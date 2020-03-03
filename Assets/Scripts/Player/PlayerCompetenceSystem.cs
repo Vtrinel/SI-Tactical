@@ -13,34 +13,34 @@ public class PlayerCompetenceSystem
     [SerializeField] CompetenceRecall recallCompetence = default;
     public CompetenceRecall GetRecallCompetence => recallCompetence;
 
-    CompetenceUsabilityState currentUsabilityState = CompetenceUsabilityState.None;
-    public CompetenceUsabilityState GetCurrentUsabilityState => currentUsabilityState;
-    CompetenceType currentCompetenceType = CompetenceType.None;
-    public CompetenceType GetCurrentCompetenceType => currentCompetenceType;
+    UsabilityState currentUsabilityState = UsabilityState.None;
+    public UsabilityState GetCurrentUsabilityState => currentUsabilityState;
+    ActionType currentCompetenceType = ActionType.None;
+    public ActionType GetCurrentCompetenceType => currentCompetenceType;
 
-    public int GetCompetenceActionPointsCost(CompetenceType compType)
+    public int GetCompetenceActionPointsCost(ActionType compType)
     {
         switch (compType)
         {
-            case CompetenceType.None:
+            case ActionType.None:
                 return 0;
-            case CompetenceType.Throw:
+            case ActionType.Throw:
                 return throwCompetence.GetActionPointsCost;
-            case CompetenceType.Recall:
+            case ActionType.Recall:
                 return recallCompetence.GetActionPointsCost;
         }
         return 0;
     }
-    public ActionSelectionResult HasEnoughActionPoints(int totalActionPoints, CompetenceType compType)
+    public ActionSelectionResult HasEnoughActionPoints(int totalActionPoints, ActionType compType)
     {
         Competence competenceToCheck = null;
 
         switch (compType)
         {
-            case CompetenceType.Throw:
+            case ActionType.Throw:
                 competenceToCheck = throwCompetence;
                 break;
-            case CompetenceType.Recall:
+            case ActionType.Recall:
                 competenceToCheck = recallCompetence;
                 break;
         }
@@ -51,7 +51,7 @@ public class PlayerCompetenceSystem
         return totalActionPoints >= competenceToCheck.GetActionPointsCost ? ActionSelectionResult.EnoughAactionPoints : ActionSelectionResult.NotEnoughActionPoints;
     }
 
-    public void ChangeUsabilityState(CompetenceUsabilityState usabilityState, CompetenceType compType)
+    public void ChangeUsabilityState(UsabilityState usabilityState, ActionType compType)
     {
         currentUsabilityState = usabilityState;
         currentCompetenceType = compType;
@@ -59,10 +59,10 @@ public class PlayerCompetenceSystem
 
     public void ResetUsabilityState()
     {
-        ChangeUsabilityState(CompetenceUsabilityState.None, CompetenceType.None);
+        ChangeUsabilityState(UsabilityState.None, ActionType.None);
     }
 
-    public bool IsUsingCompetenceSystem => currentUsabilityState != CompetenceUsabilityState.None;
+    public bool IsUsingCompetenceSystem => currentUsabilityState != UsabilityState.None;
 
     public void InterruptPreparation()
     {
@@ -95,16 +95,6 @@ public class PlayerCompetenceSystem
 
         ResetUsabilityState();
     }
-}
-
-public enum CompetenceUsabilityState
-{
-    None, Preparing, Using
-}
-
-public enum CompetenceType
-{
-    None, Throw, Recall
 }
 
 public struct CompetanceRequestInfo

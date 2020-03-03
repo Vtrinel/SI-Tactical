@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Inputs")]
     [SerializeField] KeyCode clickActionKey = KeyCode.Mouse0;
-    [SerializeField] LayerMask worldClickLayerMask = default;
+    /*[SerializeField] LayerMask worldClickLayerMask = default;
     [SerializeField] float clickCheckMaxDistance = 50.0f;
     bool calculatedCurrentWorldClickResult = false;
     WorldClickResult currentWorldClickResult = default;
@@ -41,39 +41,44 @@ public class PlayerController : MonoBehaviour
         }
 
         return result;
-    }
+    }*/
 
     [SerializeField] KeyCode selectMoveInput = KeyCode.Q;
     [SerializeField] KeyCode throwCompetenceInput = KeyCode.A;
     [SerializeField] KeyCode recallCompetenceInput = KeyCode.Z;
 
+    bool ableToAct = false;
+    public void SetAbleToAct(bool able)
+    {
+        ableToAct = able;
+    }
+
     public void UpdateInputs()
     {
-        if (isMoving || competenceSystem.GetCurrentUsabilityState == CompetenceUsabilityState.Using)
-            return;
+        /*if (isMoving || competenceSystem.GetCurrentUsabilityState == CompetenceUsabilityState.Using)
+            return;*/
 
         #region Action Selection
         if (Input.GetKeyDown(selectMoveInput))
         {
-            if (competenceSystem.GetCurrentUsabilityState == CompetenceUsabilityState.Preparing)
-                competenceSystem.InterruptPreparation();
+            /*if (competenceSystem.GetCurrentUsabilityState == UsabilityState.Preparing)
+                competenceSystem.InterruptPreparation();*/
 
-            StartMovementPreparation();
+            GameManager.Instance.SelectAction(ActionType.Move);
         }
         else if (Input.GetKeyDown(throwCompetenceInput))
         {
-            TrySelectCompetence(CompetenceType.Throw);
+            TrySelectCompetence(ActionType.Throw);
 
         }
         else if (Input.GetKeyDown(recallCompetenceInput))
         {
-            TrySelectCompetence(CompetenceType.Recall);
-
+            TrySelectCompetence(ActionType.Recall);
         }
         #endregion
 
         #region Action Validation
-        if (willingToMove)
+        /*if (willingToMove)
         {
             if (Input.GetKeyDown(clickActionKey))
                 TryStartMovement(GetCurrentWorldClickResult.mouseWorldPosition);
@@ -110,11 +115,58 @@ public class PlayerController : MonoBehaviour
                         break;
                 }
             }
+        }*/
+
+        if (Input.GetKeyDown(clickActionKey))
+        {
+            GameManager.Instance.OnPlayerClickAction();
+
+            switch (competenceSystem.GetCurrentCompetenceType)
+            {
+                case ActionType.None:
+                    break;
+
+                case ActionType.Throw:
+                    CompetanceRequestInfo newThrow = new CompetanceRequestInfo();
+                    newThrow.startPosition = transform.position;
+                    newThrow.startTransform = transform;
+                    newThrow.targetPosition = GameManager.Instance.GetCurrentWorldClickResult.mouseWorldPosition;
+
+                    Debug.DrawRay(newThrow.startPosition, Vector3.up * 10.0f, Color.red, 5.0f);
+                    Debug.DrawRay(newThrow.targetPosition, Vector3.up * 10.0f, Color.blue, 5.0f);
+
+                    competenceSystem.LaunchThrowCompetence(newThrow);
+                    break;
+
+                case ActionType.Recall:
+                    CompetanceRequestInfo newRecall = new CompetanceRequestInfo();
+                    newRecall.targetPosition = transform.position;
+                    newRecall.targetTransform = transform;
+
+                    competenceSystem.LaunchRecallCompetence(newRecall);
+                    break;
+            }
         }
         #endregion
     }
 
-    [Header("Movement")]
+    bool moving;
+    public void MoveTo(Vector3 targetPosition)
+    {
+        navMeshAgent.SetDestination(targetPosition);
+        moving = true;
+    }
+    public void CheckForDestinationReached()
+    {
+        if (navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete && navMeshAgent.remainingDistance == 0)
+        {
+            moving = false;
+            OnPlayerReachedMovementDestination?.Invoke();
+        }
+    }
+    public System.Action OnPlayerReachedMovementDestination;
+
+    /*[Header("Movement")]
     [SerializeField] float movementDistancePerActionPoint = 1;
     bool willingToMove = false;
     bool isMoving = false;
@@ -163,7 +215,6 @@ public class PlayerController : MonoBehaviour
         }
 
         UpdateActionPointsDebug(movementCost);
-        //Debug.Log("Preparing move. Target distance : " + movementDistance + "; Cost : " + movementCost);
     }
 
     public void GenerateDistancesPerActionPoints()
@@ -225,21 +276,21 @@ public class PlayerController : MonoBehaviour
 
     public void UpdateMovement()
     {
-
-    }
+    if (navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete && navMeshAgent.remainingDistance == 0)
+            isMoving = false;
+    }*/
 
     [Header("Systems")]
     [SerializeField] PlayerCompetenceSystem competenceSystem = default;
     public void UpdateCompetenceSystem()
     {
-        if (navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete && navMeshAgent.remainingDistance == 0)
-            isMoving = false;
+
     }
 
-    public void TrySelectCompetence(CompetenceType compType)
+    public void TrySelectCompetence(ActionType compType)
     {
-        if (willingToMove)
-            InterruptMovementPreparation();
+        /*if (willingToMove)
+            InterruptMovementPreparation();*/
 
         ActionSelectionResult result = competenceSystem.HasEnoughActionPoints(currentActionPoints, compType);
 
@@ -247,8 +298,8 @@ public class PlayerController : MonoBehaviour
         {
             case ActionSelectionResult.EnoughAactionPoints:
                 Debug.Log("Selected " + compType);
-                competenceSystem.ChangeUsabilityState(CompetenceUsabilityState.Preparing, compType);
-                UpdateActionPointsDebug(competenceSystem.GetCompetenceActionPointsCost(compType));
+                competenceSystem.ChangeUsabilityState(UsabilityState.Preparing, compType);
+                //UpdateActionPointsDebug(competenceSystem.GetCompetenceActionPointsCost(compType));
                 UpdateAPCostPreviewState();
                 break;
 
@@ -264,13 +315,15 @@ public class PlayerController : MonoBehaviour
 
     public void ConsumeCompetenceActionPoints(Competence usedComp)
     {
+        return;
+
         ConsumeActionPoints(usedComp.GetActionPointsCost);
         UpdateAPCostPreviewState();
     }
 
     [Header("Resources - PH")]
     [SerializeField] int maxActionPoints = 10;
-    [SerializeField] UnityEngine.UI.Text actionPointsUseDebugText = default;
+    //[SerializeField] UnityEngine.UI.Text actionPointsUseDebugText = default;
     int currentActionPoints = default;
     int actionPointsUsedThisTurnToMove = 0;
     public void ConsumeActionPoints(int amount)
@@ -278,18 +331,18 @@ public class PlayerController : MonoBehaviour
         currentActionPoints -= amount;
     }
 
-    public void UpdateActionPointsDebug(int cost)
+    /*public void UpdateActionPointsDebug(int cost)
     {
         if (actionPointsUseDebugText != null)
         {
             actionPointsUseDebugText.text = cost + "AP";
 
         }
-    }
+    }*/
     public void UpdateAPCostPreviewState()
     {
-        if (actionPointsUseDebugText != null)
-            actionPointsUseDebugText.enabled = willingToMove || competenceSystem.GetCurrentUsabilityState == CompetenceUsabilityState.Preparing;
+        /*if (actionPointsUseDebugText != null)
+            actionPointsUseDebugText.enabled = willingToMove || competenceSystem.GetCurrentUsabilityState == UsabilityState.Preparing;*/
     }
 
 
@@ -298,20 +351,24 @@ public class PlayerController : MonoBehaviour
         currentActionPoints = maxActionPoints;
         competenceSystem.OnCompetenceUsed += ConsumeCompetenceActionPoints;
 
-        UpdateLinePreviewState();
-        UpdateAPCostPreviewState();
+        //UpdateLinePreviewState();
+        //UpdateAPCostPreviewState();
     }
 
     private void Update()
     {
         //Debug.Log("Current action points : " + currentActionPoints);
 
-        if (willingToMove)
+        /*if (willingToMove)
             UpdateMovementPreview();
         else if (isMoving)
-            UpdateMovement();       
+            UpdateMovement();*/
 
-        UpdateInputs();
+        if (moving)
+            CheckForDestinationReached();
+
+        if (ableToAct)
+            UpdateInputs();
 
         UpdateCompetenceSystem();
 
@@ -320,11 +377,6 @@ public class PlayerController : MonoBehaviour
             currentActionPoints = maxActionPoints;
             actionPointsUsedThisTurnToMove = 0;
         }
-    }
-
-    private void LateUpdate()
-    {
-        calculatedCurrentWorldClickResult = false;
     }
 }
 
