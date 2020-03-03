@@ -5,6 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerCompetenceSystem
 {
+    public System.Action<Competence> OnCompetenceUsed = default;
+
     [SerializeField] CompetenceThrow throwCompetence = default;
     public CompetenceThrow GetCompetenceThrow => throwCompetence;
 
@@ -16,7 +18,38 @@ public class PlayerCompetenceSystem
     CompetenceType currentCompetenceType = CompetenceType.None;
     public CompetenceType GetCurrentCompetenceType => currentCompetenceType;
 
+    public int GetCompetenceActionPointsCost(CompetenceType compType)
+    {
+        switch (compType)
+        {
+            case CompetenceType.None:
+                return 0;
+            case CompetenceType.Throw:
+                return throwCompetence.GetActionPointsCost;
+            case CompetenceType.Recall:
+                return recallCompetence.GetActionPointsCost;
+        }
+        return 0;
+    }
+    public ActionSelectionResult HasEnoughActionPoints(int totalActionPoints, CompetenceType compType)
+    {
+        Competence competenceToCheck = null;
 
+        switch (compType)
+        {
+            case CompetenceType.Throw:
+                competenceToCheck = throwCompetence;
+                break;
+            case CompetenceType.Recall:
+                competenceToCheck = recallCompetence;
+                break;
+        }
+
+        if (competenceToCheck == null)
+            return ActionSelectionResult.NoCompetenceFound;
+
+        return totalActionPoints >= competenceToCheck.GetActionPointsCost ? ActionSelectionResult.EnoughAactionPoints : ActionSelectionResult.NotEnoughActionPoints;
+    }
 
     public void ChangeUsabilityState(CompetenceUsabilityState usabilityState, CompetenceType compType)
     {
@@ -44,6 +77,8 @@ public class PlayerCompetenceSystem
         newCrystal.GetComponent<CrystalScript>().AttackHere(newCompetanceRequestInfo.startTransform, newCompetanceRequestInfo.targetPosition);
         newCrystal.SetActive(true);
 
+        OnCompetenceUsed(throwCompetence);
+
         ResetUsabilityState();
     }
 
@@ -55,6 +90,8 @@ public class PlayerCompetenceSystem
         {
             crystal.GetComponent<CrystalScript>().RecallCrystal(newCompetanceRequestInfo.targetTransform);
         }
+
+        OnCompetenceUsed(recallCompetence);
 
         ResetUsabilityState();
     }
