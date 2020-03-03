@@ -24,7 +24,6 @@ public class PlayerController : MonoBehaviour
             return currentWorldClickResult;
         }
     }
-
     public WorldClickResult CalculateCurrentWorldClickResult()
     {
         WorldClickResult result = default;
@@ -44,24 +43,88 @@ public class PlayerController : MonoBehaviour
         return result;
     }
 
+    [SerializeField] KeyCode selectMoveInput = KeyCode.Q;
+    [SerializeField] KeyCode throwCompetenceInput = KeyCode.A;
+    [SerializeField] KeyCode recallCompetenceInput = KeyCode.Z;
+
     public void UpdateInputs()
     {
-        if (Input.GetKeyDown(clickActionKey))
+        if (isMoving || competenceSystem.GetCurrentUsabilityState == CompetenceUsabilityState.Using)
+            return;
+
+        #region Competence Selection
+        if (Input.GetKeyDown(selectMoveInput))
         {
-            if(willingToMove)
+            if (competenceSystem.GetCurrentUsabilityState == CompetenceUsabilityState.Preparing)
+                competenceSystem.InterruptPreparation();
+
+            StartMovementPreparation();
+        }
+        else if (Input.GetKeyDown(throwCompetenceInput))
+        {
+            if (willingToMove)
+                InterruptMovementPreparation();
+
+            competenceSystem.ChangeUsabilityState(CompetenceUsabilityState.Preparing, CompetenceType.Throw);
+        }
+        else if (Input.GetKeyDown(recallCompetenceInput))
+        {
+            if (willingToMove)
+                InterruptMovementPreparation();
+
+            competenceSystem.ChangeUsabilityState(CompetenceUsabilityState.Preparing, CompetenceType.Recall);
+        }
+        #endregion
+
+        if (willingToMove)
+        {
+            if (Input.GetKeyDown(clickActionKey))
                 TryStartMovement(GetCurrentWorldClickResult.mouseWorldPosition);
+        }
+        else if (competenceSystem.GetCurrentUsabilityState == CompetenceUsabilityState.Preparing)
+        {
+            Debug.Log("Preparing " + competenceSystem.GetCurrentCompetenceType);
+
+            if (Input.GetKeyDown(clickActionKey))
+            {
+                switch (competenceSystem.GetCurrentCompetenceType)
+                {
+                    case CompetenceType.None:
+                        break;
+
+                    case CompetenceType.Throw:
+                        competenceSystem.LaunchThrowCompetence(GetCurrentWorldClickResult.mouseWorldPosition);
+                        break;
+
+                    case CompetenceType.Recall:
+                        competenceSystem.LaunchRecallCompetence(transform.position);
+                        break;
+                }
+            }
         }
     }
 
     [Header("Movement")]
     bool willingToMove = false;
     bool isMoving = false;
+    bool IsUsingMoveSystem => willingToMove || isMoving;
+
+    public void StartMovementPreparation()
+    {
+        willingToMove = true;
+    }
+
+    public void InterruptMovementPreparation()
+    {
+        willingToMove = false;
+    }
 
     public void UpdateMovementPreview()
     {
         float movementDistance = Vector3.Distance(transform.position, GetCurrentWorldClickResult.mouseWorldPosition);
 
-        Debug.Log(movementDistance);
+        Debug.Log("Preparing move");
+        //Debug.Log(movementDistance);
     }
 
     public void TryStartMovement(Vector3 targetPosition)
@@ -72,6 +135,13 @@ public class PlayerController : MonoBehaviour
         navMeshAgent.SetDestination(targetPosition);
         isMoving = true;
         willingToMove = false;
+    }
+
+    [Header("Systems")]
+    [SerializeField] PlayerCompetenceSystem competenceSystem = default;
+    public void UpdateCompetenceSystem()
+    {
+
     }
 
     [Header("Resources - PH")]
@@ -85,6 +155,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        UpdateCompetenceSystem();
+
         if (isMoving)
         {
             if (navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete && navMeshAgent.remainingDistance == 0)
@@ -95,11 +167,6 @@ public class PlayerController : MonoBehaviour
             UpdateMovementPreview();
 
         UpdateInputs();
-
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            willingToMove = true;
-        }
 
         if (Input.GetKeyDown(KeyCode.T))
         {
