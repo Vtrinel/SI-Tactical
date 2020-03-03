@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using NaughtyAttributes;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,7 +9,10 @@ public class UIManager : MonoBehaviour
     #region Dummy public attributes
 
     public int maxHealth = 3;
+
+    [MinValue(0), MaxValue(10)]
     public int currentHealth = 3;
+
     public int actionPoint = 3;
 
     #endregion
@@ -21,6 +25,12 @@ public class UIManager : MonoBehaviour
     public UnityAction OnPlayerRecall;
     public UnityAction OnPlayerSwap;
 
+    #endregion
+
+    #region ButtonUtilities 
+    public GameObject ButtonMove;
+    public GameObject ButtonLaunch;
+    public GameObject ButtonRecall;
     #endregion
 
     private static UIManager _instance;
