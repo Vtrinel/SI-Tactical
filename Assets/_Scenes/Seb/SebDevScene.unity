@@ -581,7 +581,8 @@ GameObject:
   - component: {fileID: 1525067902}
   - component: {fileID: 1525067903}
   - component: {fileID: 1525067904}
-  m_Layer: 0
+  - component: {fileID: 1525067905}
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -622,6 +623,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   clickCheckMaxDistance: 50
+  selectMoveInput: 113
+  throwCompetenceInput: 97
+  recallCompetenceInput: 122
   competenceSystem:
     throwCompetence: {fileID: 11400000, guid: b51a0664d8bf82746b64d2ae05b38ec3, type: 2}
     recallCompetence: {fileID: 11400000, guid: 23c61e99f565491499f03494d0b17213, type: 2}
@@ -648,6 +652,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &1525067905
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1525067901}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &1708022425
 GameObject:
   m_ObjectHideFlags: 0
@@ -815,8 +833,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1767064921}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.36, y: 0.25, z: 1.92}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.36, y: 0.5, z: 1.92}
+  m_LocalScale: {x: 1, y: 2.7724, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4

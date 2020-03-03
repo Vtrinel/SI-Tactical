@@ -36,15 +36,26 @@ public class PlayerCompetenceSystem
         ResetUsabilityState();
     }
 
-    public void LaunchThrowCompetence(Vector3 targetPosition)
+    public void LaunchThrowCompetence(CompetanceRequestInfo newCompetanceRequestInfo)
     {
-        Debug.Log("Throw knife at position " + targetPosition);
+        Debug.Log("Throw knife at position " + newCompetanceRequestInfo.targetPosition);
+
+        GameObject newCrystal = CrystalManager.Instance.GetCrystal();
+        newCrystal.GetComponent<CrystalScript>().AttackHere(newCompetanceRequestInfo.startTransform, newCompetanceRequestInfo.targetPosition);
+        newCrystal.SetActive(true);
+
         ResetUsabilityState();
     }
 
-    public void LaunchRecallCompetence(Vector3 playerPosition)
+    public void LaunchRecallCompetence(CompetanceRequestInfo newCompetanceRequestInfo)
     {
-        Debug.Log("Recall knife at position " + playerPosition);
+        Debug.Log("Recall knife at position " + newCompetanceRequestInfo.targetPosition);
+
+        foreach (GameObject crystal in CrystalManager.Instance.GetAllCrystalUse())
+        {
+            crystal.GetComponent<CrystalScript>().RecallCrystal(newCompetanceRequestInfo.targetTransform);
+        }
+
         ResetUsabilityState();
     }
 }
@@ -57,4 +68,13 @@ public enum CompetenceUsabilityState
 public enum CompetenceType
 {
     None, Throw, Recall
+}
+
+public struct CompetanceRequestInfo
+{
+    public Transform startTransform;
+    public Transform targetTransform;
+
+    public Vector3 startPosition;
+    public Vector3 targetPosition;
 }
