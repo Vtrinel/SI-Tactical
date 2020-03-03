@@ -21,6 +21,7 @@ public class CrystalScript : MonoBehaviour
         {
             //vitesse du couteau
             myRigidBody.AddForce(transform.forward * speed);
+            transform.position = new Vector3(transform.position.x, CrystalManager.crystalHeight, transform.position.z);
         }
 
         //rotation du couteau
