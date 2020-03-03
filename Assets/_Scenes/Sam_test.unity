@@ -228,7 +228,7 @@ PrefabInstance:
     - target: {fileID: 2897340004283240089, guid: 53b4f27c6fd25e64ca5f1984ed334702,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.33346152
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2897340004283240089, guid: 53b4f27c6fd25e64ca5f1984ed334702,
         type: 3}
@@ -300,6 +300,7 @@ GameObject:
   - component: {fileID: 1319373798}
   - component: {fileID: 1319373797}
   - component: {fileID: 1319373801}
+  - component: {fileID: 1319373802}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -394,6 +395,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotaVector: {x: 0, y: -1, z: 0}
+--- !u!114 &1319373802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1319373796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2077be73992f1d144b0cbf3c480bb1ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1732789447
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -409,7 +422,7 @@ PrefabInstance:
     - target: {fileID: 2897340004283240089, guid: 53b4f27c6fd25e64ca5f1984ed334702,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.33346152
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2897340004283240089, guid: 53b4f27c6fd25e64ca5f1984ed334702,
         type: 3}
@@ -822,7 +835,7 @@ PrefabInstance:
     - target: {fileID: 2897340004283240089, guid: 53b4f27c6fd25e64ca5f1984ed334702,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.33346152
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2897340004283240089, guid: 53b4f27c6fd25e64ca5f1984ed334702,
         type: 3}

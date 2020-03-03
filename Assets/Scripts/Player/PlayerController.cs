@@ -93,11 +93,23 @@ public class PlayerController : MonoBehaviour
                         break;
 
                     case CompetenceType.Throw:
-                        competenceSystem.LaunchThrowCompetence(GetCurrentWorldClickResult.mouseWorldPosition);
+                        CompetanceRequestInfo newThrow = new CompetanceRequestInfo();
+                        newThrow.startPosition = transform.position;
+                        newThrow.startTransform = transform;
+                        newThrow.targetPosition = GetCurrentWorldClickResult.mouseWorldPosition;
+
+                        Debug.DrawRay(newThrow.startPosition, Vector3.up * 10.0f, Color.red, 5.0f);
+                        Debug.DrawRay(newThrow.targetPosition, Vector3.up * 10.0f, Color.blue, 5.0f);
+
+                        competenceSystem.LaunchThrowCompetence(newThrow);
                         break;
 
                     case CompetenceType.Recall:
-                        competenceSystem.LaunchRecallCompetence(transform.position);
+                        CompetanceRequestInfo newRecall = new CompetanceRequestInfo();
+                        newRecall.targetPosition = transform.position;
+                        newRecall.targetTransform = transform;
+
+                        competenceSystem.LaunchRecallCompetence(newRecall);
                         break;
                 }
             }

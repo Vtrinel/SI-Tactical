@@ -9,6 +9,8 @@ public class CrystalManager : MonoBehaviour
 
     public GameObject prefabCrystal;
 
+    public static float crystalHeight = 1f;
+
 
     private static CrystalManager _instance;
     public static CrystalManager Instance { get { return _instance; } }
@@ -46,5 +48,10 @@ public class CrystalManager : MonoBehaviour
     {
         element.SetActive(false);
         crystalsUse.Remove(element);
+    }
+
+    public List<GameObject> GetAllCrystalUse()
+    {
+        return crystalsUse;
     }
 }
