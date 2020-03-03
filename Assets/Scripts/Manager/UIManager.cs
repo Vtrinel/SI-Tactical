@@ -13,8 +13,15 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
+    #region Actions 
 
-    public UnityAction<float> OnPlayerTakeDamage;
+    public UnityAction OnPlayerMove;
+    public UnityAction OnPlayerSpecial;
+    public UnityAction OnPlayerLaunch;
+    public UnityAction OnPlayerRecall;
+    public UnityAction OnPlayerSwap;
+
+    #endregion
 
     private static UIManager _instance;
     public static UIManager Instance { get { return _instance; } }
@@ -57,28 +64,31 @@ public class UIManager : MonoBehaviour
     public void Move()
     {
         Debug.Log("Move");
+        OnPlayerMove?.Invoke();
     }
 
     public void Special()
     {
         Debug.Log("Special");
+        OnPlayerSpecial?.Invoke();
     }
 
     public void Launch()
     {
         Debug.Log("Launch");
+        OnPlayerLaunch?.Invoke();
     }
 
     public void Recall()
     {
         Debug.Log("Recall");
+        OnPlayerRecall?.Invoke();
     }
 
     public void Swap()
     {
         Debug.Log("Swap");
-
-        OnPlayerTakeDamage(100256.6f);
+        OnPlayerSwap?.Invoke();
     }
 
     #endregion
