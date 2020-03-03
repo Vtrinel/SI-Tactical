@@ -184,3 +184,8 @@ public struct WorldClickResult
 {
     public Vector3 mouseWorldPosition;
 }
+
+public enum ActionSelectionResult
+{
+    Selected, NotEnoughAP
+}

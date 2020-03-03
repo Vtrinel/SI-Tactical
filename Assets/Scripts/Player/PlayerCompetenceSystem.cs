@@ -16,6 +16,8 @@ public class PlayerCompetenceSystem
     CompetenceType currentCompetenceType = CompetenceType.None;
     public CompetenceType GetCurrentCompetenceType => currentCompetenceType;
 
+
+
     public void ChangeUsabilityState(CompetenceUsabilityState usabilityState, CompetenceType compType)
     {
         currentUsabilityState = usabilityState;
