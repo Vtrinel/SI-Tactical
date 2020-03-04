@@ -6,10 +6,10 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[CustomEditor(typeof(CrystalManager))]
+[CustomEditor(typeof(DiscManager))]
 public class CrystalManagerEditor : Editor
 {
-    CrystalManager myTarget;
+    DiscManager myTarget;
 
     float utilisation;
     int used = 0;
@@ -69,7 +69,7 @@ public class CrystalManagerEditor : Editor
 
     private void OnEnable()
     {
-        myTarget = (CrystalManager)target;
+        myTarget = (DiscManager)target;
 
         myTarget.allCrystals.Clear();
 

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CrystalScript : MonoBehaviour
+public class DiscScript : MonoBehaviour
 {
     [SerializeField] Rigidbody myRigidBody;
-    [SerializeField] BoxCollider myBoxCollider;
+    [SerializeField] Collider myCollider;
+    [SerializeField] Animator myAnimator;
 
     public float speed = 3;
     public float rotaSpeed = 3;
@@ -14,31 +15,32 @@ public class CrystalScript : MonoBehaviour
 
     Collider attachedObj;
 
+    GameObject objLaunch;
+    Vector3 destination;
 
-    void FixedUpdate()
+
+    void Update()
     {
         if (isAttacking)
         {
             //vitesse du couteau
-            myRigidBody.AddForce(transform.forward * speed);
-            transform.position = new Vector3(transform.position.x, CrystalManager.crystalHeight, transform.position.z);
+            float step = speed * Time.deltaTime; // calculate distance to move
+            transform.position = Vector3.MoveTowards(transform.position, destination, step);
         }
-
-        //rotation du couteau
-        //myRigidBody.AddTorque(transform.position / rotaSpeed, ForceMode.Force);
     }
 
 
     private void OnTriggerEnter(Collider other)
     {
-        print(other.gameObject.layer);
+        if(other.gameObject == objLaunch) { return; }
+
         switch (other.gameObject.layer)
         {
             //Player
             case 9:
                 //recall or touch player
                 isAttacking = false;
-                CrystalManager.Instance.DeleteCrystal(gameObject);
+                DiscManager.Instance.DeleteCrystal(gameObject);
                 break;
 
             //ennemy
@@ -62,21 +64,26 @@ public class CrystalScript : MonoBehaviour
     {
         myRigidBody.isKinematic = true;
         transform.position = impactPoint;
-        myBoxCollider.enabled = false;
+        myCollider.enabled = false;
     }
 
-    public void AttackHere(Transform objLaunch, Vector3 destination)
+    public void AttackHere(Transform _objLaunch, Vector3 _destination)
     {
         myRigidBody.velocity = Vector3.zero;
         myRigidBody.angularVelocity = Vector3.zero;
         isAttacking = true;
 
-        transform.position = objLaunch.position;
-        transform.LookAt(destination, Vector3.forward);
-        transform.position += transform.forward * 1.2f;
-        transform.position = new Vector3(transform.position.x,  CrystalManager.crystalHeight, transform.position.z);
+        objLaunch = _objLaunch.gameObject;
+        transform.position = _objLaunch.position;
+        destination = new Vector3(_destination.x, 0, _destination.z);
+
+        print(destination);
+
+        //transform.LookAt(destination, Vector3.forward);
+        //transform.position += transform.forward * 1.2f;
+        transform.position = new Vector3(transform.position.x,  DiscManager.crystalHeight, transform.position.z);
         myRigidBody.isKinematic = false;
-        myBoxCollider.enabled = true;
+        myCollider.enabled = true;
     }
 
     public void RecallCrystal(Transform player)

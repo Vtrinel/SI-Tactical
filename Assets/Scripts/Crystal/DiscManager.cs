@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CrystalManager : MonoBehaviour
+public class DiscManager : MonoBehaviour
 {
     public List<GameObject> allCrystals = new List<GameObject>();
     List<GameObject> crystalsUse = new List<GameObject>();
@@ -12,8 +12,8 @@ public class CrystalManager : MonoBehaviour
     public static float crystalHeight = 1f;
 
 
-    private static CrystalManager _instance;
-    public static CrystalManager Instance { get { return _instance; } }
+    private static DiscManager _instance;
+    public static DiscManager Instance { get { return _instance; } }
 
     private void Awake()
     {

@@ -73,8 +73,8 @@ public class PlayerCompetenceSystem
     {
         Debug.Log("Throw knife at position " + newCompetanceRequestInfo.targetPosition);
 
-        GameObject newCrystal = CrystalManager.Instance.GetCrystal();
-        newCrystal.GetComponent<CrystalScript>().AttackHere(newCompetanceRequestInfo.startTransform, newCompetanceRequestInfo.targetPosition);
+        GameObject newCrystal = DiscManager.Instance.GetCrystal();
+        newCrystal.GetComponent<DiscScript>().AttackHere(newCompetanceRequestInfo.startTransform, newCompetanceRequestInfo.targetPosition);
         newCrystal.SetActive(true);
 
         OnCompetenceUsed(throwCompetence);
@@ -86,9 +86,9 @@ public class PlayerCompetenceSystem
     {
         Debug.Log("Recall knife at position " + newCompetanceRequestInfo.targetPosition);
 
-        foreach (GameObject crystal in CrystalManager.Instance.GetAllCrystalUse())
+        foreach (GameObject crystal in DiscManager.Instance.GetAllCrystalUse())
         {
-            crystal.GetComponent<CrystalScript>().RecallCrystal(newCompetanceRequestInfo.targetTransform);
+            crystal.GetComponent<DiscScript>().RecallCrystal(newCompetanceRequestInfo.targetTransform);
         }
 
         OnCompetenceUsed(recallCompetence);

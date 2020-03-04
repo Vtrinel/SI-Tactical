@@ -101,12 +101,10 @@ public class ButtonUtilities : MonoBehaviour
         if (value)
         {
             Active();
-            print("yes");
         }
         else
         {
             Disable();
-            print("no");
         }
     }
 }
