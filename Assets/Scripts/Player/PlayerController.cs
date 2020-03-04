@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     [Header("References")]
     [SerializeField] NavMeshAgent navMeshAgent = default;
     [SerializeField] DamageableEntity damageReceiptionSystem = default;
+
     #region Life
     public void LifeReachedZero()
     {
@@ -52,6 +53,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] KeyCode throwCompetenceInput = KeyCode.Z;
     [SerializeField] KeyCode recallCompetenceInput = KeyCode.E;
     [SerializeField] KeyCode specialCompetenceInput = KeyCode.R;
+    [SerializeField] KeyCode passTurnInput = KeyCode.Return;
 
     bool ableToAct = false;
     public void SetAbleToAct(bool able)
@@ -74,6 +76,12 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(clickActionKey))
             GameManager.Instance.OnPlayerClickAction();
+
+        if (Input.GetKeyDown(passTurnInput))
+        {
+            GameManager.Instance.SelectAction(ActionType.None);
+            TurnManager.Instance.EndPlayerTurn();
+        }
     }
     #endregion
 

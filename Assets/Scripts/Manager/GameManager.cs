@@ -32,6 +32,11 @@ public class GameManager : MonoBehaviour
         UpdatePlayerActability();
 
         ResetActionPointsCount();
+
+        turnManager.OnStartPlayerTurn += StartPlayerTurn;
+        turnManager.OnEndPlayerTurn += EndPlayerTurn;
+
+        turnManager.StartPlayerTurn();
     }
 
     private void Update()
@@ -50,16 +55,25 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Turn Management
-    public void OnStartPlayerTurn()
+    public void StartPlayerTurn()
     {
         ResetActionPointsCount();
         playerMovementsManager.ResetActionPointsUsedThisTurn();
+        UpdatePlayerActability();
+    }
+
+    public void EndPlayerTurn()
+    {
+        SelectAction(ActionType.None);
+        UpdatePlayerActability();
     }
     #endregion
 
     [Header("Important References")]
     [SerializeField] PlayerController player = default;
     public PlayerController GetPlayer => player;
+
+    [SerializeField] TurnManager turnManager = default;
 
     public bool OnMouseInUI = false;
 
@@ -164,6 +178,21 @@ public class GameManager : MonoBehaviour
     #region Player Inputs Reception
     public void SelectAction(ActionType actionType)
     {
+        if (actionType == ActionType.None)
+        {
+            if (competencesManager.IsPreparingCompetence)
+            {
+                CallUnselectActionEvent(competencesManager.GetCurrentCompetenceType);
+                competencesManager.InterruptPreparation();
+            }
+
+            if (playerMovementsManager.IsWillingToMove)
+            {
+                CallUnselectActionEvent(ActionType.Move);
+                playerMovementsManager.InterruptMovementPreparation();
+            }
+        }
+
         if (actionType == ActionType.Move)
         {
             if (competencesManager.IsPreparingCompetence)
@@ -304,7 +333,14 @@ public class GameManager : MonoBehaviour
 
     public void UpdatePlayerActability()
     {
-        player.SetAbleToAct(!playerMovementsManager.IsUsingMoveSystem && !competencesManager.IsUsingCompetence);
+        bool canAct = 
+            !playerMovementsManager.IsUsingMoveSystem 
+            && 
+            !competencesManager.IsUsingCompetence 
+            && 
+            turnManager.GetCurrentTurnState == TurnState.PlayerTurn;
+
+        player.SetAbleToAct(canAct);
         SetActionPointsDebugTextVisibility(playerMovementsManager.IsWillingToMove || competencesManager.IsPreparingCompetence);
     }
     #endregion

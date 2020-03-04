@@ -86,17 +86,6 @@ public class PlayerMovementsManager
     public System.Action<int> OnPreparationAmountChanged;
     public void GenerateDistancesPerActionPoints(int actionPointAmount)
     {
-        /*availableActionPoints = actionPointAmount;
-
-        currentDistancesByUsedActionPoints = new List<float>();
-
-        for (int i = 1; i <= availableActionPoints; i++)
-        {
-            currentDistancesByUsedActionPoints.Add(GetDistanceByUsedActionPoints(i));
-        }
-
-        GenerateDebugCircles();*/
-
         availableActionPoints = actionPointAmount;
 
         currentDistancesByUsedActionPoints = new List<float>();
@@ -113,17 +102,6 @@ public class PlayerMovementsManager
 
     public float GetDistanceByUsedActionPoints(int actionPointsAmount)
     {
-        /*float floatedActionPoints = (float)actionPointsAmount;
-
-        float dist = (floatedActionPoints * baseMovementDistancePerActionPoint);
-        float power = (floatedActionPoints + actionPointsUsedThisTurnToMove - 1) * distanceReductionModificationCoeffPerActionPoint;
-        float reductionCoeff = (Mathf.Pow(distanceReductionCoeffPerActionPoint, power));
-
-        if (reductionCoeff > 0)
-            dist /= reductionCoeff;
-
-        return dist;*/
-
         float floatedActionPoints = (float)actionPointsAmount;
 
         float dist = baseMovementDistancePerActionPoint;
