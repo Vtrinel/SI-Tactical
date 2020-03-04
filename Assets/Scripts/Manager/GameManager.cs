@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
     #region Action Points
     [Header("Action Points")]
     public int maxActionPointsAmount = 10;
-    int currentActionPointsAmount;
+    [SerializeField] int currentActionPointsAmount;
     public int GetCurrentActionPointsAmount => currentActionPointsAmount;
 
     public System.Action<int> OnActionPointsAmountChanged;
