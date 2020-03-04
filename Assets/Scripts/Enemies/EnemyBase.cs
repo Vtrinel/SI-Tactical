@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyBase : MonoBehaviour
 {
@@ -8,15 +9,22 @@ public class EnemyBase : MonoBehaviour
     {
         damageReceiptionSystem.SetUpSystem();
         damageReceiptionSystem.OnCurrentLifeAmountChanged += DebugLifeChange;
+        damageReceiptionSystem.OnCurrentLifeAmountChanged += UpdateLifeBarFill;
         damageReceiptionSystem.OnLifeReachedZero += Die;
     }
 
     [Header("References")]
     [SerializeField] DamageableEntity damageReceiptionSystem = default;
+    [SerializeField] Image lifeBar = default;
+    public void UpdateLifeBarFill(int currentAmount, int delta)
+    {
+        lifeBar.fillAmount = damageReceiptionSystem.GetCurrentLifePercent;
+    }
 
     public void Die()
     {
         Debug.Log(name + " (Enemy) is dead");
+        Destroy(gameObject);
     }
     
     public void DebugLifeChange(int currentAmount, int delta)
