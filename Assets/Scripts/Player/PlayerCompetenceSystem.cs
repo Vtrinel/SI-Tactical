@@ -5,18 +5,53 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerCompetenceSystem
 {
+    public System.Action<Competence> OnCompetenceUsed = default;
+
     [SerializeField] CompetenceThrow throwCompetence = default;
     public CompetenceThrow GetCompetenceThrow => throwCompetence;
 
     [SerializeField] CompetenceRecall recallCompetence = default;
     public CompetenceRecall GetRecallCompetence => recallCompetence;
 
-    CompetenceUsabilityState currentUsabilityState = CompetenceUsabilityState.None;
-    public CompetenceUsabilityState GetCurrentUsabilityState => currentUsabilityState;
-    CompetenceType currentCompetenceType = CompetenceType.None;
-    public CompetenceType GetCurrentCompetenceType => currentCompetenceType;
+    UsabilityState currentUsabilityState = UsabilityState.None;
+    public UsabilityState GetCurrentUsabilityState => currentUsabilityState;
+    ActionType currentCompetenceType = ActionType.None;
+    public ActionType GetCurrentCompetenceType => currentCompetenceType;
 
-    public void ChangeUsabilityState(CompetenceUsabilityState usabilityState, CompetenceType compType)
+    public int GetCompetenceActionPointsCost(ActionType compType)
+    {
+        switch (compType)
+        {
+            case ActionType.None:
+                return 0;
+            case ActionType.Throw:
+                return throwCompetence.GetActionPointsCost;
+            case ActionType.Recall:
+                return recallCompetence.GetActionPointsCost;
+        }
+        return 0;
+    }
+    public ActionSelectionResult HasEnoughActionPoints(int totalActionPoints, ActionType compType)
+    {
+        Competence competenceToCheck = null;
+
+        switch (compType)
+        {
+            case ActionType.Throw:
+                competenceToCheck = throwCompetence;
+                break;
+            case ActionType.Recall:
+                competenceToCheck = recallCompetence;
+                break;
+        }
+
+        if (competenceToCheck == null)
+            return ActionSelectionResult.NoCompetenceFound;
+
+        return totalActionPoints >= competenceToCheck.GetActionPointsCost ? ActionSelectionResult.EnoughAactionPoints : ActionSelectionResult.NotEnoughActionPoints;
+    }
+
+    public void ChangeUsabilityState(UsabilityState usabilityState, ActionType compType)
     {
         currentUsabilityState = usabilityState;
         currentCompetenceType = compType;
@@ -24,10 +59,10 @@ public class PlayerCompetenceSystem
 
     public void ResetUsabilityState()
     {
-        ChangeUsabilityState(CompetenceUsabilityState.None, CompetenceType.None);
+        ChangeUsabilityState(UsabilityState.None, ActionType.None);
     }
 
-    public bool IsUsingCompetenceSystem => currentUsabilityState != CompetenceUsabilityState.None;
+    public bool IsUsingCompetenceSystem => currentUsabilityState != UsabilityState.None;
 
     public void InterruptPreparation()
     {
@@ -42,6 +77,8 @@ public class PlayerCompetenceSystem
         newCrystal.GetComponent<CrystalScript>().AttackHere(newCompetanceRequestInfo.startTransform, newCompetanceRequestInfo.targetPosition);
         newCrystal.SetActive(true);
 
+        OnCompetenceUsed(throwCompetence);
+
         ResetUsabilityState();
     }
 
@@ -54,18 +91,10 @@ public class PlayerCompetenceSystem
             crystal.GetComponent<CrystalScript>().RecallCrystal(newCompetanceRequestInfo.targetTransform);
         }
 
+        OnCompetenceUsed(recallCompetence);
+
         ResetUsabilityState();
     }
-}
-
-public enum CompetenceUsabilityState
-{
-    None, Preparing, Using
-}
-
-public enum CompetenceType
-{
-    None, Throw, Recall
 }
 
 public struct CompetanceRequestInfo

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using NaughtyAttributes;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,8 +7,12 @@ public class HealthBar : MonoBehaviour
 {
 
     private int maxHealth;
+
     private int currentHealth;
+
     public GameObject healthPoint;
+
+    List<GameObject> allLifeBarElement = new List<GameObject>();
 
     void Start()
     {
@@ -21,12 +26,34 @@ public class HealthBar : MonoBehaviour
     {
         for (int i = 0; i < maxHealth; i++)
         {
-            Instantiate(healthPoint, gameObject.transform);
+            GameObject newLifeBarElement = Instantiate(healthPoint, gameObject.transform);
+            allLifeBarElement.Add(newLifeBarElement);
         }
     }
 
-    void ChangeHealth()
+    void UpdateLifeBar()
     {
+        int i = 0;
 
+        foreach(GameObject lifeBar in allLifeBarElement)
+        {
+            if(i < currentHealth)
+            {
+                //Oui
+                lifeBar.GetComponent<Animator>().SetBool("Statut", true);
+            }
+            else
+            {
+                //Non
+                lifeBar.GetComponent<Animator>().SetBool("Statut", false);
+            }
+            i++;
+        }
+    }
+
+    void Update()
+    {
+        currentHealth = UIManager.Instance.currentHealth;
+        UpdateLifeBar();
     }
 }
