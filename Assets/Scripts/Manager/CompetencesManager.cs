@@ -140,13 +140,13 @@ public class CompetencesManager
     {
         CompetanceRequestInfo newCompetenceRequestInfo = new CompetanceRequestInfo();
         newCompetenceRequestInfo.startTransform = _player.transform;
-        newCompetenceRequestInfo.startPosition = _player.transform.position + Vector3.up * CrystalManager.crystalHeight;
-        newCompetenceRequestInfo.targetPosition = currentWorldMouseResult.mouseWorldPosition + Vector3.up * CrystalManager.crystalHeight;
+        newCompetenceRequestInfo.startPosition = _player.transform.position + Vector3.up * DiscManager.crystalHeight;
+        newCompetenceRequestInfo.targetPosition = currentWorldMouseResult.mouseWorldPosition + Vector3.up * DiscManager.crystalHeight;
 
         Debug.Log("Throw knife at position " + newCompetenceRequestInfo.targetPosition);
 
-        GameObject newCrystal = CrystalManager.Instance.GetCrystal();
-        newCrystal.GetComponent<CrystalScript>().AttackHere(newCompetenceRequestInfo.startTransform, newCompetenceRequestInfo.targetPosition);
+        GameObject newCrystal = DiscManager.Instance.GetCrystal();
+        newCrystal.GetComponent<DiscScript>().AttackHere(newCompetenceRequestInfo.startTransform, newCompetenceRequestInfo.targetPosition);
         newCrystal.SetActive(true);
 
         ResetUsabilityState();
@@ -160,9 +160,9 @@ public class CompetencesManager
 
         Debug.Log("Recall knife at position " + newCompetenceRequestInfo.targetPosition);
 
-        foreach (GameObject crystal in CrystalManager.Instance.GetAllCrystalUse())
+        foreach (GameObject crystal in DiscManager.Instance.GetAllCrystalUse())
         {
-            crystal.GetComponent<CrystalScript>().RecallCrystal(newCompetenceRequestInfo.targetTransform);
+            crystal.GetComponent<DiscScript>().RecallCrystal(newCompetenceRequestInfo.targetTransform);
         }
 
         ResetUsabilityState();
