@@ -154,9 +154,12 @@ MonoBehaviour:
   maxActionPointsAmount: 10
   actionPointsUseDebugText: {fileID: 781894180}
   playerMovementsManager:
-    baseMovementDistancePerActionPoint: 1
-    distanceReductionCoeffPerActionPoint: 1.2
+    baseMovementDistancePerActionPoint: 2
+    distanceReductionCoeffPerActionPoint: 1.15
+    distanceReductionModificationCoeffPerActionPoint: 0.6
     movementLinePreview: {fileID: 262638754}
+    debugCirclePrefab: {fileID: 5422921156114304414, guid: bf4c7124ec8e3514b9fd34f77ad1dcd8,
+      type: 3}
   competencesManager:
     throwCompetence: {fileID: 11400000, guid: b51a0664d8bf82746b64d2ae05b38ec3, type: 2}
     recallCompetence: {fileID: 11400000, guid: 23c61e99f565491499f03494d0b17213, type: 2}
