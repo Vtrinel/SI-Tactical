@@ -108,7 +108,6 @@ public class PlayerMovementsManager
         if (reductionCoeff > 0)
             dist /= reductionCoeff;
 
-        Debug.Log(dist);
         return dist;
     }
 
