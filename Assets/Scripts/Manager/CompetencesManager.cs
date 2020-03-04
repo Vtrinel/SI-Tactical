@@ -14,7 +14,7 @@ public class CompetencesManager
     {
         if(IsPreparingCompetence)
         {
-            Debug.Log("Preparing " + currentCompetenceType);
+            //Debug.Log("Preparing " + currentCompetenceType);
         }
     }
 
