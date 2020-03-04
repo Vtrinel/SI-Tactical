@@ -5,9 +5,47 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
+    private void Start()
+    {
+        damageReceiptionSystem.SetUpSystem();
+        damageReceiptionSystem.OnCurrentLifeAmountChanged += DebugLifeAmount;
+        damageReceiptionSystem.OnLifeReachedZero += LifeReachedZero;
+    }
+
+    private void Update()
+    {
+        if (moving)
+            CheckForDestinationReached();
+
+        if (ableToAct)
+            UpdateInputs();
+
+        if (Input.GetKeyDown(KeyCode.KeypadMinus))
+        {
+            damageReceiptionSystem.LoseLife(1);
+        }
+        else if (Input.GetKeyDown(KeyCode.KeypadPlus))
+        {
+            damageReceiptionSystem.RegainLife(1);
+        }
+    }
+
     [Header("References")]
     [SerializeField] NavMeshAgent navMeshAgent = default;
+    [SerializeField] DamageableEntity damageReceiptionSystem = default;
+    #region Life
+    public void LifeReachedZero()
+    {
+        Debug.Log("DEAD");
+    }
 
+    public void DebugLifeAmount(int amount, int delta)
+    {
+        Debug.Log("Current life : " + amount);
+    }
+    #endregion
+
+    #region Inputs
     [Header("Inputs")]
     [SerializeField] KeyCode clickActionKey = KeyCode.Mouse0;
     [SerializeField] KeyCode selectMoveInput = KeyCode.A;
@@ -37,7 +75,9 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(clickActionKey))
             GameManager.Instance.OnPlayerClickAction();
     }
+    #endregion
 
+    #region Movement
     bool moving;
     public void MoveTo(Vector3 targetPosition)
     {
@@ -53,13 +93,5 @@ public class PlayerController : MonoBehaviour
         }
     }
     public System.Action OnPlayerReachedMovementDestination;
-   
-    private void Update()
-    {
-        if (moving)
-            CheckForDestinationReached();
-
-        if (ableToAct)
-            UpdateInputs();
-    }
+    #endregion    
 }
