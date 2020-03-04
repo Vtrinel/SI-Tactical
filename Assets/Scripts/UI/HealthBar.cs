@@ -14,6 +14,18 @@ public class HealthBar : MonoBehaviour
 
     List<GameObject> allLifeBarElement = new List<GameObject>();
 
+    private void OnEnable()
+    {
+        GameManager.Instance.OnActionPointsAmountChanged += UpdateLifeBar;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.OnActionPointsAmountChanged -= UpdateLifeBar;
+    }
+
+
+
     void Start()
     {
         maxHealth = UIManager.Instance.maxHealth;
@@ -31,7 +43,7 @@ public class HealthBar : MonoBehaviour
         }
     }
 
-    void UpdateLifeBar()
+    void UpdateLifeBar(int _numberLives)
     {
         int i = 0;
 
@@ -49,11 +61,5 @@ public class HealthBar : MonoBehaviour
             }
             i++;
         }
-    }
-
-    void Update()
-    {
-        currentHealth = UIManager.Instance.currentHealth;
-        UpdateLifeBar();
     }
 }

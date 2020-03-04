@@ -25,9 +25,10 @@ public class PlayerMovementsManager
     }
 
     [Header("Movement")]
-    [SerializeField] float baseMovementDistancePerActionPoint = 1.5f;
+    [SerializeField] float baseMovementDistancePerActionPoint = 2f;
     [SerializeField] float distanceReductionCoeffPerActionPoint = 1.2f;
     [SerializeField] float distanceReductionModificationCoeffPerActionPoint = 0.5f;
+    [SerializeField] float minimumDistance = 1f;
     UsabilityState currentUsabilityState = UsabilityState.None;
     public bool IsWillingToMove => currentUsabilityState == UsabilityState.Preparing;
     public bool IsMoving => currentUsabilityState == UsabilityState.Using;
@@ -85,7 +86,7 @@ public class PlayerMovementsManager
     public System.Action<int> OnPreparationAmountChanged;
     public void GenerateDistancesPerActionPoints(int actionPointAmount)
     {
-        availableActionPoints = actionPointAmount;
+        /*availableActionPoints = actionPointAmount;
 
         currentDistancesByUsedActionPoints = new List<float>();
 
@@ -94,12 +95,25 @@ public class PlayerMovementsManager
             currentDistancesByUsedActionPoints.Add(GetDistanceByUsedActionPoints(i));
         }
 
+        GenerateDebugCircles();*/
+
+        availableActionPoints = actionPointAmount;
+
+        currentDistancesByUsedActionPoints = new List<float>();
+
+        float totalDistance = 0;
+        for (int i = 1; i <= availableActionPoints; i++)
+        {
+            totalDistance += GetDistanceByUsedActionPoints(i);
+            currentDistancesByUsedActionPoints.Add(totalDistance);
+        }
+
         GenerateDebugCircles();
     }
 
     public float GetDistanceByUsedActionPoints(int actionPointsAmount)
     {
-        float floatedActionPoints = (float)actionPointsAmount;
+        /*float floatedActionPoints = (float)actionPointsAmount;
 
         float dist = (floatedActionPoints * baseMovementDistancePerActionPoint);
         float power = (floatedActionPoints + actionPointsUsedThisTurnToMove - 1) * distanceReductionModificationCoeffPerActionPoint;
@@ -107,6 +121,20 @@ public class PlayerMovementsManager
 
         if (reductionCoeff > 0)
             dist /= reductionCoeff;
+
+        return dist;*/
+
+        float floatedActionPoints = (float)actionPointsAmount;
+
+        float dist = baseMovementDistancePerActionPoint;
+        float power = (floatedActionPoints + actionPointsUsedThisTurnToMove - 1) * distanceReductionModificationCoeffPerActionPoint;
+        float reductionCoeff = (Mathf.Pow(distanceReductionCoeffPerActionPoint, power));
+
+        if (reductionCoeff > 0)
+            dist /= reductionCoeff;
+
+        if (dist < minimumDistance)
+            dist = minimumDistance;
 
         return dist;
     }
