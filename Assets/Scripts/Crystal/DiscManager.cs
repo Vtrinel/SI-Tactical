@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class DiscManager : MonoBehaviour
 {
-    public List<GameObject> allCrystals = new List<GameObject>();
-    List<GameObject> crystalsUse = new List<GameObject>();
+    public List<DiscScript> allDiscs = new List<DiscScript>();
+    List<DiscScript> discsUse = new List<DiscScript>();
 
-    public GameObject prefabCrystal;
+    public GameObject prefabDisc;
 
     public static float crystalHeight = 1f;
 
@@ -37,37 +37,37 @@ public class DiscManager : MonoBehaviour
 
     private void Update()
     {
-        foreach(GameObject disc in crystalsUse)
+        foreach(DiscScript disc in discsUse)
         {
-            disc.GetComponent<DiscScript>().isInRange = (Vector3.Distance(player.position, disc.transform.position) < 7);
+            disc.isInRange = (Vector3.Distance(player.position, disc.transform.position) < 7);
         }
     }
 
     public GameObject GetCrystal()
     {
-        foreach (GameObject element in allCrystals)
+        foreach (DiscScript element in allDiscs)
         {
-            if (!element.activeSelf && !crystalsUse.Contains(element.gameObject))
+            if (!element.gameObject.activeSelf && !discsUse.Contains(element))
             {
-                crystalsUse.Add(element);
-                return element;
+                discsUse.Add(element.GetComponent<DiscScript>());
+                return element.gameObject;
             }
         }
 
-        GameObject newEnnemy = Instantiate(prefabCrystal, transform);
-        allCrystals.Add(newEnnemy);
-        crystalsUse.Add(newEnnemy);
-        return newEnnemy;
+        DiscScript newEnnemy = Instantiate(prefabDisc, transform).GetComponent<DiscScript>();
+        allDiscs.Add(newEnnemy);
+        discsUse.Add(newEnnemy);
+        return newEnnemy.gameObject;
     }
 
     public void DeleteCrystal(GameObject element)
     {
         element.SetActive(false);
-        crystalsUse.Remove(element);
+        discsUse.Remove(element.GetComponent<DiscScript>());
     }
 
-    public List<GameObject> GetAllCrystalUse()
+    public List<DiscScript> GetAllCrystalUse()
     {
-        return crystalsUse;
+        return discsUse;
     }
 }
