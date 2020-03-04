@@ -19,8 +19,8 @@ public class PlayerMovementsManager
     }
 
     PlayerController _player;
-    WorldClickResult currentWorldMouseResult;
-    public void UpdateCurrentWorldMouseResult(WorldClickResult result)
+    WorldMouseResult currentWorldMouseResult;
+    public void UpdateCurrentWorldMouseResult(WorldMouseResult result)
     {
         currentWorldMouseResult = result;
     }

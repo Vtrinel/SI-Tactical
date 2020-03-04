@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,9 +16,13 @@ public class GameManager : MonoBehaviour
         }
 
         playerMovementsManager.SetUp(player);
+        competencesManager.SetUp(player);        
 
         OnWorldMouseResultUpdate += playerMovementsManager.UpdateCurrentWorldMouseResult;
+        OnWorldMouseResultUpdate += competencesManager.UpdateCurrentWorldMouseResult;
+
         playerMovementsManager.OnPreparationAmountChanged += UpdateActionPointsDebugTextAmount;
+        competencesManager.OnCompetenceStateChanged += UpdatePlayerActability;
 
         player.OnPlayerReachedMovementDestination += UpdatePlayerActability;
 
@@ -31,15 +33,17 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        currentWorldClickResult = GetCurrentWorldClickResult;
-        OnWorldMouseResultUpdate?.Invoke(currentWorldClickResult);
+        // Update current mouse world result
+        currentWorldMouseResult = GetCurrentWorldMouseResult;
+        OnWorldMouseResultUpdate?.Invoke(currentWorldMouseResult);
 
         playerMovementsManager.UpdateSystem();
+        competencesManager.UpdateSystem();
     }
 
     private void LateUpdate()
     {
-        calculatedCurrentWorldClickResult = false;
+        calculatedCurrentWorldMouseResult = false;
     }
 
     [Header("Important References")]
@@ -85,29 +89,30 @@ public class GameManager : MonoBehaviour
     }
 
     [Header("Player Systems")]
-    [SerializeField] PlayerMovementsManager playerMovementsManager;
+    [SerializeField] PlayerMovementsManager playerMovementsManager = default;
+    [SerializeField] CompetencesManager competencesManager = default;
 
-    [Header("Mouse World Position")]
-    [SerializeField] LayerMask worldClickLayerMask = default;
-    [SerializeField] float clickCheckMaxDistance = 50.0f;
-    bool calculatedCurrentWorldClickResult = false;
-    WorldClickResult currentWorldClickResult = default;
-    public WorldClickResult GetCurrentWorldClickResult
+    [Header("Mouse World Result")]
+    [SerializeField] LayerMask worldMouseLayerMask = default;
+    [SerializeField] float mouseCheckMaxDistance = 50.0f;
+    bool calculatedCurrentWorldMouseResult = false;
+    WorldMouseResult currentWorldMouseResult = default;
+    public WorldMouseResult GetCurrentWorldMouseResult
     {
         get
         {
-            if (!calculatedCurrentWorldClickResult)
-                currentWorldClickResult = CalculateCurrentWorldClickResult();
+            if (!calculatedCurrentWorldMouseResult)
+                currentWorldMouseResult = CalculateCurrentWorldMouseResult();
 
-            return currentWorldClickResult;
+            return currentWorldMouseResult;
         }
     }
-    public WorldClickResult CalculateCurrentWorldClickResult()
+    public WorldMouseResult CalculateCurrentWorldMouseResult()
     {
-        WorldClickResult result = default;
+        WorldMouseResult result = default;
 
         Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit[] hits = Physics.RaycastAll(cameraRay, clickCheckMaxDistance, worldClickLayerMask);
+        RaycastHit[] hits = Physics.RaycastAll(cameraRay, mouseCheckMaxDistance, worldMouseLayerMask);
 
         foreach (RaycastHit hit in hits)
         {
@@ -121,7 +126,7 @@ public class GameManager : MonoBehaviour
         return result;
     }
 
-    System.Action<WorldClickResult> OnWorldMouseResultUpdate = default;
+    System.Action<WorldMouseResult> OnWorldMouseResultUpdate = default;
 
     //[Header("Inputs Events")]
     public void SelectAction(ActionType actionType)
@@ -132,6 +137,9 @@ public class GameManager : MonoBehaviour
                 break;
 
             case ActionType.Move:
+                if (competencesManager.IsPreparingCompetence)
+                    competencesManager.InterruptPreparation();
+
                 if (!playerMovementsManager.IsWillingToMove)
                 {
                     playerMovementsManager.GenerateDistancesPerActionPoints(currentActionPointsAmount);
@@ -146,9 +154,37 @@ public class GameManager : MonoBehaviour
                 break;
 
             case ActionType.Throw:
+                if (playerMovementsManager.IsWillingToMove)
+                    playerMovementsManager.InterruptMovementPreparation();
+
+                if (competencesManager.IsPreparingCompetence && competencesManager.GetCurrentCompetenceType == actionType)
+                    competencesManager.InterruptPreparation();
+                else
+                {
+                    ActionSelectionResult throwSelectionResult = competencesManager.TrySelectAction(currentActionPointsAmount, actionType);
+                    if (throwSelectionResult != ActionSelectionResult.EnoughActionPoints)
+                        competencesManager.InterruptPreparation();
+
+                    SetActionPointsDebugTextVisibility(throwSelectionResult == ActionSelectionResult.EnoughActionPoints);
+                    UpdateActionPointsDebugTextAmount(competencesManager.GetCurrentCompetenceCost());
+                }
                 break;
 
             case ActionType.Recall:
+                if (playerMovementsManager.IsWillingToMove)
+                    playerMovementsManager.InterruptMovementPreparation();
+
+                if (competencesManager.IsPreparingCompetence && competencesManager.GetCurrentCompetenceType == actionType)
+                    competencesManager.InterruptPreparation();
+                else
+                {
+                    ActionSelectionResult recallSelectionResult = competencesManager.TrySelectAction(currentActionPointsAmount, actionType);
+                    if (recallSelectionResult != ActionSelectionResult.EnoughActionPoints)
+                        competencesManager.InterruptPreparation();
+
+                    SetActionPointsDebugTextVisibility(recallSelectionResult == ActionSelectionResult.EnoughActionPoints);
+                    UpdateActionPointsDebugTextAmount(competencesManager.GetCurrentCompetenceCost());
+                }
                 break;
         }
     }
@@ -157,12 +193,27 @@ public class GameManager : MonoBehaviour
     {
         if (playerMovementsManager.IsWillingToMove)
         {
-            int cost = playerMovementsManager.TryStartMovement(GetCurrentWorldClickResult.mouseWorldPosition);
+            int cost = playerMovementsManager.TryStartMovement(GetCurrentWorldMouseResult.mouseWorldPosition);
             if (cost > 0)
             {
                 SetActionPointsDebugTextVisibility(false);
                 ConsumeActionPoints(cost);
             }
+        }
+        else if(competencesManager.IsPreparingCompetence)
+        {
+            int cost = competencesManager.GetCurrentCompetenceCost();
+            switch (competencesManager.GetCurrentCompetenceType)
+            {
+                case ActionType.Throw:
+                    competencesManager.LaunchThrowCompetence();
+                    break;
+
+                case ActionType.Recall:
+                    competencesManager.LaunchRecallCompetence();
+                    break;
+            }
+            ConsumeActionPoints(cost);
         }
 
         UpdatePlayerActability();
@@ -170,7 +221,8 @@ public class GameManager : MonoBehaviour
 
     public void UpdatePlayerActability()
     {
-        player.SetAbleToAct(!playerMovementsManager.IsUsingMoveSystem);
+        player.SetAbleToAct(!playerMovementsManager.IsUsingMoveSystem && !competencesManager.IsUsingCompetence);
+        SetActionPointsDebugTextVisibility(playerMovementsManager.IsWillingToMove || competencesManager.IsPreparingCompetence);
     }
 }
 

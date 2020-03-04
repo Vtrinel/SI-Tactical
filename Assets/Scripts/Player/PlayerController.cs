@@ -68,12 +68,14 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetKeyDown(throwCompetenceInput))
         {
-            TrySelectCompetence(ActionType.Throw);
+            GameManager.Instance.SelectAction(ActionType.Throw);
+            //TrySelectCompetence(ActionType.Throw);
 
         }
         else if (Input.GetKeyDown(recallCompetenceInput))
         {
-            TrySelectCompetence(ActionType.Recall);
+            GameManager.Instance.SelectAction(ActionType.Recall);
+            //TrySelectCompetence(ActionType.Recall);
         }
         #endregion
 
@@ -121,7 +123,7 @@ public class PlayerController : MonoBehaviour
         {
             GameManager.Instance.OnPlayerClickAction();
 
-            switch (competenceSystem.GetCurrentCompetenceType)
+            /*switch (competenceSystem.GetCurrentCompetenceType)
             {
                 case ActionType.None:
                     break;
@@ -130,10 +132,8 @@ public class PlayerController : MonoBehaviour
                     CompetanceRequestInfo newThrow = new CompetanceRequestInfo();
                     newThrow.startPosition = transform.position;
                     newThrow.startTransform = transform;
-                    newThrow.targetPosition = GameManager.Instance.GetCurrentWorldClickResult.mouseWorldPosition;
+                    newThrow.targetPosition = GameManager.Instance.GetCurrentWorldMouseResult.mouseWorldPosition;
 
-                    Debug.DrawRay(newThrow.startPosition, Vector3.up * 10.0f, Color.red, 5.0f);
-                    Debug.DrawRay(newThrow.targetPosition, Vector3.up * 10.0f, Color.blue, 5.0f);
 
                     competenceSystem.LaunchThrowCompetence(newThrow);
                     break;
@@ -145,7 +145,7 @@ public class PlayerController : MonoBehaviour
 
                     competenceSystem.LaunchRecallCompetence(newRecall);
                     break;
-            }
+            }*/
         }
         #endregion
     }
@@ -296,7 +296,7 @@ public class PlayerController : MonoBehaviour
 
         switch (result)
         {
-            case ActionSelectionResult.EnoughAactionPoints:
+            case ActionSelectionResult.EnoughActionPoints:
                 Debug.Log("Selected " + compType);
                 competenceSystem.ChangeUsabilityState(UsabilityState.Preparing, compType);
                 //UpdateActionPointsDebug(competenceSystem.GetCompetenceActionPointsCost(compType));
@@ -380,12 +380,12 @@ public class PlayerController : MonoBehaviour
     }
 }
 
-public struct WorldClickResult
+public struct WorldMouseResult
 {
     public Vector3 mouseWorldPosition;
 }
 
 public enum ActionSelectionResult
 {
-    EnoughAactionPoints, NotEnoughActionPoints, NoCompetenceFound
+    EnoughActionPoints, NotEnoughActionPoints, NoCompetenceFound
 }

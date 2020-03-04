@@ -48,7 +48,7 @@ public class PlayerCompetenceSystem
         if (competenceToCheck == null)
             return ActionSelectionResult.NoCompetenceFound;
 
-        return totalActionPoints >= competenceToCheck.GetActionPointsCost ? ActionSelectionResult.EnoughAactionPoints : ActionSelectionResult.NotEnoughActionPoints;
+        return totalActionPoints >= competenceToCheck.GetActionPointsCost ? ActionSelectionResult.EnoughActionPoints : ActionSelectionResult.NotEnoughActionPoints;
     }
 
     public void ChangeUsabilityState(UsabilityState usabilityState, ActionType compType)
@@ -97,11 +97,11 @@ public class PlayerCompetenceSystem
     }
 }
 
-public struct CompetanceRequestInfo
+/*public struct CompetanceRequestInfo
 {
     public Transform startTransform;
     public Transform targetTransform;
 
     public Vector3 startPosition;
     public Vector3 targetPosition;
-}
+}*/
