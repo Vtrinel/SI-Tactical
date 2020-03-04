@@ -10,9 +10,10 @@ public class PlayerController : MonoBehaviour
 
     [Header("Inputs")]
     [SerializeField] KeyCode clickActionKey = KeyCode.Mouse0;
-    [SerializeField] KeyCode selectMoveInput = KeyCode.Q;
-    [SerializeField] KeyCode throwCompetenceInput = KeyCode.A;
-    [SerializeField] KeyCode recallCompetenceInput = KeyCode.Z;
+    [SerializeField] KeyCode selectMoveInput = KeyCode.A;
+    [SerializeField] KeyCode throwCompetenceInput = KeyCode.Z;
+    [SerializeField] KeyCode recallCompetenceInput = KeyCode.E;
+    [SerializeField] KeyCode specialCompetenceInput = KeyCode.R;
 
     bool ableToAct = false;
     public void SetAbleToAct(bool able)
@@ -28,7 +29,9 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetKeyDown(throwCompetenceInput))
             GameManager.Instance.SelectAction(ActionType.Throw);
         else if (Input.GetKeyDown(recallCompetenceInput))
-            GameManager.Instance.SelectAction(ActionType.Recall);        
+            GameManager.Instance.SelectAction(ActionType.Recall);
+        else if (Input.GetKeyDown(specialCompetenceInput))
+            GameManager.Instance.SelectAction(ActionType.Special);
         #endregion
 
         if (Input.GetKeyDown(clickActionKey))
