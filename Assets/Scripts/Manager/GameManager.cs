@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
@@ -60,9 +61,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] PlayerController player = default;
     public PlayerController GetPlayer => player;
 
+    public bool OnMouseInUI = false;
+
+    public void SetOnMouseInUI(bool value)
+    {
+        OnMouseInUI = value;
+    }
+
     #region Action Points
     [Header("Action Points")]
-    [SerializeField] int maxActionPointsAmount = 10;
+    public int maxActionPointsAmount = 10;
     int currentActionPointsAmount;
     public int GetCurrentActionPointsAmount => currentActionPointsAmount;
 
@@ -108,10 +116,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] PlayerMovementsManager playerMovementsManager = default;
     [SerializeField] CompetencesManager competencesManager = default;
     public Competence GetCurrentlySelectedCompetence => competencesManager.GetCurrentCompetence;
-    public System.Action<bool> OnMoveActionSelectionStateChanged;
-    public System.Action<bool> OnThrowCompetenceSelectionStateChanged;
-    public System.Action<bool> OnRecallCompetenceSelectionStateChanged;
-    public System.Action<bool> OnSpecialCompetenceSelectionStateChanged;
+    public Action<bool> OnMoveActionSelectionStateChanged;
+    public Action<bool> OnThrowCompetenceSelectionStateChanged;
+    public Action<bool> OnRecallCompetenceSelectionStateChanged;
+    public Action<bool> OnSpecialCompetenceSelectionStateChanged;
 
     #region Mouse World Result
     [Header("Mouse World Result")]
@@ -194,12 +202,14 @@ public class GameManager : MonoBehaviour
             }
 
             if (previousActionType != actionType)
-            { 
-                ActionSelectionResult throwSelectionResult = competencesManager.TrySelectAction(currentActionPointsAmount, actionType);
-                if(throwSelectionResult == ActionSelectionResult.EnoughActionPoints)
-                    CallSelectActionEvent(previousActionType);
+            {
+                ActionSelectionResult competenceSelectionResult = competencesManager.TrySelectAction(currentActionPointsAmount, actionType);
+                if (competenceSelectionResult == ActionSelectionResult.EnoughActionPoints)
+                {
+                    CallSelectActionEvent(actionType);
+                }
 
-                SetActionPointsDebugTextVisibility(throwSelectionResult == ActionSelectionResult.EnoughActionPoints);
+                SetActionPointsDebugTextVisibility(competenceSelectionResult == ActionSelectionResult.EnoughActionPoints);
                 UpdateActionPointsDebugTextAmount(competencesManager.GetCurrentCompetenceCost());
             }
         }

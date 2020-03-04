@@ -13,9 +13,20 @@ public class PointActionBar : MonoBehaviour
 
     List<GameObject> allPointBarElement = new List<GameObject>();
 
+    private void OnEnable()
+    {
+        GameManager.Instance.OnActionPointsAmountChanged += UpdatePointBar;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.OnActionPointsAmountChanged -= UpdatePointBar;
+    }
+
     void Start()
     {
-        currentPoint = UIManager.Instance.actionPoint;
+        maxPoint = GameManager.Instance.maxActionPointsAmount;
+        currentPoint = GameManager.Instance.GetCurrentActionPointsAmount;
 
         CreateHealthBar();
     }
@@ -29,8 +40,9 @@ public class PointActionBar : MonoBehaviour
         }
     }
 
-    void UpdatePointBar()
+    void UpdatePointBar(int value)
     {
+        currentPoint = value;
         int i = 0;
 
         foreach(GameObject _pointBar in allPointBarElement)
@@ -47,11 +59,5 @@ public class PointActionBar : MonoBehaviour
             }
             i++;
         }
-    }
-
-    void Update()
-    {
-        currentPoint = UIManager.Instance.actionPoint;
-        UpdatePointBar();
     }
 }
