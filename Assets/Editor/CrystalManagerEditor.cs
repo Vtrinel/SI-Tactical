@@ -6,10 +6,10 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[CustomEditor(typeof(CrystalManager))]
+[CustomEditor(typeof(DiscManager))]
 public class CrystalManagerEditor : Editor
 {
-    CrystalManager myTarget;
+    DiscManager myTarget;
 
     float utilisation;
     int used = 0;
@@ -22,7 +22,7 @@ public class CrystalManagerEditor : Editor
 
         GUIStyle styleEnable = EditorStyles.miniButton;
 
-        float percent = (float)used / (float)myTarget.allCrystals.Count * 100;
+        float percent = (float)used / (float)myTarget.allDiscs.Count * 100;
         GUILayout.Space(18);
 
         Rect r = EditorGUILayout.BeginVertical();
@@ -39,9 +39,9 @@ public class CrystalManagerEditor : Editor
         used = 0;
         GUILayout.BeginHorizontal();
         int i = 1;
-        foreach (GameObject element in myTarget.allCrystals)
+        foreach (DiscScript element in myTarget.allDiscs)
         {
-            if (element.activeSelf)
+            if (element.gameObject.activeSelf)
             {
                 GUI.backgroundColor = Color.green;
                 used++;
@@ -69,13 +69,13 @@ public class CrystalManagerEditor : Editor
 
     private void OnEnable()
     {
-        myTarget = (CrystalManager)target;
+        myTarget = (DiscManager)target;
 
-        myTarget.allCrystals.Clear();
+        myTarget.allDiscs.Clear();
 
         foreach (Transform child in myTarget.transform)
         {
-            myTarget.allCrystals.Add(child.gameObject);
+            myTarget.allDiscs.Add(child.GetComponent<DiscScript>());
         }
     }
 }
