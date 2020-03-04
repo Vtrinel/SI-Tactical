@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Tree
+  m_Name: M_Tree 4
   m_Shader: {fileID: 4800000, guid: 2a948b397abdced418c1bef743aab7e8, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 0
@@ -19,6 +19,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _Noise:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _T_MaskShadow_M:
         m_Texture: {fileID: 2800000, guid: f7e96904e8667e1439548f0f86389447, type: 3}
         m_Scale: {x: 1, y: 1}
