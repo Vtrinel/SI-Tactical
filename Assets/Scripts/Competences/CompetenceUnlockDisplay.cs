@@ -10,6 +10,8 @@ public class CompetenceUnlockDisplay : MonoBehaviour
 
     private Competence competence;
 
+    #region Actions add
+
     private void OnEnable()
     {
         PlayerExperienceManager._instance.OnSelectCompetence += RefreshCompetence;
@@ -20,14 +22,19 @@ public class CompetenceUnlockDisplay : MonoBehaviour
         PlayerExperienceManager._instance.OnSelectCompetence -= RefreshCompetence;
     }
 
+    #endregion
+
     // Change the UI for the competence info
     private void RefreshCompetence()
     {
         competence = PlayerExperienceManager._instance.GetSelectedCompetence();
 
-        description.text = competence.Getdescription;
-        ActionPoint.text = competence.GetActionPointsCost.ToString();
-        UnlockCost.text = competence.GetPointsCost.ToString();
+        if (competence)
+        {
+            description.text = competence.Getdescription;
+            ActionPoint.text = competence.GetActionPointsCost.ToString();
+            UnlockCost.text = competence.GetPointsCost.ToString();
+        }
     }
 
     // Send the request to unlock the competence

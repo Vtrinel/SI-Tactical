@@ -7,10 +7,8 @@ public class PlayerExperienceManager : MonoBehaviour
     // Public attributes
     public static PlayerExperienceManager _instance;
 
-    [Header("Recall Competences")]
+    [Header("Lists competences")]
     public List<CompetenceRecall> RecallCompetences = new List<CompetenceRecall>();
-
-    [Header("Throw Competences")]
     public List<CompetenceThrow> ThrowCompetence = new List<CompetenceThrow>();
 
     //Actions
@@ -19,10 +17,10 @@ public class PlayerExperienceManager : MonoBehaviour
 
 
     // Private Attributes
-    private int competencesPoints = 0;
+    private int competencesPoints = 2;
     private Competence selectedCompetence;
 
-
+    // For the singleton
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -35,8 +33,8 @@ public class PlayerExperienceManager : MonoBehaviour
         }
     }
 
-    public static PlayerExperienceManager Instance { get { return _instance; } }
 
+    public static PlayerExperienceManager Instance { get { return _instance; } }
 
     // Check if a competence can be unlocked and unlock it if possible
     public void CanUnlockCompetence(Competence competence)
@@ -60,9 +58,9 @@ public class PlayerExperienceManager : MonoBehaviour
     // Setter SelectedCompetence
     public void SelectCompetence(Competence competence)
     {
-        OnSelectCompetence?.Invoke();
-
         selectedCompetence = competence;
+
+        OnSelectCompetence?.Invoke();
     }
     
     // Getter SelectedCompetence
