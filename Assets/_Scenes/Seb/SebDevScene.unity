@@ -151,6 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1525067903}
+  OnMouseInUI: 0
   maxActionPointsAmount: 10
   actionPointsUseDebugText: {fileID: 781894180}
   playerMovementsManager:
@@ -726,6 +727,66 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 781894178}
   m_CullTransparentMesh: 0
+--- !u!1 &790734132
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 790734133}
+  - component: {fileID: 790734134}
+  - component: {fileID: 790734135}
+  m_Layer: 9
+  m_Name: Hitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &790734133
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790734132}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1525067902}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &790734134
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790734132}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.6
+  m_Height: 2.2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &790734135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790734132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9674967c7d195794d80098cf6c31da1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageTag: 0
+  maxLifeAmount: 10
 --- !u!1 &895876845
 GameObject:
   m_ObjectHideFlags: 0
@@ -934,6 +995,7 @@ Transform:
   - {fileID: 526171893}
   - {fileID: 1708022426}
   - {fileID: 1776578095}
+  - {fileID: 790734133}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -950,10 +1012,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navMeshAgent: {fileID: 1525067904}
+  damageReceiptionSystem: {fileID: 790734135}
   clickActionKey: 323
   selectMoveInput: 113
   throwCompetenceInput: 97
   recallCompetenceInput: 122
+  specialCompetenceInput: 114
 --- !u!195 &1525067904
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1002,7 +1066,7 @@ GameObject:
   - component: {fileID: 1708022428}
   - component: {fileID: 1708022427}
   m_Layer: 0
-  m_Name: Capsule
+  m_Name: Renderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
