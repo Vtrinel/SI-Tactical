@@ -4,6 +4,8 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
+
+    #region Callbacks
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -33,7 +35,6 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        // Update current mouse world result
         currentWorldMouseResult = GetCurrentWorldMouseResult;
         OnWorldMouseResultUpdate?.Invoke(currentWorldMouseResult);
 
@@ -45,19 +46,32 @@ public class GameManager : MonoBehaviour
     {
         calculatedCurrentWorldMouseResult = false;
     }
+    #endregion
+
+    #region Turn Management
+    public void OnStartPlayerTurn()
+    {
+        ResetActionPointsCount();
+        playerMovementsManager.ResetActionPointsUsedThisTurn();
+    }
+    #endregion
 
     [Header("Important References")]
     [SerializeField] PlayerController player = default;
     public PlayerController GetPlayer => player;
 
+    #region Action Points
     [Header("Action Points")]
     [SerializeField] int maxActionPointsAmount = 10;
     int currentActionPointsAmount;
     public int GetCurrentActionPointsAmount => currentActionPointsAmount;
+
+    public System.Action<int> OnActionPointsAmountChanged;
     
     public void ResetActionPointsCount()
     {
         currentActionPointsAmount = maxActionPointsAmount;
+        OnActionPointsAmountChanged?.Invoke(currentActionPointsAmount);
     }
 
     public bool CanConsumeActionPointsAmount(int amount)
@@ -74,6 +88,7 @@ public class GameManager : MonoBehaviour
             currentActionPointsAmount = 0;
             Debug.LogWarning("WARNING : Too much action points consumed, count got negative.");
         }
+        OnActionPointsAmountChanged?.Invoke(currentActionPointsAmount);
     }
 
     [SerializeField] UnityEngine.UI.Text actionPointsUseDebugText = default;
@@ -87,11 +102,18 @@ public class GameManager : MonoBehaviour
         if (actionPointsUseDebugText != null)
             actionPointsUseDebugText.text = amount + "/" + currentActionPointsAmount;
     }
+    #endregion
 
     [Header("Player Systems")]
     [SerializeField] PlayerMovementsManager playerMovementsManager = default;
     [SerializeField] CompetencesManager competencesManager = default;
+    public Competence GetCurrentlySelectedCompetence => competencesManager.GetCurrentCompetence;
+    public System.Action<bool> OnMoveActionSelectionStateChanged;
+    public System.Action<bool> OnThrowCompetenceSelectionStateChanged;
+    public System.Action<bool> OnRecallCompetenceSelectionStateChanged;
+    public System.Action<bool> OnSpecialCompetenceSelectionStateChanged;
 
+    #region Mouse World Result
     [Header("Mouse World Result")]
     [SerializeField] LayerMask worldMouseLayerMask = default;
     [SerializeField] float mouseCheckMaxDistance = 50.0f;
@@ -127,65 +149,59 @@ public class GameManager : MonoBehaviour
     }
 
     System.Action<WorldMouseResult> OnWorldMouseResultUpdate = default;
+    #endregion
 
-    //[Header("Inputs Events")]
+    #region Player Inputs Reception
     public void SelectAction(ActionType actionType)
     {
-        switch (actionType)
+        if (actionType == ActionType.Move)
         {
-            case ActionType.None:
-                break;
+            if (competencesManager.IsPreparingCompetence)
+            {
+                CallUnselectActionEvent(competencesManager.GetCurrentCompetenceType);
+                competencesManager.InterruptPreparation();
+            }
 
-            case ActionType.Move:
-                if (competencesManager.IsPreparingCompetence)
-                    competencesManager.InterruptPreparation();
+            if (!playerMovementsManager.IsWillingToMove)
+            {
+                CallSelectActionEvent(ActionType.Move);
+                playerMovementsManager.GenerateDistancesPerActionPoints(currentActionPointsAmount);
+                playerMovementsManager.StartMovementPreparation();
+                SetActionPointsDebugTextVisibility(true);
+            }
+            else
+            {
+                CallUnselectActionEvent(ActionType.Move);
+                playerMovementsManager.InterruptMovementPreparation();
+                SetActionPointsDebugTextVisibility(false);
+            }
 
-                if (!playerMovementsManager.IsWillingToMove)
-                {
-                    playerMovementsManager.GenerateDistancesPerActionPoints(currentActionPointsAmount);
-                    playerMovementsManager.StartMovementPreparation();
-                    SetActionPointsDebugTextVisibility(true);
-                }
-                else
-                {
-                    playerMovementsManager.InterruptMovementPreparation();
-                    SetActionPointsDebugTextVisibility(false);
-                }
-                break;
+        }
+        else
+        {
+            ActionType previousActionType = competencesManager.GetCurrentCompetenceType;
 
-            case ActionType.Throw:
-                if (playerMovementsManager.IsWillingToMove)
-                    playerMovementsManager.InterruptMovementPreparation();
+            if (playerMovementsManager.IsWillingToMove)
+            {
+                CallUnselectActionEvent(ActionType.Move);
+                playerMovementsManager.InterruptMovementPreparation();
+            }
 
-                if (competencesManager.IsPreparingCompetence && competencesManager.GetCurrentCompetenceType == actionType)
-                    competencesManager.InterruptPreparation();
-                else
-                {
-                    ActionSelectionResult throwSelectionResult = competencesManager.TrySelectAction(currentActionPointsAmount, actionType);
-                    if (throwSelectionResult != ActionSelectionResult.EnoughActionPoints)
-                        competencesManager.InterruptPreparation();
+            if (competencesManager.IsPreparingCompetence)
+            {
+                CallUnselectActionEvent(previousActionType);
+                competencesManager.InterruptPreparation();
+            }
 
-                    SetActionPointsDebugTextVisibility(throwSelectionResult == ActionSelectionResult.EnoughActionPoints);
-                    UpdateActionPointsDebugTextAmount(competencesManager.GetCurrentCompetenceCost());
-                }
-                break;
+            if (previousActionType != actionType)
+            { 
+                ActionSelectionResult throwSelectionResult = competencesManager.TrySelectAction(currentActionPointsAmount, actionType);
+                if(throwSelectionResult == ActionSelectionResult.EnoughActionPoints)
+                    CallSelectActionEvent(previousActionType);
 
-            case ActionType.Recall:
-                if (playerMovementsManager.IsWillingToMove)
-                    playerMovementsManager.InterruptMovementPreparation();
-
-                if (competencesManager.IsPreparingCompetence && competencesManager.GetCurrentCompetenceType == actionType)
-                    competencesManager.InterruptPreparation();
-                else
-                {
-                    ActionSelectionResult recallSelectionResult = competencesManager.TrySelectAction(currentActionPointsAmount, actionType);
-                    if (recallSelectionResult != ActionSelectionResult.EnoughActionPoints)
-                        competencesManager.InterruptPreparation();
-
-                    SetActionPointsDebugTextVisibility(recallSelectionResult == ActionSelectionResult.EnoughActionPoints);
-                    UpdateActionPointsDebugTextAmount(competencesManager.GetCurrentCompetenceCost());
-                }
-                break;
+                SetActionPointsDebugTextVisibility(throwSelectionResult == ActionSelectionResult.EnoughActionPoints);
+                UpdateActionPointsDebugTextAmount(competencesManager.GetCurrentCompetenceCost());
+            }
         }
     }
 
@@ -196,6 +212,7 @@ public class GameManager : MonoBehaviour
             int cost = playerMovementsManager.TryStartMovement(GetCurrentWorldMouseResult.mouseWorldPosition);
             if (cost > 0)
             {
+                CallUnselectActionEvent(ActionType.Move);
                 SetActionPointsDebugTextVisibility(false);
                 ConsumeActionPoints(cost);
             }
@@ -203,6 +220,7 @@ public class GameManager : MonoBehaviour
         else if(competencesManager.IsPreparingCompetence)
         {
             int cost = competencesManager.GetCurrentCompetenceCost();
+            CallUnselectActionEvent(competencesManager.GetCurrentCompetenceType);
             switch (competencesManager.GetCurrentCompetenceType)
             {
                 case ActionType.Throw:
@@ -212,6 +230,9 @@ public class GameManager : MonoBehaviour
                 case ActionType.Recall:
                     competencesManager.LaunchRecallCompetence();
                     break;
+
+                case ActionType.Special:
+                    break;
             }
             ConsumeActionPoints(cost);
         }
@@ -219,19 +240,68 @@ public class GameManager : MonoBehaviour
         UpdatePlayerActability();
     }
 
+    public void CallSelectActionEvent(ActionType actionType)
+    {
+        switch (actionType)
+        {
+            case ActionType.Move:
+                OnMoveActionSelectionStateChanged?.Invoke(true);
+                break;
+            case ActionType.Throw:
+                OnThrowCompetenceSelectionStateChanged?.Invoke(true);
+                break;
+            case ActionType.Recall:
+                OnRecallCompetenceSelectionStateChanged?.Invoke(true);
+                break;
+            case ActionType.Special:
+                OnSpecialCompetenceSelectionStateChanged?.Invoke(true);
+                break;
+        }
+    }
+
+    public void CallUnselectActionEvent(ActionType actionType)
+    {
+        switch (actionType)
+        {
+            case ActionType.Move:
+                OnMoveActionSelectionStateChanged?.Invoke(false);
+                break;
+            case ActionType.Throw:
+                OnThrowCompetenceSelectionStateChanged?.Invoke(false);
+                break;
+            case ActionType.Recall:
+                OnRecallCompetenceSelectionStateChanged?.Invoke(false);
+                break;
+            case ActionType.Special:
+                OnSpecialCompetenceSelectionStateChanged?.Invoke(false);
+                break;
+        }
+    }
+
     public void UpdatePlayerActability()
     {
         player.SetAbleToAct(!playerMovementsManager.IsUsingMoveSystem && !competencesManager.IsUsingCompetence);
         SetActionPointsDebugTextVisibility(playerMovementsManager.IsWillingToMove || competencesManager.IsPreparingCompetence);
     }
+    #endregion
 }
 
 public enum ActionType
 {
-    None, Move, Throw, Recall
+    None, Move, Throw, Recall, Special
 }
 
 public enum UsabilityState
 {
     None, Preparing, Using
+}
+
+public struct WorldMouseResult
+{
+    public Vector3 mouseWorldPosition;
+}
+
+public enum ActionSelectionResult
+{
+    EnoughActionPoints, NotEnoughActionPoints, NoCompetenceFound
 }

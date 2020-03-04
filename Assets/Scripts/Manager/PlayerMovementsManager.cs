@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,7 +25,8 @@ public class PlayerMovementsManager
     }
 
     [Header("Movement")]
-    [SerializeField] float movementDistancePerActionPoint = 1;
+    [SerializeField] float baseMovementDistancePerActionPoint = 1;
+    [SerializeField] float distanceReductionCoeffPerActionPoint = 1.2f;
     UsabilityState currentUsabilityState = UsabilityState.None;
     public bool IsWillingToMove => currentUsabilityState == UsabilityState.Preparing;
     public bool IsMoving => currentUsabilityState == UsabilityState.Using;
@@ -34,9 +34,31 @@ public class PlayerMovementsManager
     public bool IsUsingMoveSystem => IsWillingToMove || IsMoving;
     List<float> currentDistancesByUsedActionPoints = new List<float>();
     int availableActionPoints = 0;
+    int actionPointsUsedThisTurnToMove = 0;
+
+    public void ResetActionPointsUsedThisTurn()
+    {
+        actionPointsUsedThisTurnToMove = 0;
+    }
 
     [Header("Movement - PH")]
     [SerializeField] LineRenderer movementLinePreview = default;
+    [SerializeField] GameObject debugCirclePrefab = default;
+    List<GameObject> instanciatedDebugCircle = new List<GameObject>();
+    public void GenerateDebugCircles()
+    {
+        ClearInstantiatedDebugCircles();
+    }
+    public void ClearInstantiatedDebugCircles()
+    {
+        if(instanciatedDebugCircle != null)
+        {
+            foreach (GameObject debugCircle in instanciatedDebugCircle)
+                GameObject.Destroy(debugCircle);
+        }
+        instanciatedDebugCircle = new List<GameObject>();
+    }
+
     public void UpdateLinePreviewState()
     {
         if (movementLinePreview != null)
@@ -52,7 +74,7 @@ public class PlayerMovementsManager
         UpdateLinePreviewState();
     }
 
-    public Action<int> OnPreparationAmountChanged;
+    public System.Action<int> OnPreparationAmountChanged;
     public void GenerateDistancesPerActionPoints(int actionPointAmount)
     {
         availableActionPoints = actionPointAmount;
@@ -67,7 +89,14 @@ public class PlayerMovementsManager
 
     public float GetDistanceByUsedActionPoints(int actionPointsAmount)
     {
-        float dist = (float)actionPointsAmount * movementDistancePerActionPoint;
+        float floatedActionPoints = (float)actionPointsAmount;
+
+        float dist = (floatedActionPoints * baseMovementDistancePerActionPoint);
+        float reductionCoeff = (Mathf.Pow(distanceReductionCoeffPerActionPoint, floatedActionPoints + actionPointsUsedThisTurnToMove - 1));
+        Debug.Log(reductionCoeff);
+
+        if (reductionCoeff > 0)
+            dist /= reductionCoeff;
 
         return dist;
     }
@@ -125,8 +154,6 @@ public class PlayerMovementsManager
     /// <returns></returns>
     public int TryStartMovement(Vector3 targetPosition)
     {
-        bool succeed = true;
-
         if (IsMoving)
             return -1;
 
@@ -143,6 +170,8 @@ public class PlayerMovementsManager
         _player.MoveTo(targetPosition);
         currentUsabilityState = UsabilityState.Using;
         UpdateLinePreviewState();
+
+        actionPointsUsedThisTurnToMove += movementCost;
 
         return movementCost;
     }

@@ -38,6 +38,21 @@ public class CompetencesManager
     public UsabilityState GetCurrentUsabilityState => currentUsabilityState;
     ActionType currentCompetenceType = ActionType.None;
     public ActionType GetCurrentCompetenceType => currentCompetenceType;
+    public Competence GetCurrentCompetence
+    {
+        get
+        {
+            switch (currentCompetenceType)
+            {                
+                case ActionType.Throw:
+                    return throwCompetence;
+                case ActionType.Recall:
+                    return recallCompetence;
+                default:
+                    return null;
+            }
+        }
+    }
 
     public ActionSelectionResult TrySelectAction(int totalActionPoints, ActionType compType)
     {
