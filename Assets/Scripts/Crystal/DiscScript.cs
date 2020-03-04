@@ -72,7 +72,6 @@ public class DiscScript : MonoBehaviour
     void CollisionWithThisObj(Transform impactPoint)
     {
         myAnimator.SetTrigger("Collision");
-        isAttacking = false;
 
         print("vehez");
         Debug.DrawRay(transform.position + transform.forward * .5f , Vector3.up, Color.red, 50);
