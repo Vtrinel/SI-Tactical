@@ -185,6 +185,7 @@ GameObject:
   - component: {fileID: 1554477736563382166}
   - component: {fileID: 8030675917091118892}
   - component: {fileID: 7300530026638147795}
+  - component: {fileID: 8130454188064962252}
   m_Layer: 11
   m_Name: Gold Disc
   m_TagString: Untagged
@@ -238,9 +239,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myRigidBody: {fileID: 2856969832363405175}
   myCollider: {fileID: 8030675917091118892}
-  myAnimator: {fileID: 0}
+  myAnimator: {fileID: 7300530026638147795}
   speed: 12
   rotaSpeed: 0.1
+  isAttacking: 0
+  isInRange: 0
 --- !u!136 &8030675917091118892
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -274,6 +277,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8130454188064962252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6817484857811702715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 663a986e615f9194d8e5392f5f8d6579, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotaVector: {x: 0, y: 1, z: 0}
 --- !u!1001 &2880536627148159804
 PrefabInstance:
   m_ObjectHideFlags: 0

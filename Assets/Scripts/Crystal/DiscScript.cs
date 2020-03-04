@@ -11,13 +11,13 @@ public class DiscScript : MonoBehaviour
     public float speed = 3;
     public float rotaSpeed = 3;
 
-    bool isAttacking = false;
+    public bool isAttacking = false;
+    public bool isInRange = true;
 
     Collider attachedObj;
 
     GameObject objLaunch;
     Vector3 destination;
-
 
     void Update()
     {
@@ -26,7 +26,16 @@ public class DiscScript : MonoBehaviour
             //vitesse du couteau
             float step = speed * Time.deltaTime; // calculate distance to move
             transform.position = Vector3.MoveTowards(transform.position, destination, step);
+            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+
+            if(Vector3.Distance(destination, transform.position) < 0.1f)
+            {
+                isAttacking = false;
+            }
         }
+
+        myAnimator.SetBool("Forward", isAttacking);
+        myAnimator.SetBool("InRange", isInRange);
     }
 
 
@@ -46,13 +55,13 @@ public class DiscScript : MonoBehaviour
             //ennemy
             case 10:
                 //take damage
-                AttachToObj(other.ClosestPointOnBounds(transform.position));
+                CollisionWithThisObj(other.transform);
                 attachedObj = other;
                 isAttacking = false;
                 break;
 
             default:
-                AttachToObj(other.ClosestPointOnBounds(transform.position));
+                CollisionWithThisObj(other.transform);
                 attachedObj = other;
                 isAttacking = false;
                 break;
@@ -60,11 +69,15 @@ public class DiscScript : MonoBehaviour
     }
 
 
-    void AttachToObj(Vector3 impactPoint)
+    void CollisionWithThisObj(Transform impactPoint)
     {
-        myRigidBody.isKinematic = true;
-        transform.position = impactPoint;
-        myCollider.enabled = false;
+        myAnimator.SetTrigger("Collision");
+        isAttacking = false;
+
+        print("vehez");
+        Debug.DrawRay(transform.position + transform.forward * .5f , Vector3.up, Color.red, 50);
+
+        transform.position = transform.position + transform.forward * .5f;
     }
 
     public void AttackHere(Transform _objLaunch, Vector3 _destination)
@@ -74,10 +87,8 @@ public class DiscScript : MonoBehaviour
         isAttacking = true;
 
         objLaunch = _objLaunch.gameObject;
-        transform.position = _objLaunch.position;
+        transform.position = new Vector3(_objLaunch.position.x, 0 , _objLaunch.position.z);
         destination = new Vector3(_destination.x, 0, _destination.z);
-
-        print(destination);
 
         //transform.LookAt(destination, Vector3.forward);
         //transform.position += transform.forward * 1.2f;
@@ -88,7 +99,10 @@ public class DiscScript : MonoBehaviour
 
     public void RecallCrystal(Transform player)
     {
-        AttackHere(transform, player.position);
+        if (isInRange)
+        {
+            AttackHere(transform, player.position);
+        }
     }
 }
 

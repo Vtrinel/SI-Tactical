@@ -11,6 +11,9 @@ public class DiscManager : MonoBehaviour
 
     public static float crystalHeight = 1f;
 
+    public float rangeOgPlayer = 5;
+    Transform player;
+
 
     private static DiscManager _instance;
     public static DiscManager Instance { get { return _instance; } }
@@ -24,6 +27,19 @@ public class DiscManager : MonoBehaviour
         else
         {
             _instance = this;
+        }
+    }
+
+    private void Start()
+    {
+        player = GameManager.Instance.GetPlayer.transform;
+    }
+
+    private void Update()
+    {
+        foreach(GameObject disc in crystalsUse)
+        {
+            disc.GetComponent<DiscScript>().isInRange = (Vector3.Distance(player.position, disc.transform.position) < 7);
         }
     }
 
