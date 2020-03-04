@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 236336244396311173}
   - component: {fileID: 236336244396311172}
   m_Layer: 0
-  m_Name: CrystalManager
+  m_Name: DiscManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5fb565e1044c794589287dace469f83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allCrystals: []
-  prefabCrystal: {fileID: 6817484857811702715, guid: b1917bcbd37b72c41bb666f7abade850,
+  allDiscs: []
+  prefabDisc: {fileID: 6817484857811702715, guid: b1917bcbd37b72c41bb666f7abade850,
     type: 3}
+  rangeOgPlayer: 5
