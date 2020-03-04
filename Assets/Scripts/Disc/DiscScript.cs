@@ -4,12 +4,9 @@ using UnityEngine;
 
 public class DiscScript : MonoBehaviour
 {
-    [SerializeField] Rigidbody myRigidBody = default;
-    [SerializeField] Collider myCollider = default;
-    [SerializeField] Animator myAnimator = default;
-
-    [Header("Damages")]
-    [SerializeField] int currentDamagesAmount = 1;
+    [SerializeField] Rigidbody myRigidBody;
+    [SerializeField] Collider myCollider;
+    [SerializeField] Animator myAnimator;
 
     public float speed = 3;
     public float rotaSpeed = 3;
@@ -58,16 +55,9 @@ public class DiscScript : MonoBehaviour
             //ennemy
             case 10:
                 //take damage
-                //CollisionWithThisObj(other.transform);
-                //attachedObj = other;
-                //isAttacking = false;
-                Debug.Log("Collision with enemy");
-
-                DamageableEntity hitDamageableEntity = other.GetComponent<DamageableEntity>();
-                if (hitDamageableEntity != null)
-                {
-                    hitDamageableEntity.LoseLife(currentDamagesAmount);
-                }
+                CollisionWithThisObj(other.transform);
+                attachedObj = other;
+                isAttacking = false;
                 break;
 
             default:

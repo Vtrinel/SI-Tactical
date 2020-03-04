@@ -11,6 +11,7 @@ public class DamageableEntity : MonoBehaviour
     [SerializeField] int maxLifeAmount = 10;
     int currentLifeAmount;
     public int GetCurrentLifeAmount => currentLifeAmount;
+    public float GetCurrentLifePercent => (float)currentLifeAmount / maxLifeAmount;
 
     /// <summary>
     /// First parameter is current life, second parameter is life differential
