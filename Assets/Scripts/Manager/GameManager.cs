@@ -196,8 +196,10 @@ public class GameManager : MonoBehaviour
             if (previousActionType != actionType)
             { 
                 ActionSelectionResult throwSelectionResult = competencesManager.TrySelectAction(currentActionPointsAmount, actionType);
-                if(throwSelectionResult == ActionSelectionResult.EnoughActionPoints)
+                if (throwSelectionResult == ActionSelectionResult.EnoughActionPoints)
+                {
                     CallSelectActionEvent(previousActionType);
+                }
 
                 SetActionPointsDebugTextVisibility(throwSelectionResult == ActionSelectionResult.EnoughActionPoints);
                 UpdateActionPointsDebugTextAmount(competencesManager.GetCurrentCompetenceCost());
