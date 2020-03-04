@@ -35,17 +35,17 @@ public class HealthBar : MonoBehaviour
     {
         int i = 0;
 
-        foreach(GameObject lifeBar in allLifeBarElement)
+        foreach(GameObject _lifeBar in allLifeBarElement)
         {
             if(i < currentHealth)
             {
                 //Oui
-                lifeBar.GetComponent<Animator>().SetBool("Statut", true);
+                _lifeBar.GetComponent<Animator>().SetBool("Statut", true);
             }
             else
             {
                 //Non
-                lifeBar.GetComponent<Animator>().SetBool("Statut", false);
+                _lifeBar.GetComponent<Animator>().SetBool("Statut", false);
             }
             i++;
         }
