@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
     #region Action Points
     [Header("Action Points")]
     public int maxActionPointsAmount = 10;
-    int currentActionPointsAmount;
+    [SerializeField] int currentActionPointsAmount;
     public int GetCurrentActionPointsAmount => currentActionPointsAmount;
 
     public System.Action<int> OnActionPointsAmountChanged;
@@ -153,6 +153,8 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        result.mouseIsOnUI = OnMouseInUI;
+
         return result;
     }
 
@@ -172,6 +174,12 @@ public class GameManager : MonoBehaviour
 
             if (!playerMovementsManager.IsWillingToMove)
             {
+                if(currentActionPointsAmount == 0)
+                {
+                    Debug.Log("Not enough AP to move");
+                    return;
+                }
+
                 CallSelectActionEvent(ActionType.Move);
                 playerMovementsManager.GenerateDistancesPerActionPoints(currentActionPointsAmount);
                 playerMovementsManager.StartMovementPreparation();
@@ -217,6 +225,12 @@ public class GameManager : MonoBehaviour
 
     public void OnPlayerClickAction()
     {
+        if (OnMouseInUI)
+        {
+            Debug.Log("Avoided action validation because mouse is on UI");
+            return;
+        }
+
         if (playerMovementsManager.IsWillingToMove)
         {
             int cost = playerMovementsManager.TryStartMovement(GetCurrentWorldMouseResult.mouseWorldPosition);
@@ -309,6 +323,7 @@ public enum UsabilityState
 public struct WorldMouseResult
 {
     public Vector3 mouseWorldPosition;
+    public bool mouseIsOnUI;
 }
 
 public enum ActionSelectionResult

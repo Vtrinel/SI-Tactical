@@ -46,11 +46,13 @@ MonoBehaviour:
   player: {fileID: 0}
   OnMouseInUI: 0
   maxActionPointsAmount: 10
+  currentActionPointsAmount: 0
   actionPointsUseDebugText: {fileID: 0}
   playerMovementsManager:
-    baseMovementDistancePerActionPoint: 1
-    distanceReductionCoeffPerActionPoint: 1.2
-    distanceReductionModificationCoeffPerActionPoint: 0.5
+    baseMovementDistancePerActionPoint: 3
+    distanceReductionCoeffPerActionPoint: 1.5
+    distanceReductionModificationCoeffPerActionPoint: 1
+    minimumDistance: 0.5
     movementLinePreview: {fileID: 0}
     debugCirclePrefab: {fileID: 5422921156114304414, guid: bf4c7124ec8e3514b9fd34f77ad1dcd8,
       type: 3}
