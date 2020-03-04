@@ -202,19 +202,11 @@ public class GameManager : MonoBehaviour
             }
 
             if (previousActionType != actionType)
-<<<<<<< HEAD
             {
                 ActionSelectionResult competenceSelectionResult = competencesManager.TrySelectAction(currentActionPointsAmount, actionType);
                 if (competenceSelectionResult == ActionSelectionResult.EnoughActionPoints)
                 {
                     CallSelectActionEvent(actionType);
-=======
-            { 
-                ActionSelectionResult throwSelectionResult = competencesManager.TrySelectAction(currentActionPointsAmount, actionType);
-                if (throwSelectionResult == ActionSelectionResult.EnoughActionPoints)
-                {
-                    CallSelectActionEvent(previousActionType);
->>>>>>> 9d3e943ad486d131cc5d59781210f4fa2bbb5825
                 }
 
                 SetActionPointsDebugTextVisibility(competenceSelectionResult == ActionSelectionResult.EnoughActionPoints);
