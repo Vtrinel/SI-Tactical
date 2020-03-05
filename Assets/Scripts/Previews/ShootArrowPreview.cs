@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class ShootArrowPreview : MonoBehaviour
 {
-    public LineRenderer leftLine;
-    public LineRenderer rightLine;
+    public LineRenderer line;
 
-    public Transform startLeft;
-    public Transform startRight;
-
-    public Transform endLeft;
-    public Transform endRight;
+    public Transform startPoint;
+    public Transform endPoint;
 
     public Transform Arrow;
 
@@ -19,8 +15,7 @@ public class ShootArrowPreview : MonoBehaviour
 
     private void Start()
     {
-        leftLine.positionCount = 2;
-        rightLine.positionCount = 2;
+        line.positionCount = 2;
 
         player = GameManager.Instance.GetPlayer.transform;
     }
@@ -34,11 +29,8 @@ public class ShootArrowPreview : MonoBehaviour
 
     void RefreshArrow()
     {
-        leftLine.SetPosition(0, startLeft.position);
-        leftLine.SetPosition(1, endLeft.position);
-
-        rightLine.SetPosition(0, startRight.position);
-        rightLine.SetPosition(1, endRight.position);
+        line.SetPosition(0, startPoint.position);
+        line.SetPosition(1, endPoint.position);
 
         //Vector3 dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
         Arrow.position = GameManager.Instance.GetCurrentWorldMouseResult.mouseWorldPosition;
