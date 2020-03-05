@@ -55,26 +55,42 @@ public class EnemyBase : MonoBehaviour
     [Header("Placeholder")]
     [SerializeField] Material normalMaterial = default;
     [SerializeField] Material activeMaterial = default;
-    public void StartDebugTurn()
+    public void StartTurn()
     {
         Debug.Log(name + "' turn");
-
         enemyRenderer.material = activeMaterial;
 
-        StartCoroutine("DebugTurn");
+        PlayMyTurn();
     }
 
-    public void EndDebugTurn()
+    public void EndTurn()
     {
         enemyRenderer.material = normalMaterial;
-
         TurnManager.Instance.EndEnemyTurn(this);
     }
 
-    IEnumerator DebugTurn()
+    #endregion
+    
+    
+    #region IA
+    [Header("IA")]
+
+    [SerializeField] BasicEnemy myIA = default;
+
+    void PlayMyTurn()
     {
-        yield return new WaitForSeconds(0.5f);
-        EndDebugTurn();
+        myIA.PlayerTurn();
     }
     #endregion
+
+    private void OnEnable()
+    {
+        myIA.OnIsAtDestination += EndTurn;
+    }
+
+    private void OnDisable()
+    {
+        myIA.OnIsAtDestination -= EndTurn;
+    }
+
 }
