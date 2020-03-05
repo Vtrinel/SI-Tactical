@@ -1,16 +1,20 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class csAreaVision : MonoBehaviour {
 
-	public int angulo = 45;
-	public int rango  = 5;
+    [SerializeField] BasicEnemy myBasicEnemy;
+
+	float angle = 45;
+    float range  = 5;
 
 	MeshFilter meshFilter;
 
 	Vector3 oldPosition;
 	Quaternion oldRotation;
 	Vector3 oldScale;
+
+    MeshCollider myMeshCollider;
 
 	Mesh Cono(){
 		
@@ -28,19 +32,19 @@ public class csAreaVision : MonoBehaviour {
 		
 		int w,s;
 		
-		for(w=0;w<angulo;w++){
+		for(w=0;w<angle;w++){
 			
-			for(s=0;s<rango;s++){
+			for(s=0;s<range;s++){
 				
-				temp.x = Mathf.Cos(Mathf.Deg2Rad*w+Mathf.Deg2Rad*(s/rango))*rango;
-				temp.z = Mathf.Sin(Mathf.Deg2Rad*w+Mathf.Deg2Rad*(s/rango))*rango;
+				temp.x = Mathf.Cos(Mathf.Deg2Rad*w+Mathf.Deg2Rad*(s/range))*range;
+				temp.z = Mathf.Sin(Mathf.Deg2Rad*w+Mathf.Deg2Rad*(s/range))*range;
 
 				if(oldPosition!=temp){
 
 					oldPosition=temp;
 					vertices.Add(new Vector3(temp.x,temp.y,temp.z));
 					normals.Add(Vector3.up);
-					uv.Add(new Vector2((rango+temp.x)/(rango*2),(rango+temp.z)/(rango*2)));
+					uv.Add(new Vector2((range+temp.x)/(range*2),(range+temp.z)/(range*2)));
 
 				}
 
@@ -74,13 +78,23 @@ public class csAreaVision : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		meshFilter = this.gameObject.GetComponent<MeshFilter>();
+        angle = myBasicEnemy.angleAttack;
+        range = myBasicEnemy.attackRange;
+
+
+        myMeshCollider = gameObject.GetComponent<MeshCollider>();
+
+        meshFilter = gameObject.GetComponent<MeshFilter>();
 		meshFilter.mesh = Cono();
 		initialPosition = meshFilter.mesh.vertices;
 		initialUV = meshFilter.mesh.uv;
 
-        transform.parent.eulerAngles = new Vector3(transform.parent.eulerAngles.x, transform.parent.eulerAngles.y + angulo / 2, transform.parent.eulerAngles.z);
+        transform.parent.eulerAngles = new Vector3(transform.parent.eulerAngles.x, transform.parent.eulerAngles.y + angle / 2, transform.parent.eulerAngles.z);
 
+        if(myMeshCollider != null)
+        {
+            myMeshCollider.sharedMesh = meshFilter.mesh;
+        }
     }
 
 	Mesh areaMesh(Mesh mesh){
@@ -103,7 +117,7 @@ public class csAreaVision : MonoBehaviour {
 			if(Physics.Linecast(center,worldPoint, out hit)){
 
 				vertices[i] = transform.worldToLocalMatrix.MultiplyPoint3x4(hit.point);
-				uv[i] = new Vector2((rango+vertices[i].x)/(rango*2),(rango+vertices[i].z)/(rango*2));
+				uv[i] = new Vector2((range+vertices[i].x)/(range*2),(range+vertices[i].z)/(range*2));
 
 			} else {
 
@@ -120,22 +134,5 @@ public class csAreaVision : MonoBehaviour {
 		_mesh.triangles = mesh.triangles;
 
 		return _mesh;
-
 	}
-	
-	// Update is called once per frame
-	void FixedUpdate () {
-
-		if(oldPosition!=transform.position || oldRotation!=transform.rotation || oldScale != transform.localScale){
-
-			oldPosition = transform.position;
-			oldRotation = transform.rotation;
-			oldScale    = transform.localScale;
-
-			meshFilter.mesh = areaMesh(meshFilter.mesh);
-
-		}
-	
-	}
-
 }
