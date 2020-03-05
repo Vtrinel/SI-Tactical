@@ -19,12 +19,16 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _Noise:
+        m_Texture: {fileID: 2800000, guid: 72c8e534b852ab2489786a5592dd41c4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _T_MaskShadow_M:
-        m_Texture: {fileID: 2800000, guid: f7e96904e8667e1439548f0f86389447, type: 3}
+        m_Texture: {fileID: 2800000, guid: 4c6c41bb026f22a448fe36d01c870f58, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TextureSample0:
-        m_Texture: {fileID: 2800000, guid: 4c6c41bb026f22a448fe36d01c870f58, type: 3}
+        m_Texture: {fileID: 2800000, guid: e38fd99574a9fdb43850705fef5d2d04, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _texcoord:
@@ -32,15 +36,16 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _ASEOutlineWidth: 3.17
-    - _SmoothShadowMax: 0.7
-    - _SmoothShadowMin: 0.2
-    - _TextureShadow: -0.25
-    - _Tilling: 0.42
+    - _ASEOutlineWidth: 0
+    - _ShadowStep: 0.14
+    - _SmoothShadowMax: 0.1
+    - _SmoothShadowMin: 0
+    - _TextureShadow: -0.52
+    - _Tilling: 5.7
     - __dirty: 0
     m_Colors:
     - _ASEOutlineColor: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 0.8773585, g: 0.8773585, b: 0.8773585, a: 0}
     - _Emlissive: {r: 0, g: 0, b: 0, a: 0}
     - _ShadowAttenuation: {r: 0, g: 0, b: 0, a: 0}
-    - _Shadow_Color: {r: 0.065637246, g: 0.12539245, b: 0.23584908, a: 0}
+    - _Shadow_Color: {r: 0.103773594, g: 0.08370417, b: 0.08370417, a: 0}

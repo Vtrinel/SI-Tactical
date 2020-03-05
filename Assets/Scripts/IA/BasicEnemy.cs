@@ -12,12 +12,18 @@ public class BasicEnemy : MonoBehaviour
     [SerializeField] float attackRange;
     [SerializeField] int damage = 1;
 
+    [SerializeField] float angleAttack;
+
     GameObject player;
     PlayerController playerControlleur;
 
     Vector3 destination;
 
     public UnityAction OnIsAtDestination;
+
+    [SerializeField] Animator myAnimator;
+
+    bool isPreparing = false;
 
     private void Start()
     {
@@ -27,15 +33,20 @@ public class BasicEnemy : MonoBehaviour
 
     public void PlayerTurn()
     {
-        if (CanAttack())
+        if (isPreparing)
         {
             Attack();
-            print("attack");
+            isPreparing = false;
+        }
+
+        if (CanAttack())
+        {
+            PrepareAttack();
+            OnIsAtDestination?.Invoke();
         }
         else
         {
             Move();
-            print("cant attack");
         }
     }
 
@@ -66,9 +77,8 @@ public class BasicEnemy : MonoBehaviour
         {
             if (CanAttack())
             {
-                Attack();
+                PrepareAttack();
                 myNavAgent.isStopped = true;
-                print("sdfhhjf");
                 break;
             }
             yield return new WaitForSeconds(0.1f);
@@ -77,9 +87,21 @@ public class BasicEnemy : MonoBehaviour
         OnIsAtDestination?.Invoke();
     }
 
+    void PrepareAttack()
+    {
+        myAnimator.SetBool("Preparing", true);
+        isPreparing = true;
+    }
+
     void Attack()
     {
-        playerControlleur.damageReceiptionSystem.LoseLife(damage);
+        myAnimator.SetTrigger("Attack");
+        CollisionAttack();
+    }
+
+    void CollisionAttack()
+    {
+        playerControlleur.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy ,damage);
     }
 
     bool CanAttack()
@@ -94,9 +116,25 @@ public class BasicEnemy : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        //Gizmos.DrawWireSphere(transform.position, attackRange);
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, distanceOfDeplacement);
+
+        Gizmos.color = Color.cyan;
+
+        float angle = angleAttack;
+        float rayRange = attackRange;
+        float halfFOV = angle / 2.0f;
+
+        Quaternion upRayRotation = Quaternion.AngleAxis(-halfFOV, Vector3.up);
+        Quaternion downRayRotation = Quaternion.AngleAxis(halfFOV, Vector3.up);
+
+        Vector3 rightRayDirection = upRayRotation * transform.forward * rayRange;
+        Vector3 leftRayDirection = downRayRotation * transform.forward * rayRange;
+
+        Gizmos.DrawRay(transform.position, rightRayDirection);
+        Gizmos.DrawRay(transform.position, leftRayDirection);
+        Gizmos.DrawLine(transform.position + leftRayDirection, transform.position + rightRayDirection);
     }
 }
