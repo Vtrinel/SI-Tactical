@@ -12,8 +12,9 @@ public class PlayerExperienceManager : MonoBehaviour
     public List<CompetenceThrow> ThrowCompetence = new List<CompetenceThrow>();
 
     //Actions
-    public event Action OnSelectCompetence;
+    public event Action<Competence> OnSelectCompetence;
     public event Action<Competence> OnTryUnlockCompetence;
+    public event Action<Competence> OnEquipCompetence;
 
 
     // Private Attributes
@@ -32,15 +33,11 @@ public class PlayerExperienceManager : MonoBehaviour
             _instance = this;
         }
     }
-
-
     public static PlayerExperienceManager Instance { get { return _instance; } }
 
     // Check if a competence can be unlocked and unlock it if possible
     public void CanUnlockCompetence(Competence competence)
     {
-        OnTryUnlockCompetence?.Invoke(competence);
-
         Debug.Log("Competences points : " + competencesPoints);
 
         if (competence.GetPointsCost <= competencesPoints)
@@ -53,6 +50,8 @@ public class PlayerExperienceManager : MonoBehaviour
         }
 
         Debug.Log("Competences points : " + competencesPoints);
+
+        OnTryUnlockCompetence?.Invoke(competence);
     }
 
     // Setter SelectedCompetence
@@ -60,9 +59,18 @@ public class PlayerExperienceManager : MonoBehaviour
     {
         selectedCompetence = competence;
 
-        OnSelectCompetence?.Invoke();
+        OnSelectCompetence?.Invoke(competence);
     }
-    
+
+    public void EquipCompetence(Competence competence)
+    {
+        Debug.Log("Is equiped : " + selectedCompetence.Getdescription);
+
+        //bool isCompRecall = competence is DiscScript;
+
+        OnEquipCompetence?.Invoke(competence);
+    }
+
     // Getter SelectedCompetence
     public Competence GetSelectedCompetence()
     {
