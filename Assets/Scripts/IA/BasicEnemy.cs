@@ -9,10 +9,10 @@ public class BasicEnemy : MonoBehaviour
     [SerializeField] NavMeshAgent myNavAgent;
 
     [SerializeField] float distanceOfDeplacement;
-    [SerializeField] float attackRange;
+    public float attackRange;
     [SerializeField] int damage = 1;
 
-    [SerializeField] float angleAttack;
+    public float angleAttack;
 
     GameObject player;
     PlayerController playerControlleur;
@@ -24,6 +24,18 @@ public class BasicEnemy : MonoBehaviour
     [SerializeField] Animator myAnimator;
 
     bool isPreparing = false;
+
+    [SerializeField] LayerMask objCanBeAttecked;
+
+    private void OnEnable()
+    {
+        TurnManager.Instance.OnEnemyTurnInterruption += ForceStopMyTurn;
+    }
+
+    private void OnDisable()
+    {
+        TurnManager.Instance.OnEnemyTurnInterruption -= ForceStopMyTurn;
+    }
 
     private void Start()
     {
@@ -91,17 +103,70 @@ public class BasicEnemy : MonoBehaviour
     {
         myAnimator.SetBool("Preparing", true);
         isPreparing = true;
+
+        transform.LookAt(CalculDestination());
     }
 
     void Attack()
     {
         myAnimator.SetTrigger("Attack");
+        myAnimator.SetBool("Preparing", false);
         CollisionAttack();
     }
 
     void CollisionAttack()
     {
-        playerControlleur.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy ,damage);
+        List<GameObject> _objsTouched = GetListOfObjsTouched();
+
+        foreach(GameObject _obj in _objsTouched)
+        {
+            _obj.GetComponent<DamageableEntity>().ReceiveDamage(DamageTag.Enemy, damage);
+        }
+    }
+
+    List<GameObject> GetListOfObjsTouched()
+    {
+        float angle = angleAttack;
+        float rayRange = attackRange;
+        float halfFOV = angle / 2.0f;
+
+        Quaternion upRayRotation = Quaternion.AngleAxis(-halfFOV, Vector3.up);
+        Quaternion downRayRotation = Quaternion.AngleAxis(halfFOV, Vector3.up);
+
+        Vector3 rightRayDirection = upRayRotation * transform.forward * rayRange;
+        Vector3 leftRayDirection = downRayRotation * transform.forward * rayRange;
+
+        List<GameObject> objTouched = new List<GameObject>();
+
+        RaycastHit[] hits;
+        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, transform.forward, attackRange, objCanBeAttecked);
+        foreach(RaycastHit hit in hits)
+        {
+            if (!objTouched.Contains(hit.collider.gameObject))
+            {
+                objTouched.Add(hit.collider.gameObject);
+            }
+        }
+
+        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, rightRayDirection, attackRange, objCanBeAttecked);
+        foreach (RaycastHit hit in hits)
+        {
+            if (!objTouched.Contains(hit.collider.gameObject))
+            {
+                objTouched.Add(hit.collider.gameObject);
+            }
+        }
+
+        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, transform.forward, attackRange, objCanBeAttecked);
+        foreach (RaycastHit hit in hits)
+        {
+            if (!objTouched.Contains(hit.collider.gameObject))
+            {
+                objTouched.Add(hit.collider.gameObject);
+            }
+        }
+
+        return objTouched;
     }
 
     bool CanAttack()
@@ -111,6 +176,12 @@ public class BasicEnemy : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    void ForceStopMyTurn()
+    {
+        StopAllCoroutines();
+        OnIsAtDestination?.Invoke();
     }
 
     private void OnDrawGizmos()

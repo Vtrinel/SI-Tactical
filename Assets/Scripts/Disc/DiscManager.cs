@@ -39,7 +39,7 @@ public class DiscManager : MonoBehaviour
 
     private void Update()
     {
-        foreach(DiscScript disc in discsUse)
+        foreach (DiscScript disc in discsUse)
         {
             disc.isInRange = (Vector3.Distance(player.position, disc.transform.position) < rangeOfPlayer);
         }
@@ -47,6 +47,7 @@ public class DiscManager : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if (!player) return;
         if (!showDebugGizmo) return;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(player.transform.position, rangeOfPlayer);

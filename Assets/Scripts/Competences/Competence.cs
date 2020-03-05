@@ -4,20 +4,22 @@ using UnityEngine;
 
 public class Competence : ScriptableObject
 {
-    [Header("Common")]
-    [SerializeField] string description = null;
+    [Header("Display")]
+    [SerializeField] string competenceName = null;
+    [SerializeField] string competenceDescription = null;
 
-    [SerializeField] Sprite image = null;
+    [SerializeField] Sprite competenceImage = null;
 
+    [Header("Common Parameters")]
     [SerializeField] int actionPointsCost = 1;
-    [SerializeField] int CompetencesPointNeeded = 1;
+
 
     [SerializeField] bool unlocked = false;
 
     public int GetActionPointsCost => actionPointsCost;
-    public int GetPointsCost => CompetencesPointNeeded;
-    public Sprite GetImage=> image;
-    public string Getdescription => description;
+    public Sprite GetCompetenceImage=> competenceImage;
+    public string GetCompetenceDescription => competenceDescription;
+    public string GetCompetenceName => competenceName;
     public bool GetUnlockedState => unlocked;
     public bool SetUnlockedState(bool state) => unlocked = state;
 }
