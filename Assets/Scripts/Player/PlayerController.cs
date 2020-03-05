@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        damageReceiptionSystem.SetUpSystem();
+        damageReceiptionSystem.SetUpSystem(true);
         navMeshAgent.isStopped = true;
     }
 
@@ -44,6 +44,9 @@ public class PlayerController : MonoBehaviour
             knockbackReceiptionSystem.ReceiveKnockback(DamageTag.Enemy, new KnockbackParameters(10, 0.08f, 0.2f), randomDir);
             Debug.DrawRay(transform.position + Vector3.up, randomDir * 3, Color.red);
         }
+
+        if (Input.GetKeyDown(KeyCode.D))
+            damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, 1);
 
         if (Input.GetMouseButtonDown(1))
         {
@@ -69,7 +72,7 @@ public class PlayerController : MonoBehaviour
         EffectZone newRageEffectZone = Instantiate(rageEffectZonePrefab);
         newRageEffectZone.StartZone(transform.position + Vector3.up * rageEffectZoneVerticalOffset);
 
-        TurnManager.Instance.InterruptEnemyTurn();
+        TurnManager.Instance.InterruptEnemiesTurn();
     }
 
     public void LifeReachedZero()

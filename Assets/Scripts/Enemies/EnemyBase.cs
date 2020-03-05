@@ -8,7 +8,7 @@ public class EnemyBase : MonoBehaviour
 {
     private void Start()
     {
-        damageReceiptionSystem.SetUpSystem();
+        damageReceiptionSystem.SetUpSystem(false);
         enemyRenderer.material = normalMaterial;
 
         SetUpInitiative();
