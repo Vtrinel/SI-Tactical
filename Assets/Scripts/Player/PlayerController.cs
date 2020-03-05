@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     {
         damageReceiptionSystem.SetUpSystem(true);
         navMeshAgent.isStopped = true;
+        positionStamp = transform.position;
     }
 
     private void Update()
@@ -35,6 +36,14 @@ public class PlayerController : MonoBehaviour
         if (ableToAct)
             UpdateInputs();
 
+        Vector3 currentPos = transform.position;
+        if (positionStamp != currentPos)
+        {
+            positionStamp = currentPos;
+            GameManager.Instance.OnPlayerPositionChanged?.Invoke(currentPos);
+        }
+
+        #region DEBUG
         if (Input.GetKeyDown(KeyCode.K))
         {
             Vector3 randomDir = Random.onUnitSphere;
@@ -53,6 +62,7 @@ public class PlayerController : MonoBehaviour
             EffectZone newEffectZone = Instantiate(test);
             newEffectZone.StartZone(GameManager.Instance.GetCurrentWorldMouseResult.mouseWorldPosition);
         }
+        #endregion
     }
 
     [Header("References")]
@@ -67,6 +77,9 @@ public class PlayerController : MonoBehaviour
 
     public void StartPlayerRage(int currentLife, int lifeDifferential)
     {
+        if (currentLife == 0)
+            return;
+
         Debug.Log("RAGE");
 
         EffectZone newRageEffectZone = Instantiate(rageEffectZonePrefab);
@@ -77,7 +90,7 @@ public class PlayerController : MonoBehaviour
 
     public void LifeReachedZero()
     {
-        Debug.Log("DEAD");
+        GameManager.Instance.LoseGame();
     }
 
     public void DebugLifeAmount(int amount)
@@ -126,7 +139,8 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Movement
-    bool moving;
+    Vector3 positionStamp = Vector3.zero;
+    bool moving = false;
     public void MoveTo(Vector3 targetPosition)
     {
         navMeshAgent.isStopped = false;

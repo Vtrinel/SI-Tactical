@@ -19,7 +19,7 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
     [SerializeField] Image lifeBar = default;
     [SerializeField] MeshRenderer enemyRenderer = default;
-    public void UpdateLifeBarFill(int currentAmount)
+    public void UpdateLifeBarFill(int currentAmount, int damageDelta)
     {
         lifeBar.fillAmount = damageReceiptionSystem.GetCurrentLifePercent;
     }
@@ -63,6 +63,11 @@ public class EnemyBase : MonoBehaviour
     public void EndTurn()
     {
         enemyRenderer.material = normalMaterial;
+
+        if(TurnManager.Instance.GetCurrentTurnState != TurnState.EnemyTurn)
+        {
+            return;
+        }
         TurnManager.Instance.EndEnemyTurn(this);
     }
 
@@ -103,7 +108,7 @@ public class EnemyBase : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.OnPlayerLifeAmountChanged += UpdateLifeBarFill;
+        damageReceiptionSystem.OnLifeAmountChanged += UpdateLifeBarFill;
         damageReceiptionSystem.OnLifeReachedZero += Die;
         TurnManager.Instance.OnEnemyTurnInterruption += InterruptAllAction;
 
@@ -114,7 +119,7 @@ public class EnemyBase : MonoBehaviour
 
     private void OnDisable()
     {
-        GameManager.Instance.OnPlayerLifeAmountChanged -= UpdateLifeBarFill;
+        damageReceiptionSystem.OnLifeAmountChanged -= UpdateLifeBarFill;
         damageReceiptionSystem.OnLifeReachedZero -= Die;
         TurnManager.Instance.OnEnemyTurnInterruption -= InterruptAllAction;
 
