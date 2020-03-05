@@ -10,8 +10,10 @@ public class BasicEnemy : MonoBehaviour
 
     [SerializeField] float distanceOfDeplacement;
     [SerializeField] float attackRange;
+    [SerializeField] int damage = 1;
 
     GameObject player;
+    PlayerController playerControlleur;
 
     Vector3 destination;
 
@@ -19,7 +21,8 @@ public class BasicEnemy : MonoBehaviour
 
     private void Start()
     {
-        player = GameManager.Instance.GetPlayer.gameObject;
+        playerControlleur = GameManager.Instance.GetPlayer;
+        player = playerControlleur.gameObject;
     }
 
     public void PlayerTurn()
@@ -65,6 +68,7 @@ public class BasicEnemy : MonoBehaviour
             {
                 Attack();
                 myNavAgent.isStopped = true;
+                print("sdfhhjf");
                 break;
             }
             yield return new WaitForSeconds(0.1f);
@@ -75,7 +79,7 @@ public class BasicEnemy : MonoBehaviour
 
     void Attack()
     {
-
+        playerControlleur.damageReceiptionSystem.LoseLife(damage);
     }
 
     bool CanAttack()

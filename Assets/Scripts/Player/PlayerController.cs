@@ -7,13 +7,23 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] EffectZone test = default;
 
+    private void OnEnable()
+    {
+        GameManager.Instance.OnPlayerLifeAmountChanged += DebugLifeAmount;
+        damageReceiptionSystem.OnLifeReachedZero += LifeReachedZero;
+        damageReceiptionSystem.OnReceivedDamages += StartPlayerRage;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.OnPlayerLifeAmountChanged -= DebugLifeAmount;
+        damageReceiptionSystem.OnLifeReachedZero -= LifeReachedZero;
+        damageReceiptionSystem.OnReceivedDamages -= StartPlayerRage;
+    }
+
     private void Start()
     {
         damageReceiptionSystem.SetUpSystem();
-        damageReceiptionSystem.OnCurrentLifeAmountChanged += DebugLifeAmount;
-        damageReceiptionSystem.OnLifeReachedZero += LifeReachedZero;
-        damageReceiptionSystem.OnReceivedDamages += StartPlayerRage;
-
         navMeshAgent.isStopped = true;
     }
 
@@ -44,7 +54,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] NavMeshAgent navMeshAgent = default;
-    [SerializeField] DamageableEntity damageReceiptionSystem = default;
+    public DamageableEntity damageReceiptionSystem = default;
     [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
 
     #region Life
@@ -67,7 +77,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("DEAD");
     }
 
-    public void DebugLifeAmount(int amount, int delta)
+    public void DebugLifeAmount(int amount)
     {
         Debug.Log("Current life : " + amount);
     }

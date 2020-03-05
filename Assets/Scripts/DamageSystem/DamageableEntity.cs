@@ -8,15 +8,11 @@ public class DamageableEntity : MonoBehaviour
     [SerializeField] DamageTag damageTag = default;
     public DamageTag GetDamageTag => damageTag;
 
-    [SerializeField] int maxLifeAmount = 10;
-    int currentLifeAmount;
+    int maxLifeAmount = 10;
+    [SerializeField] int currentLifeAmount;
     public int GetCurrentLifeAmount => currentLifeAmount;
     public float GetCurrentLifePercent => (float)currentLifeAmount / maxLifeAmount;
 
-    /// <summary>
-    /// First parameter is current life, second parameter is life differential
-    /// </summary>
-    public Action<int, int> OnCurrentLifeAmountChanged;
     /// <summary>
     /// First parameter is current life, second parameter is life differential
     /// </summary>
@@ -30,9 +26,9 @@ public class DamageableEntity : MonoBehaviour
 
     public void ResetLifeAmount()
     {
+        maxLifeAmount = GameManager.Instance.maxPlayerLifeAmount;
         currentLifeAmount = maxLifeAmount;
-
-        OnCurrentLifeAmountChanged?.Invoke(currentLifeAmount, 0);
+        GameManager.Instance.PlayerLifeChange(currentLifeAmount);
     }
 
     public void ReceiveDamage(DamageTag sourceDamageTag, int damageAmount)
@@ -51,7 +47,7 @@ public class DamageableEntity : MonoBehaviour
     public void LoseLife(int amount)
     {
         currentLifeAmount = Mathf.Clamp(currentLifeAmount - Mathf.Abs(amount), 0, maxLifeAmount);
-        OnCurrentLifeAmountChanged?.Invoke(currentLifeAmount, -Mathf.Abs(amount));
+        GameManager.Instance.PlayerLifeChange(currentLifeAmount);
 
         if (currentLifeAmount == 0)
             LifeReachedZero();
@@ -60,7 +56,7 @@ public class DamageableEntity : MonoBehaviour
     public void RegainLife(int amount)
     {
         currentLifeAmount = Mathf.Clamp(currentLifeAmount + Mathf.Abs(amount), 0, maxLifeAmount);
-        OnCurrentLifeAmountChanged?.Invoke(currentLifeAmount, Mathf.Abs(amount));
+        GameManager.Instance.PlayerLifeChange(currentLifeAmount);
     }
 
     public void LifeReachedZero()

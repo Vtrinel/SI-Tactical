@@ -9,9 +9,6 @@ public class EnemyBase : MonoBehaviour
     private void Start()
     {
         damageReceiptionSystem.SetUpSystem();
-        damageReceiptionSystem.OnCurrentLifeAmountChanged += UpdateLifeBarFill;
-        damageReceiptionSystem.OnLifeReachedZero += Die;
-
         enemyRenderer.material = normalMaterial;
 
         SetUpInitiative();
@@ -22,7 +19,7 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
     [SerializeField] Image lifeBar = default;
     [SerializeField] MeshRenderer enemyRenderer = default;
-    public void UpdateLifeBarFill(int currentAmount, int delta)
+    public void UpdateLifeBarFill(int currentAmount)
     {
         lifeBar.fillAmount = damageReceiptionSystem.GetCurrentLifePercent;
     }
@@ -93,14 +90,19 @@ public class EnemyBase : MonoBehaviour
 
     private void OnEnable()
     {
+        GameManager.Instance.OnPlayerLifeAmountChanged += UpdateLifeBarFill;
+        damageReceiptionSystem.OnLifeReachedZero += Die;
+
         if (myIA == null)
             return;
-
         myIA.OnIsAtDestination += EndTurn;
     }
 
     private void OnDisable()
     {
+        GameManager.Instance.OnPlayerLifeAmountChanged -= UpdateLifeBarFill;
+        damageReceiptionSystem.OnLifeReachedZero -= Die;
+
         if (myIA == null)
             return;
 
