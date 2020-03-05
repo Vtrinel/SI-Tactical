@@ -14,7 +14,7 @@ public class CompetencesUsabilityManager
     {
         if(IsPreparingCompetence)
         {
-            //Debug.Log("Preparing " + currentCompetenceType);
+            UpdatePreparation();
         }
     }
 
@@ -36,6 +36,8 @@ public class CompetencesUsabilityManager
 
     [SerializeField] CompetenceSpecial specialCompetence = default;
     public CompetenceSpecial GetSpecialCompetence => specialCompetence;
+
+    float maxDiscRange = 0;
 
     public void UpdateSet(CompetenceThrow throwComp, CompetenceRecall recallComp, CompetenceSpecial specialComp)
     {
@@ -126,8 +128,22 @@ public class CompetencesUsabilityManager
 
     public void ChangeUsabilityState(UsabilityState usabilityState, ActionType compType)
     {
+        if (usabilityState == UsabilityState.Preparing)
+            maxDiscRange = DiscManager.Instance.rangeOfPlayer;
+
+        if (currentUsabilityState == UsabilityState.Preparing)
+            EndPreparation();
+
         currentUsabilityState = usabilityState;
         currentCompetenceType = compType;
+
+        if (currentUsabilityState == UsabilityState.Preparing)
+            StartPreparation();
+
+        /*if (usabilityState == UsabilityState.Preparing && compType == ActionType.Recall)
+            PreviewCompetencesManager.Instance.StartRecallPreview(_player.transform.position);
+        else
+            PreviewCompetencesManager.Instance.EndRecallPreview();*/
 
         OnCompetenceStateChanged?.Invoke();
     }
@@ -146,12 +162,112 @@ public class CompetencesUsabilityManager
         ResetUsabilityState();
     }
 
+    #region Preparation
+    public void StartPreparation()
+    {
+        switch (currentCompetenceType)
+        {
+            case ActionType.Throw:
+                StartThrowPreparation();
+                break;
+            case ActionType.Recall:
+                StartRecallPreparation();
+                break;
+            case ActionType.Special:
+                break;
+        }
+    }
+
+    public void UpdatePreparation()
+    {
+        switch (currentCompetenceType)
+        {
+            case ActionType.Throw:
+                UpdateThrowPreparation();
+                break;
+            case ActionType.Recall:
+                UpdateRecallPreparation();
+                break;
+            case ActionType.Special:
+                break;
+        }
+    }
+
+    public void EndPreparation()
+    {
+        switch (currentCompetenceType)
+        {
+            case ActionType.Throw:
+                EndThrowPreparation();
+                break;
+            case ActionType.Recall:
+                EndRecallPreparation();
+                break;
+            case ActionType.Special:
+                break;
+        }
+    }
+
+    #region Throw Preparation
+    public void StartThrowPreparation()
+    {
+        Vector3 trueTargetPosition = GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition);
+        PreviewCompetencesManager.Instance.StartThrowPreview(_player.transform.position, trueTargetPosition);
+    }
+
+    public void UpdateThrowPreparation()
+    {
+        Vector3 trueTargetPosition = GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition);
+        PreviewCompetencesManager.Instance.UpdateThrowPreview(_player.transform.position, trueTargetPosition);
+    }
+
+    public void EndThrowPreparation()
+    {
+        PreviewCompetencesManager.Instance.EndThrowPreview();
+    }
+    #endregion
+
+    #region Recall Preparation
+    public void StartRecallPreparation()
+    {
+        PreviewCompetencesManager.Instance.StartRecallPreview(_player.transform.position);
+    }
+
+    public void UpdateRecallPreparation()
+    {
+    }
+
+    public void EndRecallPreparation()
+    {
+        PreviewCompetencesManager.Instance.EndRecallPreview();
+    }
+    #endregion
+
+    #endregion
+
+    #region Throw
+    public Vector3 GetInRangeThrowTargetPosition(Vector3 baseTargetPos)
+    {
+        Vector3 playerPos = _player.transform.position;
+        Vector3 trueTargetPos = baseTargetPos;
+        trueTargetPos.y = playerPos.y;
+
+        float distance = Vector3.Distance(trueTargetPos, playerPos);
+        if(distance > maxDiscRange)
+        {
+            Vector3 throwDirection = (trueTargetPos - playerPos).normalized;
+            trueTargetPos = playerPos + throwDirection * maxDiscRange;
+        }
+
+        return trueTargetPos;
+    }
+
     public void LaunchThrowCompetence()
     {
         CompetanceRequestInfo newCompetenceRequestInfo = new CompetanceRequestInfo();
         newCompetenceRequestInfo.startTransform = _player.transform;
         newCompetenceRequestInfo.startPosition = _player.transform.position + Vector3.up * DiscManager.crystalHeight;
-        newCompetenceRequestInfo.targetPosition = currentWorldMouseResult.mouseWorldPosition + Vector3.up * DiscManager.crystalHeight;
+        newCompetenceRequestInfo.targetPosition = GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition) + Vector3.up * DiscManager.crystalHeight;
 
         //Debug.Log("Throw knife at position " + newCompetenceRequestInfo.targetPosition);
         Debug.Log("Using throw competence : " + throwCompetence.GetCompetenceName);
@@ -162,6 +278,7 @@ public class CompetencesUsabilityManager
 
         ResetUsabilityState();
     }
+    #endregion
 
     public void LaunchRecallCompetence()
     {
