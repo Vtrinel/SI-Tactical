@@ -273,10 +273,11 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        //Debug.Log("EH");
         if (playerMovementsManager.IsWillingToMove)
         {
             int cost = playerMovementsManager.TryStartMovement(GetCurrentWorldMouseResult.mouseWorldPosition);
-            if (cost > 0)
+            if (cost > 0 && cost <= currentActionPointsAmount)
             {
                 CallUnselectActionEvent(ActionType.Move);
                 SetActionPointsDebugTextVisibility(false);
@@ -347,7 +348,7 @@ public class GameManager : MonoBehaviour
     public void UpdatePlayerActability()
     {
         bool canAct = 
-            !playerMovementsManager.IsUsingMoveSystem 
+            !playerMovementsManager.IsMoving 
             && 
             !competencesManager.IsUsingCompetence 
             && 

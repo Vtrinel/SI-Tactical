@@ -51,6 +51,7 @@ public class EnemyBase : MonoBehaviour
     [Header("Placeholder")]
     [SerializeField] Material normalMaterial = default;
     [SerializeField] Material activeMaterial = default;
+    [SerializeField] bool willAttackPlayerDebug = false;
     public void StartTurn()
     {
         Debug.Log(name + "' turn");
@@ -65,11 +66,10 @@ public class EnemyBase : MonoBehaviour
         TurnManager.Instance.EndEnemyTurn(this);
     }
 
-    public void InterruptTurn()
+    public void InterruptAllAction()
     {
-        Debug.Log("Interrupt " + name + "'s Turn");
-        EndTurn();
-        //throw new NotImplementedException();
+        Debug.Log("Interrupt " + name + "'s actions");
+        // TO DO : interrupt action of the linked AI, without calling EndTurn 
     }
     #endregion
 
@@ -86,12 +86,26 @@ public class EnemyBase : MonoBehaviour
 
         myIA.PlayerTurn();
     }
+
+    IEnumerator DebugCoroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        if (willAttackPlayerDebug)
+        {
+            GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, 1);
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        EndTurn();
+    }
     #endregion
 
     private void OnEnable()
     {
         GameManager.Instance.OnPlayerLifeAmountChanged += UpdateLifeBarFill;
         damageReceiptionSystem.OnLifeReachedZero += Die;
+        TurnManager.Instance.OnEnemyTurnInterruption += InterruptAllAction;
 
         if (myIA == null)
             return;
@@ -102,6 +116,7 @@ public class EnemyBase : MonoBehaviour
     {
         GameManager.Instance.OnPlayerLifeAmountChanged -= UpdateLifeBarFill;
         damageReceiptionSystem.OnLifeReachedZero -= Die;
+        TurnManager.Instance.OnEnemyTurnInterruption -= InterruptAllAction;
 
         if (myIA == null)
             return;

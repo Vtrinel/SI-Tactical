@@ -58,7 +58,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7cb20c1ea50103a4381f01299a09b8dc, type: 2}
+  - {fileID: 2100000, guid: 497f0bc1351f48940a8d84c90b1c04ac, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 2679825475301777188}
   - component: {fileID: 2679825475301777187}
   m_Layer: 0
-  m_Name: TestZone
+  m_Name: TestZonePlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -134,8 +134,38 @@ MonoBehaviour:
   damaging: 1
   damageAmount: 1
   knockbacking: 1
-  knockbackParameters:
-    knockbackForce: 10
+  maxKnockbackParameters:
+    knockbackForce: 20
     knockbackDuration: 0.05
     knockbackAttenuationDuration: 0.2
+  maxKnockbackDistance: 2
+  minKnockbackParameters:
+    knockbackForce: 5
+    knockbackDuration: 0.05
+    knockbackAttenuationDuration: 0.2
+  minKnockbackDistance: 5
+  knockbackDependingOnDistanceAttenuationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   debugZoneRenderer: {fileID: 2679825475115409010}
