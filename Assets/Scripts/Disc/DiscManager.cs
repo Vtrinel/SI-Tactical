@@ -35,13 +35,20 @@ public class DiscManager : MonoBehaviour
     private void Start()
     {
         player = GameManager.Instance.GetPlayer.transform;
+
+        /*recallZonePreview = Instantiate(recallZonePreviewPrefab);
+        recallZonePreview.SetActive(false);*/
     }
 
     private void Update()
     {
+        Vector3 playerPos = player.position;
         foreach (DiscScript disc in discsUse)
         {
-            disc.isInRange = (Vector3.Distance(player.position, disc.transform.position) < rangeOfPlayer);
+            Vector3 discPosHorizontalyWithPlayer = disc.transform.position;
+            discPosHorizontalyWithPlayer.y = playerPos.y;
+
+            disc.isInRange = (Vector3.Distance(playerPos, discPosHorizontalyWithPlayer) <= rangeOfPlayer);
         }
     }
 
@@ -82,4 +89,28 @@ public class DiscManager : MonoBehaviour
     {
         return discsUse;
     }
+
+    /*#region Recall Preview
+    [Header("Preview")]
+    [SerializeField] GameObject recallZonePreviewPrefab = default;
+    GameObject recallZonePreview = default;
+
+    public void StartRecallPreview(Vector3 recallPosition)
+    {
+        recallZonePreview.SetActive(true);
+        recallZonePreview.transform.localScale = Vector3.one * rangeOfPlayer;
+
+        UpdateRecallPreview(recallPosition);
+    }
+
+    public void UpdateRecallPreview(Vector3 recallPosition)
+    {
+        recallZonePreview.transform.position = recallPosition;
+    }
+
+    public void EndRecallPreview()
+    {
+        recallZonePreview.SetActive(false);
+    }
+    #endregion*/
 }
