@@ -94,7 +94,7 @@ public class TurnManager : MonoBehaviour
         StartCoroutine("BetweenTurnsCoroutine");
     }
 
-    public void InterruptEnemyTurn()
+    public void InterruptEnemiesTurn()
     {
         currentEnemiesTurnCounter = orderedInGameEnemies.Count;
         if (currentTurnEnemy != null)

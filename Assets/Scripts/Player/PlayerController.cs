@@ -7,13 +7,23 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] EffectZone test = default;
 
-    private void Start()
+    private void OnEnable()
     {
-        damageReceiptionSystem.SetUpSystem();
-        damageReceiptionSystem.OnCurrentLifeAmountChanged += DebugLifeAmount;
+        GameManager.Instance.OnPlayerLifeAmountChanged += DebugLifeAmount;
         damageReceiptionSystem.OnLifeReachedZero += LifeReachedZero;
         damageReceiptionSystem.OnReceivedDamages += StartPlayerRage;
+    }
 
+    private void OnDisable()
+    {
+        GameManager.Instance.OnPlayerLifeAmountChanged -= DebugLifeAmount;
+        damageReceiptionSystem.OnLifeReachedZero -= LifeReachedZero;
+        damageReceiptionSystem.OnReceivedDamages -= StartPlayerRage;
+    }
+
+    private void Start()
+    {
+        damageReceiptionSystem.SetUpSystem(true);
         navMeshAgent.isStopped = true;
     }
 
@@ -35,6 +45,9 @@ public class PlayerController : MonoBehaviour
             Debug.DrawRay(transform.position + Vector3.up, randomDir * 3, Color.red);
         }
 
+        if (Input.GetKeyDown(KeyCode.D))
+            damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, 1);
+
         if (Input.GetMouseButtonDown(1))
         {
             EffectZone newEffectZone = Instantiate(test);
@@ -44,7 +57,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] NavMeshAgent navMeshAgent = default;
-    [SerializeField] DamageableEntity damageReceiptionSystem = default;
+    public DamageableEntity damageReceiptionSystem = default;
     [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
 
     #region Life
@@ -59,7 +72,7 @@ public class PlayerController : MonoBehaviour
         EffectZone newRageEffectZone = Instantiate(rageEffectZonePrefab);
         newRageEffectZone.StartZone(transform.position + Vector3.up * rageEffectZoneVerticalOffset);
 
-        TurnManager.Instance.InterruptEnemyTurn();
+        TurnManager.Instance.InterruptEnemiesTurn();
     }
 
     public void LifeReachedZero()
@@ -67,7 +80,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("DEAD");
     }
 
-    public void DebugLifeAmount(int amount, int delta)
+    public void DebugLifeAmount(int amount)
     {
         Debug.Log("Current life : " + amount);
     }

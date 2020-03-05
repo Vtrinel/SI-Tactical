@@ -19,7 +19,8 @@ public class EffectZone : MonoBehaviour
     [SerializeField] bool damaging = false;
     [SerializeField] int damageAmount = 1;
     [SerializeField] bool knockbacking = false;
-    [SerializeField] KnockbackParameters knockbackParameters = new KnockbackParameters();
+    [SerializeField] KnockbackParameters minDistanceKnockbackParameters = new KnockbackParameters();
+    [SerializeField] KnockbackParameters maxDistanceKnockbackParameters = new KnockbackParameters();
 
     [Header("Debug")]
     [SerializeField] MeshRenderer debugZoneRenderer = default;
@@ -81,7 +82,7 @@ public class EffectZone : MonoBehaviour
                     knockbackDirection.y = 0;
                     knockbackDirection.Normalize();
 
-                    hitKnockable.ReceiveKnockback(sourceTag, knockbackParameters, knockbackDirection);
+                    hitKnockable.ReceiveKnockback(sourceTag, minDistanceKnockbackParameters, knockbackDirection);
                 }
             }
         }
