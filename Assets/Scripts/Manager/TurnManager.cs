@@ -75,7 +75,7 @@ public class TurnManager : MonoBehaviour
 
     public void StartEnemyTurn(EnemyBase enemy)
     {
-        enemy.StartDebugTurn();
+        enemy.StartTurn();
     }
 
     public void EndEnemyTurn(EnemyBase enemy)
