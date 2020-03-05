@@ -11,8 +11,10 @@ public class DiscManager : MonoBehaviour
 
     public static float crystalHeight = 1f;
 
-    public float rangeOgPlayer = 5;
+    public float rangeOfPlayer = 5;
     Transform player;
+
+    [SerializeField] bool showDebugGizmo = false;
 
 
     private static DiscManager _instance;
@@ -37,10 +39,20 @@ public class DiscManager : MonoBehaviour
 
     private void Update()
     {
-        foreach(DiscScript disc in discsUse)
+        foreach (DiscScript disc in discsUse)
         {
-            disc.isInRange = (Vector3.Distance(player.position, disc.transform.position) < 7);
+            disc.isInRange = (Vector3.Distance(player.position, disc.transform.position) < rangeOfPlayer);
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!player) return;
+        if (!showDebugGizmo) return;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(player.transform.position, rangeOfPlayer);
+        Gizmos.color = new Color(Color.red.r, Color.red.g, Color.red.b, 0.35f);
+        Gizmos.DrawSphere(player.transform.position, rangeOfPlayer);
     }
 
     public GameObject GetCrystal()
