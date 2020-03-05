@@ -183,10 +183,10 @@ GameObject:
   m_Component:
   - component: {fileID: 6817484857812127643}
   - component: {fileID: 2856969832363405175}
-  - component: {fileID: 1554477736563382166}
   - component: {fileID: 8030675917091118892}
   - component: {fileID: 7300530026638147795}
   - component: {fileID: 8130454188064962252}
+  - component: {fileID: 4078095755978816970}
   m_Layer: 11
   m_Name: Gold Disc
   m_TagString: Untagged
@@ -226,26 +226,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &1554477736563382166
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6817484857811702715}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 388827f72521ba044a5d93d9854605f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  myRigidBody: {fileID: 2856969832363405175}
-  myCollider: {fileID: 8030675917091118892}
-  myAnimator: {fileID: 7300530026638147795}
-  currentDamagesAmount: 1
-  speed: 30
-  rotaSpeed: 0.1
-  isAttacking: 0
-  isInRange: 0
 --- !u!136 &8030675917091118892
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -292,6 +272,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotaVector: {x: 0, y: 1, z: 0}
+--- !u!114 &4078095755978816970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6817484857811702715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd1983ce8b91a6f4096b5ba0ae544260, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myRigidBody: {fileID: 2856969832363405175}
+  myCollider: {fileID: 8030675917091118892}
+  myAnimator: {fileID: 7300530026638147795}
+  speed: 25
+  rotaSpeed: 3
+  isAttacking: 0
+  isInRange: 1
 --- !u!1001 &2880536627148159804
 PrefabInstance:
   m_ObjectHideFlags: 0

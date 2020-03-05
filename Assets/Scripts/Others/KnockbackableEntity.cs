@@ -7,16 +7,23 @@ public class KnockbackableEntity : MonoBehaviour
     [Header("Main")]
     [SerializeField] Transform transformToMove = default;
     [SerializeField] AnimationCurve knockbackAttenuationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    [SerializeField] DamageTag damageTag = DamageTag.Player;
 
     float currentStartKnockbackForce = 0;
     float currentKnockbackForce = 0;
 
-    TimerSystem knockbackDurationSystem = new TimerSystem(0, null);
-    TimerSystem knockbackAttenuationDurationSystem = new TimerSystem(0, null);
+    TimerSystem knockbackDurationSystem = new TimerSystem();
+    TimerSystem knockbackAttenuationDurationSystem = new TimerSystem();
 
     Vector3 currentKnockbackDirection = Vector3.forward;
-    public void ReceiveKnockback(KnockbackParameters knockbackParams, Vector3 dir)
+    public void ReceiveKnockback(DamageTag knockbackTag, KnockbackParameters knockbackParams, Vector3 dir)
     {
+        if (knockbackTag != DamageTag.Environment && knockbackTag == damageTag)
+            return;
+
+        if (knockbackParams.IsNull)
+            return;
+
         currentStartKnockbackForce = knockbackParams.knockbackForce;
         currentKnockbackForce = currentStartKnockbackForce;
 
@@ -62,8 +69,19 @@ public struct KnockbackParameters
         knockbackAttenuationDuration = attenuationDuration;
     }
 
+    public static KnockbackParameters Lerp(KnockbackParameters a, KnockbackParameters b, float coeff)
+    {
+        return new KnockbackParameters(
+            Mathf.Lerp(a.knockbackForce, b.knockbackForce, coeff),
+            Mathf.Lerp(a.knockbackDuration, b.knockbackDuration, coeff),
+            Mathf.Lerp(a.knockbackAttenuationDuration, b.knockbackAttenuationDuration, coeff)
+            );
+    }
+
     public float knockbackForce;
     public float knockbackDuration;
     public float knockbackAttenuationDuration;
+
+    public bool IsNull => knockbackForce == 0 || (knockbackDuration == 0 && knockbackAttenuationDuration == 0);
 }
 

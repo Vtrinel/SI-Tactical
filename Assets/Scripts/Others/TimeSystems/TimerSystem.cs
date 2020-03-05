@@ -19,6 +19,11 @@ public class TimerSystem
     int remainingIterations;
 
     #region Initialization
+    public TimerSystem()
+    {
+        duration = 1;
+    }
+
     public TimerSystem(float _duration, System.Action onTimerEnded)
     {
         duration = _duration;

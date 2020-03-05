@@ -19,6 +19,7 @@ public class EnemyBase : MonoBehaviour
 
     [Header("References")]
     [SerializeField] DamageableEntity damageReceiptionSystem = default;
+    [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
     [SerializeField] Image lifeBar = default;
     [SerializeField] MeshRenderer enemyRenderer = default;
     public void UpdateLifeBarFill(int currentAmount, int delta)
@@ -47,34 +48,62 @@ public class EnemyBase : MonoBehaviour
 
         setedUpInitiative = true;
         enemyInstanceInitiative = baseInitiative + UnityEngine.Random.Range(0f, 1f);
-
-        //Debug.Log(name + "'s initiative : " + enemyInstanceInitiative);
     }
 
     #region Placeholder
     [Header("Placeholder")]
     [SerializeField] Material normalMaterial = default;
     [SerializeField] Material activeMaterial = default;
-    public void StartDebugTurn()
+    public void StartTurn()
     {
         Debug.Log(name + "' turn");
-
         enemyRenderer.material = activeMaterial;
 
-        StartCoroutine("DebugTurn");
+        PlayMyTurn();
     }
 
-    public void EndDebugTurn()
+    public void EndTurn()
     {
         enemyRenderer.material = normalMaterial;
-
         TurnManager.Instance.EndEnemyTurn(this);
     }
 
-    IEnumerator DebugTurn()
+    public void InterruptTurn()
     {
-        yield return new WaitForSeconds(0.5f);
-        EndDebugTurn();
+        Debug.Log("Interrupt " + name + "'s Turn");
+        EndTurn();
+        //throw new NotImplementedException();
     }
     #endregion
+
+
+    #region IA
+    [Header("IA")]
+
+    [SerializeField] BasicEnemy myIA = default;
+
+    void PlayMyTurn()
+    {
+        if (myIA == null)
+            return;
+
+        myIA.PlayerTurn();
+    }
+    #endregion
+
+    private void OnEnable()
+    {
+        if (myIA == null)
+            return;
+
+        myIA.OnIsAtDestination += EndTurn;
+    }
+
+    private void OnDisable()
+    {
+        if (myIA == null)
+            return;
+
+        myIA.OnIsAtDestination -= EndTurn;
+    }
 }

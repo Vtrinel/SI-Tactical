@@ -59,6 +59,7 @@ public class TurnManager : MonoBehaviour
     }
 
     int currentEnemiesTurnCounter = 0;
+    EnemyBase currentTurnEnemy = default;
     public void StartEnemiesTurn()
     {
         currentEnemiesTurnCounter = 0;
@@ -75,11 +76,13 @@ public class TurnManager : MonoBehaviour
 
     public void StartEnemyTurn(EnemyBase enemy)
     {
-        enemy.StartDebugTurn();
+        currentTurnEnemy = enemy;
+        enemy.StartTurn();
     }
 
     public void EndEnemyTurn(EnemyBase enemy)
     {
+        currentTurnEnemy = null;
         currentEnemiesTurnCounter++;
 
         if (currentEnemiesTurnCounter == orderedInGameEnemies.Count)
@@ -89,6 +92,15 @@ public class TurnManager : MonoBehaviour
         }
 
         StartCoroutine("BetweenTurnsCoroutine");
+    }
+
+    public void InterruptEnemyTurn()
+    {
+        currentEnemiesTurnCounter = orderedInGameEnemies.Count;
+        if (currentTurnEnemy != null)
+        {
+            currentTurnEnemy.InterruptTurn();
+        }
     }
 
     public void EndEnemiesTurn()

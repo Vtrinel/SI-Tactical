@@ -17,6 +17,10 @@ public class DamageableEntity : MonoBehaviour
     /// First parameter is current life, second parameter is life differential
     /// </summary>
     public Action<int, int> OnCurrentLifeAmountChanged;
+    /// <summary>
+    /// First parameter is current life, second parameter is life differential
+    /// </summary>
+    public Action<int, int> OnReceivedDamages;
     public Action OnLifeReachedZero;
 
     public void SetUpSystem()
@@ -29,6 +33,19 @@ public class DamageableEntity : MonoBehaviour
         currentLifeAmount = maxLifeAmount;
 
         OnCurrentLifeAmountChanged?.Invoke(currentLifeAmount, 0);
+    }
+
+    public void ReceiveDamage(DamageTag sourceDamageTag, int damageAmount)
+    {
+        if (sourceDamageTag != DamageTag.Environment && sourceDamageTag == damageTag)
+            return;
+
+        if (damageAmount == 0)
+            return;
+
+        LoseLife(damageAmount);
+
+        OnReceivedDamages?.Invoke(currentLifeAmount, -Mathf.Abs(damageAmount));
     }
 
     public void LoseLife(int amount)
