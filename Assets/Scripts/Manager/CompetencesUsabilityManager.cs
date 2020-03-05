@@ -68,9 +68,28 @@ public class CompetencesUsabilityManager
 
     public ActionSelectionResult TrySelectAction(int totalActionPoints, ActionType compType)
     {
-        ActionSelectionResult hasEnoughAPResult = HasEnoughActionPoints(totalActionPoints, compType);
+        ActionSelectionResult trySelectResult = HasEnoughActionPoints(totalActionPoints, compType);
 
-        switch (hasEnoughAPResult)
+        if (trySelectResult == ActionSelectionResult.EnoughActionPoints)
+        {
+            if (compType == ActionType.Throw)
+            {
+                if (DiscManager.Instance.GetPossessedDiscsCount == 0)
+                {
+                    trySelectResult = ActionSelectionResult.NotEnoughDiscs;
+                }
+            }
+            else if (compType == ActionType.Recall)
+            {
+                if (DiscManager.Instance.GetNearbyDiscsCount == 0)
+                {
+                    trySelectResult = ActionSelectionResult.NoNearbyDisc;
+                }
+            }
+
+        }
+
+        switch (trySelectResult)
         {
             case ActionSelectionResult.EnoughActionPoints:
                 ChangeUsabilityState(UsabilityState.Preparing, compType);
@@ -83,9 +102,17 @@ public class CompetencesUsabilityManager
             case ActionSelectionResult.NoCompetenceFound:
                 Debug.LogWarning("WARNING : " + compType + " not found.");
                 break;
+
+            case ActionSelectionResult.NotEnoughDiscs:
+                Debug.Log("Not enough possessed discs for " + compType);
+                break;
+
+            case ActionSelectionResult.NoNearbyDisc:
+                Debug.Log("Not nearby discs for " + compType);
+                break;
         }
 
-        return hasEnoughAPResult;
+        return trySelectResult;
     }
 
     public int GetCompetenceActionPointsCost(ActionType compType)
@@ -139,11 +166,6 @@ public class CompetencesUsabilityManager
 
         if (currentUsabilityState == UsabilityState.Preparing)
             StartPreparation();
-
-        /*if (usabilityState == UsabilityState.Preparing && compType == ActionType.Recall)
-            PreviewCompetencesManager.Instance.StartRecallPreview(_player.transform.position);
-        else
-            PreviewCompetencesManager.Instance.EndRecallPreview();*/
 
         OnCompetenceStateChanged?.Invoke();
     }
@@ -266,15 +288,16 @@ public class CompetencesUsabilityManager
     {
         CompetanceRequestInfo newCompetenceRequestInfo = new CompetanceRequestInfo();
         newCompetenceRequestInfo.startTransform = _player.transform;
-        newCompetenceRequestInfo.startPosition = _player.transform.position + Vector3.up * DiscManager.crystalHeight;
-        newCompetenceRequestInfo.targetPosition = GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition) + Vector3.up * DiscManager.crystalHeight;
+        newCompetenceRequestInfo.startPosition = _player.transform.position + Vector3.up * DiscManager.discHeight;
+        newCompetenceRequestInfo.targetPosition = GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition) + Vector3.up * DiscManager.discHeight;
 
         //Debug.Log("Throw knife at position " + newCompetenceRequestInfo.targetPosition);
         Debug.Log("Using throw competence : " + throwCompetence.GetCompetenceName);
 
-        GameObject newCrystal = DiscManager.Instance.GetCrystal();
-        newCrystal.GetComponent<DiscScript>().AttackHere(newCompetenceRequestInfo.startTransform, newCompetenceRequestInfo.targetPosition);
-        newCrystal.SetActive(true);
+        DiscScript newDisc = DiscManager.Instance.TakeFirstDiscFromPossessedDiscs();
+        newDisc.AttackHere(newCompetenceRequestInfo.startTransform, newCompetenceRequestInfo.targetPosition);
+        newDisc.gameObject.SetActive(true);
+        DiscManager.Instance.AddDiscToThrown(newDisc);
 
         ResetUsabilityState();
     }
@@ -289,7 +312,7 @@ public class CompetencesUsabilityManager
         //Debug.Log("Recall knife at position " + newCompetenceRequestInfo.targetPosition);
         Debug.Log("Using recall competence : " + recallCompetence.GetCompetenceName);
 
-        foreach (DiscScript disc in DiscManager.Instance.GetAllCrystalUse())
+        foreach (DiscScript disc in DiscManager.Instance.GetNearbyDiscs)
         {
             disc.RecallCrystal(newCompetenceRequestInfo.targetTransform);
         }

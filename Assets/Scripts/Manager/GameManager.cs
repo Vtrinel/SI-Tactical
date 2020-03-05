@@ -403,5 +403,5 @@ public struct WorldMouseResult
 
 public enum ActionSelectionResult
 {
-    EnoughActionPoints, NotEnoughActionPoints, NoCompetenceFound
+    EnoughActionPoints, NotEnoughActionPoints, NoCompetenceFound, NotEnoughDiscs, NoNearbyDisc
 }
