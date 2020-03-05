@@ -19,6 +19,7 @@ public class EnemyBase : MonoBehaviour
 
     [Header("References")]
     [SerializeField] DamageableEntity damageReceiptionSystem = default;
+    [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
     [SerializeField] Image lifeBar = default;
     [SerializeField] MeshRenderer enemyRenderer = default;
     public void UpdateLifeBarFill(int currentAmount, int delta)
@@ -47,8 +48,6 @@ public class EnemyBase : MonoBehaviour
 
         setedUpInitiative = true;
         enemyInstanceInitiative = baseInitiative + UnityEngine.Random.Range(0f, 1f);
-
-        //Debug.Log(name + "'s initiative : " + enemyInstanceInitiative);
     }
 
     #region Placeholder
@@ -79,17 +78,26 @@ public class EnemyBase : MonoBehaviour
 
     void PlayMyTurn()
     {
+        if (myIA == null)
+            return;
+
         myIA.PlayerTurn();
     }
     #endregion
 
     private void OnEnable()
     {
+        if (myIA == null)
+            return;
+
         myIA.OnIsAtDestination += EndTurn;
     }
 
     private void OnDisable()
     {
+        if (myIA == null)
+            return;
+
         myIA.OnIsAtDestination -= EndTurn;
     }
 
