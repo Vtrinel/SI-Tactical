@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: M_TestUnlit 1
+  m_Shader: {fileID: 4800000, guid: 2a948b397abdced418c1bef743aab7e8, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Noise:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _T_MaskShadow_M:
+        m_Texture: {fileID: 2800000, guid: 4c6c41bb026f22a448fe36d01c870f58, type: 3}
+        m_Scale: {x: 2, y: 2}
+        m_Offset: {x: 0, y: 0}
+    - _TextureSample0:
+        m_Texture: {fileID: 2800000, guid: e38fd99574a9fdb43850705fef5d2d04, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _ASEOutlineWidth: 0
+    - _ShadowMaskIntensity: 1.03
+    - _ShadowOpacity: 0.901
+    - _ShadowStep: 0.054
+    - _SmoothShadowMax: 0.11
+    - _SmoothShadowMin: 0.1
+    - _TextureShadow: 2.28
+    - _Tilling: 1.47
+    - __dirty: 0
+    m_Colors:
+    - _ASEOutlineColor: {r: 0, g: 0, b: 0, a: 0}
+    - _Color: {r: 0.990566, g: 0.6961997, b: 0.6961997, a: 0}
+    - _Emlissive: {r: 0, g: 0, b: 0, a: 0}
+    - _ShadowAttenuation: {r: 0, g: 0, b: 0, a: 0}
+    - _Shadow_Color: {r: 0.049127806, g: 0.06800665, b: 0.1509434, a: 0}

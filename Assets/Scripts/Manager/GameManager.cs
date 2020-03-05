@@ -137,6 +137,17 @@ public class GameManager : MonoBehaviour
     public Action<bool> OnRecallCompetenceSelectionStateChanged;
     public Action<bool> OnSpecialCompetenceSelectionStateChanged;
 
+    public Action<int> OnPlayerLifeAmountChanged;
+    public int maxPlayerLifeAmount = 3;
+    [SerializeField] int currentPlayerLifeAmount;
+    public int GetCurrentPlayerLifeAmount => currentPlayerLifeAmount;
+
+    public void PlayerLifeChange(int value)
+    {
+        currentPlayerLifeAmount = value;
+        OnPlayerLifeAmountChanged?.Invoke(value);
+    }
+
     #region Mouse World Result
     [Header("Mouse World Result")]
     [SerializeField] LayerMask worldMouseLayerMask = default;
@@ -262,10 +273,11 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        //Debug.Log("EH");
         if (playerMovementsManager.IsWillingToMove)
         {
             int cost = playerMovementsManager.TryStartMovement(GetCurrentWorldMouseResult.mouseWorldPosition);
-            if (cost > 0)
+            if (cost > 0 && cost <= currentActionPointsAmount)
             {
                 CallUnselectActionEvent(ActionType.Move);
                 SetActionPointsDebugTextVisibility(false);
@@ -336,7 +348,7 @@ public class GameManager : MonoBehaviour
     public void UpdatePlayerActability()
     {
         bool canAct = 
-            !playerMovementsManager.IsUsingMoveSystem 
+            !playerMovementsManager.IsMoving 
             && 
             !competencesManager.IsUsingCompetence 
             && 
