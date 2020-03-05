@@ -110,6 +110,7 @@ public class BasicEnemy : MonoBehaviour
     void Attack()
     {
         myAnimator.SetTrigger("Attack");
+        myAnimator.SetBool("Preparing", false);
         CollisionAttack();
     }
 
