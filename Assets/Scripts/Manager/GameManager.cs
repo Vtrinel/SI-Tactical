@@ -29,9 +29,15 @@ public class GameManager : MonoBehaviour
 
         player.OnPlayerReachedMovementDestination += UpdatePlayerActability;
 
-        UpdatePlayerActability();
-
         ResetActionPointsCount();
+
+        turnManager.OnStartPlayerTurn += StartPlayerTurn;
+        turnManager.OnEndPlayerTurn += EndPlayerTurn;
+
+        turnManager.StartPlayerTurn();
+
+        enemiesManager.OnInGameEnemiesChanged += turnManager.RefreshEnemyList;
+        enemiesManager.GetAllAlreadyPlacedEnemies();
     }
 
     private void Update()
@@ -50,16 +56,26 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Turn Management
-    public void OnStartPlayerTurn()
+    public void StartPlayerTurn()
     {
         ResetActionPointsCount();
         playerMovementsManager.ResetActionPointsUsedThisTurn();
+        UpdatePlayerActability();
+    }
+
+    public void EndPlayerTurn()
+    {
+        SelectAction(ActionType.None);
+        UpdatePlayerActability();
     }
     #endregion
 
     [Header("Important References")]
     [SerializeField] PlayerController player = default;
     public PlayerController GetPlayer => player;
+
+    [SerializeField] TurnManager turnManager = default;
+    [SerializeField] EnemiesManager enemiesManager = default;
 
     public bool OnMouseInUI = false;
 
@@ -71,7 +87,7 @@ public class GameManager : MonoBehaviour
     #region Action Points
     [Header("Action Points")]
     public int maxActionPointsAmount = 10;
-    int currentActionPointsAmount;
+    [SerializeField] int currentActionPointsAmount;
     public int GetCurrentActionPointsAmount => currentActionPointsAmount;
 
     public System.Action<int> OnActionPointsAmountChanged;
@@ -121,6 +137,17 @@ public class GameManager : MonoBehaviour
     public Action<bool> OnRecallCompetenceSelectionStateChanged;
     public Action<bool> OnSpecialCompetenceSelectionStateChanged;
 
+    public Action<int> OnPlayerLifeAmountChanged;
+    public int maxPlayerLifeAmount = 3;
+    [SerializeField] int currentPlayerLifeAmount;
+    public int GetCurrentPlayerLifeAmount => currentPlayerLifeAmount;
+
+    public void PlayerLifeChange(int value)
+    {
+        currentPlayerLifeAmount = value;
+        OnPlayerLifeAmountChanged?.Invoke(value);
+    }
+
     #region Mouse World Result
     [Header("Mouse World Result")]
     [SerializeField] LayerMask worldMouseLayerMask = default;
@@ -153,6 +180,8 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        result.mouseIsOnUI = OnMouseInUI;
+
         return result;
     }
 
@@ -162,6 +191,21 @@ public class GameManager : MonoBehaviour
     #region Player Inputs Reception
     public void SelectAction(ActionType actionType)
     {
+        if (actionType == ActionType.None)
+        {
+            if (competencesManager.IsPreparingCompetence)
+            {
+                CallUnselectActionEvent(competencesManager.GetCurrentCompetenceType);
+                competencesManager.InterruptPreparation();
+            }
+
+            if (playerMovementsManager.IsWillingToMove)
+            {
+                CallUnselectActionEvent(ActionType.Move);
+                playerMovementsManager.InterruptMovementPreparation();
+            }
+        }
+
         if (actionType == ActionType.Move)
         {
             if (competencesManager.IsPreparingCompetence)
@@ -172,6 +216,12 @@ public class GameManager : MonoBehaviour
 
             if (!playerMovementsManager.IsWillingToMove)
             {
+                if(currentActionPointsAmount == 0)
+                {
+                    Debug.Log("Not enough AP to move");
+                    return;
+                }
+
                 CallSelectActionEvent(ActionType.Move);
                 playerMovementsManager.GenerateDistancesPerActionPoints(currentActionPointsAmount);
                 playerMovementsManager.StartMovementPreparation();
@@ -217,10 +267,17 @@ public class GameManager : MonoBehaviour
 
     public void OnPlayerClickAction()
     {
+        if (OnMouseInUI)
+        {
+            Debug.Log("Avoided action validation because mouse is on UI");
+            return;
+        }
+
+        //Debug.Log("EH");
         if (playerMovementsManager.IsWillingToMove)
         {
             int cost = playerMovementsManager.TryStartMovement(GetCurrentWorldMouseResult.mouseWorldPosition);
-            if (cost > 0)
+            if (cost > 0 && cost <= currentActionPointsAmount)
             {
                 CallUnselectActionEvent(ActionType.Move);
                 SetActionPointsDebugTextVisibility(false);
@@ -290,7 +347,14 @@ public class GameManager : MonoBehaviour
 
     public void UpdatePlayerActability()
     {
-        player.SetAbleToAct(!playerMovementsManager.IsUsingMoveSystem && !competencesManager.IsUsingCompetence);
+        bool canAct = 
+            !playerMovementsManager.IsMoving 
+            && 
+            !competencesManager.IsUsingCompetence 
+            && 
+            turnManager.GetCurrentTurnState == TurnState.PlayerTurn;
+
+        player.SetAbleToAct(canAct);
         SetActionPointsDebugTextVisibility(playerMovementsManager.IsWillingToMove || competencesManager.IsPreparingCompetence);
     }
     #endregion
@@ -309,6 +373,7 @@ public enum UsabilityState
 public struct WorldMouseResult
 {
     public Vector3 mouseWorldPosition;
+    public bool mouseIsOnUI;
 }
 
 public enum ActionSelectionResult

@@ -8,16 +8,28 @@ public class HealthBar : MonoBehaviour
 
     private int maxHealth;
 
-    private int currentHealth;
+    [SerializeField] int currentHealth;
 
     public GameObject healthPoint;
 
     List<GameObject> allLifeBarElement = new List<GameObject>();
 
+    private void OnEnable()
+    {
+        GameManager.Instance.OnPlayerLifeAmountChanged += UpdateLifeBar;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.OnPlayerLifeAmountChanged -= UpdateLifeBar;
+    }
+
+
+
     void Start()
     {
-        maxHealth = UIManager.Instance.maxHealth;
-        currentHealth = UIManager.Instance.currentHealth;
+        maxHealth = GameManager.Instance.maxPlayerLifeAmount;
+        currentHealth = GameManager.Instance.GetCurrentPlayerLifeAmount;
 
         CreateHealthBar();
     }
@@ -31,8 +43,11 @@ public class HealthBar : MonoBehaviour
         }
     }
 
-    void UpdateLifeBar()
+    void UpdateLifeBar(int _numberLives)
     {
+        currentHealth = _numberLives;
+
+        print("passage");
         int i = 0;
 
         foreach(GameObject _lifeBar in allLifeBarElement)
@@ -49,11 +64,5 @@ public class HealthBar : MonoBehaviour
             }
             i++;
         }
-    }
-
-    void Update()
-    {
-        currentHealth = UIManager.Instance.currentHealth;
-        UpdateLifeBar();
     }
 }

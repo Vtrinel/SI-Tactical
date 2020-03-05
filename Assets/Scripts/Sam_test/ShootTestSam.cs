@@ -9,17 +9,17 @@ public class ShootTestSam : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            GameObject newCrystal = DiscManager.Instance.GetCrystal();
+            GameObject newDisc = DiscManager.Instance.GetCrystal();
 
-            newCrystal.GetComponent<DiscScript>().AttackHere(transform, Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            newCrystal.SetActive(true);
+            newDisc.GetComponent<DiscScript>().AttackHere(transform, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            newDisc.SetActive(true);
         }
 
         if (Input.GetMouseButtonDown(1))
         {
-            foreach(GameObject crystal in DiscManager.Instance.GetAllCrystalUse())
+            foreach(DiscScript disc in DiscManager.Instance.GetAllCrystalUse())
             {
-                crystal.GetComponent<DiscScript>().RecallCrystal(transform);
+                disc.RecallCrystal(transform);
             }
         }
     }

@@ -86,9 +86,9 @@ public class PlayerCompetenceSystem
     {
         Debug.Log("Recall knife at position " + newCompetanceRequestInfo.targetPosition);
 
-        foreach (GameObject crystal in DiscManager.Instance.GetAllCrystalUse())
+        foreach (DiscScript disc in DiscManager.Instance.GetAllCrystalUse())
         {
-            crystal.GetComponent<DiscScript>().RecallCrystal(newCompetanceRequestInfo.targetTransform);
+            disc.RecallCrystal(newCompetanceRequestInfo.targetTransform);
         }
 
         OnCompetenceUsed(recallCompetence);
