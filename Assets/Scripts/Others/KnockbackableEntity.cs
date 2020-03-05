@@ -21,6 +21,9 @@ public class KnockbackableEntity : MonoBehaviour
         if (knockbackTag != DamageTag.Environment && knockbackTag == damageTag)
             return;
 
+        if (knockbackParams.IsNull)
+            return;
+
         currentStartKnockbackForce = knockbackParams.knockbackForce;
         currentKnockbackForce = currentStartKnockbackForce;
 
@@ -66,8 +69,19 @@ public struct KnockbackParameters
         knockbackAttenuationDuration = attenuationDuration;
     }
 
+    public static KnockbackParameters Lerp(KnockbackParameters a, KnockbackParameters b, float coeff)
+    {
+        return new KnockbackParameters(
+            Mathf.Lerp(a.knockbackForce, b.knockbackForce, coeff),
+            Mathf.Lerp(a.knockbackDuration, b.knockbackDuration, coeff),
+            Mathf.Lerp(a.knockbackAttenuationDuration, b.knockbackAttenuationDuration, coeff)
+            );
+    }
+
     public float knockbackForce;
     public float knockbackDuration;
     public float knockbackAttenuationDuration;
+
+    public bool IsNull => knockbackForce == 0 || (knockbackDuration == 0 && knockbackAttenuationDuration == 0);
 }
 
