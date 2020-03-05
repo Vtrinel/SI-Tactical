@@ -137,6 +137,17 @@ public class GameManager : MonoBehaviour
     public Action<bool> OnRecallCompetenceSelectionStateChanged;
     public Action<bool> OnSpecialCompetenceSelectionStateChanged;
 
+    public Action<int> OnPlayerLifeAmountChanged;
+    public int maxPlayerLifeAmount = 3;
+    [SerializeField] int currentPlayerLifeAmount;
+    public int GetCurrentPlayerLifeAmount => currentPlayerLifeAmount;
+
+    public void PlayerLifeChange(int value)
+    {
+        currentPlayerLifeAmount = value;
+        OnPlayerLifeAmountChanged?.Invoke(value);
+    }
+
     #region Mouse World Result
     [Header("Mouse World Result")]
     [SerializeField] LayerMask worldMouseLayerMask = default;

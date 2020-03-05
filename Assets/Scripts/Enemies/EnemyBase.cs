@@ -8,10 +8,7 @@ public class EnemyBase : MonoBehaviour
 {
     private void Start()
     {
-        damageReceiptionSystem.SetUpSystem();
-        damageReceiptionSystem.OnCurrentLifeAmountChanged += UpdateLifeBarFill;
-        damageReceiptionSystem.OnLifeReachedZero += Die;
-
+        damageReceiptionSystem.SetUpSystem(false);
         enemyRenderer.material = normalMaterial;
 
         SetUpInitiative();
@@ -19,9 +16,10 @@ public class EnemyBase : MonoBehaviour
 
     [Header("References")]
     [SerializeField] DamageableEntity damageReceiptionSystem = default;
+    [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
     [SerializeField] Image lifeBar = default;
     [SerializeField] MeshRenderer enemyRenderer = default;
-    public void UpdateLifeBarFill(int currentAmount, int delta)
+    public void UpdateLifeBarFill(int currentAmount)
     {
         lifeBar.fillAmount = damageReceiptionSystem.GetCurrentLifePercent;
     }
@@ -47,8 +45,6 @@ public class EnemyBase : MonoBehaviour
 
         setedUpInitiative = true;
         enemyInstanceInitiative = baseInitiative + UnityEngine.Random.Range(0f, 1f);
-
-        //Debug.Log(name + "'s initiative : " + enemyInstanceInitiative);
     }
 
     #region Placeholder
@@ -69,9 +65,15 @@ public class EnemyBase : MonoBehaviour
         TurnManager.Instance.EndEnemyTurn(this);
     }
 
+    public void InterruptTurn()
+    {
+        Debug.Log("Interrupt " + name + "'s Turn");
+        EndTurn();
+        //throw new NotImplementedException();
+    }
     #endregion
-    
-    
+
+
     #region IA
     [Header("IA")]
 
@@ -79,18 +81,31 @@ public class EnemyBase : MonoBehaviour
 
     void PlayMyTurn()
     {
+        if (myIA == null)
+            return;
+
         myIA.PlayerTurn();
     }
     #endregion
 
     private void OnEnable()
     {
+        GameManager.Instance.OnPlayerLifeAmountChanged += UpdateLifeBarFill;
+        damageReceiptionSystem.OnLifeReachedZero += Die;
+
+        if (myIA == null)
+            return;
         myIA.OnIsAtDestination += EndTurn;
     }
 
     private void OnDisable()
     {
+        GameManager.Instance.OnPlayerLifeAmountChanged -= UpdateLifeBarFill;
+        damageReceiptionSystem.OnLifeReachedZero -= Die;
+
+        if (myIA == null)
+            return;
+
         myIA.OnIsAtDestination -= EndTurn;
     }
-
 }
