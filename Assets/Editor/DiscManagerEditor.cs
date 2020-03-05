@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [CustomEditor(typeof(DiscManager))]
-public class CrystalManagerEditor : Editor
+public class DiscManagerEditor : Editor
 {
     DiscManager myTarget;
 

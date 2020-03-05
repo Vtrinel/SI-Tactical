@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
             randomDir.y = 0;
             randomDir.Normalize();
 
+            knockbackReceiptionSystem.ReceiveKnockback(DamageTag.Enemy, new KnockbackParameters(10, 0.08f, 0.2f), randomDir);
             Debug.DrawRay(transform.position + Vector3.up, randomDir * 3, Color.red);
         }
     }
