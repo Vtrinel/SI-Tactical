@@ -116,49 +116,25 @@ public class BasicEnemy : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        //Gizmos.DrawWireSphere(transform.position, attackRange);
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, distanceOfDeplacement);
 
-
         Gizmos.color = Color.cyan;
-        int quality = 15;
 
-        float dist_max = attackRange;
+        float angle = angleAttack;
+        float rayRange = attackRange;
+        float halfFOV = angle / 2.0f;
 
-        Vector3 pos = transform.position;
-        float angle_lookat = 0;
-        float angle_fov = angleAttack;
+        Quaternion upRayRotation = Quaternion.AngleAxis(-halfFOV, Vector3.up);
+        Quaternion downRayRotation = Quaternion.AngleAxis(halfFOV, Vector3.up);
 
-        float angle_start = angle_lookat - angle_fov;
-        float angle_end = angle_lookat + angle_fov;
-        float angle_delta = (angle_end - angle_start) / quality;
+        Vector3 rightRayDirection = upRayRotation * transform.forward * rayRange;
+        Vector3 leftRayDirection = downRayRotation * transform.forward * rayRange;
 
-        
-        float angle_curr = transform.rotation.y;
-        float angle_next = angle_delta;
-
-        for (int i = 0; i < quality - 1; i++)
-        {
-            Vector3 sphere_curr = Vector3.zero;
-            sphere_curr.x = Mathf.Cos(Mathf.Deg2Rad * angle_curr);
-            sphere_curr.z = Mathf.Sin(Mathf.Deg2Rad * angle_curr);
-
-            Vector3 sphere_next = Vector3.zero;
-            sphere_next.x = Mathf.Cos(Mathf.Deg2Rad * angle_next);
-            sphere_next.z = Mathf.Sin(Mathf.Deg2Rad * angle_next);
-
-            Vector3 pos_curr_max = pos + sphere_curr * dist_max;
-
-            Vector3 pos_next_max = pos + sphere_next * dist_max;
-
-            Gizmos.DrawLine(transform.position, pos_curr_max);
-            Gizmos.DrawLine(transform.position, pos_next_max);
-
-            angle_curr += angle_delta;
-            angle_next += angle_delta;
-
-        }
+        Gizmos.DrawRay(transform.position, rightRayDirection);
+        Gizmos.DrawRay(transform.position, leftRayDirection);
+        Gizmos.DrawLine(transform.position + leftRayDirection, transform.position + rightRayDirection);
     }
 }

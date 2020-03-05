@@ -78,8 +78,10 @@ public class csAreaVision : MonoBehaviour {
 		meshFilter.mesh = Cono();
 		initialPosition = meshFilter.mesh.vertices;
 		initialUV = meshFilter.mesh.uv;
-	
-	}
+
+        transform.parent.eulerAngles = new Vector3(transform.parent.eulerAngles.x, transform.parent.eulerAngles.y + angulo / 2, transform.parent.eulerAngles.z);
+
+    }
 
 	Mesh areaMesh(Mesh mesh){
 
