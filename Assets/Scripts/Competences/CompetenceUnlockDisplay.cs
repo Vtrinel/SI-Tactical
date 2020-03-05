@@ -35,8 +35,6 @@ public class CompetenceUnlockDisplay : MonoBehaviour
     {
         Currentcompetence = PlayerExperienceManager._instance.GetSelectedCompetence();
 
-        Debug.Log("Refresh competence : " + Currentcompetence);
-
         if (Currentcompetence)
         {
             description.text = Currentcompetence.Getdescription;

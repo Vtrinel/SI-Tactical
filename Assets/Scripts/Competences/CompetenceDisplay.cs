@@ -20,6 +20,5 @@ public class CompetenceDisplay : MonoBehaviour
     public void SelectCompetence()
     {
         PlayerExperienceManager._instance.SelectCompetence(competence);
-        Debug.Log(competence.Getdescription);
     }
 }
