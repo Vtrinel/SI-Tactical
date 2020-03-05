@@ -14,6 +14,7 @@ public class PlayerExperienceManager : MonoBehaviour
     public List<CompetenceThrow> ThrowCompetence = new List<CompetenceThrow>();
 
     //Actions
+    public event Action<int> OnSelectTypeCompetence;
     public event Action<Competence> OnSelectCompetence;
     public event Action<Competence> OnTryUnlockCompetence;
     public event Action<Competence> OnEquipCompetence;
@@ -24,6 +25,7 @@ public class PlayerExperienceManager : MonoBehaviour
     private Competence selectedCompetence;
     private List<Competence> listUnlockedCompetences = new List<Competence>();
     private List<Competence> listEquipedCompetences = new List<Competence>();
+    private int competenceTypeSelected; // 0 = throw, 1 = recall, 2 = special
 
 
     // For the singleton
@@ -44,10 +46,10 @@ public class PlayerExperienceManager : MonoBehaviour
     public void CanUnlockCompetence(Competence competence)
     {
 
-        if (competence.GetPointsCost <= competencesPoints)
+        if (competencesPoints > 0)
         {
             competence.SetUnlockedState(true);
-            competencesPoints -= competence.GetPointsCost;
+            competencesPoints = 0;
 
             listUnlockedCompetences.Add(competence);
 
@@ -67,6 +69,13 @@ public class PlayerExperienceManager : MonoBehaviour
         selectedCompetence = competence;
 
         OnSelectCompetence?.Invoke(competence);
+    }
+
+    // Change the type of competence selected
+    public void SelectTypeCompetence(int type)
+    {
+        competenceTypeSelected = type;
+        OnSelectTypeCompetence?.Invoke(type);
     }
 
     public void EquipCompetence(Competence competence)
