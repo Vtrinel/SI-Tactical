@@ -19,8 +19,11 @@ public class EffectZone : MonoBehaviour
     [SerializeField] bool damaging = false;
     [SerializeField] int damageAmount = 1;
     [SerializeField] bool knockbacking = false;
-    [SerializeField] KnockbackParameters minDistanceKnockbackParameters = new KnockbackParameters();
-    [SerializeField] KnockbackParameters maxDistanceKnockbackParameters = new KnockbackParameters();
+    [SerializeField] KnockbackParameters maxKnockbackParameters = new KnockbackParameters(20f, 0.05f, 0.2f);
+    [SerializeField] float maxKnockbackDistance = 2f;
+    [SerializeField] KnockbackParameters minKnockbackParameters = new KnockbackParameters(10f, 0.05f, 0.2f);
+    [SerializeField] float minKnockbackDistance = 5f;
+    [SerializeField] AnimationCurve knockbackDependingOnDistanceAttenuationCurve = AnimationCurve.Linear(0, 0, 1, 1);
 
     [Header("Debug")]
     [SerializeField] MeshRenderer debugZoneRenderer = default;
@@ -78,14 +81,28 @@ public class EffectZone : MonoBehaviour
                 KnockbackableEntity hitKnockable = hitCollider.GetComponent<KnockbackableEntity>();
                 if(hitKnockable != null)
                 {
+                    Vector3 hitPosition = hitCollider.transform.position;
                     Vector3 knockbackDirection = hitCollider.transform.position - transform.position;
                     knockbackDirection.y = 0;
                     knockbackDirection.Normalize();
 
-                    hitKnockable.ReceiveKnockback(sourceTag, minDistanceKnockbackParameters, knockbackDirection);
+                    hitKnockable.ReceiveKnockback(sourceTag, GetKnockbackParametersWithDistance(hitPosition), knockbackDirection);
                 }
             }
         }
+    }
+
+    public KnockbackParameters GetKnockbackParametersWithDistance(Vector3 hitKnockablePosition)
+    {
+        hitKnockablePosition.y = transform.position.y;
+
+        float distance = Vector3.Distance(transform.position, hitKnockablePosition);
+
+        float coeff = Mathf.Clamp((maxKnockbackDistance - distance) /(maxKnockbackDistance - minKnockbackDistance), 0, 1);
+
+        coeff = knockbackDependingOnDistanceAttenuationCurve.Evaluate(coeff);
+
+        return KnockbackParameters.Lerp(maxKnockbackParameters, minKnockbackParameters, coeff);
     }
 
     public void UpdateRadius()

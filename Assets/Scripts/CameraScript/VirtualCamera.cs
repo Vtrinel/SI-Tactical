@@ -6,6 +6,9 @@ using Cinemachine;
 public class VirtualCamera : MonoBehaviour
 {
     [SerializeField] protected CinemachineVirtualCamera virtualCam;
+    [SerializeField] private CameraShake cameraShake;
+
+    public CameraShake CameraShake { get => cameraShake; }
 
     protected virtual void OnEnable()
     {
