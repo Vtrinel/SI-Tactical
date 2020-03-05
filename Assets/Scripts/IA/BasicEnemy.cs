@@ -49,12 +49,12 @@ public class BasicEnemy : MonoBehaviour
 
     Vector3 CalculDestination()
     {
-        Vector3 pos = player.transform.position;
+        Vector3 pos = transform.position;
         Vector3 dir = (this.transform.position - player.transform.position).normalized;
 
-        Debug.DrawLine(pos, pos + dir * 10, Color.red, Mathf.Infinity);
+        Debug.DrawLine(pos, pos + -dir * distanceOfDeplacement, Color.red, Mathf.Infinity);
 
-        return dir * distanceOfDeplacement;
+        return pos + -dir * distanceOfDeplacement;
     }
 
     IEnumerator WaitDeplacement()
