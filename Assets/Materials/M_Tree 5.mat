@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Sanctuair 1
+  m_Name: M_Tree 5
   m_Shader: {fileID: 4800000, guid: 2a948b397abdced418c1bef743aab7e8, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 0
@@ -24,11 +24,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _T_MaskShadow_M:
-        m_Texture: {fileID: 2800000, guid: 7f29381f847e7514d923f2f188438651, type: 3}
-        m_Scale: {x: 0, y: 2}
+        m_Texture: {fileID: 2800000, guid: f7e96904e8667e1439548f0f86389447, type: 3}
+        m_Scale: {x: 2, y: 2}
         m_Offset: {x: 0, y: 0}
     - _TextureSample0:
-        m_Texture: {fileID: 2800000, guid: cb6f152d533204c47a3e643afaea14a2, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9356c8d0cbb79e04399fb57f38b142ed, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _texcoord:
@@ -36,15 +36,18 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _ASEOutlineWidth: 3.17
-    - _SmoothShadowMax: 0.7
-    - _SmoothShadowMin: 0.2
-    - _TextureShadow: 0.35
-    - _Tilling: 1.53
+    - _ASEOutlineWidth: 0
+    - _ShadowMaskIntensity: 0
+    - _ShadowOpacity: 0
+    - _ShadowStep: 0.1
+    - _SmoothShadowMax: 0.11
+    - _SmoothShadowMin: 0.1
+    - _TextureShadow: 2.28
+    - _Tilling: 0.42
     - __dirty: 0
     m_Colors:
     - _ASEOutlineColor: {r: 0, g: 0, b: 0, a: 0}
-    - _Color: {r: 0.7264151, g: 0.7264151, b: 0.7264151, a: 0}
-    - _Emlissive: {r: 0.3207547, g: 0.3207547, b: 0.3207547, a: 0}
+    - _Color: {r: 0.45278567, g: 0.5188679, b: 0.50422984, a: 0}
+    - _Emlissive: {r: 0, g: 0, b: 0, a: 0}
     - _ShadowAttenuation: {r: 0, g: 0, b: 0, a: 0}
-    - _Shadow_Color: {r: 0, g: 0, b: 0, a: 0}
+    - _Shadow_Color: {r: 0.1509434, g: 0.04362823, b: 0.039159846, a: 0}
