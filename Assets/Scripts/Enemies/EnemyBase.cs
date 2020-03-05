@@ -68,9 +68,15 @@ public class EnemyBase : MonoBehaviour
         TurnManager.Instance.EndEnemyTurn(this);
     }
 
+    public void InterruptTurn()
+    {
+        Debug.Log("Interrupt " + name + "'s Turn");
+        EndTurn();
+        //throw new NotImplementedException();
+    }
     #endregion
-    
-    
+
+
     #region IA
     [Header("IA")]
 
@@ -100,5 +106,4 @@ public class EnemyBase : MonoBehaviour
 
         myIA.OnIsAtDestination -= EndTurn;
     }
-
 }

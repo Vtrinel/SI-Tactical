@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
         damageReceiptionSystem.SetUpSystem();
         damageReceiptionSystem.OnCurrentLifeAmountChanged += DebugLifeAmount;
         damageReceiptionSystem.OnLifeReachedZero += LifeReachedZero;
+        damageReceiptionSystem.OnReceivedDamages += StartPlayerRage;
 
         navMeshAgent.isStopped = true;
     }
@@ -47,6 +48,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
 
     #region Life
+    [Header("Damage Reception")]
+    [SerializeField] EffectZone rageEffectZonePrefab = default;
+    [SerializeField] float rageEffectZoneVerticalOffset = 1f;
+
+    public void StartPlayerRage(int currentLife, int lifeDifferential)
+    {
+        Debug.Log("RAGE");
+
+        EffectZone newRageEffectZone = Instantiate(rageEffectZonePrefab);
+        newRageEffectZone.StartZone(transform.position + Vector3.up * rageEffectZoneVerticalOffset);
+
+        TurnManager.Instance.InterruptEnemyTurn();
+    }
+
     public void LifeReachedZero()
     {
         Debug.Log("DEAD");
