@@ -15,16 +15,21 @@ public class ShootArrowPreview : MonoBehaviour
 
     public Transform Arrow;
 
+    Transform player;
+
     private void Start()
     {
         leftLine.positionCount = 2;
         rightLine.positionCount = 2;
+
+        player = GameManager.Instance.GetPlayer.transform;
     }
 
     // Update is called once per frame
     void Update()
     {
         RefreshArrow();
+        transform.position = player.position;
     }
 
     void RefreshArrow()

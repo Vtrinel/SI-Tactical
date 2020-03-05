@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
         damageReceiptionSystem.SetUpSystem();
         damageReceiptionSystem.OnCurrentLifeAmountChanged += DebugLifeAmount;
         damageReceiptionSystem.OnLifeReachedZero += LifeReachedZero;
+
+        navMeshAgent.isStopped = true;
     }
 
     private void Update()
@@ -20,19 +22,20 @@ public class PlayerController : MonoBehaviour
         if (ableToAct)
             UpdateInputs();
 
-        if (Input.GetKeyDown(KeyCode.KeypadMinus))
+        if (Input.GetKeyDown(KeyCode.K))
         {
-            damageReceiptionSystem.LoseLife(1);
-        }
-        else if (Input.GetKeyDown(KeyCode.KeypadPlus))
-        {
-            damageReceiptionSystem.RegainLife(1);
+            Vector3 randomDir = Random.onUnitSphere;
+            randomDir.y = 0;
+            randomDir.Normalize();
+
+            Debug.DrawRay(transform.position + Vector3.up, randomDir * 3, Color.red);
         }
     }
 
     [Header("References")]
     [SerializeField] NavMeshAgent navMeshAgent = default;
     [SerializeField] DamageableEntity damageReceiptionSystem = default;
+    [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
 
     #region Life
     public void LifeReachedZero()
@@ -89,6 +92,7 @@ public class PlayerController : MonoBehaviour
     bool moving;
     public void MoveTo(Vector3 targetPosition)
     {
+        navMeshAgent.isStopped = false;
         navMeshAgent.SetDestination(targetPosition);
         moving = true;
     }
@@ -96,6 +100,7 @@ public class PlayerController : MonoBehaviour
     {
         if (navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete && navMeshAgent.remainingDistance == 0)
         {
+            navMeshAgent.isStopped = true;
             moving = false;
             OnPlayerReachedMovementDestination?.Invoke();
         }
