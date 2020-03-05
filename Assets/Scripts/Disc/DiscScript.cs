@@ -9,6 +9,7 @@ public class DiscScript : MonoBehaviour
     [SerializeField] Animator myAnimator = default;
 
     [Header("Damages")]
+    [SerializeField] DamageTag damageTag = DamageTag.Player;
     [SerializeField] int currentDamagesAmount = 1;
 
     public float speed = 3;
@@ -61,12 +62,11 @@ public class DiscScript : MonoBehaviour
                 //CollisionWithThisObj(other.transform);
                 //attachedObj = other;
                 //isAttacking = false;
-                Debug.Log("Collision with enemy");
 
                 DamageableEntity hitDamageableEntity = other.GetComponent<DamageableEntity>();
                 if (hitDamageableEntity != null)
                 {
-                    hitDamageableEntity.LoseLife(currentDamagesAmount);
+                    hitDamageableEntity.ReceiveDamage(damageTag, currentDamagesAmount);
                 }
                 break;
 
