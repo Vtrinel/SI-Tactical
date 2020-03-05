@@ -63,6 +63,11 @@ public class EnemyBase : MonoBehaviour
     public void EndTurn()
     {
         enemyRenderer.material = normalMaterial;
+
+        if(TurnManager.Instance.GetCurrentTurnState != TurnState.EnemyTurn)
+        {
+            return;
+        }
         TurnManager.Instance.EndEnemyTurn(this);
     }
 

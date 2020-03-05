@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3915401795240119114}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: PreviewPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -504,6 +504,9 @@ MonoBehaviour:
   damage: 1
   angleAttack: 60
   myAnimator: {fileID: 4833937767969952820}
+  objCanBeAttecked:
+    serializedVersion: 2
+    m_Bits: 1536
 --- !u!195 &6103916517976931779
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -737,7 +740,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: 37d1682525508c1469138261176c3890, type: 3}
       propertyPath: m_Name
-      value: Cono
+      value: ConoPreview
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 37d1682525508c1469138261176c3890, type: 3}
       propertyPath: m_LocalPosition.x
@@ -787,6 +790,10 @@ PrefabInstance:
       propertyPath: angulo
       value: 60
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 37d1682525508c1469138261176c3890, type: 3}
+      propertyPath: myBasicEnemy
+      value: 
+      objectReference: {fileID: 6547703038302129142}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37d1682525508c1469138261176c3890, type: 3}
 --- !u!4 &8339100536892779484 stripped
