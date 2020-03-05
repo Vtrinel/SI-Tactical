@@ -29,14 +29,15 @@ public class GameManager : MonoBehaviour
 
         player.OnPlayerReachedMovementDestination += UpdatePlayerActability;
 
-        UpdatePlayerActability();
-
         ResetActionPointsCount();
 
         turnManager.OnStartPlayerTurn += StartPlayerTurn;
         turnManager.OnEndPlayerTurn += EndPlayerTurn;
 
         turnManager.StartPlayerTurn();
+
+        enemiesManager.OnInGameEnemiesChanged += turnManager.RefreshEnemyList;
+        enemiesManager.GetAllAlreadyPlacedEnemies();
     }
 
     private void Update()
@@ -74,6 +75,7 @@ public class GameManager : MonoBehaviour
     public PlayerController GetPlayer => player;
 
     [SerializeField] TurnManager turnManager = default;
+    [SerializeField] EnemiesManager enemiesManager = default;
 
     public bool OnMouseInUI = false;
 
