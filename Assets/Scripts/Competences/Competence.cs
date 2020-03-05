@@ -10,12 +10,11 @@ public class Competence : ScriptableObject
     [SerializeField] Sprite image = null;
 
     [SerializeField] int actionPointsCost = 1;
-    [SerializeField] int CompetencesPointNeeded = 1;
+
 
     [SerializeField] bool unlocked = false;
 
     public int GetActionPointsCost => actionPointsCost;
-    public int GetPointsCost => CompetencesPointNeeded;
     public Sprite GetImage=> image;
     public string Getdescription => description;
     public bool GetUnlockedState => unlocked;

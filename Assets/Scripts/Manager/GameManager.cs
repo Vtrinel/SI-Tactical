@@ -38,6 +38,9 @@ public class GameManager : MonoBehaviour
 
         enemiesManager.OnInGameEnemiesChanged += turnManager.RefreshEnemyList;
         enemiesManager.GetAllAlreadyPlacedEnemies();
+
+        turnManager.OnCheckGameProgression += levelManager.CheckForProgressTurn;
+        levelManager.OnGoalReached += WinGame;
     }
 
     private void Update()
@@ -76,6 +79,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] TurnManager turnManager = default;
     [SerializeField] EnemiesManager enemiesManager = default;
+    [SerializeField] LevelProgressionManager levelManager = default;
 
     public bool OnMouseInUI = false;
 
@@ -136,6 +140,8 @@ public class GameManager : MonoBehaviour
     public Action<bool> OnThrowCompetenceSelectionStateChanged;
     public Action<bool> OnRecallCompetenceSelectionStateChanged;
     public Action<bool> OnSpecialCompetenceSelectionStateChanged;
+
+    public Action<Vector3> OnPlayerPositionChanged;
 
     public Action<int> OnPlayerLifeAmountChanged;
     public int maxPlayerLifeAmount = 3;
@@ -356,6 +362,18 @@ public class GameManager : MonoBehaviour
 
         player.SetAbleToAct(canAct);
         SetActionPointsDebugTextVisibility(playerMovementsManager.IsWillingToMove || competencesManager.IsPreparingCompetence);
+    }
+    #endregion
+
+    #region Game Management
+    public void WinGame()
+    {
+        Debug.Log("YOU WIN");
+    }
+
+    public void LoseGame()
+    {
+        Debug.Log("YOU LOSE");
     }
     #endregion
 }

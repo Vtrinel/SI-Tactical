@@ -8,7 +8,6 @@ public class CompetenceUnlockDisplay : MonoBehaviour
     [Header("Interface of the competence")]
     public TextMeshProUGUI description;
     public TextMeshProUGUI ActionPoint;
-    public TextMeshProUGUI UnlockCost;
     public Button unlockButton;
     public Button equipButton;
 
@@ -39,8 +38,6 @@ public class CompetenceUnlockDisplay : MonoBehaviour
         {
             description.text = Currentcompetence.Getdescription;
             ActionPoint.text = Currentcompetence.GetActionPointsCost.ToString();
-            UnlockCost.text = Currentcompetence.GetPointsCost.ToString();
-
 
             // See if the competence can be unlocked or equiped
             if (Currentcompetence.GetUnlockedState)

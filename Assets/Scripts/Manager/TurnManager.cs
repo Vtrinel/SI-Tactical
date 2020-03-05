@@ -131,6 +131,12 @@ public class TurnManager : MonoBehaviour
         yield return new WaitForSeconds(waitDuration);
 
 
+        if(currentTurnState == TurnState.BetweenEnemiesAndPlayer)
+        {
+            CheckGameProgression();
+            yield return new WaitForSeconds(waitDuration);
+        }
+
         switch (currentTurnState)
         {
             case TurnState.BetweenPlayerAndEnemies:
@@ -144,9 +150,20 @@ public class TurnManager : MonoBehaviour
                 break;
         }
     }
+
+    public Action OnCheckGameProgression;
+    public void CheckGameProgression()
+    {
+        OnCheckGameProgression?.Invoke();
+    }
+
+    public void WonGame()
+    {
+        currentTurnState = TurnState.Won;
+    }
 }
 
 public enum TurnState
 {
-    PlayerTurn, BetweenPlayerAndEnemies, EnemyTurn, BetweenEnemiesAndPlayer
+    PlayerTurn, BetweenPlayerAndEnemies, EnemyTurn, BetweenEnemiesAndPlayer, Won
 }
