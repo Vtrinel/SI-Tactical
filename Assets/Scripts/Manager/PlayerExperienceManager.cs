@@ -6,6 +6,17 @@ using UnityEngine;
 
 public class PlayerExperienceManager : MonoBehaviour
 {
+    public void SetUp()
+    {
+        /*listUnlockedCompetences.Add();
+        listEquipedCompetences.Add();*/
+        equipedThrowCompetence = startThrowCompetence;
+        equipedRecallCompetence = startRecallCompetence;
+        equipedSpecialCompetence = startSpecialCompetence;
+
+        OnSetChanged?.Invoke(equipedThrowCompetence, equipedRecallCompetence, equipedSpecialCompetence);
+    }
+
     // Public attributes
     public static PlayerExperienceManager _instance;
 
@@ -16,23 +27,32 @@ public class PlayerExperienceManager : MonoBehaviour
     public event Action<Competence> OnSelectCompetence;
     public event Action<Competence> OnTryUnlockCompetence;
     public event Action<Competence> OnEquipCompetence;
-
+    public Action<CompetenceThrow, CompetenceRecall, CompetenceSpecial> OnSetChanged;
 
     // Private Attributes
     
     private Competence selectedCompetence;
 
     private List<Competence> listUnlockedCompetences = new List<Competence>();
-    private List<Competence> listEquipedCompetences = new List<Competence>();
+    //private List<Competence> listEquipedCompetences = new List<Competence>();
+    CompetenceThrow equipedThrowCompetence = default;
+    CompetenceRecall equipedRecallCompetence = default;
+    CompetenceSpecial equipedSpecialCompetence = default;
 
     public GameObject throwInterface;
     public GameObject recallInterface;
     public GameObject specialInterface;
 
+    [Header("Start competences")]
+    [SerializeField] CompetenceThrow startThrowCompetence = default;
+    [SerializeField] CompetenceRecall startRecallCompetence = default;
+    [SerializeField] CompetenceSpecial startSpecialCompetence = default;
+
     private int competenceTypeSelected = 0; // 0 = throw, 1 = recall, 2 = special
     private int competencesPoints = 1;
 
     private bool isCanvasCompetenceShowed = false;
+    public bool IsUsingCompetencesMenu => isCanvasCompetenceShowed;
 
     //private void Start()
     //{
@@ -93,10 +113,12 @@ public class PlayerExperienceManager : MonoBehaviour
 
     // Show or not the competence interface
 
+    public Action OnMenuOpenedOrClosed;
     public void IsCompetenceInterfaceShowing()
     {
         isCanvasCompetenceShowed = !isCanvasCompetenceShowed;
         competenceCanvas.gameObject.SetActive(isCanvasCompetenceShowed);
+        OnMenuOpenedOrClosed?.Invoke();
     }
 
     // Change the type of competence selected
@@ -137,47 +159,34 @@ public class PlayerExperienceManager : MonoBehaviour
 
     public void EquipCompetence(Competence competence)
     {
-        Debug.Log(listEquipedCompetences.Count);
+        //Debug.Log(listEquipedCompetences.Count);
 
         bool competenceAdd = false;
 
-        // Replace the type of competence by the new one
-        for (int i = 0; i < listEquipedCompetences.Count; i++)
+        CompetenceThrow newThrowComp = competence as CompetenceThrow;
+        if (newThrowComp != null)
         {
-            if (competence is CompetenceRecall && listEquipedCompetences[i] is CompetenceRecall)
-            {
-                listEquipedCompetences[i] = competence;
-                competenceAdd = true;
-                Debug.Log("Competence recall changed");
-
-                break;
-            }
-
-            else if (competence is CompetenceThrow && listEquipedCompetences[i] is CompetenceThrow)
-            {
-                listEquipedCompetences[i] = competence;
-                competenceAdd = true;
-                Debug.Log("Competence throw changed");
-                break;
-            }
-
-            else if (competence is CompetenceSpecial && listEquipedCompetences[i] is CompetenceSpecial)
-            {
-                listEquipedCompetences[i] = competence;
-                competenceAdd = true;
-                Debug.Log("Competence special changed");
-                break;
-            }
+            equipedThrowCompetence = newThrowComp;
         }
-
-        // Add the competence if nothing is found
-        if (!competenceAdd)
+        else
         {
-            listEquipedCompetences.Add(competence);
-            Debug.Log("Competence add");
-        }
+            CompetenceRecall newRecallComp = competence as CompetenceRecall;
+            if (newRecallComp != null)
+            {
+                equipedRecallCompetence = newRecallComp;
+            }
+            else
+            {
+                CompetenceSpecial newSpecialComp = competence as CompetenceSpecial;
+                if (newSpecialComp != null)
+                {
+                    equipedSpecialCompetence = newSpecialComp;
+                }
+            }
+        }        
 
         OnEquipCompetence?.Invoke(competence);
+        OnSetChanged?.Invoke(equipedThrowCompetence, equipedRecallCompetence, equipedSpecialCompetence);
     }
 
     // Getter SelectedCompetence
@@ -196,13 +205,13 @@ public class PlayerExperienceManager : MonoBehaviour
         Debug.Log("<color=red>Unlocked competences</color>");
         for (int i = 0; i < listUnlockedCompetences.Count; i++)
         {
-            Debug.Log(listUnlockedCompetences[i].Getdescription);
+            Debug.Log(listUnlockedCompetences[i].GetCompetenceDescription);
         }
         Debug.Log("<color=yellow>Equiped competences</color>");
-        for (int i = 0; i < listEquipedCompetences.Count; i++)
+        /*for (int i = 0; i < listEquipedCompetences.Count; i++)
         {
             Debug.Log(listEquipedCompetences[i].Getdescription);
-        }
+        }*/
     }
 
     // Clear the console

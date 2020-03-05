@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class CompetencesManager
+public class CompetencesUsabilityManager
 {
     public void SetUp(PlayerController player)
     {
@@ -33,6 +33,16 @@ public class CompetencesManager
 
     [SerializeField] CompetenceRecall recallCompetence = default;
     public CompetenceRecall GetRecallCompetence => recallCompetence;
+
+    [SerializeField] CompetenceSpecial specialCompetence = default;
+    public CompetenceSpecial GetSpecialCompetence => specialCompetence;
+
+    public void UpdateSet(CompetenceThrow throwComp, CompetenceRecall recallComp, CompetenceSpecial specialComp)
+    {
+        throwCompetence = throwComp;
+        recallCompetence = recallComp;
+        specialCompetence = specialComp;
+    }
 
     UsabilityState currentUsabilityState = UsabilityState.None;
     public UsabilityState GetCurrentUsabilityState => currentUsabilityState;
@@ -143,7 +153,8 @@ public class CompetencesManager
         newCompetenceRequestInfo.startPosition = _player.transform.position + Vector3.up * DiscManager.crystalHeight;
         newCompetenceRequestInfo.targetPosition = currentWorldMouseResult.mouseWorldPosition + Vector3.up * DiscManager.crystalHeight;
 
-        Debug.Log("Throw knife at position " + newCompetenceRequestInfo.targetPosition);
+        //Debug.Log("Throw knife at position " + newCompetenceRequestInfo.targetPosition);
+        Debug.Log("Using throw competence : " + throwCompetence.GetCompetenceName);
 
         GameObject newCrystal = DiscManager.Instance.GetCrystal();
         newCrystal.GetComponent<DiscScript>().AttackHere(newCompetenceRequestInfo.startTransform, newCompetenceRequestInfo.targetPosition);
@@ -158,7 +169,8 @@ public class CompetencesManager
         newCompetenceRequestInfo.targetTransform = _player.transform;
         newCompetenceRequestInfo.targetPosition = _player.transform.position;
 
-        Debug.Log("Recall knife at position " + newCompetenceRequestInfo.targetPosition);
+        //Debug.Log("Recall knife at position " + newCompetenceRequestInfo.targetPosition);
+        Debug.Log("Using recall competence : " + recallCompetence.GetCompetenceName);
 
         foreach (DiscScript disc in DiscManager.Instance.GetAllCrystalUse())
         {
