@@ -50,7 +50,13 @@ public class PlayerMovementsManager
     [Header("Movement Preview")]
     [SerializeField] GameObject movementPlayerPreviewPrefab = default;
     GameObject movementPlayerPreview = default;
+    CompetenceRecall currentRecallCompetence = default;
+    public void UpdateCurrentRecallCompetence(CompetenceRecall competenceRecall)
+    {
+        currentRecallCompetence = competenceRecall;
+    }
 
+    bool justStartedMovementPreview = false;
     public void StartMovementPreview(Vector3 targetPosition)
     {
         if (movementLinePreview != null)
@@ -59,8 +65,10 @@ public class PlayerMovementsManager
         GenerateDebugCircles();
         movementPlayerPreview.SetActive(true);
 
-        //DiscManager.Instance.StartRecallPreview(targetPosition);
-        PreviewCompetencesManager.Instance.StartRecallPreview(targetPosition);
+        List<DiscTrajectoryParameters> discsInNewPositionRangeParameters = GetDiscInRangeTrajectory(targetPosition);
+        PreviewCompetencesManager.Instance.StartRecallPreview(discsInNewPositionRangeParameters, targetPosition);
+
+        justStartedMovementPreview = true;
         UpdateMovementPreview(targetPosition);
     }
 
@@ -86,17 +94,36 @@ public class PlayerMovementsManager
 
         movementPlayerPreview.transform.position = targetPosition;
 
-        PreviewCompetencesManager.Instance.UpdateRecallPreview(targetPosition);
+        if (!justStartedMovementPreview)
+        {
+            List<DiscTrajectoryParameters> discsInNewPositionRangeParameters = GetDiscInRangeTrajectory(targetPosition);
+            PreviewCompetencesManager.Instance.UpdateRecallPreview(discsInNewPositionRangeParameters, targetPosition);
+        }
+        else
+            justStartedMovementPreview = false;
     }
 
     public void EndMovementPreview()
     {
+        justStartedMovementPreview = false;
+
         if (movementLinePreview != null)
             movementLinePreview.enabled = false;
 
         ClearInstantiatedDebugCircles();
         movementPlayerPreview.SetActive(false);
         PreviewCompetencesManager.Instance.EndRecallPreview();
+    }
+
+    public List<DiscTrajectoryParameters> GetDiscInRangeTrajectory(Vector3 targetPosition)
+    {
+        List<DiscTrajectoryParameters> allTrajParams = new List<DiscTrajectoryParameters>();
+        foreach (DiscScript disc in DiscManager.Instance.GetAllInRangeDiscsFromPosition(targetPosition))
+        {
+            DiscTrajectoryParameters newTrajParams = DiscTrajectoryFactory.GetRecallTrajectory(currentRecallCompetence, disc.transform.position, targetPosition);
+            allTrajParams.Add(newTrajParams);
+        }
+        return allTrajParams;
     }
 
     [Header("Movement - PH")]
@@ -123,12 +150,6 @@ public class PlayerMovementsManager
         }
         instanciatedDebugCircles = new List<GameObject>();
     }
-
-    /*public void UpdateLinePreviewState()
-    {
-        if (movementLinePreview != null)
-            movementLinePreview.enabled = IsWillingToMove;
-    }*/
     #endregion
 
     public void StartMovementPreparation()
@@ -195,7 +216,6 @@ public class PlayerMovementsManager
     {
         currentUsabilityState = UsabilityState.None;
 
-        //UpdateLinePreviewState();
         EndMovementPreview();
 
         currentDistancesByUsedActionPoints = new List<float>();

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,6 +34,7 @@ public class CompetencesUsabilityManager
 
     [SerializeField] CompetenceRecall recallCompetence = default;
     public CompetenceRecall GetRecallCompetence => recallCompetence;
+    public Action<CompetenceRecall> OnRecallCompetenceChanged;
 
     [SerializeField] CompetenceSpecial specialCompetence = default;
     public CompetenceSpecial GetSpecialCompetence => specialCompetence;
@@ -44,6 +46,8 @@ public class CompetencesUsabilityManager
         throwCompetence = throwComp;
         recallCompetence = recallComp;
         specialCompetence = specialComp;
+
+        OnRecallCompetenceChanged?.Invoke(recallCompetence);
     }
 
     UsabilityState currentUsabilityState = UsabilityState.None;
@@ -81,7 +85,7 @@ public class CompetencesUsabilityManager
             }
             else if (compType == ActionType.Recall)
             {
-                if (DiscManager.Instance.GetNearbyDiscsCount == 0)
+                if (DiscManager.Instance.GetInRangeDiscsCount == 0)
                 {
                     trySelectResult = ActionSelectionResult.NoNearbyDisc;
                 }
@@ -234,13 +238,15 @@ public class CompetencesUsabilityManager
     public void StartThrowPreparation()
     {
         Vector3 trueTargetPosition = GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition);
-        PreviewCompetencesManager.Instance.StartThrowPreview(_player.transform.position, trueTargetPosition);
+        DiscTrajectoryParameters trajectoryParameters = DiscTrajectoryFactory.GetThrowTrajectory(throwCompetence, _player.transform.position, trueTargetPosition);
+        PreviewCompetencesManager.Instance.StartThrowPreview(new List<DiscTrajectoryParameters> { trajectoryParameters }, _player.transform.position);
     }
 
     public void UpdateThrowPreparation()
     {
         Vector3 trueTargetPosition = GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition);
-        PreviewCompetencesManager.Instance.UpdateThrowPreview(_player.transform.position, trueTargetPosition);
+        DiscTrajectoryParameters trajectoryParameters = DiscTrajectoryFactory.GetThrowTrajectory(throwCompetence, _player.transform.position, trueTargetPosition);
+        PreviewCompetencesManager.Instance.UpdateThrowPreview(new List<DiscTrajectoryParameters> { trajectoryParameters });
     }
 
     public void EndThrowPreparation()
@@ -252,11 +258,30 @@ public class CompetencesUsabilityManager
     #region Recall Preparation
     public void StartRecallPreparation()
     {
-        PreviewCompetencesManager.Instance.StartRecallPreview(_player.transform.position);
+        Vector3 playerPos = _player.transform.position;
+        List<DiscTrajectoryParameters> recallTrajectoryParameters = new List<DiscTrajectoryParameters>();
+
+        foreach(DiscScript discInRange in DiscManager.Instance.GetInRangeDiscs)
+        {
+            DiscTrajectoryParameters newParams = DiscTrajectoryFactory.GetRecallTrajectory(recallCompetence, discInRange.transform.position, playerPos);
+            recallTrajectoryParameters.Add(newParams);
+        }
+
+        PreviewCompetencesManager.Instance.StartRecallPreview(recallTrajectoryParameters, playerPos);
     }
 
     public void UpdateRecallPreparation()
     {
+        Vector3 playerPos = _player.transform.position;
+        List<DiscTrajectoryParameters> recallTrajectoryParameters = new List<DiscTrajectoryParameters>();
+
+        foreach (DiscScript discInRange in DiscManager.Instance.GetInRangeDiscs)
+        {
+            DiscTrajectoryParameters newParams = DiscTrajectoryFactory.GetRecallTrajectory(recallCompetence, discInRange.transform.position, playerPos);
+            recallTrajectoryParameters.Add(newParams);
+        }
+
+        PreviewCompetencesManager.Instance.UpdateRecallPreview(recallTrajectoryParameters, playerPos);
     }
 
     public void EndRecallPreparation()
@@ -312,7 +337,7 @@ public class CompetencesUsabilityManager
         //Debug.Log("Recall knife at position " + newCompetenceRequestInfo.targetPosition);
         Debug.Log("Using recall competence : " + recallCompetence.GetCompetenceName);
 
-        foreach (DiscScript disc in DiscManager.Instance.GetNearbyDiscs)
+        foreach (DiscScript disc in DiscManager.Instance.GetInRangeDiscs)
         {
             disc.RecallCrystal(newCompetenceRequestInfo.targetTransform);
         }

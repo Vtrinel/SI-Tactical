@@ -39,20 +39,6 @@ public class DiscManager : MonoBehaviour
         FillPossessedDiscsWithBasicDiscs();
     }
 
-    private void Update()
-    {
-        // HERE : need to add and remove discs from proximity
-        /*
-        Vector3 playerPos = player.position;
-        foreach (DiscScript disc in discsUse)
-        {
-            Vector3 discPosHorizontalyWithPlayer = disc.transform.position;
-            discPosHorizontalyWithPlayer.y = playerPos.y;
-
-            disc.isInRange = (Vector3.Distance(playerPos, discPosHorizontalyWithPlayer) <= rangeOfPlayer);
-        }*/
-    }
-
     private void OnDrawGizmos()
     {
         if (!player) return;
@@ -161,7 +147,7 @@ public class DiscManager : MonoBehaviour
         if (!thrownDiscs.Contains(disc))
             thrownDiscs.Add(disc);
 
-        AddDiscToNearbyProximity(disc);
+        AddDiscToInRange(disc);
     }
     #endregion
 
@@ -169,7 +155,7 @@ public class DiscManager : MonoBehaviour
     public void CheckAllDiscsProximity(Vector3 playerPosition)
     {
         List<DiscScript> newOutRangeDiscs = new List<DiscScript>();
-        foreach(DiscScript disc in nearbyDiscs)
+        foreach(DiscScript disc in inRangeDiscs)
         {
             if(!DiscIsInRange(playerPosition, disc.transform.position))
                 newOutRangeDiscs.Add(disc);
@@ -183,10 +169,10 @@ public class DiscManager : MonoBehaviour
         }
 
         foreach (DiscScript disc in newOutRangeDiscs)
-            RemoveDiscFromNearbyProximity(disc);
+            RemoveDiscFromInRange(disc);
 
         foreach (DiscScript disc in newInRangeDiscs)
-            AddDiscToNearbyProximity(disc);
+            AddDiscToInRange(disc);
     }
 
     public bool DiscIsInRange(Vector3 playerPos, Vector3 discPos)
@@ -195,24 +181,24 @@ public class DiscManager : MonoBehaviour
         return Vector3.Distance(playerPos, discPos) <= rangeOfPlayer;
     }
 
-    List<DiscScript> nearbyDiscs = new List<DiscScript>();
-    public List<DiscScript> GetNearbyDiscs => nearbyDiscs;
-    List<DiscScript> nearbyUnthrowedDiscs = new List<DiscScript>();
+    List<DiscScript> inRangeDiscs = new List<DiscScript>();
+    public List<DiscScript> GetInRangeDiscs => inRangeDiscs;
+    List<DiscScript> inRangeUnthrowedDiscs = new List<DiscScript>();
     List<DiscScript> outRangeDiscs = new List<DiscScript>();
 
-    public int GetNearbyDiscsCount => nearbyDiscs.Count;
+    public int GetInRangeDiscsCount => inRangeDiscs.Count;
 
-    public void AddDiscToNearbyProximity(DiscScript disc)
+    public void AddDiscToInRange(DiscScript disc)
     {
         disc.isInRange = true;
 
-        if (!nearbyDiscs.Contains(disc))
+        if (!inRangeDiscs.Contains(disc))
         {
-            nearbyDiscs.Add(disc);
+            inRangeDiscs.Add(disc);
 
             if (!thrownDiscs.Contains(disc))
             {
-                nearbyUnthrowedDiscs.Add(disc);
+                inRangeUnthrowedDiscs.Add(disc);
             }
         }
 
@@ -222,17 +208,17 @@ public class DiscManager : MonoBehaviour
         }
     }
 
-    public void RemoveDiscFromNearbyProximity(DiscScript disc)
+    public void RemoveDiscFromInRange(DiscScript disc)
     {
         disc.isInRange = false;
 
-        if (nearbyDiscs.Contains(disc))
+        if (inRangeDiscs.Contains(disc))
         {
-            nearbyDiscs.Remove(disc);
+            inRangeDiscs.Remove(disc);
 
-            if (nearbyUnthrowedDiscs.Contains(disc))
+            if (inRangeUnthrowedDiscs.Contains(disc))
             {
-                nearbyUnthrowedDiscs.Remove(disc);
+                inRangeUnthrowedDiscs.Remove(disc);
             }
         }
 
@@ -240,6 +226,25 @@ public class DiscManager : MonoBehaviour
         {
             outRangeDiscs.Add(disc);
         }
+    }
+
+    public List<DiscScript> GetAllInRangeDiscsFromPosition(Vector3 position)
+    {
+        List<DiscScript> inRangeFromPos = new List<DiscScript>();
+
+        foreach (DiscScript disc in inRangeDiscs)
+        {
+            if (DiscIsInRange(position, disc.transform.position))
+                inRangeFromPos.Add(disc);
+        }
+
+        foreach (DiscScript disc in outRangeDiscs)
+        {
+            if (DiscIsInRange(position, disc.transform.position))
+                inRangeFromPos.Add(disc);
+        }
+
+        return inRangeFromPos;
     }
     #endregion
 }

@@ -20,6 +20,18 @@ public class PreviewCompetencesManager : MonoBehaviour
 
         discEffectZonePreview = Instantiate(discEffectZonePreviewPrefab);
         discEffectZonePreview.SetActive(false);
+
+        for(int i = 0; i < startNumberOfArrowPreview; i++)
+        {
+            ShootArrowPreview newArrowPreview = Instantiate(arrowPreviewPrefab);
+            newArrowPreview.gameObject.SetActive(false);
+            arrowPreviews.Add(newArrowPreview);
+        }
+    }
+
+    private void Update()
+    {
+
     }
 
     private void OnEnable()
@@ -40,56 +52,118 @@ public class PreviewCompetencesManager : MonoBehaviour
     [Header("Global")]
     [SerializeField] GameObject discEffectZonePreviewPrefab = default;
     GameObject discEffectZonePreview = default;
+
     float discEffectRange = 0;
+
+    [SerializeField] ShootArrowPreview arrowPreviewPrefab = default;
+    [SerializeField] int startNumberOfArrowPreview = 5;
+    List<ShootArrowPreview> arrowPreviews = new List<ShootArrowPreview>();
+    int currentNumberOfShownArrowPreviews = 0;
+
+    public void UpdateNumberOfShownTrajectories(int newNumber)
+    {
+        if (currentNumberOfShownArrowPreviews == newNumber)
+            return;
+
+        currentNumberOfShownArrowPreviews = newNumber;
+
+        if (newNumber > arrowPreviews.Count)
+        {
+            for(int i = arrowPreviews.Count; i < newNumber; i++)
+            {
+                ShootArrowPreview newArrowPreview = Instantiate(arrowPreviewPrefab);
+                newArrowPreview.gameObject.SetActive(false);
+                arrowPreviews.Add(newArrowPreview);
+            }
+        }
+
+        for(int i = 0; i < arrowPreviews.Count; i++)
+        {
+            arrowPreviews[i].gameObject.SetActive(i < newNumber);
+        }
+    }
+
+    public void UpdateTrajectoriesPreview(List<DiscTrajectoryParameters> discTrajectories)
+    {
+        DiscTrajectoryParameters trajParams = default;
+        for (int i = 0; i < discTrajectories.Count; i++)
+        {
+            if(i > currentNumberOfShownArrowPreviews)
+            {
+                Debug.LogWarning("WARNING : Updating more arrows than shown");
+            }
+
+            trajParams = discTrajectories[i];
+
+            //Debug.Log("Start : " + trajParams.startPosition + "; End : " + trajParams.endPosition);
+            arrowPreviews[i].SetPositions(new List<Vector3> { trajParams.startPosition, trajParams.endPosition });
+        }
+    }
 
     #region Throw
 
     [Header("Throw")]
+    
     [SerializeField] ShootArrowPreview arrowPreviewShoot;
-    public void StartThrowPreview(Vector3 startPos, Vector3 targetPos)
+    public void StartThrowPreview(List<DiscTrajectoryParameters> trajectoryParameters, Vector3 playerPosition)
     {
-        arrowPreviewShoot.gameObject.SetActive(true);
+        //arrowPreviewShoot.gameObject.SetActive(true);
 
         discEffectRange = DiscManager.Instance.rangeOfPlayer;
         discEffectZonePreview.gameObject.SetActive(true);
         discEffectZonePreview.transform.localScale = Vector3.one * discEffectRange;
+        discEffectZonePreview.transform.position = playerPosition + Vector3.up * 0.01f;
 
-        UpdateThrowPreview(startPos, targetPos);
+        //UpdateThrowPreview(startPos, targetPos);
+
+        UpdateNumberOfShownTrajectories(trajectoryParameters.Count);
+        UpdateThrowPreview(trajectoryParameters);
     }
 
-    public void UpdateThrowPreview(Vector3 startPos, Vector3 targetPos)
+    public void UpdateThrowPreview(List<DiscTrajectoryParameters> trajectoryParameters/*Vector3 startPos, Vector3 targetPos*/)
     {
-        arrowPreviewShoot.SetPositions(new List<Vector3> { startPos, targetPos });
+        UpdateTrajectoriesPreview(trajectoryParameters);
+        /*arrowPreviewShoot.SetPositions(new List<Vector3> { startPos, targetPos });
 
-        discEffectZonePreview.transform.position = startPos;
+        discEffectZonePreview.transform.position = startPos;*/
     }
 
     public void EndThrowPreview()
     {
-        arrowPreviewShoot.gameObject.SetActive(false);
+        //arrowPreviewShoot.gameObject.SetActive(false);
+
+        UpdateNumberOfShownTrajectories(0);
         discEffectZonePreview.gameObject.SetActive(false);
     }
     #endregion
 
     #region Recall 
 
-    public void StartRecallPreview(Vector3 recallPosition)
+    public void StartRecallPreview(List<DiscTrajectoryParameters> trajectoryParameters, Vector3 recallPosition)
     {
         discEffectRange = DiscManager.Instance.rangeOfPlayer;
         discEffectZonePreview.SetActive(true);
         discEffectZonePreview.transform.localScale = Vector3.one * discEffectRange;
+        discEffectZonePreview.transform.position = recallPosition + Vector3.up * 0.01f;
 
-        UpdateRecallPreview(recallPosition);
+        UpdateNumberOfShownTrajectories(trajectoryParameters.Count);
+        UpdateRecallPreview(trajectoryParameters, recallPosition);
     }
 
-    public void UpdateRecallPreview(Vector3 recallPosition)
+    public void UpdateRecallPreview(List<DiscTrajectoryParameters> trajectoryParameters, Vector3 recallPosition)
     {
-        discEffectZonePreview.transform.position = recallPosition;
+        discEffectZonePreview.transform.position = recallPosition + Vector3.up * 0.01f;
+
+        if (trajectoryParameters.Count != currentNumberOfShownArrowPreviews)
+            UpdateNumberOfShownTrajectories(trajectoryParameters.Count);
+
+        UpdateTrajectoriesPreview(trajectoryParameters);
     }
 
     public void EndRecallPreview()
     {
         discEffectZonePreview.SetActive(false);
+        UpdateNumberOfShownTrajectories(0);
     }
     #endregion
 }
