@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class csAreaVision : MonoBehaviour {
 
-    [SerializeField] BasicEnemy myBasicEnemy;
+    [SerializeField] TouniEnemy myBasicEnemy;
 
 	float angle = 45;
     float range  = 5;

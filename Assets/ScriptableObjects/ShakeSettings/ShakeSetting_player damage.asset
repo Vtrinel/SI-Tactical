@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6867ca9b98d12c7478dcbe6c041cf584, type: 3}
   m_Name: ShakeSetting_player damage
   m_EditorClassIdentifier: 
-  noiseSettingProfile: {fileID: 11400000, guid: 680dc2be41f7dff4d8b383b002e02b45,
+  noiseSettingProfile: {fileID: 11400000, guid: 1ce276b30c025bc47aa97fd8a101d9b9,
     type: 2}
-  shakeDuration: 0.75
-  shakeAmplitude: 0.5
+  shakeDuration: 0.6
+  shakeAmplitude: 1.31
   shakeFrequency: 1
   amplitudeOverTime:
     serializedVersion: 2
@@ -23,17 +23,17 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: -1.0078583
-      outSlope: -1.0078583
+      inSlope: -1.4254081
+      outSlope: -1.4254081
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1
-      value: -0.007858276
-      inSlope: -1.0078583
-      outSlope: -1.0078583
+      time: 0.7007141
+      value: 0.0011963751
+      inSlope: -1.4254081
+      outSlope: -1.4254081
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334

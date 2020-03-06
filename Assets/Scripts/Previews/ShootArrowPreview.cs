@@ -23,7 +23,7 @@ public class ShootArrowPreview : MonoBehaviour
         line.SetPosition(0, startPoint.position);
         line.SetPosition(1, endPoint.position);
 
-        var lookPos = Arrow.position - startPoint.position;
+        var lookPos = Arrow.position - trajectoryPoints[trajectoryPoints.Count - 2];
         lookPos.y = 0;
         Arrow.rotation = Quaternion.LookRotation(lookPos);
     }

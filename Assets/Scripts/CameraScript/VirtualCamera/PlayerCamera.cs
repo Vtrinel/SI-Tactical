@@ -19,6 +19,7 @@ public class PlayerCamera : VirtualCamera
         SetCameraActive();
     }
 
+
     #region Free Cam
     [Header("Free Cam System")]
     [SerializeField] Transform minimumFreeCameraOffset = default;
