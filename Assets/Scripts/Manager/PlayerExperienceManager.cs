@@ -269,4 +269,11 @@ public class PlayerExperienceManager : MonoBehaviour
             OnLossExperience?.Invoke(100);
         }
     }
+
+    public void CloseCompetenceInterface()
+    {
+        isCanvasCompetenceShowed = !isCanvasCompetenceShowed;
+        competenceCanvas.gameObject.SetActive(isCanvasCompetenceShowed);
+        OnMenuOpenedOrClosed?.Invoke();
+    }
 }
