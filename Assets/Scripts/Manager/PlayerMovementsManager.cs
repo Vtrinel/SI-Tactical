@@ -67,7 +67,7 @@ public class PlayerMovementsManager
 
         List<DiscTrajectoryParameters> discsInNewPositionRangeParameters = GetDiscInRangeTrajectory(targetPosition);
         PreviewCompetencesManager.Instance.StartRecallPreview(discsInNewPositionRangeParameters, targetPosition);
-        PreviewCompetencesManager.Instance.StartPreviewCamera(targetPosition);
+        //PreviewCompetencesManager.Instance.StartPreviewCamera(targetPosition);
 
         justStartedMovementPreview = true;
         UpdateMovementPreview(targetPosition);
@@ -100,7 +100,7 @@ public class PlayerMovementsManager
 
         movementPlayerPreview.transform.position = targetPosition;
 
-        PreviewCompetencesManager.Instance.UpdatePreviewCamera(targetPosition);
+        //PreviewCompetencesManager.Instance.UpdatePreviewCamera(targetPosition);
         if (!justStartedMovementPreview)
         {
             List<DiscTrajectoryParameters> discsInNewPositionRangeParameters = GetDiscInRangeTrajectory(targetPosition);
@@ -120,7 +120,7 @@ public class PlayerMovementsManager
         ClearInstantiatedDebugCircles();
         movementPlayerPreview.SetActive(false);
         PreviewCompetencesManager.Instance.EndRecallPreview();
-        PreviewCompetencesManager.Instance.EndPreviewCamera();
+        //PreviewCompetencesManager.Instance.EndPreviewCamera();
     }
 
     public List<DiscTrajectoryParameters> GetDiscInRangeTrajectory(Vector3 targetPosition)
@@ -277,6 +277,8 @@ public class PlayerMovementsManager
         EndMovementPreview();
 
         actionPointsUsedThisTurnToMove += movementCost;
+
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
 
         return movementCost;
     }

@@ -27,7 +27,7 @@ public class VirtualCamera : MonoBehaviour
     public virtual void SetCameraTarget(Transform target)
     {
         virtualCam.Follow = target;
-        virtualCam.LookAt = target;
+        //virtualCam.LookAt = target;
     }
 
     public virtual void SetCameraActive()

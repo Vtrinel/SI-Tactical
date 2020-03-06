@@ -325,6 +325,7 @@ public class CompetencesUsabilityManager
         DiscManager.Instance.AddDiscToThrown(newDisc);
 
         ResetUsabilityState();
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
     }
     #endregion
 
@@ -343,6 +344,7 @@ public class CompetencesUsabilityManager
         }
 
         ResetUsabilityState();
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
     }
 }
 

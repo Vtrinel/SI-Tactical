@@ -108,6 +108,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] KeyCode recallCompetenceInput = KeyCode.E;
     [SerializeField] KeyCode specialCompetenceInput = KeyCode.R;
     [SerializeField] KeyCode passTurnInput = KeyCode.Return;
+    [Space]
+    [SerializeField] KeyCode camForwardInput = KeyCode.UpArrow;
+    [SerializeField] KeyCode camBackwardInput = KeyCode.DownArrow;
+    [SerializeField] KeyCode camRightInput = KeyCode.RightArrow;
+    [SerializeField] KeyCode camLeftInput = KeyCode.LeftArrow;
+    public Vector2 GetCameraMoveKeyboardInput => new Vector2(
+        (Input.GetKey(camRightInput) ? 1 : 0) - (Input.GetKey(camLeftInput) ? 1 : 0), 
+        (Input.GetKey(camForwardInput)? 1 : 0) - (Input.GetKey(camBackwardInput) ? 1 : 0));
 
     bool ableToAct = false;
     public void SetAbleToAct(bool able)
@@ -135,6 +143,19 @@ public class PlayerController : MonoBehaviour
         {
             GameManager.Instance.SelectAction(ActionType.None);
             TurnManager.Instance.EndPlayerTurn();
+            CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+        }
+
+        Vector2 camKeyboardInputs = GetCameraMoveKeyboardInput;
+        if (camKeyboardInputs != Vector2.zero)
+        {
+            CameraManager.instance.GetPlayerCamera.MovePlayerCamera(camKeyboardInputs, true);
+        }
+        else
+        {
+            //Input.mousePosition.x
+            Debug.Log(Input.mousePosition);
+            
         }
     }
     #endregion
