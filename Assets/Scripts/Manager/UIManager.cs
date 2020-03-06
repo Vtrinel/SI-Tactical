@@ -3,39 +3,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    #region Dummy public attributes
-
-    public int maxHealth = 3;
-
-    [MinValue(0), MaxValue(10)]
-    public int currentHealth = 3;
-
-    public int actionPoint = 3;
-
-    #endregion
-
     #region Actions 
-
     public UnityAction OnPlayerMove;
     public UnityAction OnPlayerSpecial;
     public UnityAction OnPlayerLaunch;
     public UnityAction OnPlayerRecall;
     public UnityAction OnPlayerSwap;
-
     #endregion
 
     #region ButtonUtilities 
+    [Header("UI Parameters")]
     public GameObject ButtonMove;
     public GameObject ButtonLaunch;
     public GameObject ButtonRecall;
+    public Image goldSlider;
     #endregion
 
     private static UIManager _instance;
     public static UIManager Instance { get { return _instance; } }
 
+    void OnEnable()
+    {
+        PlayerExperienceManager.Instance.OnGainExperience += AddExperience;
+        PlayerExperienceManager.Instance.OnLossExperience += LossExperience;
+    }
+
+    void OnDisable()
+    {
+        PlayerExperienceManager.Instance.OnGainExperience -= AddExperience;
+        PlayerExperienceManager.Instance.OnLossExperience -= LossExperience;
+    }
 
     private void Awake()
     {
@@ -47,6 +48,16 @@ public class UIManager : MonoBehaviour
         {
             _instance = this;
         }
+    }
+
+    public void AddExperience(int experience)
+    {
+        goldSlider.fillAmount += experience / 100;
+    }
+
+    public void LossExperience(int experience)
+    {
+        goldSlider.fillAmount -= experience / 100;
     }
 
     #region Menu interactions
