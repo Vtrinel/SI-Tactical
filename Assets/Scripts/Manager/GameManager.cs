@@ -19,13 +19,13 @@ public class GameManager : MonoBehaviour
         }
 
         playerMovementsManager.SetUp(player);
-        competencesManager.SetUp(player);        
+        competencesUsabilityManager.SetUp(player);        
 
         OnWorldMouseResultUpdate += playerMovementsManager.UpdateCurrentWorldMouseResult;
-        OnWorldMouseResultUpdate += competencesManager.UpdateCurrentWorldMouseResult;
+        OnWorldMouseResultUpdate += competencesUsabilityManager.UpdateCurrentWorldMouseResult;
 
         playerMovementsManager.OnPreparationAmountChanged += UpdateActionPointsDebugTextAmount;
-        competencesManager.OnCompetenceStateChanged += UpdatePlayerActability;
+        competencesUsabilityManager.OnCompetenceStateChanged += UpdatePlayerActability;
 
         player.OnPlayerReachedMovementDestination += UpdatePlayerActability;
 
@@ -41,6 +41,12 @@ public class GameManager : MonoBehaviour
 
         turnManager.OnCheckGameProgression += levelManager.CheckForProgressTurn;
         levelManager.OnGoalReached += WinGame;
+
+        playerExperienceManager.OnSetChanged += competencesUsabilityManager.UpdateSet;
+        playerExperienceManager.OnMenuOpenedOrClosed += UpdatePlayerActability;
+        playerExperienceManager.SetUp();
+
+        competencesUsabilityManager.OnRecallCompetenceChanged += playerMovementsManager.UpdateCurrentRecallCompetence;
     }
 
     private void Update()
@@ -49,7 +55,7 @@ public class GameManager : MonoBehaviour
         OnWorldMouseResultUpdate?.Invoke(currentWorldMouseResult);
 
         playerMovementsManager.UpdateSystem();
-        competencesManager.UpdateSystem();
+        competencesUsabilityManager.UpdateSystem();
     }
 
     private void LateUpdate()
@@ -80,6 +86,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TurnManager turnManager = default;
     [SerializeField] EnemiesManager enemiesManager = default;
     [SerializeField] LevelProgressionManager levelManager = default;
+    [SerializeField] PlayerExperienceManager playerExperienceManager = default;
 
     public bool OnMouseInUI = false;
 
@@ -134,8 +141,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Player Systems")]
     [SerializeField] PlayerMovementsManager playerMovementsManager = default;
-    [SerializeField] CompetencesManager competencesManager = default;
-    public Competence GetCurrentlySelectedCompetence => competencesManager.GetCurrentCompetence;
+    [SerializeField] CompetencesUsabilityManager competencesUsabilityManager = default;
+    
+    public Competence GetCurrentlySelectedCompetence => competencesUsabilityManager.GetCurrentCompetence;
     public Action<bool> OnMoveActionSelectionStateChanged;
     public Action<bool> OnThrowCompetenceSelectionStateChanged;
     public Action<bool> OnRecallCompetenceSelectionStateChanged;
@@ -199,10 +207,10 @@ public class GameManager : MonoBehaviour
     {
         if (actionType == ActionType.None)
         {
-            if (competencesManager.IsPreparingCompetence)
+            if (competencesUsabilityManager.IsPreparingCompetence)
             {
-                CallUnselectActionEvent(competencesManager.GetCurrentCompetenceType);
-                competencesManager.InterruptPreparation();
+                CallUnselectActionEvent(competencesUsabilityManager.GetCurrentCompetenceType);
+                competencesUsabilityManager.InterruptPreparation();
             }
 
             if (playerMovementsManager.IsWillingToMove)
@@ -214,10 +222,10 @@ public class GameManager : MonoBehaviour
 
         if (actionType == ActionType.Move)
         {
-            if (competencesManager.IsPreparingCompetence)
+            if (competencesUsabilityManager.IsPreparingCompetence)
             {
-                CallUnselectActionEvent(competencesManager.GetCurrentCompetenceType);
-                competencesManager.InterruptPreparation();
+                CallUnselectActionEvent(competencesUsabilityManager.GetCurrentCompetenceType);
+                competencesUsabilityManager.InterruptPreparation();
             }
 
             if (!playerMovementsManager.IsWillingToMove)
@@ -243,7 +251,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            ActionType previousActionType = competencesManager.GetCurrentCompetenceType;
+            ActionType previousActionType = competencesUsabilityManager.GetCurrentCompetenceType;
 
             if (playerMovementsManager.IsWillingToMove)
             {
@@ -251,22 +259,22 @@ public class GameManager : MonoBehaviour
                 playerMovementsManager.InterruptMovementPreparation();
             }
 
-            if (competencesManager.IsPreparingCompetence)
+            if (competencesUsabilityManager.IsPreparingCompetence)
             {
                 CallUnselectActionEvent(previousActionType);
-                competencesManager.InterruptPreparation();
+                competencesUsabilityManager.InterruptPreparation();
             }
 
             if (previousActionType != actionType)
             {
-                ActionSelectionResult competenceSelectionResult = competencesManager.TrySelectAction(currentActionPointsAmount, actionType);
+                ActionSelectionResult competenceSelectionResult = competencesUsabilityManager.TrySelectAction(currentActionPointsAmount, actionType);
                 if (competenceSelectionResult == ActionSelectionResult.EnoughActionPoints)
                 {
                     CallSelectActionEvent(actionType);
                 }
 
                 SetActionPointsDebugTextVisibility(competenceSelectionResult == ActionSelectionResult.EnoughActionPoints);
-                UpdateActionPointsDebugTextAmount(competencesManager.GetCurrentCompetenceCost());
+                UpdateActionPointsDebugTextAmount(competencesUsabilityManager.GetCurrentCompetenceCost());
             }
         }
     }
@@ -290,18 +298,18 @@ public class GameManager : MonoBehaviour
                 ConsumeActionPoints(cost);
             }
         }
-        else if(competencesManager.IsPreparingCompetence)
+        else if(competencesUsabilityManager.IsPreparingCompetence)
         {
-            int cost = competencesManager.GetCurrentCompetenceCost();
-            CallUnselectActionEvent(competencesManager.GetCurrentCompetenceType);
-            switch (competencesManager.GetCurrentCompetenceType)
+            int cost = competencesUsabilityManager.GetCurrentCompetenceCost();
+            CallUnselectActionEvent(competencesUsabilityManager.GetCurrentCompetenceType);
+            switch (competencesUsabilityManager.GetCurrentCompetenceType)
             {
                 case ActionType.Throw:
-                    competencesManager.LaunchThrowCompetence();
+                    competencesUsabilityManager.LaunchThrowCompetence();
                     break;
 
                 case ActionType.Recall:
-                    competencesManager.LaunchRecallCompetence();
+                    competencesUsabilityManager.LaunchRecallCompetence();
                     break;
 
                 case ActionType.Special:
@@ -356,12 +364,14 @@ public class GameManager : MonoBehaviour
         bool canAct = 
             !playerMovementsManager.IsMoving 
             && 
-            !competencesManager.IsUsingCompetence 
+            !competencesUsabilityManager.IsUsingCompetence 
             && 
-            turnManager.GetCurrentTurnState == TurnState.PlayerTurn;
+            turnManager.GetCurrentTurnState == TurnState.PlayerTurn
+            &&
+            !playerExperienceManager.IsUsingCompetencesMenu;
 
         player.SetAbleToAct(canAct);
-        SetActionPointsDebugTextVisibility(playerMovementsManager.IsWillingToMove || competencesManager.IsPreparingCompetence);
+        SetActionPointsDebugTextVisibility(playerMovementsManager.IsWillingToMove || competencesUsabilityManager.IsPreparingCompetence);
     }
     #endregion
 
@@ -396,5 +406,5 @@ public struct WorldMouseResult
 
 public enum ActionSelectionResult
 {
-    EnoughActionPoints, NotEnoughActionPoints, NoCompetenceFound
+    EnoughActionPoints, NotEnoughActionPoints, NoCompetenceFound, NotEnoughDiscs, NoNearbyDisc
 }

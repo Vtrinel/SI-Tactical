@@ -36,7 +36,7 @@ public class CompetenceUnlockDisplay : MonoBehaviour
 
         if (Currentcompetence)
         {
-            description.text = Currentcompetence.Getdescription;
+            description.text = Currentcompetence.GetCompetenceDescription;
             ActionPoint.text = Currentcompetence.GetActionPointsCost.ToString();
 
             // See if the competence can be unlocked or equiped
@@ -56,8 +56,6 @@ public class CompetenceUnlockDisplay : MonoBehaviour
     // Send the request to unlock the competence
     public void UnlockCompetence()
     {
-        Debug.Log(Currentcompetence.ToString());
-
         PlayerExperienceManager._instance.CanUnlockCompetence(Currentcompetence);
     }
 

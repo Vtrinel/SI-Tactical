@@ -84,6 +84,12 @@ MonoBehaviour:
   virtualCam: {fileID: 2107271652310472110}
   cameraShake: {fileID: 3226341438197719348}
   player: {fileID: 0}
+  followTransform: {fileID: 0}
+  minimumFreeCameraOffset: {fileID: 0}
+  maximumFreeCameraOffset: {fileID: 0}
+  minimumFreeCameraMoveSpeed: 3
+  maximumFreeCameraMoveSpeed: 10
+  keyboardFreeCameraMoveSpeed: 8
 --- !u!114 &3226341438197719348
 MonoBehaviour:
   m_ObjectHideFlags: 0

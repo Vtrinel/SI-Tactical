@@ -3,43 +3,60 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using TMPro;
 
 public class PlayerExperienceManager : MonoBehaviour
 {
+    public void SetUp()
+    {
+        equipedThrowCompetence = startThrowCompetence;
+        equipedRecallCompetence = startRecallCompetence;
+        equipedSpecialCompetence = startSpecialCompetence;
+
+        OnSetChanged?.Invoke(equipedThrowCompetence, equipedRecallCompetence, equipedSpecialCompetence);
+    }
+
     // Public attributes
     public static PlayerExperienceManager _instance;
 
+    [Header("Interface modifications")]
     public Canvas competenceCanvas;
+    public TextMeshProUGUI competenceInfoText;
+
+    [Header("Menus Competences")]
+    public GameObject throwInterface;
+    public GameObject recallInterface;
+    public GameObject specialInterface;
 
     //Actions
-    public event Action<int> OnSelectTypeCompetence;
-    public event Action<Competence> OnSelectCompetence;
-    public event Action<Competence> OnTryUnlockCompetence;
-    public event Action<Competence> OnEquipCompetence;
-
+    public Action<int> OnSelectTypeCompetence;
+    public Action<Competence> OnSelectCompetence;
+    public Action<Competence> OnTryUnlockCompetence;
+    public Action<Competence> OnEquipCompetence;
+    public Action<CompetenceThrow, CompetenceRecall, CompetenceSpecial> OnSetChanged;
+    public Action<int> OnGainExperience;
 
     // Private Attributes
     
     private Competence selectedCompetence;
 
-    private List<Competence> listUnlockedCompetences = new List<Competence>();
-    private List<Competence> listEquipedCompetences = new List<Competence>();
+    CompetenceThrow equipedThrowCompetence = default;
+    CompetenceRecall equipedRecallCompetence = default;
+    CompetenceSpecial equipedSpecialCompetence = default;
 
-    public GameObject throwInterface;
-    public GameObject recallInterface;
-    public GameObject specialInterface;
+    
+
+    [Header("Start competences")]
+    [SerializeField] CompetenceThrow startThrowCompetence = default;
+    [SerializeField] CompetenceRecall startRecallCompetence = default;
+    [SerializeField] CompetenceSpecial startSpecialCompetence = default;
 
     private int competenceTypeSelected = 0; // 0 = throw, 1 = recall, 2 = special
-    private int competencesPoints = 1;
+    private int competenceBar = 0; // 0 => 100. At 100, unlock a competence point
+    private bool canUnlockComp = false;
 
     private bool isCanvasCompetenceShowed = false;
-
-    //private void Start()
-    //{
-    //    throwInterface = GameObject.Find("MenuCompetenceThrow");
-    //    recallInterface = GameObject.Find("MenuCompetenceRecall");
-    //    specialInterface = GameObject.Find("MenuCompetenceSpecial");
-    //}
+    public bool IsUsingCompetencesMenu => isCanvasCompetenceShowed;
 
     // For the singleton
     private void Awake()
@@ -89,14 +106,31 @@ public class PlayerExperienceManager : MonoBehaviour
                 specialInterface.gameObject.SetActive(false);
                 break;
         }
+
+        // Compatence bar
+        if (competenceBar >= 100)
+        {
+            competenceBar = 100;
+            canUnlockComp = true;
+
+            competenceInfoText.text = "Competence point available";
+        }
+        else
+        {
+            canUnlockComp = false;
+            competenceInfoText.text = "No point available";
+        }
+
     }
 
     // Show or not the competence interface
 
+    public Action OnMenuOpenedOrClosed;
     public void IsCompetenceInterfaceShowing()
     {
         isCanvasCompetenceShowed = !isCanvasCompetenceShowed;
         competenceCanvas.gameObject.SetActive(isCanvasCompetenceShowed);
+        OnMenuOpenedOrClosed?.Invoke();
     }
 
     // Change the type of competence selected
@@ -105,19 +139,19 @@ public class PlayerExperienceManager : MonoBehaviour
         competenceTypeSelected = type;
         OnSelectTypeCompetence?.Invoke(type);
     }
+    
 
     // Check if a competence can be unlocked and unlock it if possible
     public void CanUnlockCompetence(Competence competence)
     {
 
-        if (competencesPoints > 0)
+        if (canUnlockComp)
         {
-            competence.SetUnlockedState(true);
-            competencesPoints = 0;
-
-            listUnlockedCompetences.Add(competence);
-
-            Debug.Log("Competence unlocked");
+            if (competence.CanUnlockCompetence())
+            {
+                competenceBar = 0;
+                Debug.Log("Competence unlocked");
+            }
         }
         else
         {
@@ -137,47 +171,30 @@ public class PlayerExperienceManager : MonoBehaviour
 
     public void EquipCompetence(Competence competence)
     {
-        Debug.Log(listEquipedCompetences.Count);
-
-        bool competenceAdd = false;
-
-        // Replace the type of competence by the new one
-        for (int i = 0; i < listEquipedCompetences.Count; i++)
+        CompetenceThrow newThrowComp = competence as CompetenceThrow;
+        if (newThrowComp != null)
         {
-            if (competence is CompetenceRecall && listEquipedCompetences[i] is CompetenceRecall)
-            {
-                listEquipedCompetences[i] = competence;
-                competenceAdd = true;
-                Debug.Log("Competence recall changed");
-
-                break;
-            }
-
-            else if (competence is CompetenceThrow && listEquipedCompetences[i] is CompetenceThrow)
-            {
-                listEquipedCompetences[i] = competence;
-                competenceAdd = true;
-                Debug.Log("Competence throw changed");
-                break;
-            }
-
-            else if (competence is CompetenceSpecial && listEquipedCompetences[i] is CompetenceSpecial)
-            {
-                listEquipedCompetences[i] = competence;
-                competenceAdd = true;
-                Debug.Log("Competence special changed");
-                break;
-            }
+            equipedThrowCompetence = newThrowComp;
         }
-
-        // Add the competence if nothing is found
-        if (!competenceAdd)
+        else
         {
-            listEquipedCompetences.Add(competence);
-            Debug.Log("Competence add");
-        }
+            CompetenceRecall newRecallComp = competence as CompetenceRecall;
+            if (newRecallComp != null)
+            {
+                equipedRecallCompetence = newRecallComp;
+            }
+            else
+            {
+                CompetenceSpecial newSpecialComp = competence as CompetenceSpecial;
+                if (newSpecialComp != null)
+                {
+                    equipedSpecialCompetence = newSpecialComp;
+                }
+            }
+        }        
 
         OnEquipCompetence?.Invoke(competence);
+        OnSetChanged?.Invoke(equipedThrowCompetence, equipedRecallCompetence, equipedSpecialCompetence);
     }
 
     // Getter SelectedCompetence
@@ -192,17 +209,11 @@ public class PlayerExperienceManager : MonoBehaviour
         ClearLog();
 
         Debug.Log("Show all competences stats");
-        Debug.Log("<color=blue>Competences points : </color>" + competencesPoints);
-        Debug.Log("<color=red>Unlocked competences</color>");
-        for (int i = 0; i < listUnlockedCompetences.Count; i++)
-        {
-            Debug.Log(listUnlockedCompetences[i].Getdescription);
-        }
+        Debug.Log("<color=blue>Competences points : </color>" + canUnlockComp);
         Debug.Log("<color=yellow>Equiped competences</color>");
-        for (int i = 0; i < listEquipedCompetences.Count; i++)
-        {
-            Debug.Log(listEquipedCompetences[i].Getdescription);
-        }
+        Debug.Log("equipedThrowCompetence : " + equipedThrowCompetence.GetCompetenceName);
+        Debug.Log("equipedRecallCompetence : " + equipedRecallCompetence.GetCompetenceName);
+        Debug.Log("equipedSpecialCompetence : " + equipedSpecialCompetence.GetCompetenceName);
     }
 
     // Clear the console
@@ -214,8 +225,31 @@ public class PlayerExperienceManager : MonoBehaviour
         method.Invoke(new object(), null);
     }
 
-    public void AddCompetencePoint()
+    public void GainExperience(int experience)
     {
-        competencesPoints++;
+        competenceBar += experience;
+        OnGainExperience?.Invoke(experience);
+    }
+
+    public void AddMaximumDisc()
+    {
+        if (canUnlockComp)
+        {
+            DiscManager.Instance.AddOneMaxNumberOfPossessedDiscs();
+
+            canUnlockComp = false;
+            competenceBar = 0;
+        }
+    }
+
+    public void AddMaximumRangeDisc()
+    {
+        if (canUnlockComp)
+        {
+            DiscManager.Instance.AddOneMaxRangeOfPlayer();
+
+            canUnlockComp = false;
+            competenceBar = 0;
+        }
     }
 }
