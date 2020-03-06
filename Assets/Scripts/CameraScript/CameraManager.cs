@@ -43,11 +43,9 @@ public class CameraManager : MonoBehaviour
 
     public void SetCamera(VirtualCamera vCam)
     {
-        //if (isPlayerCam) playerCamera = (PlayerCamera)p_virtualCam;
         for (int i = 0; i < virtualCameras.Count; i++)
         {
             VirtualCameras[i].SetPriority(VirtualCameras[i] == vCam ? activeCamPriority : inactiveCamPriority);
-            Debug.Log("Set Cam");
         }
 
         currentCamera = vCam;

@@ -80,6 +80,13 @@ public class DamageableEntity : MonoBehaviour
     {
         OnLifeReachedZero?.Invoke();
     }
+
+    public void AddLifeBar(int value)
+    {
+        currentLifeAmount += value;
+        maxLifeAmount += value;
+        OnLifeAmountChanged?.Invoke(currentLifeAmount, Mathf.Abs(value));
+    }
 }
 
 public enum DamageTag { Player, Enemy, Environment }
