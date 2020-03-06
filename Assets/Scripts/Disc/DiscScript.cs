@@ -53,7 +53,8 @@ public class DiscScript : MonoBehaviour
             case 9:
                 //recall or touch player
                 isAttacking = false;
-                DiscManager.Instance.DeleteCrystal(gameObject);
+                //DiscManager.Instance.DeleteCrystal(gameObject);
+                DiscManager.Instance.PlayerRetreiveDisc(this);
                 break;
 
             //ennemy
@@ -101,7 +102,7 @@ public class DiscScript : MonoBehaviour
 
         //transform.LookAt(destination, Vector3.forward);
         //transform.position += transform.forward * 1.2f;
-        transform.position = new Vector3(transform.position.x,  DiscManager.crystalHeight, transform.position.z);
+        transform.position = new Vector3(transform.position.x,  DiscManager.discHeight, transform.position.z);
         myRigidBody.isKinematic = false;
         myCollider.enabled = true;
     }
