@@ -117,8 +117,10 @@ public class PlayerController : MonoBehaviour
         (Input.GetKey(camRightInput) ? 1 : 0) - (Input.GetKey(camLeftInput) ? 1 : 0), 
         (Input.GetKey(camForwardInput)? 1 : 0) - (Input.GetKey(camBackwardInput) ? 1 : 0));
 
-    [SerializeField] float cursorMinCameraMovementCoeff = 0.8f;
-    [SerializeField] float cursorMaxCameraMovementCoeff = 0.95f;
+    [SerializeField] float cursorMinCameraHorizontalMovementCoeff = 0.8f;
+    [SerializeField] float cursorMaxCameraHorizontalMovementCoeff = 0.95f;
+    [SerializeField] float cursorMinCameraVerticalMovementCoeff = 0.9f;
+    [SerializeField] float cursorMaxCameraVerticalMovementCoeff = 0.98f;
 
     bool ableToAct = false;
     public void SetAbleToAct(bool able)
@@ -163,11 +165,11 @@ public class PlayerController : MonoBehaviour
             float cursorVerticalCoeff = ((clampedMousePosition.y - Screen.height / 2) / (Screen.height / 2));
 
             float cursorHorizontalInput = Mathf.Clamp(
-                1 - ((cursorMaxCameraMovementCoeff - Mathf.Abs(cursorHorizontalCoeff))/ (cursorMaxCameraMovementCoeff - cursorMinCameraMovementCoeff))
+                1 - ((cursorMaxCameraHorizontalMovementCoeff - Mathf.Abs(cursorHorizontalCoeff))/ (cursorMaxCameraHorizontalMovementCoeff - cursorMinCameraHorizontalMovementCoeff))
                 , 0, 1) * Mathf.Sign(cursorHorizontalCoeff);
 
             float cursorVerticalInput = Mathf.Clamp(
-               1 - ((cursorMaxCameraMovementCoeff - Mathf.Abs(cursorVerticalCoeff)) / (cursorMaxCameraMovementCoeff - cursorMinCameraMovementCoeff))
+               1 - ((cursorMaxCameraVerticalMovementCoeff - Mathf.Abs(cursorVerticalCoeff)) / (cursorMaxCameraVerticalMovementCoeff - cursorMinCameraVerticalMovementCoeff))
                , 0, 1) * Mathf.Sign(cursorVerticalCoeff);
 
             Vector2 camCursorInput = new Vector2(cursorHorizontalInput, cursorVerticalInput);
