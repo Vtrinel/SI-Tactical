@@ -112,7 +112,11 @@ public class DiscManager : MonoBehaviour
     public int GetPossessedDiscsCount => possessedDiscs.Count;
     public void AddOneMaxNumberOfPossessedDiscs() 
     { 
-        maxNumberOfPossessedDiscs++; 
+        maxNumberOfPossessedDiscs++;
+
+        DiscScript newDisc = GetDiscFromPool();
+        newDisc.gameObject.SetActive(false);
+        possessedDiscs.Push(newDisc);
     }
 
     public void FillPossessedDiscsWithBasicDiscs()

@@ -226,6 +226,6 @@ public class PlayerExperienceManager : MonoBehaviour
 
     public void AddMaximumRangeDisc()
     {
-
+        DiscManager.Instance.AddOneMaxRangeOfPlayer();
     }
 }
