@@ -10,32 +10,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6867ca9b98d12c7478dcbe6c041cf584, type: 3}
-  m_Name: ShakeSetting_ThrowDisc
+  m_Name: ShakeSetting_Recall
   m_EditorClassIdentifier: 
-  noiseSettingProfile: {fileID: 0}
-  shakeDuration: 0.3
-  shakeAmplitude: 1.2
-  shakeFrequency: 2
+  noiseSettingProfile: {fileID: 11400000, guid: e0c62c6dca2545c4db26a4cb778aaefe,
+    type: 2}
+  shakeDuration: 2
+  shakeAmplitude: 1.5
+  shakeFrequency: 1
   amplitudeOverTime:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
+      time: -0.001865387
+      value: -0.0010626316
+      inSlope: 0.35624912
+      outSlope: 0.35624912
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.046849757
     - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
+      time: 1.0018921
+      value: -0.0012304783
+      inSlope: -1.1330677
+      outSlope: -1.1330677
+      tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.017770573
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

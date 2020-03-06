@@ -60,6 +60,30 @@ public class PreviewCompetencesManager : MonoBehaviour
     List<ShootArrowPreview> arrowPreviews = new List<ShootArrowPreview>();
     int currentNumberOfShownArrowPreviews = 0;
 
+    /*#region Preview Camera
+    [SerializeField] Transform previewFollowCameraParent = default;
+    [SerializeField] VirtualCamera previewFollowCamera = default;
+
+    public void StartPreviewCamera(Vector3 cameraPreviewPos)
+    {
+        CameraManager.instance.AddVirtualCamera(previewFollowCamera);
+        previewFollowCamera.gameObject.SetActive(true);
+        UpdatePreviewCamera(cameraPreviewPos);
+    }
+
+    public void UpdatePreviewCamera(Vector3 cameraPreviewPos)
+    {
+        previewFollowCameraParent.position = cameraPreviewPos;
+    }
+
+    public void EndPreviewCamera()
+    {
+        CameraManager.instance.RemoveVirtualCamera(previewFollowCamera);
+        previewFollowCamera.gameObject.SetActive(false);
+    }
+    #endregion*/
+
+    #region Trajectories
     public void UpdateNumberOfShownTrajectories(int newNumber)
     {
         if (currentNumberOfShownArrowPreviews == newNumber)
@@ -99,6 +123,7 @@ public class PreviewCompetencesManager : MonoBehaviour
             arrowPreviews[i].SetPositions(new List<Vector3> { trajParams.startPosition, trajParams.endPosition });
         }
     }
+    #endregion
 
     #region Throw
 
