@@ -53,11 +53,13 @@ public class EnemyBase : MonoBehaviour
     {
         Debug.Log(name + "' turn");
 
+        myIA.isPlaying = true;
         PlayMyTurn();
     }
 
     public void EndTurn()
     {
+        myIA.isPlaying = false;
         if(TurnManager.Instance.GetCurrentTurnState != TurnState.EnemyTurn)
         {
             return;
@@ -108,7 +110,7 @@ public class EnemyBase : MonoBehaviour
 
         if (myIA == null)
             return;
-        myIA.OnIsAtDestination += EndTurn;
+        myIA.OnFinishTurn += EndTurn;
     }
 
     private void OnDisable()
@@ -120,6 +122,6 @@ public class EnemyBase : MonoBehaviour
         if (myIA == null)
             return;
 
-        myIA.OnIsAtDestination -= EndTurn;
+        myIA.OnFinishTurn -= EndTurn;
     }
 }

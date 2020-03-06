@@ -42,7 +42,7 @@ public class CultisteEnemy : IAEnemyVirtual
         {
             PrepareAttack();
             yield return new WaitForSeconds(0.4f);
-            OnIsAtDestination?.Invoke();
+            OnFinishTurn?.Invoke();
         }
         else
         {
@@ -55,8 +55,7 @@ public class CultisteEnemy : IAEnemyVirtual
         Transform newObjDestination = ResershDisc();
         if (newObjDestination == null)
         {
-            print("<color=green> Null </color>");
-            OnIsAtDestination?.Invoke();
+            OnFinishTurn?.Invoke();
             return;
         }
 
@@ -96,7 +95,7 @@ public class CultisteEnemy : IAEnemyVirtual
         }
 
         myNavAgent.isStopped = true;
-        OnIsAtDestination?.Invoke();
+        OnFinishTurn?.Invoke();
     }
 
     void PrepareAttack()
@@ -156,7 +155,7 @@ public class CultisteEnemy : IAEnemyVirtual
     void ForceStopMyTurn()
     {
         StopAllCoroutines();
-        OnIsAtDestination?.Invoke();
+        OnFinishTurn?.Invoke();
     }
 
     private void OnDrawGizmos()
@@ -166,5 +165,13 @@ public class CultisteEnemy : IAEnemyVirtual
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, distanceOfDeplacement);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.collider.gameObject.layer == 11 && isPlaying)
+        {
+
+        }
     }
 }
