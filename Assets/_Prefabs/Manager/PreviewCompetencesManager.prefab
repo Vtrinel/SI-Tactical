@@ -27,8 +27,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1103542465089157846}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -49,98 +48,4 @@ MonoBehaviour:
   arrowPreviewPrefab: {fileID: 9222989131551337375, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
     type: 3}
   startNumberOfArrowPreview: 5
-  previewFollowCameraParent: {fileID: 0}
-  previewFollowCamera: {fileID: 0}
-  arrowPreviewShoot: {fileID: 5573890398578492685}
---- !u!1001 &3649266408499228306
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 5227372414070284318}
-    m_Modifications:
-    - target: {fileID: 4464296968770688068, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4464296968770688068, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4464296968770688068, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4464296968770688068, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4464296968770688068, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4464296968770688068, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4464296968770688068, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4464296968770688068, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4464296968770688068, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4464296968770688068, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4464296968770688068, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4464296968770688091, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
-        type: 3}
-      propertyPath: m_Name
-      value: ArrowShoot
-      objectReference: {fileID: 0}
-    - target: {fileID: 4464296968770688091, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd, type: 3}
---- !u!4 &1103542465089157846 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4464296968770688068, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
-    type: 3}
-  m_PrefabInstance: {fileID: 3649266408499228306}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5573890398578492685 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9222989131551337375, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
-    type: 3}
-  m_PrefabInstance: {fileID: 3649266408499228306}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94f516a882de06a49bf6c95b0c79215a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  arrowPreviewShoot: {fileID: 0}

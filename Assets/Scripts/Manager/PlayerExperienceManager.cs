@@ -8,8 +8,6 @@ public class PlayerExperienceManager : MonoBehaviour
 {
     public void SetUp()
     {
-        /*listUnlockedCompetences.Add();
-        listEquipedCompetences.Add();*/
         equipedThrowCompetence = startThrowCompetence;
         equipedRecallCompetence = startRecallCompetence;
         equipedSpecialCompetence = startSpecialCompetence;
@@ -34,7 +32,6 @@ public class PlayerExperienceManager : MonoBehaviour
     private Competence selectedCompetence;
 
     private List<Competence> listUnlockedCompetences = new List<Competence>();
-    //private List<Competence> listEquipedCompetences = new List<Competence>();
     CompetenceThrow equipedThrowCompetence = default;
     CompetenceRecall equipedRecallCompetence = default;
     CompetenceSpecial equipedSpecialCompetence = default;
@@ -49,17 +46,10 @@ public class PlayerExperienceManager : MonoBehaviour
     [SerializeField] CompetenceSpecial startSpecialCompetence = default;
 
     private int competenceTypeSelected = 0; // 0 = throw, 1 = recall, 2 = special
-    private int competencesPoints = 1;
+    private int competencePoint = 1;
 
     private bool isCanvasCompetenceShowed = false;
     public bool IsUsingCompetencesMenu => isCanvasCompetenceShowed;
-
-    //private void Start()
-    //{
-    //    throwInterface = GameObject.Find("MenuCompetenceThrow");
-    //    recallInterface = GameObject.Find("MenuCompetenceRecall");
-    //    specialInterface = GameObject.Find("MenuCompetenceSpecial");
-    //}
 
     // For the singleton
     private void Awake()
@@ -127,15 +117,16 @@ public class PlayerExperienceManager : MonoBehaviour
         competenceTypeSelected = type;
         OnSelectTypeCompetence?.Invoke(type);
     }
+    
 
     // Check if a competence can be unlocked and unlock it if possible
     public void CanUnlockCompetence(Competence competence)
     {
 
-        if (competencesPoints > 0)
+        if (competencePoint > 0)
         {
             competence.SetUnlockedState(true);
-            competencesPoints = 0;
+        competencePoint = 0;
 
             listUnlockedCompetences.Add(competence);
 
@@ -201,7 +192,7 @@ public class PlayerExperienceManager : MonoBehaviour
         ClearLog();
 
         Debug.Log("Show all competences stats");
-        Debug.Log("<color=blue>Competences points : </color>" + competencesPoints);
+        Debug.Log("<color=blue>Competences points : </color>" + competencePoint);
         Debug.Log("<color=red>Unlocked competences</color>");
         for (int i = 0; i < listUnlockedCompetences.Count; i++)
         {
@@ -225,6 +216,16 @@ public class PlayerExperienceManager : MonoBehaviour
 
     public void AddCompetencePoint()
     {
-        competencesPoints++;
+        competencePoint++;
+    }
+
+    public void AddMaximumDisc()
+    {
+        DiscManager.Instance.AddOneMaxNumberOfPossessedDiscs();
+    }
+
+    public void AddMaximumRangeDisc()
+    {
+
     }
 }
