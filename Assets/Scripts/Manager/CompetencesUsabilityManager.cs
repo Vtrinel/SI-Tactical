@@ -316,13 +316,11 @@ public class CompetencesUsabilityManager
         newCompetenceRequestInfo.startPosition = _player.transform.position + Vector3.up * DiscManager.discHeight;
         newCompetenceRequestInfo.targetPosition = GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition) + Vector3.up * DiscManager.discHeight;
 
-        //Debug.Log("Throw knife at position " + newCompetenceRequestInfo.targetPosition);
-        Debug.Log("Using throw competence : " + throwCompetence.GetCompetenceName);
+        //Debug.Log("Using throw competence : " + throwCompetence.GetCompetenceName);
 
         DiscScript newDisc = DiscManager.Instance.TakeFirstDiscFromPossessedDiscs();
         newDisc.AttackHere(newCompetenceRequestInfo.startTransform, newCompetenceRequestInfo.targetPosition);
         newDisc.gameObject.SetActive(true);
-        DiscManager.Instance.AddDiscToThrown(newDisc);
 
         ResetUsabilityState();
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
@@ -335,8 +333,7 @@ public class CompetencesUsabilityManager
         newCompetenceRequestInfo.targetTransform = _player.transform;
         newCompetenceRequestInfo.targetPosition = _player.transform.position;
 
-        //Debug.Log("Recall knife at position " + newCompetenceRequestInfo.targetPosition);
-        Debug.Log("Using recall competence : " + recallCompetence.GetCompetenceName);
+        //Debug.Log("Using recall competence : " + recallCompetence.GetCompetenceName);
 
         foreach (DiscScript disc in DiscManager.Instance.GetInRangeDiscs)
         {

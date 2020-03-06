@@ -165,8 +165,8 @@ public class GameManager : MonoBehaviour
 
     public void PlayerMaxLifeChange(int value)
     {
+        GetPlayer.damageReceiptionSystem.AddLifeBar(value);
         maxPlayerLifeAmount += value;
-        currentPlayerLifeAmount += value;
         OnPlayerMaxLifeAmountChanged?.Invoke(value);
     }
 
