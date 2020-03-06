@@ -218,4 +218,14 @@ public class PlayerExperienceManager : MonoBehaviour
     {
         competencePoint++;
     }
+
+    public void AddMaximumDisc()
+    {
+        DiscManager.Instance.AddOneMaxNumberOfPossessedDiscs();
+    }
+
+    public void AddMaximumRangeDisc()
+    {
+        DiscManager.Instance.AddOneMaxRangeOfPlayer();
+    }
 }
