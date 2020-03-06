@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ public class CompetencesUsabilityManager
     {
         if(IsPreparingCompetence)
         {
-            //Debug.Log("Preparing " + currentCompetenceType);
+            UpdatePreparation();
         }
     }
 
@@ -33,15 +34,20 @@ public class CompetencesUsabilityManager
 
     [SerializeField] CompetenceRecall recallCompetence = default;
     public CompetenceRecall GetRecallCompetence => recallCompetence;
+    public Action<CompetenceRecall> OnRecallCompetenceChanged;
 
     [SerializeField] CompetenceSpecial specialCompetence = default;
     public CompetenceSpecial GetSpecialCompetence => specialCompetence;
+
+    float maxDiscRange = 0;
 
     public void UpdateSet(CompetenceThrow throwComp, CompetenceRecall recallComp, CompetenceSpecial specialComp)
     {
         throwCompetence = throwComp;
         recallCompetence = recallComp;
         specialCompetence = specialComp;
+
+        OnRecallCompetenceChanged?.Invoke(recallCompetence);
     }
 
     UsabilityState currentUsabilityState = UsabilityState.None;
@@ -66,9 +72,28 @@ public class CompetencesUsabilityManager
 
     public ActionSelectionResult TrySelectAction(int totalActionPoints, ActionType compType)
     {
-        ActionSelectionResult hasEnoughAPResult = HasEnoughActionPoints(totalActionPoints, compType);
+        ActionSelectionResult trySelectResult = HasEnoughActionPoints(totalActionPoints, compType);
 
-        switch (hasEnoughAPResult)
+        if (trySelectResult == ActionSelectionResult.EnoughActionPoints)
+        {
+            if (compType == ActionType.Throw)
+            {
+                if (DiscManager.Instance.GetPossessedDiscsCount == 0)
+                {
+                    trySelectResult = ActionSelectionResult.NotEnoughDiscs;
+                }
+            }
+            else if (compType == ActionType.Recall)
+            {
+                if (DiscManager.Instance.GetInRangeDiscsCount == 0)
+                {
+                    trySelectResult = ActionSelectionResult.NoNearbyDisc;
+                }
+            }
+
+        }
+
+        switch (trySelectResult)
         {
             case ActionSelectionResult.EnoughActionPoints:
                 ChangeUsabilityState(UsabilityState.Preparing, compType);
@@ -81,9 +106,17 @@ public class CompetencesUsabilityManager
             case ActionSelectionResult.NoCompetenceFound:
                 Debug.LogWarning("WARNING : " + compType + " not found.");
                 break;
+
+            case ActionSelectionResult.NotEnoughDiscs:
+                Debug.Log("Not enough possessed discs for " + compType);
+                break;
+
+            case ActionSelectionResult.NoNearbyDisc:
+                Debug.Log("Not nearby discs for " + compType);
+                break;
         }
 
-        return hasEnoughAPResult;
+        return trySelectResult;
     }
 
     public int GetCompetenceActionPointsCost(ActionType compType)
@@ -126,8 +159,17 @@ public class CompetencesUsabilityManager
 
     public void ChangeUsabilityState(UsabilityState usabilityState, ActionType compType)
     {
+        if (usabilityState == UsabilityState.Preparing)
+            maxDiscRange = DiscManager.Instance.rangeOfPlayer;
+
+        if (currentUsabilityState == UsabilityState.Preparing)
+            EndPreparation();
+
         currentUsabilityState = usabilityState;
         currentCompetenceType = compType;
+
+        if (currentUsabilityState == UsabilityState.Preparing)
+            StartPreparation();
 
         OnCompetenceStateChanged?.Invoke();
     }
@@ -146,22 +188,145 @@ public class CompetencesUsabilityManager
         ResetUsabilityState();
     }
 
+    #region Preparation
+    public void StartPreparation()
+    {
+        switch (currentCompetenceType)
+        {
+            case ActionType.Throw:
+                StartThrowPreparation();
+                break;
+            case ActionType.Recall:
+                StartRecallPreparation();
+                break;
+            case ActionType.Special:
+                break;
+        }
+    }
+
+    public void UpdatePreparation()
+    {
+        switch (currentCompetenceType)
+        {
+            case ActionType.Throw:
+                UpdateThrowPreparation();
+                break;
+            case ActionType.Recall:
+                UpdateRecallPreparation();
+                break;
+            case ActionType.Special:
+                break;
+        }
+    }
+
+    public void EndPreparation()
+    {
+        switch (currentCompetenceType)
+        {
+            case ActionType.Throw:
+                EndThrowPreparation();
+                break;
+            case ActionType.Recall:
+                EndRecallPreparation();
+                break;
+            case ActionType.Special:
+                break;
+        }
+    }
+
+    #region Throw Preparation
+    public void StartThrowPreparation()
+    {
+        Vector3 trueTargetPosition = GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition);
+        DiscTrajectoryParameters trajectoryParameters = DiscTrajectoryFactory.GetThrowTrajectory(throwCompetence, _player.transform.position, trueTargetPosition);
+        PreviewCompetencesManager.Instance.StartThrowPreview(new List<DiscTrajectoryParameters> { trajectoryParameters }, _player.transform.position);
+    }
+
+    public void UpdateThrowPreparation()
+    {
+        Vector3 trueTargetPosition = GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition);
+        DiscTrajectoryParameters trajectoryParameters = DiscTrajectoryFactory.GetThrowTrajectory(throwCompetence, _player.transform.position, trueTargetPosition);
+        PreviewCompetencesManager.Instance.UpdateThrowPreview(new List<DiscTrajectoryParameters> { trajectoryParameters });
+    }
+
+    public void EndThrowPreparation()
+    {
+        PreviewCompetencesManager.Instance.EndThrowPreview();
+    }
+    #endregion
+
+    #region Recall Preparation
+    public void StartRecallPreparation()
+    {
+        Vector3 playerPos = _player.transform.position;
+        List<DiscTrajectoryParameters> recallTrajectoryParameters = new List<DiscTrajectoryParameters>();
+
+        foreach(DiscScript discInRange in DiscManager.Instance.GetInRangeDiscs)
+        {
+            DiscTrajectoryParameters newParams = DiscTrajectoryFactory.GetRecallTrajectory(recallCompetence, discInRange.transform.position, playerPos);
+            recallTrajectoryParameters.Add(newParams);
+        }
+
+        PreviewCompetencesManager.Instance.StartRecallPreview(recallTrajectoryParameters, playerPos);
+    }
+
+    public void UpdateRecallPreparation()
+    {
+        Vector3 playerPos = _player.transform.position;
+        List<DiscTrajectoryParameters> recallTrajectoryParameters = new List<DiscTrajectoryParameters>();
+
+        foreach (DiscScript discInRange in DiscManager.Instance.GetInRangeDiscs)
+        {
+            DiscTrajectoryParameters newParams = DiscTrajectoryFactory.GetRecallTrajectory(recallCompetence, discInRange.transform.position, playerPos);
+            recallTrajectoryParameters.Add(newParams);
+        }
+
+        PreviewCompetencesManager.Instance.UpdateRecallPreview(recallTrajectoryParameters, playerPos);
+    }
+
+    public void EndRecallPreparation()
+    {
+        PreviewCompetencesManager.Instance.EndRecallPreview();
+    }
+    #endregion
+
+    #endregion
+
+    #region Throw
+    public Vector3 GetInRangeThrowTargetPosition(Vector3 baseTargetPos)
+    {
+        Vector3 playerPos = _player.transform.position;
+        Vector3 trueTargetPos = baseTargetPos;
+        trueTargetPos.y = playerPos.y;
+
+        float distance = Vector3.Distance(trueTargetPos, playerPos);
+        if(distance > maxDiscRange)
+        {
+            Vector3 throwDirection = (trueTargetPos - playerPos).normalized;
+            trueTargetPos = playerPos + throwDirection * maxDiscRange;
+        }
+
+        return trueTargetPos;
+    }
+
     public void LaunchThrowCompetence()
     {
         CompetanceRequestInfo newCompetenceRequestInfo = new CompetanceRequestInfo();
         newCompetenceRequestInfo.startTransform = _player.transform;
-        newCompetenceRequestInfo.startPosition = _player.transform.position + Vector3.up * DiscManager.crystalHeight;
-        newCompetenceRequestInfo.targetPosition = currentWorldMouseResult.mouseWorldPosition + Vector3.up * DiscManager.crystalHeight;
+        newCompetenceRequestInfo.startPosition = _player.transform.position + Vector3.up * DiscManager.discHeight;
+        newCompetenceRequestInfo.targetPosition = GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition) + Vector3.up * DiscManager.discHeight;
 
         //Debug.Log("Throw knife at position " + newCompetenceRequestInfo.targetPosition);
         Debug.Log("Using throw competence : " + throwCompetence.GetCompetenceName);
 
-        GameObject newCrystal = DiscManager.Instance.GetCrystal();
-        newCrystal.GetComponent<DiscScript>().AttackHere(newCompetenceRequestInfo.startTransform, newCompetenceRequestInfo.targetPosition);
-        newCrystal.SetActive(true);
+        DiscScript newDisc = DiscManager.Instance.TakeFirstDiscFromPossessedDiscs();
+        newDisc.AttackHere(newCompetenceRequestInfo.startTransform, newCompetenceRequestInfo.targetPosition);
+        newDisc.gameObject.SetActive(true);
+        DiscManager.Instance.AddDiscToThrown(newDisc);
 
         ResetUsabilityState();
     }
+    #endregion
 
     public void LaunchRecallCompetence()
     {
@@ -172,7 +337,7 @@ public class CompetencesUsabilityManager
         //Debug.Log("Recall knife at position " + newCompetenceRequestInfo.targetPosition);
         Debug.Log("Using recall competence : " + recallCompetence.GetCompetenceName);
 
-        foreach (DiscScript disc in DiscManager.Instance.GetAllCrystalUse())
+        foreach (DiscScript disc in DiscManager.Instance.GetInRangeDiscs)
         {
             disc.RecallCrystal(newCompetenceRequestInfo.targetTransform);
         }

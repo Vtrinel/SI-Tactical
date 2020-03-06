@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerCompetenceSystem
 {
-    public System.Action<Competence> OnCompetenceUsed = default;
+    /*public System.Action<Competence> OnCompetenceUsed = default;
 
     [SerializeField] CompetenceThrow throwCompetence = default;
     public CompetenceThrow GetCompetenceThrow => throwCompetence;
@@ -94,7 +94,7 @@ public class PlayerCompetenceSystem
         OnCompetenceUsed(recallCompetence);
 
         ResetUsabilityState();
-    }
+    }*/
 }
 
 /*public struct CompetanceRequestInfo

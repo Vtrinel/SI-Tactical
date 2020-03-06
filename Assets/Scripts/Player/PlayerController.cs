@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour
         {
             positionStamp = currentPos;
             GameManager.Instance.OnPlayerPositionChanged?.Invoke(currentPos);
+            DiscManager.Instance.CheckAllDiscsProximity(transform.position);
         }
 
         #region DEBUG

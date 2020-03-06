@@ -9,10 +9,10 @@ public class ShootTestSam : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            GameObject newDisc = DiscManager.Instance.GetCrystal();
+            DiscScript newDisc = DiscManager.Instance.GetCrystal();
 
-            newDisc.GetComponent<DiscScript>().AttackHere(transform, Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            newDisc.SetActive(true);
+            newDisc.AttackHere(transform, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            newDisc.gameObject.SetActive(true);
         }
 
         if (Input.GetMouseButtonDown(1))

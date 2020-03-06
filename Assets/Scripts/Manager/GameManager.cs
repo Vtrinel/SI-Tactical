@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
         playerExperienceManager.OnSetChanged += competencesUsabilityManager.UpdateSet;
         playerExperienceManager.OnMenuOpenedOrClosed += UpdatePlayerActability;
         playerExperienceManager.SetUp();
+
+        competencesUsabilityManager.OnRecallCompetenceChanged += playerMovementsManager.UpdateCurrentRecallCompetence;
     }
 
     private void Update()
@@ -140,6 +142,7 @@ public class GameManager : MonoBehaviour
     [Header("Player Systems")]
     [SerializeField] PlayerMovementsManager playerMovementsManager = default;
     [SerializeField] CompetencesUsabilityManager competencesUsabilityManager = default;
+    
     public Competence GetCurrentlySelectedCompetence => competencesUsabilityManager.GetCurrentCompetence;
     public Action<bool> OnMoveActionSelectionStateChanged;
     public Action<bool> OnThrowCompetenceSelectionStateChanged;
@@ -403,5 +406,5 @@ public struct WorldMouseResult
 
 public enum ActionSelectionResult
 {
-    EnoughActionPoints, NotEnoughActionPoints, NoCompetenceFound
+    EnoughActionPoints, NotEnoughActionPoints, NoCompetenceFound, NotEnoughDiscs, NoNearbyDisc
 }
