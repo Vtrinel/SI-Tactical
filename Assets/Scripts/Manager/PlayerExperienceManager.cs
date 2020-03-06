@@ -147,9 +147,11 @@ public class PlayerExperienceManager : MonoBehaviour
 
         if (canUnlockComp)
         {
-            competence.SetUnlockedState(true);
-            competenceBar = 0;
-            Debug.Log("Competence unlocked");
+            if (competence.CanUnlockCompetence())
+            {
+                competenceBar = 0;
+                Debug.Log("Competence unlocked");
+            }
         }
         else
         {
@@ -169,10 +171,6 @@ public class PlayerExperienceManager : MonoBehaviour
 
     public void EquipCompetence(Competence competence)
     {
-        //Debug.Log(listEquipedCompetences.Count);
-
-        bool competenceAdd = false;
-
         CompetenceThrow newThrowComp = competence as CompetenceThrow;
         if (newThrowComp != null)
         {
@@ -235,11 +233,23 @@ public class PlayerExperienceManager : MonoBehaviour
 
     public void AddMaximumDisc()
     {
-        DiscManager.Instance.AddOneMaxNumberOfPossessedDiscs();
+        if (canUnlockComp)
+        {
+            DiscManager.Instance.AddOneMaxNumberOfPossessedDiscs();
+
+            canUnlockComp = false;
+            competenceBar = 0;
+        }
     }
 
     public void AddMaximumRangeDisc()
     {
-        DiscManager.Instance.AddOneMaxRangeOfPlayer();
+        if (canUnlockComp)
+        {
+            DiscManager.Instance.AddOneMaxRangeOfPlayer();
+
+            canUnlockComp = false;
+            competenceBar = 0;
+        }
     }
 }
