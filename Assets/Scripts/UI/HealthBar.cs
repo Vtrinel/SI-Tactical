@@ -12,7 +12,7 @@ public class HealthBar : MonoBehaviour
 
     public GameObject healthPoint;
 
-    List<GameObject> allLifeBarElement = new List<GameObject>();
+    [SerializeField] List<GameObject> allLifeBarElement = new List<GameObject>();
 
     private void OnEnable()
     {
@@ -79,7 +79,6 @@ public class HealthBar : MonoBehaviour
         maxHealth += _numberLives;
         currentHealth += _numberLives;
 
-        print("passage");
         int j = 0;
 
         foreach (GameObject _lifeBar in allLifeBarElement)
