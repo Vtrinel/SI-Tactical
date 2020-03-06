@@ -35,6 +35,7 @@ public class PlayerExperienceManager : MonoBehaviour
     public Action<Competence> OnEquipCompetence;
     public Action<CompetenceThrow, CompetenceRecall, CompetenceSpecial> OnSetChanged;
     public Action<int> OnGainExperience;
+    public Action<int> OnLossExperience;
 
     // Private Attributes
     
@@ -150,6 +151,7 @@ public class PlayerExperienceManager : MonoBehaviour
             if (competence.CanUnlockCompetence())
             {
                 competenceBar = 0;
+                OnLossExperience?.Invoke(100);
                 Debug.Log("Competence unlocked");
             }
         }
@@ -229,6 +231,7 @@ public class PlayerExperienceManager : MonoBehaviour
     {
         competenceBar += experience;
         OnGainExperience?.Invoke(experience);
+
     }
 
     public void AddMaximumDisc()
@@ -239,6 +242,7 @@ public class PlayerExperienceManager : MonoBehaviour
 
             canUnlockComp = false;
             competenceBar = 0;
+            OnLossExperience?.Invoke(100);
         }
     }
 
@@ -250,6 +254,19 @@ public class PlayerExperienceManager : MonoBehaviour
 
             canUnlockComp = false;
             competenceBar = 0;
+            OnLossExperience?.Invoke(100);
+        }
+    }
+
+    public void AddMaxHealth()
+    {
+        if (canUnlockComp)
+        {
+            GameManager.Instance.PlayerMaxLifeChange(1);
+
+            canUnlockComp = false;
+            competenceBar = 0;
+            OnLossExperience?.Invoke(100);
         }
     }
 }
