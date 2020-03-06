@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
 
     public void DebugLifeAmount(int amount)
     {
-        Debug.Log("Current life : " + amount);
+        //Debug.Log("Current life : " + amount);
     }
     #endregion
 

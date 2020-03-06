@@ -167,11 +167,11 @@ public class CultisteEnemy : IAEnemyVirtual
         Gizmos.DrawWireSphere(transform.position, distanceOfDeplacement);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if(collision.collider.gameObject.layer == 11 && isPlaying)
+        if (other.gameObject.layer == 11 && isPlaying)
         {
-
+            print("passage");
         }
     }
 }

@@ -64,7 +64,6 @@ public class FxManager : MonoBehaviour
 
     GameObject CreateFx(fxType hisType)
     {
-        print(hisType);
         switch (hisType)
         {
             case fxType.Explosion:

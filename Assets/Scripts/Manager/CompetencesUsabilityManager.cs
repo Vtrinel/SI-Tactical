@@ -100,19 +100,19 @@ public class CompetencesUsabilityManager
                 break;
 
             case ActionSelectionResult.NotEnoughActionPoints:
-                Debug.Log("Not enough action points for " + compType);
+                //Debug.Log("Not enough action points for " + compType);
                 break;
 
             case ActionSelectionResult.NoCompetenceFound:
-                Debug.LogWarning("WARNING : " + compType + " not found.");
+                //Debug.LogWarning("WARNING : " + compType + " not found.");
                 break;
 
             case ActionSelectionResult.NotEnoughDiscs:
-                Debug.Log("Not enough possessed discs for " + compType);
+                //Debug.Log("Not enough possessed discs for " + compType);
                 break;
 
             case ActionSelectionResult.NoNearbyDisc:
-                Debug.Log("Not nearby discs for " + compType);
+                //Debug.Log("Not nearby discs for " + compType);
                 break;
         }
 

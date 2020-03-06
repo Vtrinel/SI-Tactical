@@ -234,7 +234,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6817484857811702715}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.31
   m_Height: 0
@@ -284,9 +284,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd1983ce8b91a6f4096b5ba0ae544260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _discType: 0
   myRigidBody: {fileID: 2856969832363405175}
   myCollider: {fileID: 8030675917091118892}
   myAnimator: {fileID: 7300530026638147795}
+  damageTag: 0
+  currentDamagesAmount: 1
   speed: 25
   rotaSpeed: 3
   isAttacking: 0

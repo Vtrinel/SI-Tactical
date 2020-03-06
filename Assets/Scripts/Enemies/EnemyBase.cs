@@ -51,7 +51,7 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] bool willAttackPlayerDebug = false;
     public void StartTurn()
     {
-        Debug.Log(name + "' turn");
+        //Debug.Log(name + "' turn");
 
         myIA.isPlaying = true;
         PlayMyTurn();

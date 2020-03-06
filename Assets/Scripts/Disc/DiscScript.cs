@@ -50,10 +50,25 @@ public class DiscScript : MonoBehaviour
         myAnimator.SetBool("InRange", isInRange);
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        print("test");
+        if (collision.gameObject == objLaunch || !isAttacking) { return; }
+
+        DeamandeFx(collision.contacts[0].point);
+
+        switch (collision.gameObject.layer)
+        {
+            default:
+                CollisionWithThisObj(collision.gameObject.transform);
+                isAttacking = false;
+                break;
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject == objLaunch) { return; }
+        if(other.gameObject == objLaunch || !isAttacking) { return; }
 
         DeamandeFx(other.ClosestPointOnBounds(transform.position));
 
