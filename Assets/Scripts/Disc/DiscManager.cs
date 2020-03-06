@@ -61,6 +61,7 @@ public class DiscManager : MonoBehaviour
     List<DiscScript> inGameDiscs = new List<DiscScript>();
     public List<DiscScript> GetAllInGameDiscs => inGameDiscs;
     List<DiscScript> throwedDiscs = new List<DiscScript>();
+    public List<DiscScript> GetAllThrowedDiscs => throwedDiscs;
 
     public void SetUpPools()
     {
