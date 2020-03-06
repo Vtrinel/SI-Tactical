@@ -17,3 +17,4 @@ public class NewBehaviourScript : MonoBehaviour
     }
 }
 //HelloCestCorgi <3
+//salut c sam, 1v1 rust

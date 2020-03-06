@@ -35,6 +35,7 @@ public class PlayerExperienceManager : MonoBehaviour
     public Action<Competence> OnEquipCompetence;
     public Action<CompetenceThrow, CompetenceRecall, CompetenceSpecial> OnSetChanged;
     public Action<int> OnGainExperience;
+    public Action<int> OnLossExperience;
 
     // Private Attributes
     
@@ -147,9 +148,12 @@ public class PlayerExperienceManager : MonoBehaviour
 
         if (canUnlockComp)
         {
-            competence.SetUnlockedState(true);
-            competenceBar = 0;
-            Debug.Log("Competence unlocked");
+            if (competence.CanUnlockCompetence())
+            {
+                competenceBar = 0;
+                OnLossExperience?.Invoke(100);
+                Debug.Log("Competence unlocked");
+            }
         }
         else
         {
@@ -169,10 +173,6 @@ public class PlayerExperienceManager : MonoBehaviour
 
     public void EquipCompetence(Competence competence)
     {
-        //Debug.Log(listEquipedCompetences.Count);
-
-        bool competenceAdd = false;
-
         CompetenceThrow newThrowComp = competence as CompetenceThrow;
         if (newThrowComp != null)
         {
@@ -231,15 +231,49 @@ public class PlayerExperienceManager : MonoBehaviour
     {
         competenceBar += experience;
         OnGainExperience?.Invoke(experience);
+
     }
 
     public void AddMaximumDisc()
     {
-        DiscManager.Instance.AddOneMaxNumberOfPossessedDiscs();
+        if (canUnlockComp)
+        {
+            DiscManager.Instance.AddOneMaxNumberOfPossessedDiscs();
+
+            canUnlockComp = false;
+            competenceBar = 0;
+            OnLossExperience?.Invoke(100);
+        }
     }
 
     public void AddMaximumRangeDisc()
     {
-        DiscManager.Instance.AddOneMaxRangeOfPlayer();
+        if (canUnlockComp)
+        {
+            DiscManager.Instance.AddOneMaxRangeOfPlayer();
+
+            canUnlockComp = false;
+            competenceBar = 0;
+            OnLossExperience?.Invoke(100);
+        }
+    }
+
+    public void AddMaxHealth()
+    {
+        if (canUnlockComp)
+        {
+            GameManager.Instance.PlayerMaxLifeChange(1);
+
+            canUnlockComp = false;
+            competenceBar = 0;
+            OnLossExperience?.Invoke(100);
+        }
+    }
+
+    public void CloseCompetenceInterface()
+    {
+        isCanvasCompetenceShowed = !isCanvasCompetenceShowed;
+        competenceCanvas.gameObject.SetActive(isCanvasCompetenceShowed);
+        OnMenuOpenedOrClosed?.Invoke();
     }
 }

@@ -13,13 +13,31 @@ public class Competence : ScriptableObject
     [Header("Common Parameters")]
     [SerializeField] int actionPointsCost = 1;
 
-
+    [Header("Competence parameters")]
     [SerializeField] bool unlocked = false;
+    [SerializeField] List<Competence> competencesUnlockedNeeded;
 
     public int GetActionPointsCost => actionPointsCost;
     public Sprite GetCompetenceImage=> competenceImage;
     public string GetCompetenceDescription => competenceDescription;
     public string GetCompetenceName => competenceName;
     public bool GetUnlockedState => unlocked;
-    public bool SetUnlockedState(bool state) => unlocked = state;
+    public bool CanUnlockCompetence()
+    {
+        // Need to have parent competence
+        if (competencesUnlockedNeeded.Count > 0)
+        {
+            for (int i = 0; i < competencesUnlockedNeeded.Count; i++)
+            {
+                if (!competencesUnlockedNeeded[i].GetUnlockedState)
+                {
+                    Debug.Log("Can't unlock because a parent is still locked");
+                    return false;
+                }
+            }
+        }
+
+        unlocked = true;
+        return true;
+    }
 }
