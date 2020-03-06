@@ -4,30 +4,11 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 
-public class BasicEnemy : MonoBehaviour
+public class TouniEnemy : IAEnemyVirtual
 {
-    [SerializeField] NavMeshAgent myNavAgent;
-
-    [SerializeField] float distanceOfDeplacement;
-    public float attackRange;
-    [SerializeField] int damage = 1;
-
     public float angleAttack;
 
-    GameObject player;
-    PlayerController playerControlleur;
-
-    Vector3 destination;
-
-    public UnityAction OnIsAtDestination;
-
-    [SerializeField] Animator myAnimator;
-
-    bool isPreparing = false;
-
     [SerializeField] LayerMask objCanBeAttecked;
-
-    [SerializeField] float durationTurn = 1;
 
     private void OnEnable()
     {
@@ -45,17 +26,24 @@ public class BasicEnemy : MonoBehaviour
         player = playerControlleur.gameObject;
     }
 
-    public void PlayerTurn()
+    public override void PlayerTurn()
+    {
+        StartCoroutine(PlayerTurnCouroutine());
+    }
+
+    IEnumerator PlayerTurnCouroutine()
     {
         if (isPreparing)
         {
             Attack();
             isPreparing = false;
+            yield return new WaitForSeconds(1);
         }
 
         if (CanAttack())
         {
             PrepareAttack();
+            yield return new WaitForSeconds(0.4f);
             OnIsAtDestination?.Invoke();
         }
         else
@@ -93,7 +81,6 @@ public class BasicEnemy : MonoBehaviour
         {
             normalizedTime += Time.deltaTime;
 
-            print(normalizedTime);
             if (CanAttack())
             {
                 normalizedTime = durationTurn + 1;

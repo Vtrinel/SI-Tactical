@@ -419,7 +419,6 @@ GameObject:
   - component: {fileID: 3894817726808940227}
   - component: {fileID: 3894817726808940226}
   - component: {fileID: -7294889758052032267}
-  - component: {fileID: 6547703038302129142}
   - component: {fileID: 7209678692314394212}
   - component: {fileID: 6103916517976931779}
   - component: {fileID: 4833937767969952820}
@@ -479,7 +478,7 @@ MonoBehaviour:
   enemyRenderer: {fileID: 3894817727671339327}
   baseInitiative: 1
   willAttackPlayerDebug: 0
-  myIA: {fileID: 6547703038302129142}
+  myIA: {fileID: 7209678692314394212}
 --- !u!114 &3894817726808940226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -533,27 +532,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   damageTag: 1
---- !u!114 &6547703038302129142
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3894817726808940237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48f375ff9e6decd4287401e9a6d501dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  myNavAgent: {fileID: 6103916517976931779}
-  distanceOfDeplacement: 2.5
-  attackRange: 2
-  damage: 1
-  angleAttack: 60
-  myAnimator: {fileID: 4833937767969952820}
-  objCanBeAttecked:
-    serializedVersion: 2
-    m_Bits: 1536
 --- !u!114 &7209678692314394212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -570,11 +548,13 @@ MonoBehaviour:
   distanceOfDeplacement: 2.5
   attackRange: 2
   damage: 1
-  angleAttack: 0
+  player: {fileID: 0}
+  playerControlleur: {fileID: 0}
+  destination: {x: 0, y: 0, z: 0}
   myAnimator: {fileID: 4833937767969952820}
-  objCanBeAttecked:
-    serializedVersion: 2
-    m_Bits: 512
+  isPreparing: 0
+  durationTurn: 1
+  haveDisc: 0
 --- !u!195 &6103916517976931779
 NavMeshAgent:
   m_ObjectHideFlags: 0

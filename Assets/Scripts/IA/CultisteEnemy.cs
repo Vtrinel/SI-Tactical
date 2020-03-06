@@ -4,27 +4,8 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 
-public class CultisteEnemy : MonoBehaviour
+public class CultisteEnemy : IAEnemyVirtual
 {
-    [SerializeField] NavMeshAgent myNavAgent;
-
-    [SerializeField] float distanceOfDeplacement;
-    public float attackRange;
-
-    public float angleAttack;
-
-    GameObject player;
-    PlayerController playerControlleur;
-
-    Vector3 destination;
-
-    public UnityAction OnIsAtDestination;
-
-    [SerializeField] Animator myAnimator;
-
-    bool isPreparing = false;
-
-    [SerializeField] float durationTurn = 1;
     public bool haveDisc = false;
 
     private void OnEnable()
@@ -43,17 +24,24 @@ public class CultisteEnemy : MonoBehaviour
         player = playerControlleur.gameObject;
     }
 
-    public void PlayerTurn()
+    public override void PlayerTurn()
+    {
+        StartCoroutine(PlayerTurnCouroutine());
+    }
+
+    IEnumerator PlayerTurnCouroutine()
     {
         if (isPreparing)
         {
             Attack();
             isPreparing = false;
+            yield return new WaitForSeconds(1);
         }
 
         if (CanAttack())
         {
             PrepareAttack();
+            yield return new WaitForSeconds(0.4f);
             OnIsAtDestination?.Invoke();
         }
         else
@@ -64,8 +52,15 @@ public class CultisteEnemy : MonoBehaviour
 
     void Move()
     {
-        destination = player.transform.position;
+        Transform newObjDestination = ResershDisc();
+        if (newObjDestination == null)
+        {
+            print("<color=green> Null </color>");
+            OnIsAtDestination?.Invoke();
+            return;
+        }
 
+        destination = ResershDisc().position;
 
         myNavAgent.SetDestination(destination);
         myNavAgent.isStopped = false;
@@ -91,7 +86,6 @@ public class CultisteEnemy : MonoBehaviour
         {
             normalizedTime += Time.deltaTime;
 
-            print(normalizedTime);
             if (CanAttack())
             {
                 normalizedTime = durationTurn + 1;
@@ -123,6 +117,21 @@ public class CultisteEnemy : MonoBehaviour
     void LaunchDisc()
     {
 
+    }
+
+    Transform ResershDisc()
+    {
+        List<DiscScript> allCurrentDisc = DiscManager.Instance.GetAllDisclUse();
+
+        if(allCurrentDisc.Count == 0) { return null; }
+
+        List<Transform> allObjTransfrom = new List<Transform>();
+        foreach(DiscScript disc in allCurrentDisc)
+        {
+            allObjTransfrom.Add(disc.transform); 
+        }
+
+        return EnemyUtilitiesFactory.GetTheCloserObjOfMe(transform ,allObjTransfrom);
     }
 
     bool CanAttack()
@@ -157,21 +166,5 @@ public class CultisteEnemy : MonoBehaviour
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, distanceOfDeplacement);
-
-        Gizmos.color = Color.cyan;
-
-        float angle = angleAttack;
-        float rayRange = attackRange;
-        float halfFOV = angle / 2.0f;
-
-        Quaternion upRayRotation = Quaternion.AngleAxis(-halfFOV, Vector3.up);
-        Quaternion downRayRotation = Quaternion.AngleAxis(halfFOV, Vector3.up);
-
-        Vector3 rightRayDirection = upRayRotation * transform.forward * rayRange;
-        Vector3 leftRayDirection = downRayRotation * transform.forward * rayRange;
-
-        Gizmos.DrawRay(transform.position, rightRayDirection);
-        Gizmos.DrawRay(transform.position, leftRayDirection);
-        Gizmos.DrawLine(transform.position + leftRayDirection, transform.position + rightRayDirection);
     }
 }

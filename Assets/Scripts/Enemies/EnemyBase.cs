@@ -76,7 +76,7 @@ public class EnemyBase : MonoBehaviour
     #region IA
     [Header("IA")]
 
-    [SerializeField] BasicEnemy myIA = default;
+    [SerializeField] IAEnemyVirtual myIA = default;
 
     void PlayMyTurn()
     {
