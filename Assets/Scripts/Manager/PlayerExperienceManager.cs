@@ -235,11 +235,23 @@ public class PlayerExperienceManager : MonoBehaviour
 
     public void AddMaximumDisc()
     {
-        DiscManager.Instance.AddOneMaxNumberOfPossessedDiscs();
+        if (canUnlockComp)
+        {
+            DiscManager.Instance.AddOneMaxNumberOfPossessedDiscs();
+
+            canUnlockComp = false;
+            competenceBar = 0;
+        }
     }
 
     public void AddMaximumRangeDisc()
     {
-        DiscManager.Instance.AddOneMaxRangeOfPlayer();
+        if (canUnlockComp)
+        {
+            DiscManager.Instance.AddOneMaxRangeOfPlayer();
+
+            canUnlockComp = false;
+            competenceBar = 0;
+        }
     }
 }
