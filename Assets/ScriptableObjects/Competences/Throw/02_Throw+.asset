@@ -10,10 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e905165617145545a1a441460961ffd, type: 3}
-  m_Name: BaseThrow
+  m_Name: 02_Throw+
   m_EditorClassIdentifier: 
-  competenceName: Base
+  competenceName: +
   competenceDescription: 
-  competenceImage: {fileID: 21300000, guid: ce7519d0d0e102c4b8e156ba8c7f9e88, type: 3}
-  actionPointsCost: 1
-  unlocked: 1
+  competenceImage: {fileID: 21300000, guid: 43e2d7faf13041145829b828fbd0636d, type: 3}
+  actionPointsCost: 2
+  unlocked: 0
+  competencesUnlockedNeeded:
+  - {fileID: 11400000, guid: 1cb19bb7c8641924088b29647980b55e, type: 2}

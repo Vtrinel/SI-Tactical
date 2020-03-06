@@ -350,8 +350,10 @@ MonoBehaviour:
   camBackwardInput: 274
   camRightInput: 275
   camLeftInput: 276
-  cursorMinCameraMovementCoeff: 0.8
-  cursorMaxCameraMovementCoeff: 0.95
+  cursorMinCameraHorizontalMovementCoeff: 0.8
+  cursorMaxCameraHorizontalMovementCoeff: 0.95
+  cursorMinCameraVerticalMovementCoeff: 0.92
+  cursorMaxCameraVerticalMovementCoeff: 1
 --- !u!195 &2022475993876897125
 NavMeshAgent:
   m_ObjectHideFlags: 0
