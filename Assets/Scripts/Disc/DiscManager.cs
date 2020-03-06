@@ -14,7 +14,9 @@ public class DiscManager : MonoBehaviour
     public static float discHeight = 1f;
 
     public float rangeOfPlayer = 5;
-    public float AddOneMaxRangeOfPlayer => rangeOfPlayer += 1f;
+    public void AddOneMaxRangeOfPlayer() {
+        rangeOfPlayer += 1f;
+    }
 
     Transform player;
 
@@ -108,7 +110,11 @@ public class DiscManager : MonoBehaviour
     [SerializeField] int maxNumberOfPossessedDiscs = 3;
     Stack<DiscScript> possessedDiscs = new Stack<DiscScript>();
     public int GetPossessedDiscsCount => possessedDiscs.Count;
-    public int AddOneMaxNumberOfPossessedDiscs => maxNumberOfPossessedDiscs ++;
+    public void AddOneMaxNumberOfPossessedDiscs() 
+    { 
+        maxNumberOfPossessedDiscs++; 
+    }
+
     public void FillPossessedDiscsWithBasicDiscs()
     {
         for(int i =0; i < maxNumberOfPossessedDiscs; i++)
