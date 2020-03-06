@@ -67,6 +67,7 @@ public class PlayerMovementsManager
 
         List<DiscTrajectoryParameters> discsInNewPositionRangeParameters = GetDiscInRangeTrajectory(targetPosition);
         PreviewCompetencesManager.Instance.StartRecallPreview(discsInNewPositionRangeParameters, targetPosition);
+        //PreviewCompetencesManager.Instance.StartPreviewCamera(targetPosition);
 
         justStartedMovementPreview = true;
         UpdateMovementPreview(targetPosition);
@@ -78,6 +79,11 @@ public class PlayerMovementsManager
         float movementDistance = Vector3.Distance(_player.transform.position, targetPosition);
 
         int movementCost = GetActionPointsByDistance(movementDistance);
+        if(movementCost > availableActionPoints)
+        {
+            targetPosition = GetClampedTargetPosition(targetPosition);
+            movementCost = availableActionPoints;
+        }
 
         if (movementLinePreview != null)
         {
@@ -94,6 +100,7 @@ public class PlayerMovementsManager
 
         movementPlayerPreview.transform.position = targetPosition;
 
+        //PreviewCompetencesManager.Instance.UpdatePreviewCamera(targetPosition);
         if (!justStartedMovementPreview)
         {
             List<DiscTrajectoryParameters> discsInNewPositionRangeParameters = GetDiscInRangeTrajectory(targetPosition);
@@ -113,6 +120,7 @@ public class PlayerMovementsManager
         ClearInstantiatedDebugCircles();
         movementPlayerPreview.SetActive(false);
         PreviewCompetencesManager.Instance.EndRecallPreview();
+        //PreviewCompetencesManager.Instance.EndPreviewCamera();
     }
 
     public List<DiscTrajectoryParameters> GetDiscInRangeTrajectory(Vector3 targetPosition)
@@ -210,6 +218,26 @@ public class PlayerMovementsManager
 
         return cost;
     }
+
+    public float GetMaxDistance()
+    {
+        return currentDistancesByUsedActionPoints[availableActionPoints - 1];
+    }
+
+    public Vector3 GetClampedTargetPosition(Vector3 baseTargetPos)
+    {
+        float maxDistance = GetMaxDistance();
+
+        Vector3 playerPos = _player.transform.position;
+        Vector3 trueTargetPos = baseTargetPos;
+        trueTargetPos.y = playerPos.y;
+
+        Vector3 moveDirection = (trueTargetPos - playerPos).normalized;
+        trueTargetPos = playerPos + moveDirection.normalized * maxDistance;
+        trueTargetPos.y = baseTargetPos.y;
+
+        return trueTargetPos;
+    }
     #endregion
 
     public void InterruptMovementPreparation()
@@ -220,27 +248,6 @@ public class PlayerMovementsManager
 
         currentDistancesByUsedActionPoints = new List<float>();
     }
-
-    /*int currentPreviewCost = 0;
-    public void UpdateMovementPreview()
-    {
-        float movementDistance = Vector3.Distance(_player.transform.position, currentWorldMouseResult.mouseWorldPosition);
-
-        int movementCost = GetActionPointsByDistance(movementDistance);
-
-        if (movementLinePreview != null)
-        {
-            movementLinePreview.SetPositions(new Vector3[] { _player.transform.position + Vector3.up, currentWorldMouseResult.mouseWorldPosition + Vector3.up });
-            movementLinePreview.startColor = movementCost <= availableActionPoints ? Color.green : Color.red;
-            movementLinePreview.endColor = movementCost <= availableActionPoints ? Color.green : Color.red;
-        }
-
-        if(movementCost != currentPreviewCost)
-        {
-            currentPreviewCost = movementCost;
-            OnPreparationAmountChanged?.Invoke(currentPreviewCost);
-        }
-    }*/
 
     /// <summary>
     /// Return -1 if error (not enough points,...)
@@ -259,8 +266,8 @@ public class PlayerMovementsManager
 
         if(movementCost > availableActionPoints)
         {
-            Debug.Log("NOT ENOUGH POINTS TO MOVE");
-            return -1;
+            targetPosition = GetClampedTargetPosition(targetPosition);
+            movementCost = availableActionPoints;
         }
 
         ClearInstantiatedDebugCircles();
@@ -270,6 +277,8 @@ public class PlayerMovementsManager
         EndMovementPreview();
 
         actionPointsUsedThisTurnToMove += movementCost;
+
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
 
         return movementCost;
     }
