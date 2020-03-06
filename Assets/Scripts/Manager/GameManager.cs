@@ -152,6 +152,7 @@ public class GameManager : MonoBehaviour
     public Action<Vector3> OnPlayerPositionChanged;
 
     public Action<int> OnPlayerLifeAmountChanged;
+    public Action<int> OnPlayerMaxLifeAmountChanged;
     public int maxPlayerLifeAmount = 3;
     [SerializeField] int currentPlayerLifeAmount;
     public int GetCurrentPlayerLifeAmount => currentPlayerLifeAmount;
@@ -160,6 +161,13 @@ public class GameManager : MonoBehaviour
     {
         currentPlayerLifeAmount = value;
         OnPlayerLifeAmountChanged?.Invoke(value);
+    }
+
+    public void PlayerMaxLifeChange(int value)
+    {
+        maxPlayerLifeAmount += value;
+        currentPlayerLifeAmount += value;
+        OnPlayerMaxLifeAmountChanged?.Invoke(value);
     }
 
     #region Mouse World Result
