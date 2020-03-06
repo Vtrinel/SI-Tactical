@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class DiscScript : MonoBehaviour
 {
+    [SerializeField] DiscType _discType = DiscType.Basic;
+    public void SetDiscType(DiscType discType)
+    {
+        _discType = discType;
+    }
+    public DiscType GetDiscType => _discType;
+
+    [Header("References")]
     [SerializeField] Rigidbody myRigidBody = default;
     [SerializeField] Collider myCollider = default;
     [SerializeField] Animator myAnimator = default;
