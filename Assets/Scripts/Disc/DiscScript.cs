@@ -47,6 +47,8 @@ public class DiscScript : MonoBehaviour
     {
         if(other.gameObject == objLaunch) { return; }
 
+        DeamandeFx(other.ClosestPointOnBounds(transform.position));
+
         switch (other.gameObject.layer)
         {
             //Player
@@ -79,12 +81,19 @@ public class DiscScript : MonoBehaviour
         }
     }
 
+    void DeamandeFx(Vector3 collision)
+    {
+        GameObject newFx = FxManager.Instance.DemandeFx(FxManager.fxType.Hit);
+
+        newFx.transform.position = collision;
+        newFx.transform.rotation = Random.rotation;
+    }
+
 
     void CollisionWithThisObj(Transform impactPoint)
     {
         myAnimator.SetTrigger("Collision");
 
-        print("vehez");
         Debug.DrawRay(transform.position + transform.forward * .5f , Vector3.up, Color.red, 50);
 
         transform.position = transform.position + transform.forward * .5f;

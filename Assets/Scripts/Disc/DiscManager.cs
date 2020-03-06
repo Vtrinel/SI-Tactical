@@ -78,7 +78,7 @@ public class DiscManager : MonoBehaviour
         discsUse.Remove(element.GetComponent<DiscScript>());
     }
 
-    public List<DiscScript> GetAllCrystalUse()
+    public List<DiscScript> GetAllDisclUse()
     {
         return discsUse;
     }

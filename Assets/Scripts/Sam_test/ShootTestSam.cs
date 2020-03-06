@@ -17,7 +17,7 @@ public class ShootTestSam : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-            foreach(DiscScript disc in DiscManager.Instance.GetAllCrystalUse())
+            foreach(DiscScript disc in DiscManager.Instance.GetAllDisclUse())
             {
                 disc.RecallCrystal(transform);
             }
