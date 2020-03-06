@@ -4,13 +4,12 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 
-public class BasicEnemy : MonoBehaviour
+public class CultisteEnemy : MonoBehaviour
 {
     [SerializeField] NavMeshAgent myNavAgent;
 
     [SerializeField] float distanceOfDeplacement;
     public float attackRange;
-    [SerializeField] int damage = 1;
 
     public float angleAttack;
 
@@ -25,9 +24,8 @@ public class BasicEnemy : MonoBehaviour
 
     bool isPreparing = false;
 
-    [SerializeField] LayerMask objCanBeAttecked;
-
     [SerializeField] float durationTurn = 1;
+    public bool haveDisc = false;
 
     private void OnEnable()
     {
@@ -119,69 +117,29 @@ public class BasicEnemy : MonoBehaviour
     {
         myAnimator.SetTrigger("Attack");
         myAnimator.SetBool("Preparing", false);
-        CollisionAttack();
+        LaunchDisc();
     }
 
-    void CollisionAttack()
+    void LaunchDisc()
     {
-        List<GameObject> _objsTouched = GetListOfObjsTouched();
 
-        foreach(GameObject _obj in _objsTouched)
-        {
-            _obj.GetComponent<DamageableEntity>().ReceiveDamage(DamageTag.Enemy, damage);
-        }
-    }
-
-    List<GameObject> GetListOfObjsTouched()
-    {
-        float angle = angleAttack;
-        float rayRange = attackRange;
-        float halfFOV = angle / 2.0f;
-
-        Quaternion upRayRotation = Quaternion.AngleAxis(-halfFOV, Vector3.up);
-        Quaternion downRayRotation = Quaternion.AngleAxis(halfFOV, Vector3.up);
-
-        Vector3 rightRayDirection = upRayRotation * transform.forward * rayRange;
-        Vector3 leftRayDirection = downRayRotation * transform.forward * rayRange;
-
-        List<GameObject> objTouched = new List<GameObject>();
-
-        RaycastHit[] hits;
-        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, transform.forward, attackRange, objCanBeAttecked);
-        foreach(RaycastHit hit in hits)
-        {
-            if (!objTouched.Contains(hit.collider.gameObject))
-            {
-                objTouched.Add(hit.collider.gameObject);
-            }
-        }
-
-        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, rightRayDirection, attackRange, objCanBeAttecked);
-        foreach (RaycastHit hit in hits)
-        {
-            if (!objTouched.Contains(hit.collider.gameObject))
-            {
-                objTouched.Add(hit.collider.gameObject);
-            }
-        }
-
-        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, transform.forward, attackRange, objCanBeAttecked);
-        foreach (RaycastHit hit in hits)
-        {
-            if (!objTouched.Contains(hit.collider.gameObject))
-            {
-                objTouched.Add(hit.collider.gameObject);
-            }
-        }
-
-        return objTouched;
     }
 
     bool CanAttack()
     {
-        if(Vector3.Distance(transform.position, player.transform.position) < attackRange)
+        if (Vector3.Distance(transform.position, player.transform.position) < attackRange && haveDisc) 
         {
-            return true;
+            Vector3 forward = transform.TransformDirection(player.transform.position) * attackRange;
+            Debug.DrawRay(transform.position, forward, Color.green);
+
+            RaycastHit hit;
+            if(Physics.Raycast(transform.position, forward, out hit ,attackRange))
+            {
+                if(hit.collider.gameObject == player)
+                {
+                    return true;
+                }
+            }
         }
         return false;
     }

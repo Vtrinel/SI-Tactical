@@ -9,7 +9,6 @@ public class EnemyBase : MonoBehaviour
     private void Start()
     {
         damageReceiptionSystem.SetUpSystem(false);
-        enemyRenderer.material = normalMaterial;
 
         SetUpInitiative();
     }
@@ -49,21 +48,16 @@ public class EnemyBase : MonoBehaviour
 
     #region Placeholder
     [Header("Placeholder")]
-    [SerializeField] Material normalMaterial = default;
-    [SerializeField] Material activeMaterial = default;
     [SerializeField] bool willAttackPlayerDebug = false;
     public void StartTurn()
     {
         Debug.Log(name + "' turn");
-        enemyRenderer.material = activeMaterial;
 
         PlayMyTurn();
     }
 
     public void EndTurn()
     {
-        enemyRenderer.material = normalMaterial;
-
         if(TurnManager.Instance.GetCurrentTurnState != TurnState.EnemyTurn)
         {
             return;
