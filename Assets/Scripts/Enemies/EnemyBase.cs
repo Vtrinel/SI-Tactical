@@ -8,10 +8,7 @@ public class EnemyBase : MonoBehaviour
 {
     private void Start()
     {
-        damageReceiptionSystem.SetUpSystem();
-        damageReceiptionSystem.OnCurrentLifeAmountChanged += UpdateLifeBarFill;
-        damageReceiptionSystem.OnLifeReachedZero += Die;
-
+        damageReceiptionSystem.SetUpSystem(false);
         enemyRenderer.material = normalMaterial;
 
         SetUpInitiative();
@@ -19,9 +16,10 @@ public class EnemyBase : MonoBehaviour
 
     [Header("References")]
     [SerializeField] DamageableEntity damageReceiptionSystem = default;
+    [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
     [SerializeField] Image lifeBar = default;
     [SerializeField] MeshRenderer enemyRenderer = default;
-    public void UpdateLifeBarFill(int currentAmount, int delta)
+    public void UpdateLifeBarFill(int currentAmount, int damageDelta)
     {
         lifeBar.fillAmount = damageReceiptionSystem.GetCurrentLifePercent;
     }
@@ -47,34 +45,87 @@ public class EnemyBase : MonoBehaviour
 
         setedUpInitiative = true;
         enemyInstanceInitiative = baseInitiative + UnityEngine.Random.Range(0f, 1f);
-
-        //Debug.Log(name + "'s initiative : " + enemyInstanceInitiative);
     }
 
     #region Placeholder
     [Header("Placeholder")]
     [SerializeField] Material normalMaterial = default;
     [SerializeField] Material activeMaterial = default;
-    public void StartDebugTurn()
+    [SerializeField] bool willAttackPlayerDebug = false;
+    public void StartTurn()
     {
         Debug.Log(name + "' turn");
-
         enemyRenderer.material = activeMaterial;
 
-        StartCoroutine("DebugTurn");
+        PlayMyTurn();
     }
 
-    public void EndDebugTurn()
+    public void EndTurn()
     {
         enemyRenderer.material = normalMaterial;
 
+        if(TurnManager.Instance.GetCurrentTurnState != TurnState.EnemyTurn)
+        {
+            return;
+        }
         TurnManager.Instance.EndEnemyTurn(this);
     }
 
-    IEnumerator DebugTurn()
+    public void InterruptAllAction()
     {
-        yield return new WaitForSeconds(0.5f);
-        EndDebugTurn();
+        Debug.Log("Interrupt " + name + "'s actions");
+        // TO DO : interrupt action of the linked AI, without calling EndTurn 
     }
     #endregion
+
+
+    #region IA
+    [Header("IA")]
+
+    [SerializeField] BasicEnemy myIA = default;
+
+    void PlayMyTurn()
+    {
+        if (myIA == null)
+            return;
+
+        myIA.PlayerTurn();
+    }
+
+    IEnumerator DebugCoroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        if (willAttackPlayerDebug)
+        {
+            GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, 1);
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        EndTurn();
+    }
+    #endregion
+
+    private void OnEnable()
+    {
+        damageReceiptionSystem.OnLifeAmountChanged += UpdateLifeBarFill;
+        damageReceiptionSystem.OnLifeReachedZero += Die;
+        TurnManager.Instance.OnEnemyTurnInterruption += InterruptAllAction;
+
+        if (myIA == null)
+            return;
+        myIA.OnIsAtDestination += EndTurn;
+    }
+
+    private void OnDisable()
+    {
+        damageReceiptionSystem.OnLifeAmountChanged -= UpdateLifeBarFill;
+        damageReceiptionSystem.OnLifeReachedZero -= Die;
+        TurnManager.Instance.OnEnemyTurnInterruption -= InterruptAllAction;
+
+        if (myIA == null)
+            return;
+
+        myIA.OnIsAtDestination -= EndTurn;
+    }
 }

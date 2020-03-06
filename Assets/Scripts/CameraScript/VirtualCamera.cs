@@ -6,6 +6,9 @@ using Cinemachine;
 public class VirtualCamera : MonoBehaviour
 {
     [SerializeField] protected CinemachineVirtualCamera virtualCam;
+    [SerializeField] private CameraShake cameraShake;
+
+    public CameraShake CameraShake { get => cameraShake; }
 
     protected virtual void OnEnable()
     {
@@ -24,7 +27,7 @@ public class VirtualCamera : MonoBehaviour
     public virtual void SetCameraTarget(Transform target)
     {
         virtualCam.Follow = target;
-        virtualCam.LookAt = target;
+        //virtualCam.LookAt = target;
     }
 
     public virtual void SetCameraActive()

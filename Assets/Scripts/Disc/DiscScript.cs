@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class DiscScript : MonoBehaviour
 {
-    [SerializeField] Rigidbody myRigidBody;
-    [SerializeField] Collider myCollider;
-    [SerializeField] Animator myAnimator;
+    [SerializeField] Rigidbody myRigidBody = default;
+    [SerializeField] Collider myCollider = default;
+    [SerializeField] Animator myAnimator = default;
+
+    [Header("Damages")]
+    [SerializeField] DamageTag damageTag = DamageTag.Player;
+    [SerializeField] int currentDamagesAmount = 1;
 
     public float speed = 3;
     public float rotaSpeed = 3;
@@ -49,15 +53,22 @@ public class DiscScript : MonoBehaviour
             case 9:
                 //recall or touch player
                 isAttacking = false;
-                DiscManager.Instance.DeleteCrystal(gameObject);
+                //DiscManager.Instance.DeleteCrystal(gameObject);
+                DiscManager.Instance.PlayerRetreiveDisc(this);
                 break;
 
             //ennemy
             case 10:
                 //take damage
-                CollisionWithThisObj(other.transform);
-                attachedObj = other;
-                isAttacking = false;
+                //CollisionWithThisObj(other.transform);
+                //attachedObj = other;
+                //isAttacking = false;
+
+                DamageableEntity hitDamageableEntity = other.GetComponent<DamageableEntity>();
+                if (hitDamageableEntity != null)
+                {
+                    hitDamageableEntity.ReceiveDamage(damageTag, currentDamagesAmount);
+                }
                 break;
 
             default:
@@ -91,7 +102,7 @@ public class DiscScript : MonoBehaviour
 
         //transform.LookAt(destination, Vector3.forward);
         //transform.position += transform.forward * 1.2f;
-        transform.position = new Vector3(transform.position.x,  DiscManager.crystalHeight, transform.position.z);
+        transform.position = new Vector3(transform.position.x,  DiscManager.discHeight, transform.position.z);
         myRigidBody.isKinematic = false;
         myCollider.enabled = true;
     }

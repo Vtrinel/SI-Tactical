@@ -59,6 +59,7 @@ public class TurnManager : MonoBehaviour
     }
 
     int currentEnemiesTurnCounter = 0;
+    EnemyBase currentTurnEnemy = default;
     public void StartEnemiesTurn()
     {
         currentEnemiesTurnCounter = 0;
@@ -75,11 +76,13 @@ public class TurnManager : MonoBehaviour
 
     public void StartEnemyTurn(EnemyBase enemy)
     {
-        enemy.StartDebugTurn();
+        currentTurnEnemy = enemy;
+        enemy.StartTurn();
     }
 
     public void EndEnemyTurn(EnemyBase enemy)
     {
+        currentTurnEnemy = null;
         currentEnemiesTurnCounter++;
 
         if (currentEnemiesTurnCounter == orderedInGameEnemies.Count)
@@ -89,6 +92,16 @@ public class TurnManager : MonoBehaviour
         }
 
         StartCoroutine("BetweenTurnsCoroutine");
+    }
+
+    public Action OnEnemyTurnInterruption;
+    public void InterruptEnemiesTurn()
+    {
+        OnEnemyTurnInterruption?.Invoke();
+        currentEnemiesTurnCounter = orderedInGameEnemies.Count;
+        currentTurnEnemy = null;
+
+        EndEnemiesTurn();
     }
 
     public void EndEnemiesTurn()
@@ -118,6 +131,12 @@ public class TurnManager : MonoBehaviour
         yield return new WaitForSeconds(waitDuration);
 
 
+        if(currentTurnState == TurnState.BetweenEnemiesAndPlayer)
+        {
+            CheckGameProgression();
+            yield return new WaitForSeconds(waitDuration);
+        }
+
         switch (currentTurnState)
         {
             case TurnState.BetweenPlayerAndEnemies:
@@ -131,9 +150,20 @@ public class TurnManager : MonoBehaviour
                 break;
         }
     }
+
+    public Action OnCheckGameProgression;
+    public void CheckGameProgression()
+    {
+        OnCheckGameProgression?.Invoke();
+    }
+
+    public void WonGame()
+    {
+        currentTurnState = TurnState.Won;
+    }
 }
 
 public enum TurnState
 {
-    PlayerTurn, BetweenPlayerAndEnemies, EnemyTurn, BetweenEnemiesAndPlayer
+    PlayerTurn, BetweenPlayerAndEnemies, EnemyTurn, BetweenEnemiesAndPlayer, Won
 }
