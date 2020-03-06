@@ -121,7 +121,7 @@ public class CultisteEnemy : IAEnemyVirtual
 
     Transform ResershDisc()
     {
-        List<DiscScript> allCurrentDisc = DiscManager.Instance.GetAllDisclUse();
+        List<DiscScript> allCurrentDisc = DiscManager.Instance.GetAllInGameDiscs;
 
         if(allCurrentDisc.Count == 0) { return null; }
 
