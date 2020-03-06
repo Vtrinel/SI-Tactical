@@ -35,6 +35,8 @@ public class DiscManager : MonoBehaviour
         {
             _instance = this;
         }
+
+        SetUpPools();
     }
 
     private void Start()
@@ -260,4 +262,86 @@ public class DiscManager : MonoBehaviour
         return inRangeFromPos;
     }
     #endregion
+
+    #region V3
+    [Header("Pooling")]
+    [SerializeField] List<DiscPoolParameters> allDiscPoolParameters = new List<DiscPoolParameters>();
+    [SerializeField] Transform poolsParent = default;
+    Dictionary<DiscType, DiscScript> discTypeToPrefab = new Dictionary<DiscType, DiscScript>();
+    Dictionary<DiscType, Queue<DiscScript>> allDiscPools = new Dictionary<DiscType, Queue<DiscScript>>();
+    public void SetUpPools()
+    {
+        allDiscPools = new Dictionary<DiscType, Queue<DiscScript>>();
+
+        DiscScript newDisc = null;
+        Queue<DiscScript> newDiscQueue = new Queue<DiscScript>();
+        Transform newPoolParent = null;
+
+        foreach (DiscPoolParameters discPoolParameters in allDiscPoolParameters)
+        {
+            if (!allDiscPools.ContainsKey(discPoolParameters.discType))
+            {
+                newPoolParent = new GameObject().transform;
+                newPoolParent.SetParent(poolsParent);
+                newPoolParent.name = discPoolParameters.discType + "DiscsPool";
+                newPoolParent.transform.localPosition = new Vector3();
+
+                discTypeToPrefab.Add(discPoolParameters.discType, discPoolParameters.discPrefab);
+                newDiscQueue = new Queue<DiscScript>();
+                for (int i = 0; i < discPoolParameters.baseNumberOfElements; i++)
+                {
+                    newDisc = Instantiate(discPoolParameters.discPrefab, poolsParent);
+                    newDisc.gameObject.SetActive(false);
+                    newDisc.transform.SetParent(newPoolParent);
+                    // TO DO
+                    newDiscQueue.Enqueue(newDisc);
+                }
+
+                allDiscPools.Add(discPoolParameters.discType, newDiscQueue);
+            }
+        }
+    }
+
+    public DiscScript GetDisc(DiscType discType)
+    {
+        if (allDiscPools.ContainsKey(discType))
+        {
+            DiscScript newDisc = null;
+
+            if (allDiscPools[discType].Count > 0)
+            {
+                newDisc = allDiscPools[discType].Dequeue();
+                newDisc.gameObject.SetActive(true);
+            }
+            else
+            {
+                newDisc = Instantiate(discTypeToPrefab[discType], poolsParent);
+                newDisc.gameObject.SetActive(true);
+            }
+
+            return newDisc;
+        }
+
+        return null;
+    }
+
+    public void ReturnDiscInPool(DiscScript disc)
+    {
+        // TO DO : get the right type
+        DiscType discType = DiscType.Basic;
+    }
+    #endregion
+}
+
+public enum DiscType
+{
+    Basic
+}
+
+[System.Serializable]
+public struct DiscPoolParameters
+{
+    public DiscType discType;
+    public DiscScript discPrefab;
+    public int baseNumberOfElements;
 }

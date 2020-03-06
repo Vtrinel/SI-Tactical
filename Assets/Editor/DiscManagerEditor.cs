@@ -41,6 +41,9 @@ public class DiscManagerEditor : Editor
         int i = 1;
         foreach (DiscScript element in myTarget.allDiscs)
         {
+            if (element == null)
+                continue;
+
             if (element.gameObject.activeSelf)
             {
                 GUI.backgroundColor = Color.green;
@@ -73,9 +76,9 @@ public class DiscManagerEditor : Editor
 
         myTarget.allDiscs.Clear();
 
-        foreach (Transform child in myTarget.transform)
+        /*foreach (Transform child in myTarget.transform)
         {
             myTarget.allDiscs.Add(child.GetComponent<DiscScript>());
-        }
+        }*/
     }
 }
