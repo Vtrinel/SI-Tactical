@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6867ca9b98d12c7478dcbe6c041cf584, type: 3}
-  m_Name: ShakeSetting_ThrowDisc
+  m_Name: ShakeSetting_EnnemyDamage
   m_EditorClassIdentifier: 
-  noiseSettingProfile: {fileID: 0}
-  shakeDuration: 0.3
-  shakeAmplitude: 1.2
+  noiseSettingProfile: {fileID: 11400000, guid: 680dc2be41f7dff4d8b383b002e02b45,
+    type: 2}
+  shakeDuration: 0.6
+  shakeAmplitude: 1
   shakeFrequency: 2
   amplitudeOverTime:
     serializedVersion: 2
@@ -22,20 +23,20 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: -1.0078583
+      outSlope: -1.0078583
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
+      value: -0.007858276
+      inSlope: 0.103254996
+      outSlope: 0.103254996
+      tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.046042025
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
