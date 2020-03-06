@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class DiscManager : MonoBehaviour
 {
-    #region V1 SAM
-    public List<DiscScript> allDiscs = new List<DiscScript>();
-    List<DiscScript> discsUse = new List<DiscScript>();
-    #endregion
-
     public DiscScript prefabDisc = default;
 
     public static float discHeight = 1f;
@@ -55,34 +50,6 @@ public class DiscManager : MonoBehaviour
         Gizmos.DrawSphere(player.transform.position, rangeOfPlayer);
     }
 
-    public DiscScript GetCrystal()
-    {
-        foreach (DiscScript element in allDiscs)
-        {
-            if (!element.gameObject.activeSelf && !discsUse.Contains(element))
-            {
-                discsUse.Add(element.GetComponent<DiscScript>());
-                return element;
-            }
-        }
-
-        DiscScript newElement = Instantiate(prefabDisc, transform).GetComponent<DiscScript>();
-        allDiscs.Add(newElement);
-        discsUse.Add(newElement);
-        return newElement;
-    }
-
-    public void DeleteCrystal(GameObject element)
-    {
-        element.SetActive(false);
-        discsUse.Remove(element.GetComponent<DiscScript>());
-    }
-
-    public List<DiscScript> GetAllDisclUse()
-    {
-        return discsUse;
-    }
-
     #region Pooling
     [Header("Pooling")]
     [SerializeField] List<DiscPoolParameters> allDiscPoolParameters = new List<DiscPoolParameters>();
@@ -91,8 +58,9 @@ public class DiscManager : MonoBehaviour
     Dictionary<DiscType, DiscScript> discTypeToPrefab = new Dictionary<DiscType, DiscScript>();
     Dictionary<DiscType, Transform> discTypeToPoolParent = new Dictionary<DiscType, Transform>();
 
-    public List<DiscScript> inGameDiscs = new List<DiscScript>();
-    public List<DiscScript> throwedDiscs = new List<DiscScript>();
+    List<DiscScript> inGameDiscs = new List<DiscScript>();
+    public List<DiscScript> GetAllInGameDiscs => inGameDiscs;
+    List<DiscScript> throwedDiscs = new List<DiscScript>();
 
     public void SetUpPools()
     {
@@ -217,40 +185,13 @@ public class DiscManager : MonoBehaviour
     }
     #endregion
 
-    #region Thrown Discs
-    List<DiscScript> thrownDiscs = new List<DiscScript>();
-
-    public void AddDiscToThrown(DiscScript disc)
-    {
-        if (!thrownDiscs.Contains(disc))
-            thrownDiscs.Add(disc);
-
-        AddDiscToInRange(disc);
-    }
-    #endregion
-
-    #region Nearby Discs
+    #region Proximity
     public void CheckAllDiscsProximity(Vector3 playerPosition)
     {
-        List<DiscScript> newOutRangeDiscs = new List<DiscScript>();
-        foreach(DiscScript disc in inRangeDiscs)
+        foreach (DiscScript disc in inGameDiscs)
         {
-            if(!DiscIsInRange(playerPosition, disc.transform.position))
-                newOutRangeDiscs.Add(disc);
+            disc.isInRange = DiscIsInRange(playerPosition, disc.transform.position);
         }
-
-        List<DiscScript> newInRangeDiscs = new List<DiscScript>();
-        foreach (DiscScript disc in outRangeDiscs)
-        {
-            if (DiscIsInRange(playerPosition, disc.transform.position))
-                newInRangeDiscs.Add(disc);
-        }
-
-        foreach (DiscScript disc in newOutRangeDiscs)
-            RemoveDiscFromInRange(disc);
-
-        foreach (DiscScript disc in newInRangeDiscs)
-            AddDiscToInRange(disc);
     }
 
     public bool DiscIsInRange(Vector3 playerPos, Vector3 discPos)
@@ -259,64 +200,11 @@ public class DiscManager : MonoBehaviour
         return Vector3.Distance(playerPos, discPos) <= rangeOfPlayer;
     }
 
-    List<DiscScript> inRangeDiscs = new List<DiscScript>();
-    public List<DiscScript> GetInRangeDiscs => inRangeDiscs;
-    List<DiscScript> inRangeUnthrowedDiscs = new List<DiscScript>();
-    List<DiscScript> outRangeDiscs = new List<DiscScript>();
-
-    public int GetInRangeDiscsCount => inRangeDiscs.Count;
-
-    public void AddDiscToInRange(DiscScript disc)
-    {
-        disc.isInRange = true;
-
-        if (!inRangeDiscs.Contains(disc))
-        {
-            inRangeDiscs.Add(disc);
-
-            if (!thrownDiscs.Contains(disc))
-            {
-                inRangeUnthrowedDiscs.Add(disc);
-            }
-        }
-
-        if (outRangeDiscs.Contains(disc))
-        {
-            outRangeDiscs.Remove(disc);
-        }
-    }
-
-    public void RemoveDiscFromInRange(DiscScript disc)
-    {
-        disc.isInRange = false;
-
-        if (inRangeDiscs.Contains(disc))
-        {
-            inRangeDiscs.Remove(disc);
-
-            if (inRangeUnthrowedDiscs.Contains(disc))
-            {
-                inRangeUnthrowedDiscs.Remove(disc);
-            }
-        }
-
-        if (!outRangeDiscs.Contains(disc))
-        {
-            outRangeDiscs.Add(disc);
-        }
-    }
-
     public List<DiscScript> GetAllInRangeDiscsFromPosition(Vector3 position)
     {
         List<DiscScript> inRangeFromPos = new List<DiscScript>();
 
-        foreach (DiscScript disc in inRangeDiscs)
-        {
-            if (DiscIsInRange(position, disc.transform.position))
-                inRangeFromPos.Add(disc);
-        }
-
-        foreach (DiscScript disc in outRangeDiscs)
+        foreach (DiscScript disc in inGameDiscs)
         {
             if (DiscIsInRange(position, disc.transform.position))
                 inRangeFromPos.Add(disc);
@@ -324,7 +212,39 @@ public class DiscManager : MonoBehaviour
 
         return inRangeFromPos;
     }
-    #endregion   
+    
+    public int GetInRangeDiscsCount
+    {
+        get
+        {
+            int counter = 0;
+
+            foreach (DiscScript disc in inGameDiscs)
+            {
+                if (disc.isInRange)
+                    counter++;
+            }
+
+            return counter;
+        }
+    }
+
+    public List<DiscScript> GetInRangeDiscs
+    {
+        get
+        {
+            List<DiscScript> list = new List<DiscScript>();
+
+            foreach (DiscScript disc in inGameDiscs)
+            {
+                if (disc.isInRange)
+                    list.Add(disc);
+            }
+
+            return list;
+        }
+    }
+    #endregion    
 }
 
 public enum DiscType

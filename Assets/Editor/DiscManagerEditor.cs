@@ -22,7 +22,8 @@ public class DiscManagerEditor : Editor
 
         GUIStyle styleEnable = EditorStyles.miniButton;
 
-        float percent = (float)used / (float)myTarget.allDiscs.Count * 100;
+        //float percent = (float)used / (float)myTarget.allDiscs.Count * 100;
+        float percent = 0;
         GUILayout.Space(18);
 
         Rect r = EditorGUILayout.BeginVertical();
@@ -39,7 +40,7 @@ public class DiscManagerEditor : Editor
         used = 0;
         GUILayout.BeginHorizontal();
         int i = 1;
-        foreach (DiscScript element in myTarget.allDiscs)
+        /*foreach (DiscScript element in myTarget.allDiscs)
         {
             if (element == null)
                 continue;
@@ -63,7 +64,7 @@ public class DiscManagerEditor : Editor
             }
 
             i++;
-        }
+        }*/
         GUILayout.EndHorizontal();
         GUI.backgroundColor = Color.white;
 
@@ -74,7 +75,7 @@ public class DiscManagerEditor : Editor
     {
         myTarget = (DiscManager)target;
 
-        myTarget.allDiscs.Clear();
+        //myTarget.allDiscs.Clear();
 
         /*foreach (Transform child in myTarget.transform)
         {
