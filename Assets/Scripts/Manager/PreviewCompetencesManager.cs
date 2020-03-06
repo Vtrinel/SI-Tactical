@@ -120,7 +120,7 @@ public class PreviewCompetencesManager : MonoBehaviour
             trajParams = discTrajectories[i];
 
             //Debug.Log("Start : " + trajParams.startPosition + "; End : " + trajParams.endPosition);
-            arrowPreviews[i].SetPositions(new List<Vector3> { trajParams.startPosition, trajParams.endPosition });
+            arrowPreviews[i].SetPositions(trajParams.trajectoryPositions);
         }
     }
     #endregion
