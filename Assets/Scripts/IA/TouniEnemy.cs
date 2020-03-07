@@ -44,7 +44,7 @@ public class TouniEnemy : IAEnemyVirtual
         {
             PrepareAttack();
             yield return new WaitForSeconds(0.4f);
-            OnIsAtDestination?.Invoke();
+            OnFinishTurn?.Invoke();
         }
         else
         {
@@ -91,7 +91,7 @@ public class TouniEnemy : IAEnemyVirtual
         }
 
         myNavAgent.isStopped = true;
-        OnIsAtDestination?.Invoke();
+        OnFinishTurn?.Invoke();
     }
 
     void PrepareAttack()
@@ -176,7 +176,7 @@ public class TouniEnemy : IAEnemyVirtual
     void ForceStopMyTurn()
     {
         StopAllCoroutines();
-        OnIsAtDestination?.Invoke();
+        OnFinishTurn?.Invoke();
     }
 
     private void OnDrawGizmos()

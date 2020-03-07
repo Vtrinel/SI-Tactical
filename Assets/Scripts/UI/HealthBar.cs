@@ -48,7 +48,6 @@ public class HealthBar : MonoBehaviour
     {
         currentHealth = _numberLives;
 
-        print("passage");
         int i = 0;
 
         foreach(GameObject _lifeBar in allLifeBarElement)

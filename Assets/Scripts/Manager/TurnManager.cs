@@ -33,14 +33,14 @@ public class TurnManager : MonoBehaviour
     public TurnState GetCurrentTurnState => currentTurnState;
     public void StartPlayerTurn()
     {
-        Debug.Log("Start player turn !");
+        //Debug.Log("Start player turn !");
         currentTurnState = TurnState.PlayerTurn;
         OnStartPlayerTurn?.Invoke();
     }
 
     public void EndPlayerTurn()
     {
-        Debug.Log("End player turn !");
+        //Debug.Log("End player turn !");
         currentTurnState = TurnState.BetweenPlayerAndEnemies;
         OnEndPlayerTurn?.Invoke();
 
