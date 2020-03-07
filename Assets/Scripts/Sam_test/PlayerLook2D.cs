@@ -12,7 +12,7 @@ public class PlayerLook2D : MonoBehaviour
     {
         player = GameManager.Instance.GetPlayer.transform;
     }
-
+    
     // Update is called once per frame
     void Update()
     {

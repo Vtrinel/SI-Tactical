@@ -11,7 +11,7 @@ public static class DiscTrajectoryFactory
 
         discTrajectoryParameters.trajectoryPositions.Add(startPosition);
 
-        /*Vector3 totalDirection = (targetPosition - startPosition).normalized;
+        Vector3 totalDirection = (targetPosition - startPosition).normalized;
 
         Vector3 testPos1 = Vector3.Lerp(startPosition, targetPosition, 0.2f);
         testPos1 += new Vector3(totalDirection.z, 0, -totalDirection.x).normalized * 1f;
@@ -26,7 +26,7 @@ public static class DiscTrajectoryFactory
         discTrajectoryParameters.trajectoryPositions.Add(testPos1);
         discTrajectoryParameters.trajectoryPositions.Add(testPos2);
         discTrajectoryParameters.trajectoryPositions.Add(testPos3);
-        discTrajectoryParameters.trajectoryPositions.Add(testPos4);*/
+        discTrajectoryParameters.trajectoryPositions.Add(testPos4);
 
         discTrajectoryParameters.trajectoryPositions.Add(targetPosition);
 
@@ -39,6 +39,24 @@ public static class DiscTrajectoryFactory
         discTrajectoryParameters.trajectoryPositions = new List<Vector3>();
 
         discTrajectoryParameters.trajectoryPositions.Add(startPosition);
+
+        Vector3 totalDirection = (targetPosition - startPosition).normalized;
+
+        Vector3 testPos1 = Vector3.Lerp(startPosition, targetPosition, 0.2f);
+        testPos1 += new Vector3(totalDirection.z, 0, -totalDirection.x).normalized * 1f;
+        Vector3 testPos2 = Vector3.Lerp(startPosition, targetPosition, 0.4f);
+        testPos2 += new Vector3(-totalDirection.z, 0, totalDirection.x).normalized * 1f;
+
+        Vector3 testPos3 = Vector3.Lerp(startPosition, targetPosition, 0.6f);
+        testPos3 += new Vector3(totalDirection.z, 0, -totalDirection.x).normalized * 1f;
+        Vector3 testPos4 = Vector3.Lerp(startPosition, targetPosition, 0.8f);
+        testPos4 += new Vector3(-totalDirection.z, 0, totalDirection.x).normalized * 1f;
+
+        discTrajectoryParameters.trajectoryPositions.Add(testPos1);
+        discTrajectoryParameters.trajectoryPositions.Add(testPos2);
+        discTrajectoryParameters.trajectoryPositions.Add(testPos3);
+        discTrajectoryParameters.trajectoryPositions.Add(testPos4);
+
         discTrajectoryParameters.trajectoryPositions.Add(targetPosition);
 
         return discTrajectoryParameters;
