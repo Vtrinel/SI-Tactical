@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NaughtyAttributes;
+using Cinemachine;
 
 public class PlayerCamera : VirtualCamera
 {
@@ -17,7 +19,9 @@ public class PlayerCamera : VirtualCamera
         followTransform.SetParent(player.transform);
         SetCameraTarget(followTransform.transform);
         SetCameraActive();
+        
     }
+
 
 
     #region Free Cam
@@ -71,5 +75,6 @@ public class PlayerCamera : VirtualCamera
     {
         followTransform.position = player.transform.position;
     }
+
     #endregion
 }

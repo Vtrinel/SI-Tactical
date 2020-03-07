@@ -83,6 +83,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   virtualCam: {fileID: 2107271652310472110}
   cameraShake: {fileID: 3226341438197719348}
+  iniCameraDistance: 15
+  cinemachineFraming: {fileID: 0}
+  isZooming: 0
+  iniDamping: {x: 0, y: 0, z: 0}
+  zoomDamping: {x: 1, y: 3, z: 1}
   player: {fileID: 0}
   followTransform: {fileID: 0}
   minimumFreeCameraOffset: {fileID: 0}
