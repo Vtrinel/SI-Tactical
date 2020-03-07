@@ -65,9 +65,9 @@ public class PlayerMovementsManager
         GenerateDebugCircles();
         movementPlayerPreview.SetActive(true);
 
+        //List<DiscScript> inRangeFromPositionDiscs = DiscManager.Instance.GetAllInRangeDiscsFromPosition(targetPosition);
         List<DiscTrajectoryParameters> discsInNewPositionRangeParameters = GetDiscInRangeTrajectory(targetPosition);
         PreviewCompetencesManager.Instance.StartRecallPreview(discsInNewPositionRangeParameters, targetPosition);
-        //PreviewCompetencesManager.Instance.StartPreviewCamera(targetPosition);
 
         justStartedMovementPreview = true;
         UpdateMovementPreview(targetPosition);
@@ -100,7 +100,6 @@ public class PlayerMovementsManager
 
         movementPlayerPreview.transform.position = targetPosition;
 
-        //PreviewCompetencesManager.Instance.UpdatePreviewCamera(targetPosition);
         if (!justStartedMovementPreview)
         {
             List<DiscTrajectoryParameters> discsInNewPositionRangeParameters = GetDiscInRangeTrajectory(targetPosition);
@@ -125,8 +124,12 @@ public class PlayerMovementsManager
 
     public List<DiscTrajectoryParameters> GetDiscInRangeTrajectory(Vector3 targetPosition)
     {
+        List<DiscScript> recallableFromPosition = 
+            DiscListingFactory.GetSortedRecallableDiscs(currentRecallCompetence, 
+            DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetAllInRangeDiscsFromPosition(targetPosition));
+
         List<DiscTrajectoryParameters> allTrajParams = new List<DiscTrajectoryParameters>();
-        foreach (DiscScript disc in DiscManager.Instance.GetAllInRangeDiscsFromPosition(targetPosition))
+        foreach (DiscScript disc in recallableFromPosition)
         {
             DiscTrajectoryParameters newTrajParams =
                 DiscTrajectoryFactory.GetTrajectory(currentRecallCompetence, disc.transform.position, targetPosition,
