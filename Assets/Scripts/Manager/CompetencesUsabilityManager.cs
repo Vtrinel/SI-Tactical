@@ -319,10 +319,12 @@ public class CompetencesUsabilityManager
 
     public void LaunchThrowCompetence()
     {
+        currentlyInUseDiscs = new List<DiscScript>();
+
         DiscScript newDisc = DiscManager.Instance.TakeFirstDiscFromPossessedDiscs();
         if(newDisc == null)
         {
-            Debug.LogWarning("NO DISK TO THROW");
+            //Debug.LogWarning("NO DISK TO THROW");
             return;
         }
 
@@ -331,11 +333,13 @@ public class CompetencesUsabilityManager
             _player.transform.position, GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition), 
             DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
 
+        newDisc.SetIsBeingRecalled(false);
         newDisc.SetRetreivableByPlayer(false);
         newDisc.StartTrajectory(trajectoryParameters);
-        //newDisc.gameObject.SetActive(true);
+        currentlyInUseDiscs.Add(newDisc);
+        newDisc.OnReachedTrajectoryEnd += RemoveDiscFromInUse;
 
-        ResetUsabilityState();
+        ChangeUsabilityState(UsabilityState.Using, ActionType.Throw);
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
     }
     #endregion
@@ -350,11 +354,30 @@ public class CompetencesUsabilityManager
                 disc.transform.position, _player.transform.position,
                 DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
 
+            disc.SetIsBeingRecalled(true);
             disc.StartTrajectory(trajectoryParameters);
+
+            currentlyInUseDiscs.Add(disc);
+            disc.OnReachedTrajectoryEnd += RemoveDiscFromInUse;
         }
 
-        ResetUsabilityState();
+        ChangeUsabilityState(UsabilityState.Using, ActionType.Recall);
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
     }
     #endregion
+
+    List<DiscScript> currentlyInUseDiscs = new List<DiscScript>();
+    public void RemoveDiscFromInUse(DiscScript disc)
+    {
+        disc.OnReachedTrajectoryEnd -= RemoveDiscFromInUse;
+        currentlyInUseDiscs.Remove(disc);
+
+        if (currentlyInUseDiscs.Count == 0)
+            EndCompetenceUsability();
+    }
+
+    public void EndCompetenceUsability()
+    {
+        ResetUsabilityState();
+    }
 }
