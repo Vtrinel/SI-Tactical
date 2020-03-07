@@ -11,12 +11,12 @@ public static class DiscTrajectoryFactory
         Vector3 totalDirection = (targetPosition - startPosition).normalized;
 
         List<TrajectoryModifier> trajectoryModifiers = competence.GetTrajectoryModifiers;
-        LinkedDiscTrajectoryType linkedDiscsTrajectory = LinkedDiscTrajectoryType.None;
+        DiscsOrder linkedDiscsTrajectory = DiscsOrder.None;
         TrajectoryModifierCurved curvedModifier = null;
 
         foreach (TrajectoryModifier modifier in trajectoryModifiers)
         {
-            if (linkedDiscsTrajectory == LinkedDiscTrajectoryType.None)
+            if (linkedDiscsTrajectory == DiscsOrder.None)
             {
                 TrajectoryModifierLinkedDiscs linkedDiscModifier = modifier as TrajectoryModifierLinkedDiscs;
                 if (linkedDiscModifier != null)
@@ -36,20 +36,20 @@ public static class DiscTrajectoryFactory
         #region Discs Link
         switch (linkedDiscsTrajectory)
         {
-            case LinkedDiscTrajectoryType.FromOldestToNewest:
-                for (int i = throwedDiscs.Count - 1; i >= 0; i--)
+            case DiscsOrder.FromOldestToNewest:
+                for (int i = 0; i < throwedDiscs.Count; i++)
                 {
                     DiscScript linkDisc = throwedDiscs[i];
                     if (linkDisc != currentDisc)
                     {
-                        if(inRangeDiscs.Contains(linkDisc))
+                        if (inRangeDiscs.Contains(linkDisc))
                             trajectoryPositions.Add(linkDisc.transform.position);
                     }
                 }
-
                 break;
-            case LinkedDiscTrajectoryType.FromNewestToOldest:
-                for (int i = 0; i < throwedDiscs.Count; i++)
+            case DiscsOrder.FromNewestToOldest:
+
+                for (int i = throwedDiscs.Count - 1; i >= 0; i--)
                 {
                     DiscScript linkDisc = throwedDiscs[i];
                     if (linkDisc != currentDisc)

@@ -8,3 +8,8 @@ public class CompetenceDisc : Competence
     [SerializeField] List<TrajectoryModifier> trajectoryModifiers = new List<TrajectoryModifier>();
     public List<TrajectoryModifier> GetTrajectoryModifiers => trajectoryModifiers;
 }
+
+public enum DiscsOrder
+{
+    FromOldestToNewest, FromNewestToOldest, None
+}

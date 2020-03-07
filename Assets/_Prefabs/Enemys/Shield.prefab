@@ -199,7 +199,7 @@ GameObject:
   - component: {fileID: 7988312769232818713}
   - component: {fileID: 1653113220208835028}
   m_Layer: 12
-  m_Name: ShieldFback
+  m_Name: ShieldBack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -326,6 +326,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20cfb0db0ff34e44c925f18231c61502, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FrontShield: {fileID: 6083201029509568210}
+  BackShield: {fileID: 5587456159756847415}
+  RightShield: {fileID: 5046729691546593659}
+  LeftShield: {fileID: 5540910002673806503}
+  allShieldPos: 0
 --- !u!1 &6083201029509568210
 GameObject:
   m_ObjectHideFlags: 0

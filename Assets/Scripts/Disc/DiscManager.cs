@@ -32,6 +32,15 @@ public class DiscManager : MonoBehaviour
         }
 
         SetUpPools();
+
+        #region TEST
+        //if()
+        DiscScript[] alreadyInGameDiscs = FindObjectsOfType<DiscScript>();
+        foreach(DiscScript disc in alreadyInGameDiscs)
+        {
+            inGameDiscs.Add(disc);
+        }
+        #endregion
     }
 
     private void Start()
@@ -160,16 +169,15 @@ public class DiscManager : MonoBehaviour
 
     public void PlayerRetreiveDisc(DiscScript retreivedDisc)
     {
+        throwedDiscs.Remove(retreivedDisc);
+        ReturnDiscInPool(retreivedDisc);
         if (possessedDiscs.Count < maxNumberOfPossessedDiscs)
         {
-            throwedDiscs.Remove(retreivedDisc);
             possessedDiscs.Push(retreivedDisc.GetDiscType);
-            ReturnDiscInPool(retreivedDisc);
         }
         else
         {
-            Debug.Log("TOO MUCH DISCS, NOT ADDED BUT SUPPOSED TO BE SOMETHING");
-            ReturnDiscInPool(retreivedDisc);
+            //Debug.Log("TOO MUCH DISCS, NOT ADDED BUT SUPPOSED TO BE SOMETHING");
         }
     }
 

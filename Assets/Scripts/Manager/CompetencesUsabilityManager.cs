@@ -353,22 +353,64 @@ public class CompetencesUsabilityManager
     #region
     public void LaunchRecallCompetence()
     {
-        foreach (DiscScript disc in DiscManager.Instance.GetInRangeDiscs)
+        int remainingNumberOfDiscsToRecall = recallCompetence.GetNumberOfRecalledDiscs;
+        bool recallAll = remainingNumberOfDiscsToRecall == 0;
+        DiscsOrder discsRecallOrder = recallCompetence.GetRecallingOrder;
+        bool canRecallUnthrowedDiscs = recallCompetence.GetCanRecallUnthrowedDiscs;
+
+        List<DiscScript> throwedDiscs = DiscManager.Instance.GetAllThrowedDiscs;
+        List<DiscScript> inRangeDiscs = DiscManager.Instance.GetInRangeDiscs;
+        DiscScript previousRecalledDisc = null;
+
+        int currentDiscIndex = (discsRecallOrder == DiscsOrder.FromNewestToOldest ? throwedDiscs.Count - 1 : 0);
+        while (recallAll || remainingNumberOfDiscsToRecall > 0 && throwedDiscs.Count > 0)
         {
-            DiscTrajectoryParameters trajectoryParameters =
-                DiscTrajectoryFactory.GetTrajectory(recallCompetence,
-                disc.transform.position, _player.transform.position,
-                DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, disc);
+            DiscScript currentDisc = throwedDiscs[currentDiscIndex];
+            StartRecallDisc(currentDisc);
+            previousRecalledDisc = currentDisc;
 
-            disc.SetIsBeingRecalled(true);
-            disc.StartTrajectory(trajectoryParameters);
-
-            currentlyInUseDiscs.Add(disc);
-            disc.OnReachedTrajectoryEnd += RemoveDiscFromInUse;
+            currentDiscIndex += (discsRecallOrder == DiscsOrder.FromNewestToOldest ? -1 : 1);
+            remainingNumberOfDiscsToRecall--;
+            if (currentDiscIndex < 0 || currentDiscIndex >= throwedDiscs.Count)
+            {
+                break;
+            }
         }
 
-        ChangeUsabilityState(UsabilityState.Using, ActionType.Recall);
+        if ((remainingNumberOfDiscsToRecall > 0 || recallAll) && canRecallUnthrowedDiscs)
+        {
+            foreach (DiscScript disc in inRangeDiscs)
+            {
+                if (throwedDiscs.Contains(disc))
+                    continue;
+
+                StartRecallDisc(disc);
+                previousRecalledDisc = disc;
+
+                remainingNumberOfDiscsToRecall--;
+                if (remainingNumberOfDiscsToRecall == 0)
+                    break;
+            }
+        }
+
+        if (previousRecalledDisc != null)
+            ChangeUsabilityState(UsabilityState.Using, ActionType.Recall);
+        else
+            ResetUsabilityState();
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+    }
+
+    public void StartRecallDisc(DiscScript disc)
+    {
+        DiscTrajectoryParameters trajectoryParameters =
+            DiscTrajectoryFactory.GetTrajectory(recallCompetence,
+            disc.transform.position, _player.transform.position,
+            DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, disc);
+
+        disc.SetIsBeingRecalled(true);
+        disc.StartTrajectory(trajectoryParameters);
+        currentlyInUseDiscs.Add(disc);
+        disc.OnReachedTrajectoryEnd += RemoveDiscFromInUse;
     }
     #endregion
 
