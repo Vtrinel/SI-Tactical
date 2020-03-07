@@ -8,7 +8,7 @@ public class TouniEnemy : IAEnemyVirtual
 {
     public float angleAttack;
 
-    [SerializeField] LayerMask objCanBeAttecked;
+    [SerializeField] LayerMask objCanBeAttacked;
 
     private void OnEnable()
     {
@@ -136,7 +136,7 @@ public class TouniEnemy : IAEnemyVirtual
         List<GameObject> objTouched = new List<GameObject>();
 
         RaycastHit[] hits;
-        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, transform.forward, attackRange, objCanBeAttecked);
+        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, transform.forward, attackRange, objCanBeAttacked);
         foreach(RaycastHit hit in hits)
         {
             if (!objTouched.Contains(hit.collider.gameObject))
@@ -145,7 +145,7 @@ public class TouniEnemy : IAEnemyVirtual
             }
         }
 
-        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, rightRayDirection, attackRange, objCanBeAttecked);
+        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, rightRayDirection, attackRange, objCanBeAttacked);
         foreach (RaycastHit hit in hits)
         {
             if (!objTouched.Contains(hit.collider.gameObject))
@@ -154,7 +154,7 @@ public class TouniEnemy : IAEnemyVirtual
             }
         }
 
-        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, transform.forward, attackRange, objCanBeAttecked);
+        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, transform.forward, attackRange, objCanBeAttacked);
         foreach (RaycastHit hit in hits)
         {
             if (!objTouched.Contains(hit.collider.gameObject))

@@ -26,5 +26,7 @@ public class IAEnemyVirtual : MonoBehaviour
 
     public float durationTurn = 1;
 
+    public ShieldManager myShieldManager;
+
     public virtual void PlayerTurn() { }
 }
