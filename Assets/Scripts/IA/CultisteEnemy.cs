@@ -115,7 +115,6 @@ public class CultisteEnemy : IAEnemyVirtual
 
     void PrepareAttack()
     {
-        print("stop");
         myNavAgent.isStopped = true;
         myAnimator.SetBool("Preparing", true);
         transform.LookAt(player.transform);
@@ -179,11 +178,9 @@ public class CultisteEnemy : IAEnemyVirtual
             {
                 if (hit.transform.gameObject == player)
                 {
-                    print("oui");
                     return true;
                 }
             }
-            print("non");
         }
         return false;
     }

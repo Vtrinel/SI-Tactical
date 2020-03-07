@@ -39,16 +39,24 @@ public static class DiscTrajectoryFactory
             case LinkedDiscTrajectoryType.FromOldestToNewest:
                 for (int i = throwedDiscs.Count - 1; i >= 0; i--)
                 {
-                    if(throwedDiscs[i] != currentDisc)
-                        trajectoryPositions.Add(throwedDiscs[i].transform.position);
+                    DiscScript linkDisc = throwedDiscs[i];
+                    if (linkDisc != currentDisc)
+                    {
+                        if(inRangeDiscs.Contains(linkDisc))
+                            trajectoryPositions.Add(linkDisc.transform.position);
+                    }
                 }
 
                 break;
             case LinkedDiscTrajectoryType.FromNewestToOldest:
                 for (int i = 0; i < throwedDiscs.Count; i++)
                 {
-                    if (throwedDiscs[i] != currentDisc)
-                        trajectoryPositions.Add(throwedDiscs[i].transform.position);
+                    DiscScript linkDisc = throwedDiscs[i];
+                    if (linkDisc != currentDisc)
+                    {
+                        if (inRangeDiscs.Contains(linkDisc))
+                            trajectoryPositions.Add(linkDisc.transform.position);
+                    }
                 }
                 break;
         }

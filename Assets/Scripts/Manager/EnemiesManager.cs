@@ -43,12 +43,14 @@ public class EnemiesManager : MonoBehaviour
         else
             allInGameEnemiesOrdered.Add(newEnemy);
 
+        newEnemy.OnEnemyDeath += RemoveEnemy;
         OnInGameEnemiesChanged?.Invoke(allInGameEnemiesOrdered);
     }
 
-    public void RemoveEnemy(EnemyBase newEnemy)
+    public void RemoveEnemy(EnemyBase enemyToRemove)
     {
-        allInGameEnemiesOrdered.Remove(newEnemy);
+        enemyToRemove.OnEnemyDeath -= RemoveEnemy;
+        allInGameEnemiesOrdered.Remove(enemyToRemove);
 
         OnInGameEnemiesChanged?.Invoke(allInGameEnemiesOrdered);
     }
