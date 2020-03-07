@@ -128,9 +128,9 @@ public class PlayerMovementsManager
         List<DiscTrajectoryParameters> allTrajParams = new List<DiscTrajectoryParameters>();
         foreach (DiscScript disc in DiscManager.Instance.GetAllInRangeDiscsFromPosition(targetPosition))
         {
-            DiscTrajectoryParameters newTrajParams = 
-                DiscTrajectoryFactory.GetRecallTrajectory(currentRecallCompetence, disc.transform.position, targetPosition, 
-                DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+            DiscTrajectoryParameters newTrajParams =
+                DiscTrajectoryFactory.GetTrajectory(currentRecallCompetence, disc.transform.position, targetPosition,
+                DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, disc);
             allTrajParams.Add(newTrajParams);
         }
         return allTrajParams;

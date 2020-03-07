@@ -22,13 +22,16 @@ public class DiscScript : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] float maxSpeed = 10f;
-    [SerializeField] float acceleration = 15f;
+    [SerializeField] float accelerationDuration = 0.2f;
+    [SerializeField] AnimationCurve accelerationCurve = AnimationCurve.Linear(0, 0, 1, 1);
+    TimerSystem accelerationDurationSystem = new TimerSystem();
+
     float currentSpeed = 0f;
 
     List<Vector3> currentTrajectory = new List<Vector3>();
     public System.Action<DiscScript> OnReachedTrajectoryEnd = default;
 
-    bool isAttacking = false;
+    public bool isAttacking = false;
     bool isInRange = true;
     public bool IsInRange => isInRange;
     public void SetIsInRange(bool inRange)
@@ -38,10 +41,6 @@ public class DiscScript : MonoBehaviour
 
     bool retreivableByPlayer = false;
     bool isBeingRecalled = false;
-
-
-    //public float rotaSpeed = 3;
-
 
     Collider attachedObj;
 
@@ -80,6 +79,9 @@ public class DiscScript : MonoBehaviour
 
         transform.position = currentTrajectory[0];
         currentTrajectory.RemoveAt(0);
+
+        accelerationDurationSystem.ChangeTimerValue(accelerationDuration);
+        accelerationDurationSystem.StartTimer();
     }
 
     public void UpdateTrajectory()
@@ -90,11 +92,10 @@ public class DiscScript : MonoBehaviour
             return;
         }
 
-        if(currentSpeed < maxSpeed)
+        if (!accelerationDurationSystem.TimerOver)
         {
-            currentSpeed += acceleration * Time.deltaTime;
-            if (currentSpeed > maxSpeed)
-                currentSpeed = maxSpeed;
+            accelerationDurationSystem.UpdateTimer();
+            currentSpeed = accelerationCurve.Evaluate(accelerationDurationSystem.GetTimerCoefficient) * maxSpeed;
         }
 
         float remainingReachableDistance = currentSpeed * Time.deltaTime;

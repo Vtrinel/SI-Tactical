@@ -374,7 +374,7 @@ GameObject:
   - component: {fileID: 6103916517976931779}
   - component: {fileID: 4833937767969952820}
   m_Layer: 10
-  m_Name: Dummy
+  m_Name: Touni
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -429,8 +429,6 @@ MonoBehaviour:
   lifeBar: {fileID: 3894817727234607627}
   enemyRenderer: {fileID: 3894817727671339327}
   baseInitiative: 1
-  normalMaterial: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  activeMaterial: {fileID: 2100000, guid: a5ac8ff0892cc18449f5625eaec08207, type: 2}
   willAttackPlayerDebug: 0
   myIA: {fileID: 6547703038302129142}
 --- !u!114 &3894817726808940226
@@ -502,8 +500,14 @@ MonoBehaviour:
   distanceOfDeplacement: 2.5
   attackRange: 2
   damage: 1
-  angleAttack: 60
+  player: {fileID: 0}
+  playerControlleur: {fileID: 0}
+  destination: {x: 0, y: 0, z: 0}
   myAnimator: {fileID: 4833937767969952820}
+  isPlaying: 0
+  isPreparing: 0
+  durationTurn: 1
+  angleAttack: 60
   objCanBeAttecked:
     serializedVersion: 2
     m_Bits: 1536
@@ -539,7 +543,7 @@ Animator:
   m_GameObject: {fileID: 3894817726808940237}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 71443b10d47a65445a7c4e82e02d5465, type: 2}
+  m_Controller: {fileID: 9100000, guid: 0b7a4808b8d90a34c9d7e42762c5a74e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -679,7 +683,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 3d232e7526f6e426cab994cbec1fc287, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
