@@ -21,6 +21,7 @@ public class PlayerLook2D : MonoBehaviour
 
         var lookPos = player.position - transform.position;
         lookPos.y = 0;
-        transform.rotation = Quaternion.LookRotation(lookPos);
+        if (lookPos != Vector3.zero)
+            transform.rotation = Quaternion.LookRotation(lookPos);
     }
 }

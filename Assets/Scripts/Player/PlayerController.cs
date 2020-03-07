@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
         if (currentLife == 0)
             return;
 
-        Debug.Log("RAGE");
+        //Debug.Log("RAGE");
 
         EffectZone newRageEffectZone = Instantiate(rageEffectZonePrefab);
         newRageEffectZone.StartZone(transform.position + Vector3.up * rageEffectZoneVerticalOffset);

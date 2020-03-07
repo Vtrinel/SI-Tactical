@@ -22,18 +22,25 @@ public class DiscScript : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] float maxSpeed = 10f;
-    [SerializeField] float acceleration = 15f;
+    [SerializeField] float accelerationDuration = 0.2f;
+    [SerializeField] AnimationCurve accelerationCurve = AnimationCurve.Linear(0, 0, 1, 1);
+    TimerSystem accelerationDurationSystem = new TimerSystem();
+
     float currentSpeed = 0f;
 
     List<Vector3> currentTrajectory = new List<Vector3>();
     public System.Action<DiscScript> OnReachedTrajectoryEnd = default;
 
     public bool isAttacking = false;
-    public bool isInRange = true;
+    bool isInRange = true;
+    public bool IsInRange => isInRange;
+    public void SetIsInRange(bool inRange)
+    {
+        isInRange = inRange;
+    }
+
     bool retreivableByPlayer = false;
-
-    //public float rotaSpeed = 3;
-
+    bool isBeingRecalled = false;
 
     Collider attachedObj;
 
@@ -54,6 +61,10 @@ public class DiscScript : MonoBehaviour
     {
         retreivableByPlayer = retreivable;
     }
+    public void SetIsBeingRecalled(bool recalled)
+    {
+        isBeingRecalled = recalled;
+    }
 
     public void StartTrajectory(DiscTrajectoryParameters newTrajectory)
     {
@@ -68,21 +79,23 @@ public class DiscScript : MonoBehaviour
 
         transform.position = currentTrajectory[0];
         currentTrajectory.RemoveAt(0);
+
+        accelerationDurationSystem.ChangeTimerValue(accelerationDuration);
+        accelerationDurationSystem.StartTimer();
     }
 
     public void UpdateTrajectory()
     {
         if (currentTrajectory.Count == 0)
         {
-            EndTrajectory();
+            EndTrajectory(true);
             return;
         }
 
-        if(currentSpeed < maxSpeed)
+        if (!accelerationDurationSystem.TimerOver)
         {
-            currentSpeed += acceleration * Time.deltaTime;
-            if (currentSpeed > maxSpeed)
-                currentSpeed = maxSpeed;
+            accelerationDurationSystem.UpdateTimer();
+            currentSpeed = accelerationCurve.Evaluate(accelerationDurationSystem.GetTimerCoefficient) * maxSpeed;
         }
 
         float remainingReachableDistance = currentSpeed * Time.deltaTime;
@@ -120,7 +133,6 @@ public class DiscScript : MonoBehaviour
         transform.position += totalMovement;
 
         if(reachedTrajectoryPoints > 0)
-        Debug.Log(reachedTrajectoryPoints);
         while (reachedTrajectoryPoints > 0)
         {
             currentTrajectory.RemoveAt(0);
@@ -128,7 +140,7 @@ public class DiscScript : MonoBehaviour
         }
 
         if (reachedTrajectoryEnd)
-            EndTrajectory();
+            EndTrajectory(true);
     }
 
     public void InterruptTrajectory()
@@ -138,18 +150,30 @@ public class DiscScript : MonoBehaviour
         SetRetreivableByPlayer(true);
     }
 
-    public void EndTrajectory()
+    public void EndTrajectory(bool checkIfRetreive)
     {
         OnReachedTrajectoryEnd?.Invoke(this);
         isAttacking = false;
         SetRetreivableByPlayer(true);
+
+        if (isBeingRecalled && checkIfRetreive)
+            RetreiveByPlayer();
+
+    }
+    #endregion
+
+    #region Collision responses
+    public void RetreiveByPlayer()
+    {
+        isAttacking = false;
+        EndTrajectory(false);
+        DiscManager.Instance.PlayerRetreiveDisc(this);
     }
     #endregion
 
     #region Collisions and Interaction
     private void OnCollisionEnter(Collision collision)
     {
-        print("test");
         if (collision.gameObject == objLaunch || !isAttacking) { return; }
 
         DemandeFx(collision.contacts[0].point);
@@ -165,7 +189,7 @@ public class DiscScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject == objLaunch || !isAttacking) { return; }
+        if (other.gameObject == objLaunch || !isAttacking) { return; }
 
         DemandeFx(other.ClosestPointOnBounds(transform.position));
 
@@ -175,11 +199,12 @@ public class DiscScript : MonoBehaviour
             case 9:
                 //recall or touch player
                 if (!retreivableByPlayer)
+                {
                     break;
+                }
 
-                isAttacking = false;
-                //DiscManager.Instance.DeleteCrystal(gameObject);
-                DiscManager.Instance.PlayerRetreiveDisc(this);
+                RetreiveByPlayer();                
+
                 break;
 
             //ennemy
@@ -214,7 +239,7 @@ public class DiscScript : MonoBehaviour
     }
     #endregion
 
-    #region 
+    #region Feedbacks
     void DemandeFx(Vector3 collision)
     {
         GameObject newFx = FxManager.Instance.DemandeFx(FxManager.fxType.Hit);

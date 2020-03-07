@@ -69,7 +69,7 @@ public class EnemyBase : MonoBehaviour
 
     public void InterruptAllAction()
     {
-        Debug.Log("Interrupt " + name + "'s actions");
+        //Debug.Log("Interrupt " + name + "'s actions");
         // TO DO : interrupt action of the linked AI, without calling EndTurn 
     }
     #endregion
