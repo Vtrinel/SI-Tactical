@@ -31,6 +31,7 @@ public class CompetencesUsabilityManager
     [Header("Competences")]
     [SerializeField] CompetenceThrow throwCompetence = default;
     public CompetenceThrow GetCompetenceThrow => throwCompetence;
+    [SerializeField] float minThrowDistance = 1f;
 
     [SerializeField] CompetenceRecall recallCompetence = default;
     public CompetenceRecall GetRecallCompetence => recallCompetence;
@@ -239,8 +240,8 @@ public class CompetencesUsabilityManager
     {
         Vector3 trueTargetPosition = GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition);
         DiscTrajectoryParameters trajectoryParameters = 
-            DiscTrajectoryFactory.GetThrowTrajectory(throwCompetence, _player.transform.position, trueTargetPosition,
-            DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+            DiscTrajectoryFactory.GetTrajectory(throwCompetence, _player.transform.position, trueTargetPosition,
+            DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, null);
         PreviewCompetencesManager.Instance.StartThrowPreview(new List<DiscTrajectoryParameters> { trajectoryParameters }, _player.transform.position);
     }
 
@@ -248,8 +249,8 @@ public class CompetencesUsabilityManager
     {
         Vector3 trueTargetPosition = GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition);
         DiscTrajectoryParameters trajectoryParameters = 
-            DiscTrajectoryFactory.GetThrowTrajectory(throwCompetence, _player.transform.position, trueTargetPosition,
-            DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+            DiscTrajectoryFactory.GetTrajectory(throwCompetence, _player.transform.position, trueTargetPosition,
+            DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, null);
         PreviewCompetencesManager.Instance.UpdateThrowPreview(new List<DiscTrajectoryParameters> { trajectoryParameters });
     }
 
@@ -268,8 +269,8 @@ public class CompetencesUsabilityManager
         foreach(DiscScript discInRange in DiscManager.Instance.GetInRangeDiscs)
         {
             DiscTrajectoryParameters newParams = 
-                DiscTrajectoryFactory.GetRecallTrajectory(recallCompetence, discInRange.transform.position, playerPos,
-                DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+                DiscTrajectoryFactory.GetTrajectory(recallCompetence, discInRange.transform.position, playerPos,
+                DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, discInRange);
             recallTrajectoryParameters.Add(newParams);
         }
 
@@ -284,8 +285,8 @@ public class CompetencesUsabilityManager
         foreach (DiscScript discInRange in DiscManager.Instance.GetInRangeDiscs)
         {
             DiscTrajectoryParameters newParams = 
-                DiscTrajectoryFactory.GetRecallTrajectory(recallCompetence, discInRange.transform.position, playerPos,
-                DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+                DiscTrajectoryFactory.GetTrajectory(recallCompetence, discInRange.transform.position, playerPos,
+                DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, discInRange);
             recallTrajectoryParameters.Add(newParams);
         }
 
@@ -313,6 +314,11 @@ public class CompetencesUsabilityManager
             Vector3 throwDirection = (trueTargetPos - playerPos).normalized;
             trueTargetPos = playerPos + throwDirection * maxDiscRange;
         }
+        else if(distance < minThrowDistance)
+        {
+            Vector3 throwDirection = (trueTargetPos - playerPos).normalized;
+            trueTargetPos = playerPos + throwDirection * minThrowDistance;
+        }
 
         return trueTargetPos;
     }
@@ -329,9 +335,9 @@ public class CompetencesUsabilityManager
         }
 
         DiscTrajectoryParameters trajectoryParameters = 
-            DiscTrajectoryFactory.GetThrowTrajectory(throwCompetence,
+            DiscTrajectoryFactory.GetTrajectory(throwCompetence,
             _player.transform.position, GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition), 
-            DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+            DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, newDisc);
 
         newDisc.SetIsBeingRecalled(false);
         newDisc.SetRetreivableByPlayer(false);
@@ -350,9 +356,9 @@ public class CompetencesUsabilityManager
         foreach (DiscScript disc in DiscManager.Instance.GetInRangeDiscs)
         {
             DiscTrajectoryParameters trajectoryParameters =
-                DiscTrajectoryFactory.GetRecallTrajectory(recallCompetence,
+                DiscTrajectoryFactory.GetTrajectory(recallCompetence,
                 disc.transform.position, _player.transform.position,
-                DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+                DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, disc);
 
             disc.SetIsBeingRecalled(true);
             disc.StartTrajectory(trajectoryParameters);

@@ -27,6 +27,7 @@ public class ShootArrowPreview : MonoBehaviour
 
         var lookPos = Arrow.position - trajectoryPoints[trajectoryPoints.Count - 2];
         lookPos.y = 0;
-        Arrow.rotation = Quaternion.LookRotation(lookPos);
+        if (lookPos != Vector3.zero)
+            Arrow.rotation = Quaternion.LookRotation(lookPos);
     }
 }
