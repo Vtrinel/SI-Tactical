@@ -75,6 +75,7 @@ public class TouniEnemy : IAEnemyVirtual
 
     IEnumerator WaitDeplacement()
     {
+        isPlaying = true;
         float normalizedTime = 0;
 
         while (normalizedTime < durationTurn)
@@ -90,6 +91,7 @@ public class TouniEnemy : IAEnemyVirtual
             yield return null;
         }
 
+        isPlaying = false;
         myNavAgent.isStopped = true;
         OnFinishTurn?.Invoke();
     }

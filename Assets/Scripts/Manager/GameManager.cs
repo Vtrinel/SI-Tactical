@@ -42,11 +42,11 @@ public class GameManager : MonoBehaviour
         turnManager.OnCheckGameProgression += levelManager.CheckForProgressTurn;
         levelManager.OnGoalReached += WinGame;
 
+        competencesUsabilityManager.OnRecallCompetenceChanged += playerMovementsManager.UpdateCurrentRecallCompetence;
+
         playerExperienceManager.OnSetChanged += competencesUsabilityManager.UpdateSet;
         playerExperienceManager.OnMenuOpenedOrClosed += UpdatePlayerActability;
         playerExperienceManager.SetUp();
-
-        competencesUsabilityManager.OnRecallCompetenceChanged += playerMovementsManager.UpdateCurrentRecallCompetence;
     }
 
     private void Update()

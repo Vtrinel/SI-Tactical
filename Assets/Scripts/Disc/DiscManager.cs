@@ -191,7 +191,7 @@ public class DiscManager : MonoBehaviour
     {
         foreach (DiscScript disc in inGameDiscs)
         {
-            disc.isInRange = DiscIsInRange(playerPosition, disc.transform.position);
+            disc.SetIsInRange(DiscIsInRange(playerPosition, disc.transform.position));
         }
     }
 
@@ -222,7 +222,7 @@ public class DiscManager : MonoBehaviour
 
             foreach (DiscScript disc in inGameDiscs)
             {
-                if (disc.isInRange)
+                if (disc.IsInRange)
                     counter++;
             }
 
@@ -238,7 +238,7 @@ public class DiscManager : MonoBehaviour
 
             foreach (DiscScript disc in inGameDiscs)
             {
-                if (disc.isInRange)
+                if (disc.IsInRange)
                     list.Add(disc);
             }
 
