@@ -28,7 +28,7 @@ public class DiscScript : MonoBehaviour
     List<Vector3> currentTrajectory = new List<Vector3>();
     public System.Action<DiscScript> OnReachedTrajectoryEnd = default;
 
-    bool isAttacking = false;
+    public bool isAttacking = false;
     bool isInRange = true;
     public bool IsInRange => isInRange;
     public void SetIsInRange(bool inRange)
