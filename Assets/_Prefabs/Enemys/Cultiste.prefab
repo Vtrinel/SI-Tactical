@@ -750,7 +750,7 @@ MonoBehaviour:
   knockbackReceiptionSystem: {fileID: 0}
   lifeBar: {fileID: 3894817727234607627}
   enemyRenderer: {fileID: 3894817727671339327}
-  baseInitiative: 1
+  baseInitiative: 4
   willAttackPlayerDebug: 0
   myIA: {fileID: 7209678692314394212}
 --- !u!114 &3894817726808940226
@@ -766,7 +766,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageTag: 1
-  maxLifeAmount: 2
+  maxLifeAmount: 4
   currentLifeAmount: 0
 --- !u!114 &-7294889758052032267
 MonoBehaviour:
@@ -819,7 +819,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myNavAgent: {fileID: 6103916517976931779}
-  distanceOfDeplacement: 2.5
+  distanceOfDeplacement: 3
   attackRange: 8.22
   damage: 1
   player: {fileID: 0}
