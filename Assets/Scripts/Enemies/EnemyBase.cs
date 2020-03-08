@@ -37,6 +37,13 @@ public class EnemyBase : MonoBehaviour
     public float GetEnemyInitiative => enemyInstanceInitiative;
     bool setedUpInitiative = false;
 
+    public void SpawnEnemy()
+    {
+        gameObject.SetActive(true);
+        SetUpInitiative();
+        EnemiesManager.Instance.AddEnemy(this);
+    }
+
     public void SetUpInitiative()
     {
         if (setedUpInitiative)
