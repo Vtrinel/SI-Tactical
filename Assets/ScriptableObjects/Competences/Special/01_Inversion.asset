@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be651089b085f7a4c99d506674ed197d, type: 3}
   m_Name: 01_Inversion
   m_EditorClassIdentifier: 
-  competenceName: 
-  competenceDescription: 
-  competenceImage: {fileID: 0}
-  actionPointsCost: 2
+  competenceName: Inversion
+  competenceDescription: "Echange la position du joueur avec le disque cibl\xE9e."
+  competenceImage: {fileID: 21300000, guid: bd342816b57b5e84ba38a25226148b7a, type: 3}
+  actionPointsCost: 4
   unlocked: 0
-  competencesUnlockedNeeded: []
+  competencesUnlockedNeeded:
+  - {fileID: 11400000}

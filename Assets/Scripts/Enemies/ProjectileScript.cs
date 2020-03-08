@@ -51,6 +51,14 @@ public class ProjectileScript : MonoBehaviour
                 other.GetComponent<DamageableEntity>().ReceiveDamage(DamageTag.Enemy, damage);
                 break;
 
+            //shield
+            case 12:
+                if(other.transform.parent.GetComponent<ShieldManager>().myObjParent == ObjLauncher)
+                {
+                    return;
+                }
+                break;
+
             default:
 
                 break;

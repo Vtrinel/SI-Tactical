@@ -42,9 +42,9 @@ public class DiscScript : MonoBehaviour
     bool retreivableByPlayer = false;
     bool isBeingRecalled = false;
 
-    Collider attachedObj;
-
     GameObject objLaunch;
+    GameObject lastObjTouch;
+
     Vector3 destination;
 
     void Update()
@@ -71,6 +71,8 @@ public class DiscScript : MonoBehaviour
         myRigidBody.velocity = Vector3.zero;
         myRigidBody.angularVelocity = Vector3.zero;
         myRigidBody.isKinematic = false;
+
+        lastObjTouch = null;
 
         isAttacking = true;
 
@@ -145,6 +147,8 @@ public class DiscScript : MonoBehaviour
 
     public void InterruptTrajectory()
     {
+        OnReachedTrajectoryEnd?.Invoke(this);
+
         currentTrajectory = new List<Vector3>();
         isAttacking = false;
         SetRetreivableByPlayer(true);
@@ -182,7 +186,6 @@ public class DiscScript : MonoBehaviour
         {
             default:
                 CollisionWithThisObj(collision.gameObject.transform);
-                isAttacking = false;
                 break;
         }
     }
@@ -218,21 +221,33 @@ public class DiscScript : MonoBehaviour
                 if (hitDamageableEntity != null)
                 {
                     hitDamageableEntity.ReceiveDamage(damageTag, currentDamagesAmount);
+
+                    lastObjTouch = other.gameObject;
                 }
+                break;
+
+            //shield
+            case 12:
+                print("shield");
+                if(lastObjTouch == other.transform.parent.GetComponent<ShieldManager>().myObjParent) { return; } else
+                {
+                    CollisionWithThisObj(other.transform);
+                }
+
                 break;
 
             default:
                 CollisionWithThisObj(other.transform);
-                attachedObj = other;
-                isAttacking = false;
                 break;
         }
     }
        
     void CollisionWithThisObj(Transform impactPoint)
     {
-        myAnimator.SetTrigger("Collision");
+        //isAttacking = false;
+        InterruptTrajectory();
 
+        myAnimator.SetTrigger("Collision");
         Debug.DrawRay(transform.position + transform.forward * .5f, Vector3.up, Color.red, 50);
 
         transform.position = transform.position + transform.forward * .5f;
