@@ -234,7 +234,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6817484857811702715}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.31
   m_Height: 0
@@ -284,13 +284,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd1983ce8b91a6f4096b5ba0ae544260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _discType: 0
   myRigidBody: {fileID: 2856969832363405175}
   myCollider: {fileID: 8030675917091118892}
   myAnimator: {fileID: 7300530026638147795}
-  speed: 25
-  rotaSpeed: 3
+  damageTag: 0
+  currentDamagesAmount: 2
+  maxSpeed: 60
+  accelerationDuration: 0.2
+  accelerationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.2
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1.2243395
+      outSlope: 1.2243395
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.08090615
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   isAttacking: 0
-  isInRange: 1
 --- !u!1001 &2880536627148159804
 PrefabInstance:
   m_ObjectHideFlags: 0

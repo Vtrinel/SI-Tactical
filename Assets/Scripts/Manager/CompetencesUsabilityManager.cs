@@ -31,6 +31,7 @@ public class CompetencesUsabilityManager
     [Header("Competences")]
     [SerializeField] CompetenceThrow throwCompetence = default;
     public CompetenceThrow GetCompetenceThrow => throwCompetence;
+    [SerializeField] float minThrowDistance = 1f;
 
     [SerializeField] CompetenceRecall recallCompetence = default;
     public CompetenceRecall GetRecallCompetence => recallCompetence;
@@ -100,19 +101,19 @@ public class CompetencesUsabilityManager
                 break;
 
             case ActionSelectionResult.NotEnoughActionPoints:
-                Debug.Log("Not enough action points for " + compType);
+                //Debug.Log("Not enough action points for " + compType);
                 break;
 
             case ActionSelectionResult.NoCompetenceFound:
-                Debug.LogWarning("WARNING : " + compType + " not found.");
+                //Debug.LogWarning("WARNING : " + compType + " not found.");
                 break;
 
             case ActionSelectionResult.NotEnoughDiscs:
-                Debug.Log("Not enough possessed discs for " + compType);
+                //Debug.Log("Not enough possessed discs for " + compType);
                 break;
 
             case ActionSelectionResult.NoNearbyDisc:
-                Debug.Log("Not nearby discs for " + compType);
+                //Debug.Log("Not nearby discs for " + compType);
                 break;
         }
 
@@ -238,14 +239,18 @@ public class CompetencesUsabilityManager
     public void StartThrowPreparation()
     {
         Vector3 trueTargetPosition = GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition);
-        DiscTrajectoryParameters trajectoryParameters = DiscTrajectoryFactory.GetThrowTrajectory(throwCompetence, _player.transform.position, trueTargetPosition);
+        DiscTrajectoryParameters trajectoryParameters = 
+            DiscTrajectoryFactory.GetTrajectory(throwCompetence, _player.transform.position, trueTargetPosition,
+            DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, null);
         PreviewCompetencesManager.Instance.StartThrowPreview(new List<DiscTrajectoryParameters> { trajectoryParameters }, _player.transform.position);
     }
 
     public void UpdateThrowPreparation()
     {
         Vector3 trueTargetPosition = GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition);
-        DiscTrajectoryParameters trajectoryParameters = DiscTrajectoryFactory.GetThrowTrajectory(throwCompetence, _player.transform.position, trueTargetPosition);
+        DiscTrajectoryParameters trajectoryParameters = 
+            DiscTrajectoryFactory.GetTrajectory(throwCompetence, _player.transform.position, trueTargetPosition,
+            DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, null);
         PreviewCompetencesManager.Instance.UpdateThrowPreview(new List<DiscTrajectoryParameters> { trajectoryParameters });
     }
 
@@ -261,9 +266,12 @@ public class CompetencesUsabilityManager
         Vector3 playerPos = _player.transform.position;
         List<DiscTrajectoryParameters> recallTrajectoryParameters = new List<DiscTrajectoryParameters>();
 
-        foreach(DiscScript discInRange in DiscManager.Instance.GetInRangeDiscs)
+        List<DiscScript> recallableDiscs = DiscListingFactory.GetSortedRecallableDiscs(recallCompetence, DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+        foreach(DiscScript discInRange in recallableDiscs)
         {
-            DiscTrajectoryParameters newParams = DiscTrajectoryFactory.GetRecallTrajectory(recallCompetence, discInRange.transform.position, playerPos);
+            DiscTrajectoryParameters newParams = 
+                DiscTrajectoryFactory.GetTrajectory(recallCompetence, discInRange.transform.position, playerPos,
+                DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, discInRange);
             recallTrajectoryParameters.Add(newParams);
         }
 
@@ -275,9 +283,12 @@ public class CompetencesUsabilityManager
         Vector3 playerPos = _player.transform.position;
         List<DiscTrajectoryParameters> recallTrajectoryParameters = new List<DiscTrajectoryParameters>();
 
-        foreach (DiscScript discInRange in DiscManager.Instance.GetInRangeDiscs)
+        List<DiscScript> recallableDiscs = DiscListingFactory.GetSortedRecallableDiscs(recallCompetence, DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+        foreach (DiscScript discInRange in recallableDiscs)
         {
-            DiscTrajectoryParameters newParams = DiscTrajectoryFactory.GetRecallTrajectory(recallCompetence, discInRange.transform.position, playerPos);
+            DiscTrajectoryParameters newParams =
+                DiscTrajectoryFactory.GetTrajectory(recallCompetence, discInRange.transform.position, playerPos,
+                DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, discInRange);
             recallTrajectoryParameters.Add(newParams);
         }
 
@@ -305,54 +316,85 @@ public class CompetencesUsabilityManager
             Vector3 throwDirection = (trueTargetPos - playerPos).normalized;
             trueTargetPos = playerPos + throwDirection * maxDiscRange;
         }
+        else if(distance < minThrowDistance)
+        {
+            Vector3 throwDirection = (trueTargetPos - playerPos).normalized;
+            trueTargetPos = playerPos + throwDirection * minThrowDistance;
+        }
 
         return trueTargetPos;
     }
 
     public void LaunchThrowCompetence()
     {
-        CompetanceRequestInfo newCompetenceRequestInfo = new CompetanceRequestInfo();
-        newCompetenceRequestInfo.startTransform = _player.transform;
-        newCompetenceRequestInfo.startPosition = _player.transform.position + Vector3.up * DiscManager.discHeight;
-        newCompetenceRequestInfo.targetPosition = GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition) + Vector3.up * DiscManager.discHeight;
-
-        //Debug.Log("Throw knife at position " + newCompetenceRequestInfo.targetPosition);
-        Debug.Log("Using throw competence : " + throwCompetence.GetCompetenceName);
+        currentlyInUseDiscs = new List<DiscScript>();
 
         DiscScript newDisc = DiscManager.Instance.TakeFirstDiscFromPossessedDiscs();
-        newDisc.AttackHere(newCompetenceRequestInfo.startTransform, newCompetenceRequestInfo.targetPosition);
-        newDisc.gameObject.SetActive(true);
-        DiscManager.Instance.AddDiscToThrown(newDisc);
+        if(newDisc == null)
+        {
+            //Debug.LogWarning("NO DISK TO THROW");
+            return;
+        }
 
-        ResetUsabilityState();
+        DiscTrajectoryParameters trajectoryParameters = 
+            DiscTrajectoryFactory.GetTrajectory(throwCompetence,
+            _player.transform.position, GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition), 
+            DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, newDisc);
+
+        newDisc.SetIsBeingRecalled(false);
+        newDisc.SetRetreivableByPlayer(false);
+        newDisc.StartTrajectory(trajectoryParameters);
+        currentlyInUseDiscs.Add(newDisc);
+        newDisc.OnReachedTrajectoryEnd += RemoveDiscFromInUse;
+
+        ChangeUsabilityState(UsabilityState.Using, ActionType.Throw);
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
     }
     #endregion
 
+    #region Recall
     public void LaunchRecallCompetence()
     {
-        CompetanceRequestInfo newCompetenceRequestInfo = new CompetanceRequestInfo();
-        newCompetenceRequestInfo.targetTransform = _player.transform;
-        newCompetenceRequestInfo.targetPosition = _player.transform.position;
+        List<DiscScript> discsToRecall = DiscListingFactory.GetSortedRecallableDiscs(recallCompetence, DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
 
-        //Debug.Log("Recall knife at position " + newCompetenceRequestInfo.targetPosition);
-        Debug.Log("Using recall competence : " + recallCompetence.GetCompetenceName);
-
-        foreach (DiscScript disc in DiscManager.Instance.GetInRangeDiscs)
+        foreach(DiscScript discToRecall in discsToRecall)
         {
-            disc.RecallCrystal(newCompetenceRequestInfo.targetTransform);
-        }
+            StartRecallDisc(discToRecall);
+        }        
 
-        ResetUsabilityState();
+        if (discsToRecall.Count > 0)
+            ChangeUsabilityState(UsabilityState.Using, ActionType.Recall);
+        else
+            ResetUsabilityState();
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
     }
-}
 
-public struct CompetanceRequestInfo
-{
-    public Transform startTransform;
-    public Transform targetTransform;
+    public void StartRecallDisc(DiscScript disc)
+    {
+        DiscTrajectoryParameters trajectoryParameters =
+            DiscTrajectoryFactory.GetTrajectory(recallCompetence,
+            disc.transform.position, _player.transform.position,
+            DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, disc);
 
-    public Vector3 startPosition;
-    public Vector3 targetPosition;
+        disc.SetIsBeingRecalled(true);
+        disc.StartTrajectory(trajectoryParameters);
+        currentlyInUseDiscs.Add(disc);
+        disc.OnReachedTrajectoryEnd += RemoveDiscFromInUse;
+    }
+    #endregion
+
+    List<DiscScript> currentlyInUseDiscs = new List<DiscScript>();
+    public void RemoveDiscFromInUse(DiscScript disc)
+    {
+        disc.OnReachedTrajectoryEnd -= RemoveDiscFromInUse;
+        currentlyInUseDiscs.Remove(disc);
+
+        if (currentlyInUseDiscs.Count == 0)
+            EndCompetenceUsability();
+    }
+
+    public void EndCompetenceUsability()
+    {
+        ResetUsabilityState();
+    }
 }

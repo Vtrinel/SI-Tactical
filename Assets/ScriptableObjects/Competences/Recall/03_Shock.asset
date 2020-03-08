@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14b8f0f55c9d3424eb0e3449e185571b, type: 3}
+  m_Name: 03_Shock
+  m_EditorClassIdentifier: 
+  competenceName: Shock
+  competenceDescription: "Rappelle les deux dernier disques lanc\xE9s par le joueur.
+    ils sont reli\xE9s par un lien qui stun et inflige 2 d\xE9gats aux ennemis touch\xE9s.\nappuyer
+    sur le joueur pour valider"
+  competenceImage: {fileID: 21300000, guid: 0c136515f7aa49e43ba0840df48c1f4d, type: 3}
+  actionPointsCost: 4
+  unlocked: 0
+  competencesUnlockedNeeded:
+  - {fileID: 11400000, guid: f5f01525ab131b245aca50b70c5de9c3, type: 2}
+  trajectoryModifiers: []
+  numberOfRecalledDiscs: 2
+  recallingOrder: 1
+  canRecallUnthrowedDiscs: 0

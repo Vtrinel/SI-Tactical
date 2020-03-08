@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
         if (currentLife == 0)
             return;
 
-        Debug.Log("RAGE");
+        //Debug.Log("RAGE");
 
         EffectZone newRageEffectZone = Instantiate(rageEffectZonePrefab);
         newRageEffectZone.StartZone(transform.position + Vector3.up * rageEffectZoneVerticalOffset);
@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
 
     public void DebugLifeAmount(int amount)
     {
-        Debug.Log("Current life : " + amount);
+        //Debug.Log("Current life : " + amount);
     }
     #endregion
 
@@ -158,7 +158,8 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Vector2 clampedMousePosition = Input.mousePosition;
+            Vector2 unclampedMousePosition = Input.mousePosition;
+            Vector2 clampedMousePosition = unclampedMousePosition;
             clampedMousePosition.x = Mathf.Clamp(clampedMousePosition.x, 0, Screen.width);
             clampedMousePosition.y = Mathf.Clamp(clampedMousePosition.y, 0, Screen.height);
             float cursorHorizontalCoeff = ((clampedMousePosition.x - Screen.width / 2)/ (Screen.width/2));
@@ -171,6 +172,12 @@ public class PlayerController : MonoBehaviour
             float cursorVerticalInput = Mathf.Clamp(
                1 - ((cursorMaxCameraVerticalMovementCoeff - Mathf.Abs(cursorVerticalCoeff)) / (cursorMaxCameraVerticalMovementCoeff - cursorMinCameraVerticalMovementCoeff))
                , 0, 1) * Mathf.Sign(cursorVerticalCoeff);
+
+            if (unclampedMousePosition.x < 0 || unclampedMousePosition.x > Screen.width || unclampedMousePosition.y < 0 || unclampedMousePosition.y > Screen.height)
+            {
+                cursorHorizontalInput = 0;
+                cursorVerticalInput = 0;
+            }
 
             Vector2 camCursorInput = new Vector2(cursorHorizontalInput, cursorVerticalInput);
             if (camCursorInput != Vector2.zero)

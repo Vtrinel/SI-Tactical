@@ -6,7 +6,7 @@ public class Competence : ScriptableObject
 {
     [Header("Display")]
     [SerializeField] string competenceName = null;
-    [SerializeField] string competenceDescription = null;
+    [SerializeField, TextArea(4,8)] string competenceDescription = null;
 
     [SerializeField] Sprite competenceImage = null;
 

@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class DiscScript : MonoBehaviour
 {
+    [SerializeField] DiscType _discType = DiscType.Basic;
+    public void SetDiscType(DiscType discType)
+    {
+        _discType = discType;
+    }
+    public DiscType GetDiscType => _discType;
+
+    [Header("References")]
     [SerializeField] Rigidbody myRigidBody = default;
     [SerializeField] Collider myCollider = default;
     [SerializeField] Animator myAnimator = default;
@@ -12,49 +20,194 @@ public class DiscScript : MonoBehaviour
     [SerializeField] DamageTag damageTag = DamageTag.Player;
     [SerializeField] int currentDamagesAmount = 1;
 
-    public float speed = 3;
-    public float rotaSpeed = 3;
+    [Header("Movement")]
+    [SerializeField] float maxSpeed = 10f;
+    [SerializeField] float accelerationDuration = 0.2f;
+    [SerializeField] AnimationCurve accelerationCurve = AnimationCurve.Linear(0, 0, 1, 1);
+    TimerSystem accelerationDurationSystem = new TimerSystem();
+
+    float currentSpeed = 0f;
+
+    List<Vector3> currentTrajectory = new List<Vector3>();
+    public System.Action<DiscScript> OnReachedTrajectoryEnd = default;
 
     public bool isAttacking = false;
-    public bool isInRange = true;
+    bool isInRange = true;
+    public bool IsInRange => isInRange;
+    public void SetIsInRange(bool inRange)
+    {
+        isInRange = inRange;
+    }
 
-    Collider attachedObj;
+    bool retreivableByPlayer = false;
+    bool isBeingRecalled = false;
 
     GameObject objLaunch;
+    GameObject lastObjTouch;
+
     Vector3 destination;
 
     void Update()
     {
-        if (isAttacking)
-        {
-            //vitesse du couteau
-            float step = speed * Time.deltaTime; // calculate distance to move
-            transform.position = Vector3.MoveTowards(transform.position, destination, step);
-            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-
-            if(Vector3.Distance(destination, transform.position) < 0.1f)
-            {
-                isAttacking = false;
-            }
-        }
+        if (currentTrajectory.Count > 0)
+            UpdateTrajectory();
 
         myAnimator.SetBool("Forward", isAttacking);
         myAnimator.SetBool("InRange", isInRange);
     }
 
+    #region Trajectory
+    public void SetRetreivableByPlayer(bool retreivable)
+    {
+        retreivableByPlayer = retreivable;
+    }
+    public void SetIsBeingRecalled(bool recalled)
+    {
+        isBeingRecalled = recalled;
+    }
+
+    public void StartTrajectory(DiscTrajectoryParameters newTrajectory)
+    {
+        myRigidBody.velocity = Vector3.zero;
+        myRigidBody.angularVelocity = Vector3.zero;
+        myRigidBody.isKinematic = false;
+
+        lastObjTouch = null;
+
+        isAttacking = true;
+
+        currentTrajectory = newTrajectory.trajectoryPositions;
+        currentSpeed = 0;
+
+        transform.position = currentTrajectory[0];
+        currentTrajectory.RemoveAt(0);
+
+        accelerationDurationSystem.ChangeTimerValue(accelerationDuration);
+        accelerationDurationSystem.StartTimer();
+    }
+
+    public void UpdateTrajectory()
+    {
+        if (currentTrajectory.Count == 0)
+        {
+            EndTrajectory(true);
+            return;
+        }
+
+        if (!accelerationDurationSystem.TimerOver)
+        {
+            accelerationDurationSystem.UpdateTimer();
+            currentSpeed = accelerationCurve.Evaluate(accelerationDurationSystem.GetTimerCoefficient) * maxSpeed;
+        }
+
+        float remainingReachableDistance = currentSpeed * Time.deltaTime;
+        bool reachedTrajectoryEnd = false;
+
+        Vector3 currentPositionToNextPosition = currentTrajectory[0] - transform.position;
+        float currentPositionToNextPositionDistance = currentPositionToNextPosition.magnitude;
+        Vector3 totalMovement = Vector3.zero;
+        int reachedTrajectoryPoints = 0;
+
+        if(currentPositionToNextPositionDistance > remainingReachableDistance)
+        {
+            totalMovement += currentPositionToNextPosition.normalized * remainingReachableDistance;
+        }
+        else
+        {
+            while (remainingReachableDistance > 0)
+            {
+                totalMovement += currentPositionToNextPosition.normalized * Mathf.Clamp(currentPositionToNextPositionDistance, 0, remainingReachableDistance);
+                remainingReachableDistance -= currentPositionToNextPositionDistance;
+                if(remainingReachableDistance > 0)
+                    reachedTrajectoryPoints++;
+
+                if(reachedTrajectoryPoints == currentTrajectory.Count)
+                {
+                    reachedTrajectoryEnd = true;
+                    break;
+                }
+
+                currentPositionToNextPosition = currentTrajectory[reachedTrajectoryPoints] - currentTrajectory[reachedTrajectoryPoints - 1];
+                currentPositionToNextPositionDistance = currentPositionToNextPosition.magnitude;
+            }
+        }
+        totalMovement.y = 0;
+        transform.position += totalMovement;
+
+        if(reachedTrajectoryPoints > 0)
+        while (reachedTrajectoryPoints > 0)
+        {
+            currentTrajectory.RemoveAt(0);
+            reachedTrajectoryPoints--;
+        }
+
+        if (reachedTrajectoryEnd)
+            EndTrajectory(true);
+    }
+
+    public void InterruptTrajectory()
+    {
+        OnReachedTrajectoryEnd?.Invoke(this);
+
+        currentTrajectory = new List<Vector3>();
+        isAttacking = false;
+        SetRetreivableByPlayer(true);
+    }
+
+    public void EndTrajectory(bool checkIfRetreive)
+    {
+        OnReachedTrajectoryEnd?.Invoke(this);
+        isAttacking = false;
+        SetRetreivableByPlayer(true);
+
+        if (isBeingRecalled && checkIfRetreive)
+            RetreiveByPlayer();
+
+    }
+    #endregion
+
+    #region Collision responses
+    public void RetreiveByPlayer()
+    {
+        isAttacking = false;
+        EndTrajectory(false);
+        DiscManager.Instance.PlayerRetreiveDisc(this);
+    }
+    #endregion
+
+    #region Collisions and Interaction
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject == objLaunch || !isAttacking) { return; }
+
+        DemandeFx(collision.contacts[0].point);
+
+        switch (collision.gameObject.layer)
+        {
+            default:
+                CollisionWithThisObj(collision.gameObject.transform);
+                break;
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject == objLaunch) { return; }
+        if (other.gameObject == objLaunch || !isAttacking) { return; }
+
+        DemandeFx(other.ClosestPointOnBounds(transform.position));
 
         switch (other.gameObject.layer)
         {
             //Player
             case 9:
                 //recall or touch player
-                isAttacking = false;
-                //DiscManager.Instance.DeleteCrystal(gameObject);
-                DiscManager.Instance.PlayerRetreiveDisc(this);
+                if (!retreivableByPlayer)
+                {
+                    break;
+                }
+
+                RetreiveByPlayer();                
+
                 break;
 
             //ennemy
@@ -68,51 +221,47 @@ public class DiscScript : MonoBehaviour
                 if (hitDamageableEntity != null)
                 {
                     hitDamageableEntity.ReceiveDamage(damageTag, currentDamagesAmount);
+
+                    lastObjTouch = other.gameObject;
                 }
+                break;
+
+            //shield
+            case 12:
+                print("shield");
+                if(lastObjTouch == other.transform.parent.GetComponent<ShieldManager>().myObjParent) { return; } else
+                {
+                    CollisionWithThisObj(other.transform);
+                }
+
                 break;
 
             default:
                 CollisionWithThisObj(other.transform);
-                attachedObj = other;
-                isAttacking = false;
                 break;
         }
     }
-
-
+       
     void CollisionWithThisObj(Transform impactPoint)
     {
-        myAnimator.SetTrigger("Collision");
+        //isAttacking = false;
+        InterruptTrajectory();
 
-        print("vehez");
-        Debug.DrawRay(transform.position + transform.forward * .5f , Vector3.up, Color.red, 50);
+        myAnimator.SetTrigger("Collision");
+        Debug.DrawRay(transform.position + transform.forward * .5f, Vector3.up, Color.red, 50);
 
         transform.position = transform.position + transform.forward * .5f;
     }
+    #endregion
 
-    public void AttackHere(Transform _objLaunch, Vector3 _destination)
+    #region Feedbacks
+    void DemandeFx(Vector3 collision)
     {
-        myRigidBody.velocity = Vector3.zero;
-        myRigidBody.angularVelocity = Vector3.zero;
-        isAttacking = true;
+        GameObject newFx = FxManager.Instance.DemandeFx(FxManager.fxType.Hit);
 
-        objLaunch = _objLaunch.gameObject;
-        transform.position = new Vector3(_objLaunch.position.x, 0 , _objLaunch.position.z);
-        destination = new Vector3(_destination.x, 0, _destination.z);
-
-        //transform.LookAt(destination, Vector3.forward);
-        //transform.position += transform.forward * 1.2f;
-        transform.position = new Vector3(transform.position.x,  DiscManager.discHeight, transform.position.z);
-        myRigidBody.isKinematic = false;
-        myCollider.enabled = true;
+        newFx.transform.position = collision;
+        newFx.transform.rotation = Random.rotation;
     }
-
-    public void RecallCrystal(Transform player)
-    {
-        if (isInRange)
-        {
-            AttackHere(transform, player.position);
-        }
-    }
+    #endregion
 }
 
