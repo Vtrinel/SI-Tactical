@@ -15,7 +15,7 @@ public class Competence : ScriptableObject
 
     [Header("Competence parameters")]
     [SerializeField] bool unlocked = false;
-    [SerializeField] List<Competence> competencesUnlockedNeeded;
+    [SerializeField] List<Competence> competencesUnlockedNeeded = new List<Competence>();
 
     public int GetActionPointsCost => actionPointsCost;
     public Sprite GetCompetenceImage=> competenceImage;

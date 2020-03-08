@@ -19,9 +19,9 @@ public class EffectZone : MonoBehaviour
     [SerializeField] bool damaging = false;
     [SerializeField] int damageAmount = 1;
     [SerializeField] bool knockbacking = false;
-    [SerializeField] KnockbackParameters maxKnockbackParameters = new KnockbackParameters(20f, 0.05f, 0.2f);
+    [SerializeField] KnockbackParameters maxKnockbackParameters = new KnockbackParameters(20f, 0.05f, 0.2f, false);
     [SerializeField] float maxKnockbackDistance = 2f;
-    [SerializeField] KnockbackParameters minKnockbackParameters = new KnockbackParameters(10f, 0.05f, 0.2f);
+    [SerializeField] KnockbackParameters minKnockbackParameters = new KnockbackParameters(10f, 0.05f, 0.2f, false);
     [SerializeField] float minKnockbackDistance = 5f;
     [SerializeField] AnimationCurve knockbackDependingOnDistanceAttenuationCurve = AnimationCurve.Linear(0, 0, 1, 1);
 

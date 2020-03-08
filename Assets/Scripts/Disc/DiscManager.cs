@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DiscManager : MonoBehaviour
 {
-    public DiscScript prefabDisc = default;
+    [SerializeField] DiscType testDiscType = DiscType.Piercing;
 
     public static float discHeight = 1f;
 
@@ -164,7 +164,7 @@ public class DiscManager : MonoBehaviour
     public void FillPossessedDiscsWithBasicDiscs()
     {
         for(int i =0; i < maxNumberOfPossessedDiscs; i++)
-            possessedDiscs.Push(DiscType.Basic);
+            possessedDiscs.Push(testDiscType);
     }
 
     public void PlayerRetreiveDisc(DiscScript retreivedDisc)
@@ -258,7 +258,7 @@ public class DiscManager : MonoBehaviour
 
 public enum DiscType
 {
-    Basic
+    Basic, Piercing, Ghost, Explosive, Heavy, Shockwave
 }
 
 [System.Serializable]

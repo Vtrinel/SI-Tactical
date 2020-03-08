@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,10 +16,15 @@ public class KnockbackableEntity : MonoBehaviour
     TimerSystem knockbackDurationSystem = new TimerSystem();
     TimerSystem knockbackAttenuationDurationSystem = new TimerSystem();
 
+    public Action<Vector3> OnKnockbackUpdate = default;
+
     Vector3 currentKnockbackDirection = Vector3.forward;
     public void ReceiveKnockback(DamageTag knockbackTag, KnockbackParameters knockbackParams, Vector3 dir)
     {
         if (knockbackTag != DamageTag.Environment && knockbackTag == damageTag)
+            return;
+
+        if (damageTag == DamageTag.Disc && !knockbackParams.canKnockbackDiscs)
             return;
 
         if (knockbackParams.IsNull)
@@ -54,7 +60,11 @@ public class KnockbackableEntity : MonoBehaviour
 
     public void UpdateKnockbackMovement()
     {
-        transformToMove.position += currentKnockbackDirection * currentKnockbackForce * Time.deltaTime;
+        Vector3 knockbackMovement = currentKnockbackDirection * currentKnockbackForce * Time.deltaTime;
+        if (OnKnockbackUpdate == null)
+            transformToMove.position += knockbackMovement;
+        else
+            OnKnockbackUpdate.Invoke(knockbackMovement);
     }
 }
 
@@ -62,11 +72,12 @@ public class KnockbackableEntity : MonoBehaviour
 [System.Serializable]
 public struct KnockbackParameters
 {
-    public KnockbackParameters(float force, float duration, float attenuationDuration)
+    public KnockbackParameters(float force, float duration, float attenuationDuration, bool canKnockDiscs)
     {
         knockbackForce = force;
         knockbackDuration = duration;
         knockbackAttenuationDuration = attenuationDuration;
+        canKnockbackDiscs = canKnockDiscs;
     }
 
     public static KnockbackParameters Lerp(KnockbackParameters a, KnockbackParameters b, float coeff)
@@ -74,13 +85,14 @@ public struct KnockbackParameters
         return new KnockbackParameters(
             Mathf.Lerp(a.knockbackForce, b.knockbackForce, coeff),
             Mathf.Lerp(a.knockbackDuration, b.knockbackDuration, coeff),
-            Mathf.Lerp(a.knockbackAttenuationDuration, b.knockbackAttenuationDuration, coeff)
-            );
+            Mathf.Lerp(a.knockbackAttenuationDuration, b.knockbackAttenuationDuration, coeff),
+            a.canKnockbackDiscs);
     }
 
     public float knockbackForce;
     public float knockbackDuration;
     public float knockbackAttenuationDuration;
+    public bool canKnockbackDiscs;
 
     public bool IsNull => knockbackForce == 0 || (knockbackDuration == 0 && knockbackAttenuationDuration == 0);
 }

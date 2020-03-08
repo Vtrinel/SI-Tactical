@@ -5,8 +5,6 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] EffectZone test = default;
-
     private void OnEnable()
     {
         GameManager.Instance.OnPlayerLifeAmountChanged += DebugLifeAmount;
@@ -43,27 +41,6 @@ public class PlayerController : MonoBehaviour
             GameManager.Instance.OnPlayerPositionChanged?.Invoke(currentPos);
             DiscManager.Instance.CheckAllDiscsProximity(transform.position);
         }
-
-        #region DEBUG
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            Vector3 randomDir = Random.onUnitSphere;
-            randomDir.y = 0;
-            randomDir.Normalize();
-
-            knockbackReceiptionSystem.ReceiveKnockback(DamageTag.Enemy, new KnockbackParameters(10, 0.08f, 0.2f), randomDir);
-            Debug.DrawRay(transform.position + Vector3.up, randomDir * 3, Color.red);
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-            damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, 1);
-
-        if (Input.GetMouseButtonDown(1))
-        {
-            EffectZone newEffectZone = Instantiate(test);
-            newEffectZone.StartZone(GameManager.Instance.GetCurrentWorldMouseResult.mouseWorldPosition);
-        }
-        #endregion
     }
 
     [Header("References")]

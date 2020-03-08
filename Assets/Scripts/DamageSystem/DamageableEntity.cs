@@ -89,4 +89,4 @@ public class DamageableEntity : MonoBehaviour
     }
 }
 
-public enum DamageTag { Player, Enemy, Environment }
+public enum DamageTag { Player, Enemy, Environment, Disc }

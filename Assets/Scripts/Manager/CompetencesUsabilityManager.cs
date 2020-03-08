@@ -351,6 +351,7 @@ public class CompetencesUsabilityManager
         newDisc.SetRetreivableByPlayer(false);
         newDisc.StartTrajectory(trajectoryParameters, objLauncher);
         currentlyInUseDiscs.Add(newDisc);
+        newDisc.OnTrajectoryStopped += RemoveDiscFromInUse;
         newDisc.OnReachedTrajectoryEnd += RemoveDiscFromInUse;
 
         ChangeUsabilityState(UsabilityState.Using, ActionType.Throw);
@@ -385,14 +386,14 @@ public class CompetencesUsabilityManager
         disc.SetIsBeingRecalled(true);
         disc.StartTrajectory(trajectoryParameters, null);
         currentlyInUseDiscs.Add(disc);
-        disc.OnReachedTrajectoryEnd += RemoveDiscFromInUse;
+        disc.OnTrajectoryStopped += RemoveDiscFromInUse;
     }
     #endregion
 
     List<DiscScript> currentlyInUseDiscs = new List<DiscScript>();
     public void RemoveDiscFromInUse(DiscScript disc)
     {
-        disc.OnReachedTrajectoryEnd -= RemoveDiscFromInUse;
+        //disc.OnReachedTrajectoryEnd -= RemoveDiscFromInUse;
         currentlyInUseDiscs.Remove(disc);
 
         if (currentlyInUseDiscs.Count == 0)
