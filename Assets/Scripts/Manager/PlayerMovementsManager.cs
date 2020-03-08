@@ -16,8 +16,8 @@ public class PlayerMovementsManager
 
     public void UpdateSystem()
     {
-        if (IsWillingToMove)
-            UpdateMovementPreview(currentWorldMouseResult.mouseWorldPosition);
+        //if (IsWillingToMove)
+            //UpdateMovementPreview(currentWorldMouseResult.mouseWorldPosition);
     }
 
     PlayerController _player;
@@ -171,7 +171,11 @@ public class PlayerMovementsManager
 
         currentPreviewCost = 0;
 
-        StartMovementPreview(currentWorldMouseResult.mouseWorldPosition);
+        PreviewCompetencesManager.Instance.StartMovementPreview(
+            currentDistancesByUsedActionPoints, 
+            _player.transform.position, currentWorldMouseResult.mouseWorldPosition, 
+            currentRecallCompetence); 
+        //StartMovementPreview(currentWorldMouseResult.mouseWorldPosition);
     }
 
     public System.Action<int> OnPreparationAmountChanged;
@@ -187,8 +191,6 @@ public class PlayerMovementsManager
             totalDistance += GetDistanceByUsedActionPoints(i);
             currentDistancesByUsedActionPoints.Add(totalDistance);
         }
-
-        GenerateDebugCircles();
     }
 
     #region Distance - AP Relation
@@ -249,7 +251,8 @@ public class PlayerMovementsManager
     {
         currentUsabilityState = UsabilityState.None;
 
-        EndMovementPreview();
+        //EndMovementPreview();
+        PreviewCompetencesManager.Instance.EndMovementPreview();
 
         currentDistancesByUsedActionPoints = new List<float>();
     }
