@@ -66,8 +66,9 @@ public class DiscScript : MonoBehaviour
         isBeingRecalled = recalled;
     }
 
-    public void StartTrajectory(DiscTrajectoryParameters newTrajectory)
+    public void StartTrajectory(DiscTrajectoryParameters newTrajectory, GameObject _launcher)
     {
+        objLaunch = _launcher;
         myRigidBody.velocity = Vector3.zero;
         myRigidBody.angularVelocity = Vector3.zero;
         myRigidBody.isKinematic = false;
@@ -208,13 +209,13 @@ public class DiscScript : MonoBehaviour
     {
         if (other.gameObject == objLaunch || !isAttacking) { return; }
 
-        DemandeFx(other.ClosestPointOnBounds(transform.position));
-
         switch (other.gameObject.layer)
         {
             //Player
             case 9:
                 //recall or touch player
+
+                DemandeFx(other.ClosestPointOnBounds(transform.position));
                 if (!retreivableByPlayer)
                 {
                     break;
@@ -227,9 +228,7 @@ public class DiscScript : MonoBehaviour
             //ennemy
             case 10:
                 //take damage
-                //CollisionWithThisObj(other.transform);
-                //attachedObj = other;
-                //isAttacking = false;
+                DemandeFx(other.ClosestPointOnBounds(transform.position));
 
                 DamageableEntity hitDamageableEntity = other.GetComponent<DamageableEntity>();
                 if (hitDamageableEntity != null)
@@ -242,9 +241,9 @@ public class DiscScript : MonoBehaviour
 
             //shield
             case 12:
-                print("shield");
                 if(lastObjTouch == other.transform.parent.GetComponent<ShieldManager>().myObjParent) { return; } else
                 {
+                    DemandeFx(other.ClosestPointOnBounds(transform.position));
                     CollisionWithThisObj(other.transform);
                 }
 
@@ -258,15 +257,12 @@ public class DiscScript : MonoBehaviour
        
     void CollisionWithThisObj(Transform impactPoint)
     {
-        return;
-
-        //isAttacking = false;
         InterruptTrajectory();
 
         myAnimator.SetTrigger("Collision");
-        Debug.DrawRay(transform.position + transform.forward * .5f, Vector3.up, Color.red, 50);
+        Debug.DrawRay(transform.position + -transform.right * .5f, Vector3.up, Color.red, 50);
 
-        transform.position = transform.position + transform.forward * .5f;
+        transform.position = transform.position + -transform.right * .5f;
     }
     #endregion
 
