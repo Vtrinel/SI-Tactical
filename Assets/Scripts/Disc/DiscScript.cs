@@ -53,7 +53,40 @@ public class DiscScript : MonoBehaviour
     [SerializeField] bool blockedByEnemies = false;
     [SerializeField] bool blockedByShields = true;
     [SerializeField] bool blockedByObstacles = true;
-    public LayerMask GetTrajectoryCheckLayerMask => /*((blockedByEnemies ? 1 : 0) << 10)*/1 << 10 | ((blockedByShields ? 1 : 0) << 12) | ((blockedByObstacles ? 1 : 0) << 14);
+    public LayerMask GetTrajectoryCheckLayerMask => 1 << 10 | ((blockedByShields ? 1 : 0) << 12) | ((blockedByObstacles ? 1 : 0) << 14);
+    [SerializeField] List<DiscModifier> discModifiers = new List<DiscModifier>();
+
+    int numberOfStunedTurns = 0;
+
+    EffectZoneType effectZoneToInstantiateOnHit = EffectZoneType.None;
+    bool destroyOnHit = false;
+
+    public void SetUpModifiers()
+    {
+        numberOfStunedTurns = 0;
+        effectZoneToInstantiateOnHit = EffectZoneType.None;
+        destroyOnHit = false;
+
+        foreach (DiscModifier modifier in discModifiers)
+        {
+            if(numberOfStunedTurns == 0)
+            {
+                DiscModifierStun stunModifier = modifier as DiscModifierStun;
+                if (stunModifier != null)
+                    numberOfStunedTurns = stunModifier.GetNumberOfStunedTurns;
+            }
+
+            if(effectZoneToInstantiateOnHit == EffectZoneType.None)
+            {
+                DiscModifierEffectZone effectZoneModifier = modifier as DiscModifierEffectZone;
+                if (effectZoneModifier != null)
+                {
+                    effectZoneToInstantiateOnHit = effectZoneModifier.GetEffectZoneToCreateOnHit;
+                    destroyOnHit = effectZoneModifier.GetDiscProjectileOnHit;
+                }
+            }
+        }
+    }
 
     void Update()
     {
@@ -104,7 +137,7 @@ public class DiscScript : MonoBehaviour
                 DamageableEntity hitDamageableEntity = hit.collider.GetComponent<DamageableEntity>();
                 if (hitDamageableEntity != null)
                 {
-                    hitDamageableEntity.ReceiveDamage(damageTag, currentDamagesAmount);
+                    hitDamageableEntity.ReceiveDamage(damageTag, new DamagesParameters(currentDamagesAmount, numberOfStunedTurns));
 
                     lastObjTouch = hitDamageableEntity.gameObject;
                 }
@@ -142,9 +175,20 @@ public class DiscScript : MonoBehaviour
         DamageableEntity hitDamageableEntity = hit.collider.GetComponent<DamageableEntity>();
         if (hitDamageableEntity != null)
         {
-            hitDamageableEntity.ReceiveDamage(damageTag, currentDamagesAmount);
+            hitDamageableEntity.ReceiveDamage(damageTag, new DamagesParameters(currentDamagesAmount, numberOfStunedTurns));
 
             lastObjTouch = hitDamageableEntity.gameObject;
+        }
+
+        if(effectZoneToInstantiateOnHit != EffectZoneType.None)
+        {
+            EffectZone newEffectZone = EffectZonesManager.Instance.GetEffectZoneFromPool(effectZoneToInstantiateOnHit);
+            newEffectZone.StartZone(GetColliderCenter);
+
+            if (destroyOnHit)
+            {
+                DiscManager.Instance.DestroyDisc(this);
+            }
         }
     }
     #endregion
@@ -359,7 +403,7 @@ public class DiscScript : MonoBehaviour
                 DamageableEntity hitDamageableEntity = other.GetComponent<DamageableEntity>();
                 if (hitDamageableEntity != null)
                 {
-                    hitDamageableEntity.ReceiveDamage(damageTag, currentDamagesAmount);
+                    hitDamageableEntity.ReceiveDamage(damageTag, new DamagesParameters(currentDamagesAmount, numberOfStunedTurns));
 
                     lastObjTouch = other.gameObject;
                 }

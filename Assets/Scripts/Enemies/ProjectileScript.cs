@@ -43,12 +43,12 @@ public class ProjectileScript : MonoBehaviour
         {
             //Player
             case 9:
-                GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, damage);
+                GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, new DamagesParameters(damage));
                 break;
 
             //ennemy
             case 10:
-                other.GetComponent<DamageableEntity>().ReceiveDamage(DamageTag.Enemy, damage);
+                other.GetComponent<DamageableEntity>().ReceiveDamage(DamageTag.Enemy, new DamagesParameters(damage));
                 break;
 
             //shield

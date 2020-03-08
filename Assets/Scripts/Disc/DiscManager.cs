@@ -34,7 +34,6 @@ public class DiscManager : MonoBehaviour
         SetUpPools();
 
         #region TEST
-        //if()
         DiscScript[] alreadyInGameDiscs = FindObjectsOfType<DiscScript>();
         foreach(DiscScript disc in alreadyInGameDiscs)
         {
@@ -97,9 +96,9 @@ public class DiscManager : MonoBehaviour
                 newDiscQueue = new Queue<DiscScript>();
                 for (int i = 0; i < discPoolParameters.baseNumberOfElements; i++)
                 {
-                    newDisc = Instantiate(discPoolParameters.discPrefab, poolsParent);
+                    newDisc = Instantiate(discPoolParameters.discPrefab, newPoolParent);
+                    newDisc.SetUpModifiers();
                     newDisc.gameObject.SetActive(false);
-                    newDisc.transform.SetParent(newPoolParent);
                     newDisc.SetDiscType(discPoolParameters.discType);
                     newDiscQueue.Enqueue(newDisc);
                 }
@@ -123,6 +122,8 @@ public class DiscManager : MonoBehaviour
             else
             {
                 newDisc = Instantiate(discTypeToPrefab[discType], discTypeToPoolParent[discType]);
+                newDisc.SetUpModifiers();
+                newDisc.SetDiscType(discType);
                 newDisc.gameObject.SetActive(true);
             }
 
@@ -145,6 +146,14 @@ public class DiscManager : MonoBehaviour
         else
             Destroy(disc.gameObject);
     }
+
+    public void DestroyDisc(DiscScript disc)
+    {
+        if (throwedDiscs.Contains(disc))
+            throwedDiscs.Remove(disc);
+
+        ReturnDiscInPool(disc);
+    }
     #endregion
 
     #region Possessed Discs
@@ -156,9 +165,7 @@ public class DiscManager : MonoBehaviour
     { 
         maxNumberOfPossessedDiscs++;
 
-        /*DiscScript newDisc = GetDiscFromPool();
-        newDisc.gameObject.SetActive(false);
-        possessedDiscs.Push(newDisc);*/
+        possessedDiscs.Push(DiscType.Piercing);
     }
 
     public void FillPossessedDiscsWithBasicDiscs()

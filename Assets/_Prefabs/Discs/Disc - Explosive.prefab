@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &2746920504038600890
+--- !u!1001 &1476791134757439291
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -14,29 +14,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4078095755978816970, guid: b1917bcbd37b72c41bb666f7abade850,
         type: 3}
-      propertyPath: blockedByEnemies
-      value: 1
+      propertyPath: _discType
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4078095755978816970, guid: b1917bcbd37b72c41bb666f7abade850,
         type: 3}
       propertyPath: currentDamagesAmount
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4078095755978816970, guid: b1917bcbd37b72c41bb666f7abade850,
-        type: 3}
-      propertyPath: _discType
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4078095755978816970, guid: b1917bcbd37b72c41bb666f7abade850,
         type: 3}
       propertyPath: discModifiers.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: 27cebf6e0300e004eb8c2b9d6744efd5,
+      objectReference: {fileID: 11400000, guid: dd7160832a568164f8848e16a5726d9e,
         type: 2}
+    - target: {fileID: 4078095755978816970, guid: b1917bcbd37b72c41bb666f7abade850,
+        type: 3}
+      propertyPath: blockedByEnemies
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6817484857811702715, guid: b1917bcbd37b72c41bb666f7abade850,
         type: 3}
       propertyPath: m_Name
-      value: Disc - Heavy
+      value: Disc - Explosive
       objectReference: {fileID: 0}
     - target: {fileID: 6817484857812127643, guid: b1917bcbd37b72c41bb666f7abade850,
         type: 3}

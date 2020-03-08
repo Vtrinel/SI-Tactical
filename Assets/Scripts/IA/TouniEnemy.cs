@@ -118,7 +118,7 @@ public class TouniEnemy : IAEnemyVirtual
 
         foreach(GameObject _obj in _objsTouched)
         {
-            _obj.GetComponent<DamageableEntity>().ReceiveDamage(DamageTag.Enemy, damage);
+            _obj.GetComponent<DamageableEntity>().ReceiveDamage(DamageTag.Enemy, new DamagesParameters(damage));
         }
     }
 

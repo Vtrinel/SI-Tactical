@@ -213,10 +213,14 @@ public class CultisteEnemy : IAEnemyVirtual
     {
         if (other.gameObject.layer == 11 && !haveDisc && isPlaying)
         {
-            if (!other.gameObject.GetComponent<DiscScript>().isAttacking)
+            DiscScript touchedDisc = other.GetComponent<DiscScript>();
+            if (touchedDisc != null)
             {
-                DiscManager.Instance.ReturnDiscInPool(other.GetComponent<DiscScript>());
-                haveDisc = true;
+                if (!touchedDisc.isAttacking)
+                {
+                    DiscManager.Instance.DestroyDisc(touchedDisc);
+                    haveDisc = true;
+                }
             }
         }
     }

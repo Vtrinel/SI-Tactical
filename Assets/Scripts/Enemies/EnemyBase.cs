@@ -101,7 +101,7 @@ public class EnemyBase : MonoBehaviour
 
         if (willAttackPlayerDebug)
         {
-            GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, 1);
+            GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, new DamagesParameters(1));
             yield return new WaitForSeconds(0.5f);
         }
 
