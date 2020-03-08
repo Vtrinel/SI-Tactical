@@ -10,12 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e905165617145545a1a441460961ffd, type: 3}
-  m_Name: 03_Throw++
+  m_Name: "03_Charg\xE9"
   m_EditorClassIdentifier: 
-  competenceName: ++
-  competenceDescription: 
+  competenceName: "Charg\xE9"
+  competenceDescription: "Le disque tourne autour du joueur, avant de se t\xE9l\xE9porter
+    \xE0 la position cibl\xE9e."
   competenceImage: {fileID: 21300000, guid: 2d93066aba55a9041a83bd9403bd8d5c, type: 3}
-  actionPointsCost: 3
+  actionPointsCost: 4
   unlocked: 0
   competencesUnlockedNeeded:
-  - {fileID: 11400000, guid: ebb4290b59c8d9d4fa0f07f76ded5cbf, type: 2}
+  - {fileID: 11400000, guid: 1cb19bb7c8641924088b29647980b55e, type: 2}
+  trajectoryModifiers:
+  - {fileID: 0}
