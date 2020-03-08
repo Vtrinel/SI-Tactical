@@ -13,10 +13,8 @@ public static class DiscListingFactory
         DiscsOrder discsRecallOrder = competence.GetRecallingOrder;
         bool canRecallUnthrowedDiscs = competence.GetCanRecallUnthrowedDiscs;
 
-        //DiscScript previousRecalledDisc = null;
-
         int currentDiscIndex = (discsRecallOrder == DiscsOrder.FromNewestToOldest ? throwedDiscs.Count - 1 : 0);
-        while (recallAll || remainingNumberOfDiscsToRecall > 0 && throwedDiscs.Count > 0)
+        while ((recallAll || remainingNumberOfDiscsToRecall > 0) && throwedDiscs.Count > 0)
         {
             DiscScript currentDisc = throwedDiscs[currentDiscIndex];
             if (!inRangeDiscs.Contains(currentDisc))
@@ -30,7 +28,6 @@ public static class DiscListingFactory
             }
 
             finalList.Add(currentDisc);
-            //previousRecalledDisc = currentDisc;
 
             currentDiscIndex += (discsRecallOrder == DiscsOrder.FromNewestToOldest ? -1 : 1);
             remainingNumberOfDiscsToRecall--;
@@ -48,7 +45,6 @@ public static class DiscListingFactory
                     continue;
 
                 finalList.Add(disc);
-                //previousRecalledDisc = disc;
 
                 remainingNumberOfDiscsToRecall--;
                 if (remainingNumberOfDiscsToRecall == 0)
