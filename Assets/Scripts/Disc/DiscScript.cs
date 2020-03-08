@@ -42,9 +42,9 @@ public class DiscScript : MonoBehaviour
     bool retreivableByPlayer = false;
     bool isBeingRecalled = false;
 
-    Collider attachedObj;
-
     GameObject objLaunch;
+    GameObject lastObjTouch;
+
     Vector3 destination;
 
     void Update()
@@ -71,6 +71,8 @@ public class DiscScript : MonoBehaviour
         myRigidBody.velocity = Vector3.zero;
         myRigidBody.angularVelocity = Vector3.zero;
         myRigidBody.isKinematic = false;
+
+        lastObjTouch = null;
 
         isAttacking = true;
 
@@ -218,12 +220,24 @@ public class DiscScript : MonoBehaviour
                 if (hitDamageableEntity != null)
                 {
                     hitDamageableEntity.ReceiveDamage(damageTag, currentDamagesAmount);
+
+                    lastObjTouch = other.gameObject;
                 }
+                break;
+
+            //shield
+            case 12:
+                print("shield");
+                if(lastObjTouch == other.transform.parent.GetComponent<ShieldManager>().myObjParent) { return; } else
+                {
+                    CollisionWithThisObj(other.transform);
+                    isAttacking = false;
+                }
+
                 break;
 
             default:
                 CollisionWithThisObj(other.transform);
-                attachedObj = other;
                 isAttacking = false;
                 break;
         }
