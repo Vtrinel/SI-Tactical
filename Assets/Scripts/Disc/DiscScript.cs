@@ -49,7 +49,7 @@ public class DiscScript : MonoBehaviour
 
     void Update()
     {
-        if (currentTrajectory.Count > 0)
+        if (currentTrajectory.Count > 0 && isAttacking)
             UpdateTrajectory();
 
         myAnimator.SetBool("Forward", isAttacking);
@@ -184,7 +184,6 @@ public class DiscScript : MonoBehaviour
         {
             default:
                 CollisionWithThisObj(collision.gameObject.transform);
-                isAttacking = false;
                 break;
         }
     }
@@ -231,22 +230,21 @@ public class DiscScript : MonoBehaviour
                 if(lastObjTouch == other.transform.parent.GetComponent<ShieldManager>().myObjParent) { return; } else
                 {
                     CollisionWithThisObj(other.transform);
-                    isAttacking = false;
                 }
 
                 break;
 
             default:
                 CollisionWithThisObj(other.transform);
-                isAttacking = false;
                 break;
         }
     }
        
     void CollisionWithThisObj(Transform impactPoint)
     {
-        myAnimator.SetTrigger("Collision");
+        isAttacking = false;
 
+        myAnimator.SetTrigger("Collision");
         Debug.DrawRay(transform.position + transform.forward * .5f, Vector3.up, Color.red, 50);
 
         transform.position = transform.position + transform.forward * .5f;
