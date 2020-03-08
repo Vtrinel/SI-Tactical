@@ -42,9 +42,9 @@ public class DiscScript : MonoBehaviour
     bool retreivableByPlayer = false;
     bool isBeingRecalled = false;
 
-    Collider attachedObj;
-
     GameObject objLaunch;
+    GameObject lastObjTouch;
+
     Vector3 destination;
 
     void Update()
@@ -66,11 +66,14 @@ public class DiscScript : MonoBehaviour
         isBeingRecalled = recalled;
     }
 
-    public void StartTrajectory(DiscTrajectoryParameters newTrajectory)
+    public void StartTrajectory(DiscTrajectoryParameters newTrajectory, GameObject _launcher)
     {
+        objLaunch = _launcher;
         myRigidBody.velocity = Vector3.zero;
         myRigidBody.angularVelocity = Vector3.zero;
         myRigidBody.isKinematic = false;
+
+        lastObjTouch = null;
 
         isAttacking = true;
 
@@ -104,17 +107,23 @@ public class DiscScript : MonoBehaviour
         Vector3 currentPositionToNextPosition = currentTrajectory[0] - transform.position;
         float currentPositionToNextPositionDistance = currentPositionToNextPosition.magnitude;
         Vector3 totalMovement = Vector3.zero;
+        Vector3 lastMovementDirection = Vector3.forward;
         int reachedTrajectoryPoints = 0;
 
         if(currentPositionToNextPositionDistance > remainingReachableDistance)
         {
             totalMovement += currentPositionToNextPosition.normalized * remainingReachableDistance;
+            lastMovementDirection = totalMovement.normalized;
         }
         else
         {
             while (remainingReachableDistance > 0)
             {
-                totalMovement += currentPositionToNextPosition.normalized * Mathf.Clamp(currentPositionToNextPositionDistance, 0, remainingReachableDistance);
+                Vector3 newMovement = currentPositionToNextPosition.normalized * Mathf.Clamp(currentPositionToNextPositionDistance, 0, remainingReachableDistance);
+                totalMovement += newMovement;
+
+                lastMovementDirection = newMovement.normalized;
+
                 remainingReachableDistance -= currentPositionToNextPositionDistance;
                 if(remainingReachableDistance > 0)
                     reachedTrajectoryPoints++;
@@ -132,11 +141,19 @@ public class DiscScript : MonoBehaviour
         totalMovement.y = 0;
         transform.position += totalMovement;
 
-        if(reachedTrajectoryPoints > 0)
-        while (reachedTrajectoryPoints > 0)
+        if (reachedTrajectoryPoints > 0)
         {
-            currentTrajectory.RemoveAt(0);
-            reachedTrajectoryPoints--;
+            while (reachedTrajectoryPoints > 0)
+            {
+                currentTrajectory.RemoveAt(0);
+                reachedTrajectoryPoints--;
+            }
+        }
+
+        if (lastMovementDirection != Vector3.zero)
+        {
+            float rotY = Mathf.Atan2(lastMovementDirection.x, lastMovementDirection.z) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, rotY - 90, 0);
         }
 
         if (reachedTrajectoryEnd)
@@ -145,6 +162,8 @@ public class DiscScript : MonoBehaviour
 
     public void InterruptTrajectory()
     {
+        OnReachedTrajectoryEnd?.Invoke(this);
+
         currentTrajectory = new List<Vector3>();
         isAttacking = false;
         SetRetreivableByPlayer(true);
@@ -182,7 +201,6 @@ public class DiscScript : MonoBehaviour
         {
             default:
                 CollisionWithThisObj(collision.gameObject.transform);
-                isAttacking = false;
                 break;
         }
     }
@@ -191,13 +209,13 @@ public class DiscScript : MonoBehaviour
     {
         if (other.gameObject == objLaunch || !isAttacking) { return; }
 
-        DemandeFx(other.ClosestPointOnBounds(transform.position));
-
         switch (other.gameObject.layer)
         {
             //Player
             case 9:
                 //recall or touch player
+
+                DemandeFx(other.ClosestPointOnBounds(transform.position));
                 if (!retreivableByPlayer)
                 {
                     break;
@@ -210,32 +228,41 @@ public class DiscScript : MonoBehaviour
             //ennemy
             case 10:
                 //take damage
-                //CollisionWithThisObj(other.transform);
-                //attachedObj = other;
-                //isAttacking = false;
+                DemandeFx(other.ClosestPointOnBounds(transform.position));
 
                 DamageableEntity hitDamageableEntity = other.GetComponent<DamageableEntity>();
                 if (hitDamageableEntity != null)
                 {
                     hitDamageableEntity.ReceiveDamage(damageTag, currentDamagesAmount);
+
+                    lastObjTouch = other.gameObject;
                 }
+                break;
+
+            //shield
+            case 12:
+                if(lastObjTouch == other.transform.parent.GetComponent<ShieldManager>().myObjParent) { return; } else
+                {
+                    DemandeFx(other.ClosestPointOnBounds(transform.position));
+                    CollisionWithThisObj(other.transform);
+                }
+
                 break;
 
             default:
                 CollisionWithThisObj(other.transform);
-                attachedObj = other;
-                isAttacking = false;
                 break;
         }
     }
        
     void CollisionWithThisObj(Transform impactPoint)
     {
+        InterruptTrajectory();
+
         myAnimator.SetTrigger("Collision");
+        Debug.DrawRay(transform.position + -transform.right * .5f, Vector3.up, Color.red, 50);
 
-        Debug.DrawRay(transform.position + transform.forward * .5f, Vector3.up, Color.red, 50);
-
-        transform.position = transform.position + transform.forward * .5f;
+        transform.position = transform.position + -transform.right * .5f;
     }
     #endregion
 

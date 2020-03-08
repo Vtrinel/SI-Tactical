@@ -24,6 +24,7 @@ public class TouniEnemy : IAEnemyVirtual
     {
         playerControlleur = GameManager.Instance.GetPlayer;
         player = playerControlleur.gameObject;
+        myShieldManager.myObjParent = gameObject;
     }
 
     public override void PlayerTurn()

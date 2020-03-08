@@ -29,6 +29,7 @@ public class CultisteEnemy : IAEnemyVirtual
     {
         playerControlleur = GameManager.Instance.GetPlayer;
         player = playerControlleur.gameObject;
+        myShieldManager.myObjParent = gameObject;
     }
 
     public override void PlayerTurn()
@@ -210,7 +211,7 @@ public class CultisteEnemy : IAEnemyVirtual
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 11 && !haveDisc)
+        if (other.gameObject.layer == 11 && !haveDisc && isPlaying)
         {
             if (!other.gameObject.GetComponent<DiscScript>().isAttacking)
             {
