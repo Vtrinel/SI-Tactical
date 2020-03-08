@@ -106,17 +106,23 @@ public class DiscScript : MonoBehaviour
         Vector3 currentPositionToNextPosition = currentTrajectory[0] - transform.position;
         float currentPositionToNextPositionDistance = currentPositionToNextPosition.magnitude;
         Vector3 totalMovement = Vector3.zero;
+        Vector3 lastMovementDirection = Vector3.forward;
         int reachedTrajectoryPoints = 0;
 
         if(currentPositionToNextPositionDistance > remainingReachableDistance)
         {
             totalMovement += currentPositionToNextPosition.normalized * remainingReachableDistance;
+            lastMovementDirection = totalMovement.normalized;
         }
         else
         {
             while (remainingReachableDistance > 0)
             {
-                totalMovement += currentPositionToNextPosition.normalized * Mathf.Clamp(currentPositionToNextPositionDistance, 0, remainingReachableDistance);
+                Vector3 newMovement = currentPositionToNextPosition.normalized * Mathf.Clamp(currentPositionToNextPositionDistance, 0, remainingReachableDistance);
+                totalMovement += newMovement;
+
+                lastMovementDirection = newMovement.normalized;
+
                 remainingReachableDistance -= currentPositionToNextPositionDistance;
                 if(remainingReachableDistance > 0)
                     reachedTrajectoryPoints++;
@@ -134,11 +140,19 @@ public class DiscScript : MonoBehaviour
         totalMovement.y = 0;
         transform.position += totalMovement;
 
-        if(reachedTrajectoryPoints > 0)
-        while (reachedTrajectoryPoints > 0)
+        if (reachedTrajectoryPoints > 0)
         {
-            currentTrajectory.RemoveAt(0);
-            reachedTrajectoryPoints--;
+            while (reachedTrajectoryPoints > 0)
+            {
+                currentTrajectory.RemoveAt(0);
+                reachedTrajectoryPoints--;
+            }
+        }
+
+        if (lastMovementDirection != Vector3.zero)
+        {
+            float rotY = Mathf.Atan2(lastMovementDirection.x, lastMovementDirection.z) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, rotY - 90, 0);
         }
 
         if (reachedTrajectoryEnd)
@@ -244,6 +258,9 @@ public class DiscScript : MonoBehaviour
        
     void CollisionWithThisObj(Transform impactPoint)
     {
+        return;
+
+        //isAttacking = false;
         InterruptTrajectory();
 
         myAnimator.SetTrigger("Collision");
