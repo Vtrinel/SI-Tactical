@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: be651089b085f7a4c99d506674ed197d, type: 3}
-  m_Name: 02_NowSuperSpecial
+  m_Name: 00_Teleport
   m_EditorClassIdentifier: 
   competenceName: 
-  competenceDescription: 
-  competenceImage: {fileID: 0}
-  actionPointsCost: 1
-  unlocked: 0
+  competenceDescription: "D\xE9place le joueur sur la position cibl\xE9e"
+  competenceImage: {fileID: 21300000, guid: bd342816b57b5e84ba38a25226148b7a, type: 3}
+  actionPointsCost: 3
+  unlocked: 1
+  competencesUnlockedNeeded: []
