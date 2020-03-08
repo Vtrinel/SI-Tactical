@@ -289,7 +289,7 @@ MonoBehaviour:
   myCollider: {fileID: 8030675917091118892}
   myAnimator: {fileID: 7300530026638147795}
   damageTag: 0
-  currentDamagesAmount: 1
+  currentDamagesAmount: 2
   maxSpeed: 60
   accelerationDuration: 0.2
   accelerationCurve:
@@ -316,6 +316,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  isAttacking: 0
 --- !u!1001 &2880536627148159804
 PrefabInstance:
   m_ObjectHideFlags: 0
