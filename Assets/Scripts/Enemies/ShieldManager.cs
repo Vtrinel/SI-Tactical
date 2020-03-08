@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ShieldManager : MonoBehaviour
 {
+    public GameObject myObjParent;
+
     [SerializeField] GameObject FrontShield;
     [SerializeField] GameObject BackShield;
     [SerializeField] GameObject RightShield;
