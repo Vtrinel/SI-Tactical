@@ -54,14 +54,16 @@ public class PreviewCompetencesManager : MonoBehaviour
             movementCirclePreviews.Add(newMovementCirclePreview);
         }
 
-        /*movementLinePreview = Instantiate(movementLinePreviewPrefab, movementPreviewsParent);
-        movementLinePreview.HidePreview();*/
+        movementLinePreview = Instantiate(movementLinePreviewPrefab, movementPreviewsParent);
+        movementLinePreview.HidePreview();
 
         movementGhostPreview = Instantiate(movementGhostPreviewPrefab, movementPreviewsParent);
         movementGhostPreview.HidePreview();
     }
 
-    public void StartMovementPreview(List<float> distances, Vector3 startPosition, Vector3 targetPosition, CompetenceRecall currentRecallComp)
+    bool justStartedMovementPreview = default;
+    List<float> currentMovementDistances = new List<float>();
+    public void StartMovementPreview(List<float> distances, Vector3 startPosition, Vector3 targetPosition, CompetenceRecall currentRecallComp, int completelyUsedActionPoints)
     {
         #region Circles
         int newNumber = distances.Count;
@@ -81,7 +83,6 @@ public class PreviewCompetencesManager : MonoBehaviour
             movementCirclePreviews[i].ShowPreview();
             movementCirclePreviews[i].ChangeRadius(distances[i]);
             movementCirclePreviews[i].transform.position = circlePos;
-            Debug.DrawRay(circlePos, Vector3.up * 10, Color.red, 5f);
         }
 
         for(int i = newNumber; i < movementCirclePreviews.Count; i++)
@@ -90,13 +91,33 @@ public class PreviewCompetencesManager : MonoBehaviour
         }
         #endregion
 
-        //movementLinePreview.ShowPreview();
+        currentMovementDistances = distances;
+
+        movementLinePreview.ShowPreview();
+        movementLinePreview.UpdateLine(startPosition, targetPosition, currentMovementDistances, completelyUsedActionPoints);
+
         movementGhostPreview.ShowPreview();
+        movementGhostPreview.transform.position = targetPosition;
+
+        List<DiscTrajectoryParameters> discsInNewPositionRangeParameters = DiscListingFactory.GetDiscInRangeTrajectory(targetPosition, currentRecallComp);
+        StartRecallPreview(discsInNewPositionRangeParameters, targetPosition);
+
+        justStartedMovementPreview = true;
+        UpdateMovementPreview(startPosition, targetPosition, currentRecallComp, completelyUsedActionPoints);
     }
 
-    public void UpdateMovementPreview(Vector3 startPosition, Vector3 targetPosition, CompetenceRecall currentRecallComp)
+    public void UpdateMovementPreview(Vector3 startPosition, Vector3 targetPosition, CompetenceRecall currentRecallComp, int completelyUsedActionPoints)
     {
+        movementLinePreview.UpdateLine(startPosition, targetPosition, currentMovementDistances, completelyUsedActionPoints);
+        movementGhostPreview.transform.position = targetPosition;
 
+        if (!justStartedMovementPreview)
+        {
+            List<DiscTrajectoryParameters> discsInNewPositionRangeParameters = DiscListingFactory.GetDiscInRangeTrajectory(targetPosition, currentRecallComp);
+            UpdateRecallPreview(discsInNewPositionRangeParameters, targetPosition);
+        }
+        else
+            justStartedMovementPreview = false;
     }
 
     public void EndMovementPreview()
@@ -104,8 +125,10 @@ public class PreviewCompetencesManager : MonoBehaviour
         foreach (MovementCirclePreview circlePreview in movementCirclePreviews)
             circlePreview.HidePreview();
 
-        //movementLinePreview.HidePreview();
+        movementLinePreview.HidePreview();
         movementGhostPreview.HidePreview();
+
+        EndRecallPreview();
     }
     #endregion
 
@@ -175,7 +198,6 @@ public class PreviewCompetencesManager : MonoBehaviour
         discEffectZonePreview.transform.position = playerPosition + Vector3.up * 0.01f;
 
         UpdateNumberOfShownTrajectories(trajectoryParameters.Count);
-        UpdateThrowPreview(trajectoryParameters);
     }
 
     public void UpdateThrowPreview(List<DiscTrajectoryParameters> trajectoryParameters/*Vector3 startPos, Vector3 targetPos*/)
@@ -200,7 +222,6 @@ public class PreviewCompetencesManager : MonoBehaviour
         discEffectZonePreview.transform.position = recallPosition + Vector3.up * 0.01f;
 
         UpdateNumberOfShownTrajectories(trajectoryParameters.Count);
-        UpdateRecallPreview(trajectoryParameters, recallPosition);
     }
 
     public void UpdateRecallPreview(List<DiscTrajectoryParameters> trajectoryParameters, Vector3 recallPosition)
