@@ -245,8 +245,7 @@ public class GameManager : MonoBehaviour
                 }
 
                 CallSelectActionEvent(ActionType.Move);
-                playerMovementsManager.GenerateDistancesPerActionPoints(currentActionPointsAmount);
-                playerMovementsManager.StartMovementPreparation();
+                playerMovementsManager.StartMovementPreparation(currentActionPointsAmount);
                 SetActionPointsDebugTextVisibility(true);
             }
             else
