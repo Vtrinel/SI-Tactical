@@ -49,7 +49,7 @@ public class DiscScript : MonoBehaviour
 
     void Update()
     {
-        if (currentTrajectory.Count > 0 && isAttacking)
+        if (currentTrajectory.Count > 0)
             UpdateTrajectory();
 
         myAnimator.SetBool("Forward", isAttacking);
@@ -147,6 +147,8 @@ public class DiscScript : MonoBehaviour
 
     public void InterruptTrajectory()
     {
+        OnReachedTrajectoryEnd?.Invoke(this);
+
         currentTrajectory = new List<Vector3>();
         isAttacking = false;
         SetRetreivableByPlayer(true);
@@ -242,7 +244,8 @@ public class DiscScript : MonoBehaviour
        
     void CollisionWithThisObj(Transform impactPoint)
     {
-        isAttacking = false;
+        //isAttacking = false;
+        InterruptTrajectory();
 
         myAnimator.SetTrigger("Collision");
         Debug.DrawRay(transform.position + transform.forward * .5f, Vector3.up, Color.red, 50);
