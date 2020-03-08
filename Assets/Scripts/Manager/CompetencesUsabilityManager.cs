@@ -331,7 +331,7 @@ public class CompetencesUsabilityManager
         return trueTargetPos;
     }
 
-    public void LaunchThrowCompetence()
+    public void LaunchThrowCompetence(GameObject objLauncher)
     {
         currentlyInUseDiscs = new List<DiscScript>();
 
@@ -349,7 +349,7 @@ public class CompetencesUsabilityManager
 
         newDisc.SetIsBeingRecalled(false);
         newDisc.SetRetreivableByPlayer(false);
-        newDisc.StartTrajectory(trajectoryParameters);
+        newDisc.StartTrajectory(trajectoryParameters, objLauncher);
         currentlyInUseDiscs.Add(newDisc);
         newDisc.OnReachedTrajectoryEnd += RemoveDiscFromInUse;
 
@@ -383,7 +383,7 @@ public class CompetencesUsabilityManager
             DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, disc);
 
         disc.SetIsBeingRecalled(true);
-        disc.StartTrajectory(trajectoryParameters);
+        disc.StartTrajectory(trajectoryParameters, null);
         currentlyInUseDiscs.Add(disc);
         disc.OnReachedTrajectoryEnd += RemoveDiscFromInUse;
     }

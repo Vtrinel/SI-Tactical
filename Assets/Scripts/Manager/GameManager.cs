@@ -312,7 +312,7 @@ public class GameManager : MonoBehaviour
             switch (competencesUsabilityManager.GetCurrentCompetenceType)
             {
                 case ActionType.Throw:
-                    competencesUsabilityManager.LaunchThrowCompetence();
+                    competencesUsabilityManager.LaunchThrowCompetence(player.gameObject);
                     break;
 
                 case ActionType.Recall:
