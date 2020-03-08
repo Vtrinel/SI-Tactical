@@ -62,6 +62,9 @@ public class EnemiesManager : MonoBehaviour
 
         foreach(EnemyBase enemy in alreadyPlacedEnemies)
         {
+            if (!enemy.gameObject.activeInHierarchy)
+                continue;
+
             enemy.SetUpInitiative();
             AddEnemy(enemy);
         }
