@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ShieldManager : MonoBehaviour
 {
-    public GameObject myObjParent;
+    [HideInInspector] public GameObject myObjParent;
 
     [SerializeField] GameObject FrontShield;
     [SerializeField] GameObject BackShield;

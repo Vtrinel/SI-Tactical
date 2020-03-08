@@ -244,7 +244,6 @@ public class DiscScript : MonoBehaviour
        
     void CollisionWithThisObj(Transform impactPoint)
     {
-        //isAttacking = false;
         InterruptTrajectory();
 
         myAnimator.SetTrigger("Collision");
