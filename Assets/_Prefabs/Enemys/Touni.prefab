@@ -558,6 +558,8 @@ MonoBehaviour:
   lifeBar: {fileID: 3894817727234607627}
   enemyRenderer: {fileID: 3894817727671339327}
   baseInitiative: 5
+  _lootedDiscType: 0
+  lootDiscIndicator: {fileID: 0}
   myIA: {fileID: 6547703038302129142}
 --- !u!114 &3894817726808940226
 MonoBehaviour:
@@ -641,6 +643,7 @@ MonoBehaviour:
   detectionMaskRaycast:
     serializedVersion: 2
     m_Bits: 16896
+  myShowPath: {fileID: 9050105041826387111}
   angleAttack: 60
   objCanBeAttacked:
     serializedVersion: 2
@@ -883,10 +886,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b784b06afc568824a86459786859d180, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myNavAgent: {fileID: 6103916517976931779}
   lineDeplacement: {fileID: 2368938595665459551}
   lineCantDeplacement: {fileID: 2334345209443329757}
-  distance: 2
+  myNavAgent: {fileID: 6103916517976931779}
 --- !u!1 &6333405146538037529
 GameObject:
   m_ObjectHideFlags: 0
