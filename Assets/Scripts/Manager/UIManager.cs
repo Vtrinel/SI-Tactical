@@ -21,6 +21,8 @@ public class UIManager : MonoBehaviour
     public GameObject ButtonLaunch;
     public GameObject ButtonRecall;
     public Image goldSlider;
+
+    public GameObject buttonEndTurn;
     #endregion
 
     private static UIManager _instance;
@@ -30,12 +32,16 @@ public class UIManager : MonoBehaviour
     {
         PlayerExperienceManager.Instance.OnGainExperience += AddExperience;
         PlayerExperienceManager.Instance.OnLossExperience += LossExperience;
+        TurnManager.Instance.OnStartPlayerTurn += StartPlayerTurn;
+        TurnManager.Instance.OnEndPlayerTurn += EndPlayerTurn;
     }
 
     void OnDisable()
     {
         PlayerExperienceManager.Instance.OnGainExperience -= AddExperience;
         PlayerExperienceManager.Instance.OnLossExperience -= LossExperience;
+        TurnManager.Instance.OnStartPlayerTurn -= StartPlayerTurn;
+        TurnManager.Instance.OnEndPlayerTurn -= EndPlayerTurn;
     }
 
     private void Awake()
@@ -48,6 +54,16 @@ public class UIManager : MonoBehaviour
         {
             _instance = this;
         }
+    }
+
+    void StartPlayerTurn()
+    {
+        buttonEndTurn.SetActive(true);
+    }
+
+    void EndPlayerTurn()
+    {
+        buttonEndTurn.SetActive(false);
     }
 
     public void AddExperience(int experience)
