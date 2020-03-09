@@ -81,6 +81,7 @@ public class TouniEnemy : IAEnemyVirtual
 
     IEnumerator WaitDeplacement()
     {
+
         isPlaying = true;
         float normalizedTime = 0;
 
