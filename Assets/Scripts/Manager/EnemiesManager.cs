@@ -22,6 +22,7 @@ public class EnemiesManager : MonoBehaviour
 
     [Header("Enemies in Game")]
     List<EnemyBase> allInGameEnemiesOrdered = new List<EnemyBase>();
+    public List<EnemyBase> GetAllInGameEnemiesOrdered => allInGameEnemiesOrdered;
     public Action<List<EnemyBase>> OnInGameEnemiesChanged;
 
     public void AddEnemy(EnemyBase newEnemy)
@@ -96,14 +97,16 @@ public class EnemiesManager : MonoBehaviour
         Destroy(enemy.gameObject);
     }
 
-    public void SpawnEnemyAtPosition(EnemyType enemyType, Vector3 position)
+    public EnemyBase SpawnEnemyAtPosition(EnemyType enemyType, Vector3 position, DiscType lootedDiscType)
     {
         EnemyBase newEnemy = GetEnemyFromPool(enemyType);
         if (newEnemy == null)
-            return;
+            return null;
 
+        newEnemy.SpawnEnemy(position, lootedDiscType);
         AddEnemy(newEnemy);
-        newEnemy.SpawnEnemy(position);
+
+        return newEnemy;
     }
 
     public void DestroyEnemy(EnemyBase enemy)

@@ -8,29 +8,48 @@ public class EnemySpawnPoint : MonoBehaviour
     /// This should be improved if possible
 
     [SerializeField] EnemyType definedEnemyToSpawn = EnemyType.None;
+    [SerializeField] bool definedEnemyWillAutoDetectPlayer = true;
+    [SerializeField] DiscType definedLootedDisc = DiscType.None;
+    [SerializeField] GameObject spawnZoneDebugObject = default;
 
     public void StartSpawning()
     {
         if (definedEnemyToSpawn == EnemyType.None)
             return;
-        StartSpawning(definedEnemyToSpawn);
+        StartSpawning(definedEnemyToSpawn, definedEnemyWillAutoDetectPlayer, definedLootedDisc);
     }
 
-    EnemyType nextSpawnEnemyType = EnemyType.None;
-    public void StartSpawning(EnemyType enemyTypeToSpawn)
+    EnemyType spawnPendingEnemyType = EnemyType.None;
+    bool spawnPendingWillAutoDetectPlayer;
+    DiscType spawnPendingLootedDiscType = DiscType.None;
+    public void StartSpawning(EnemyType enemyTypeToSpawn, bool autoDetectPlayer, DiscType lootedDiscType)
     {
         if (enemyTypeToSpawn == EnemyType.None)
             return;
-        nextSpawnEnemyType = enemyTypeToSpawn;
+        spawnPendingEnemyType = enemyTypeToSpawn;
+        spawnPendingWillAutoDetectPlayer = autoDetectPlayer;
+        spawnPendingLootedDiscType = lootedDiscType;
 
         /// NEXT STEP : add to spawn points to check on next player turn start + generate a preview
         /// For now, just spawn instant
-        SpawnEnemyOnSpawnPoint(nextSpawnEnemyType);
+        TurnManager.Instance.AddPendingSpawnPoint(this);
+        spawnZoneDebugObject.SetActive(true);
     }
 
-    public void SpawnEnemyOnSpawnPoint(EnemyType enemyTypeToSpawn)
+    public void SpawnPendingEnemy()
     {
-        EnemiesManager.Instance.SpawnEnemyAtPosition(enemyTypeToSpawn, transform.position);
+        SpawnEnemyOnSpawnPoint(spawnPendingEnemyType, spawnPendingWillAutoDetectPlayer, spawnPendingLootedDiscType);
+    }
+
+    public void SpawnEnemyOnSpawnPoint(EnemyType enemyTypeToSpawn, bool autoDetectPlayer, DiscType lootedDiscType)
+    {
+        EnemyBase enemyBase = EnemiesManager.Instance.SpawnEnemyAtPosition(enemyTypeToSpawn, transform.position, lootedDiscType);
+        if(enemyBase != null)
+        {
+            enemyBase.SetPlayerDetected(autoDetectPlayer);
+        }
+
+        spawnZoneDebugObject.SetActive(false);
     }
 
     private void OnDrawGizmos()

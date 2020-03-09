@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviour
         enemiesManager.OnInGameEnemiesChanged += turnManager.RefreshEnemyList;
         enemiesManager.GetAllAlreadyPlacedEnemies();
 
-        turnManager.OnCheckGameProgression += levelManager.CheckForProgressTurn;
         levelManager.OnGoalReached += WinGame;
 
         competencesUsabilityManager.OnRecallCompetenceChanged += playerMovementsManager.UpdateCurrentRecallCompetence;

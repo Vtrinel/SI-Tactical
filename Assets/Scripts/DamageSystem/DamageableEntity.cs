@@ -57,7 +57,7 @@ public class DamageableEntity : MonoBehaviour
 
         if (damagesParameters._numberOfStunedTurns > 0)
         {
-            Debug.Log(name + " is stuned for " + damagesParameters._numberOfStunedTurns + " turn" + (damagesParameters._numberOfStunedTurns > 1 ? "s" : ""));
+            //Debug.Log(name + " is stuned for " + damagesParameters._numberOfStunedTurns + " turn" + (damagesParameters._numberOfStunedTurns > 1 ? "s" : ""));
             OnReceivedStun?.Invoke(damagesParameters._numberOfStunedTurns);
         }
     }
