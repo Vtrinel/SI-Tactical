@@ -783,8 +783,6 @@ MonoBehaviour:
   currentDisc: 0
   discBasic: {fileID: 5558713623358335765, guid: bef3656ef1fa6514292ae45cc36b39c0,
     type: 3}
-  discPiercing: {fileID: 0}
-  discGhost: {fileID: 0}
   allDiscBarElement: []
 --- !u!1 &2145683240
 GameObject:
@@ -1033,7 +1031,7 @@ PrefabInstance:
     - target: {fileID: 5901315919852661226, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6538747667959666325, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
         type: 3}

@@ -172,13 +172,13 @@ public class DiscManager : MonoBehaviour
         OnAddOneMaxDisc?.Invoke();
     }
 
-    public Action OnDiscFilled;
+    public Action<int> OnDiscFilled;
     public void FillPossessedDiscsWithBasicDiscs()
     {
         for(int i =0; i < maxNumberOfPossessedDiscs; i++)
             possessedDiscs.Push(testDiscType);
 
-        OnDiscFilled?.Invoke();
+        OnDiscFilled?.Invoke(maxNumberOfPossessedDiscs);
     }
 
     public Action<DiscScript> OnDiscAdded;
@@ -250,14 +250,15 @@ public class DiscManager : MonoBehaviour
         if (newDisc != null)
         {
             throwedDiscs.Add(newDisc);
+            Debug.Log("disc throwed");
             OnDiscConsommed?.Invoke();
         }
-
         return newDisc;
     }
     #endregion
 
     #region Proximity
+
     public void CheckAllDiscsProximity(Vector3 playerPosition)
     {
         foreach (DiscScript disc in inGameDiscs)
@@ -284,7 +285,7 @@ public class DiscManager : MonoBehaviour
 
         return inRangeFromPos;
     }
-    
+
     public int GetInRangeDiscsCount
     {
         get
