@@ -1,11 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class DiscBar : MonoBehaviour
 {
-    int maxDisc;
-    int currentDisc;
+    private int maxDisc;
+
+    [SerializeField] int currentDisc = 3;
 
     [Header("Disc types")]
     public GameObject discPiercing;
@@ -77,7 +77,8 @@ public class DiscBar : MonoBehaviour
 
     void RemoveDiscFromBar()
     {
-        Destroy(allDiscBarElement[currentDisc]);
+        
+
         allDiscBarElement.RemoveAt(currentDisc);
 
         currentDisc--;
