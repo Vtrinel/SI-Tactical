@@ -43,16 +43,12 @@ public class TouniEnemy : IAEnemyVirtual
 
     IEnumerator PlayerTurnCouroutine()
     {
-        if (isPreparing)
-        {
-            Attack();
-            isPreparing = false;
-            yield return new WaitForSeconds(1);
-        }
-
         if (CanAttack())
         {
             PrepareAttack();
+            yield return new WaitForSeconds(0.4f);
+            Attack();
+            isPreparing = false;
             yield return new WaitForSeconds(0.4f);
             OnFinishTurn?.Invoke();
         }
@@ -95,7 +91,14 @@ public class TouniEnemy : IAEnemyVirtual
             if (CanAttack())
             {
                 normalizedTime = durationTurn + 1;
+
+                myNavAgent.isStopped = true;
                 PrepareAttack();
+                yield return new WaitForSeconds(0.4f);
+                Attack();
+                isPreparing = false;
+                yield return new WaitForSeconds(0.4f);
+
                 break;
             }
             yield return null;
