@@ -12,6 +12,8 @@ public class FloatButton : MonoBehaviour
 
     [SerializeField] Image myImage;
     [SerializeField] float timerToFill;
+    [SerializeField] float timer = 0;
+    [SerializeField] AnimationCurve fillCurve;
 
     bool canFill = false;
 
@@ -23,10 +25,20 @@ public class FloatButton : MonoBehaviour
             return;
         }
 
-        float toThisValue = 0;
-        if (isClicking) { toThisValue = 1; }
+        //float toThisValue = 0;
+        if (isClicking) 
+        { 
+            //toThisValue = 1;
+            timer += Time.deltaTime;
+        }
+        else
+        {
+            timer -= Time.deltaTime;
+        }
 
-        myImage.fillAmount = Mathf.Lerp(myImage.fillAmount, toThisValue, timerToFill * Time.deltaTime);
+        timer = Mathf.Clamp(timer, 0.0f, timerToFill);
+
+        myImage.fillAmount = Mathf.Lerp(0, 1, fillCurve.Evaluate(timer/timerToFill));
 
         if(myImage.fillAmount >= 0.99f)
         {
@@ -35,9 +47,11 @@ public class FloatButton : MonoBehaviour
         }
     }
 
-    void Restart() {
+    void Restart() 
+    {
         canFill = false;
         myImage.fillAmount = 0;
+        timer = 0.0f;
 
         print("fin de tour");
 

@@ -28,7 +28,7 @@ public class IAEnemyVirtual : MonoBehaviour
 
     public ShieldManager myShieldManager;
 
-    [HideInInspector] public bool haveDetectPlayer = false;
+    public bool haveDetectPlayer = false;
     public float detectionPlayerRange = 10;
 
     public LayerMask detectionMaskRaycast;
