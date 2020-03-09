@@ -23,6 +23,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Noise1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _T_MaskShadow_M:
         m_Texture: {fileID: 2800000, guid: 4c6c41bb026f22a448fe36d01c870f58, type: 3}
         m_Scale: {x: 2, y: 2}
@@ -37,9 +41,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _ASEOutlineWidth: 0
-    - _ShadowMaskIntensity: 1.03
-    - _ShadowOpacity: 0.901
-    - _ShadowStep: 0.054
+    - _ShadowMaskIntensity: 3
+    - _ShadowNoiseScale: 2
+    - _ShadowOpacity: 1
+    - _ShadowStep: 1
     - _SmoothShadowMax: 0.11
     - _SmoothShadowMin: 0.1
     - _TextureShadow: 2.28
