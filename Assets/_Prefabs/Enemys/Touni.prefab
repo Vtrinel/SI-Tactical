@@ -509,6 +509,11 @@ MonoBehaviour:
   isPreparing: 0
   durationTurn: 1
   myShieldManager: {fileID: 8771358726133287938}
+  haveDetectPlayer: 0
+  detectionPlayerRange: 10
+  detectionMaskRaycast:
+    serializedVersion: 2
+    m_Bits: 16896
   angleAttack: 60
   objCanBeAttacked:
     serializedVersion: 2

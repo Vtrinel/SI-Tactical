@@ -29,6 +29,15 @@ public class TouniEnemy : IAEnemyVirtual
 
     public override void PlayerTurn()
     {
+        if (!haveDetectPlayer)
+        {
+            if (!CheckDetectionWithPlayer())
+            {
+                OnFinishTurn?.Invoke();
+                return;
+            }
+        }
+
         StartCoroutine(PlayerTurnCouroutine());
     }
 
@@ -205,5 +214,8 @@ public class TouniEnemy : IAEnemyVirtual
         Gizmos.DrawRay(transform.position, rightRayDirection);
         Gizmos.DrawRay(transform.position, leftRayDirection);
         Gizmos.DrawLine(transform.position + leftRayDirection, transform.position + rightRayDirection);
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, detectionPlayerRange);
     }
 }
