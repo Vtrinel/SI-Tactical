@@ -108,7 +108,7 @@ public class EnemyBase : MonoBehaviour
         {
             return;
         }
-        TurnManager.Instance.EndEnemyTurn(this);
+        TurnManager.Instance.EndEnemyTurn(this, GetPlayerDetected);
     }
 
     public void InterruptAllAction()
@@ -126,6 +126,7 @@ public class EnemyBase : MonoBehaviour
     {
         myIA.haveDetectPlayer = detected;
     }
+    public bool GetPlayerDetected => myIA.haveDetectPlayer;
 
     void PlayMyTurn()
     {
