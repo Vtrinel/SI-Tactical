@@ -121,7 +121,7 @@ public class EnemyBase : MonoBehaviour
     #region IA
     [Header("IA")]
 
-    [SerializeField] IAEnemyVirtual myIA = default;
+    public IAEnemyVirtual myIA = default;
     public void SetPlayerDetected(bool detected)
     {
         myIA.haveDetectPlayer = detected;
@@ -157,5 +157,16 @@ public class EnemyBase : MonoBehaviour
             return;
 
         myIA.OnFinishTurn -= EndTurn;
+    }
+
+    public void DisplayAndActualisePreviewAttack()
+    {
+        myIA.myShowPath.SetValue(myIA.distanceOfDeplacement, myIA.attackRange);
+        myIA.myShowPath.ShowOrHide(true);
+    }
+
+    public void HidePreview(bool value)
+    {
+        myIA.myShowPath.ShowOrHide(value);
     }
 }
