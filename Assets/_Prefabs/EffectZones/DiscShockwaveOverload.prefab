@@ -58,7 +58,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7cb20c1ea50103a4381f01299a09b8dc, type: 2}
+  - {fileID: 2100000, guid: 497f0bc1351f48940a8d84c90b1c04ac, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 1876864907589764508}
   - component: {fileID: 1876864907589764507}
   m_Layer: 0
-  m_Name: DiscExplosion
+  m_Name: DiscShockwaveOverload
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eb8fa651d367d840952c04cc6c53f2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectZoneType: 2
+  effectZoneType: 5
   effectMask:
     serializedVersion: 2
     m_Bits: 1536
@@ -133,14 +133,14 @@ MonoBehaviour:
   persistanceDuration: 0.05
   sourceTag: 0
   damaging: 1
-  damageAmount: 3
+  damageAmount: 0
   knockbacking: 1
   maxKnockbackParameters:
     knockbackForce: 20
     knockbackDuration: 0.05
     knockbackAttenuationDuration: 0.2
     canKnockbackDiscs: 0
-  maxKnockbackDistance: 1
+  maxKnockbackDistance: 2
   minKnockbackParameters:
     knockbackForce: 10
     knockbackDuration: 0.02
