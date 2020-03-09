@@ -128,6 +128,14 @@ public class DiscScript : MonoBehaviour
         {
             if (hit.collider.gameObject.layer != 10 || blockedByEnemies)
             {
+                // test bouclier
+                ShieldManager objShielManager = hit.transform.parent.GetComponent<ShieldManager>();
+
+                if (objShielManager != null && objShielManager.myObjParent == lastObjTouch)
+                {
+                    return false;
+                }
+
                 HandleCollision(hit, direction);
 
                 return true;
