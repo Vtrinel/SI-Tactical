@@ -57,8 +57,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3869715040816499829}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.379, y: 0, z: -0.4}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.47384492, y: -0.39645585, z: -0.3999998}
+  m_LocalScale: {x: 0.75, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1560156977845080029}
   m_RootOrder: 0
@@ -425,12 +425,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9c5d0b8594c85a4aa58237ee375e588, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: 1
   damageReceiptionSystem: {fileID: 3894817726808940226}
   knockbackReceiptionSystem: {fileID: 0}
   lifeBar: {fileID: 3894817727234607627}
   enemyRenderer: {fileID: 3894817727671339327}
   baseInitiative: 5
-  willAttackPlayerDebug: 0
   myIA: {fileID: 6547703038302129142}
 --- !u!114 &3894817726808940226
 MonoBehaviour:
@@ -658,8 +658,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3894817727671339326}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 3894817726808940225}
   m_RootOrder: 0
@@ -735,8 +735,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8228210363981870650}
   m_LocalRotation: {x: -0.37811014, y: -0.5975222, z: 0.37811014, w: 0.5975222}
-  m_LocalPosition: {x: 0.396, y: 0.928, z: -0.056}
-  m_LocalScale: {x: 1.3960683, y: 0.1862031, z: 0.16239794}
+  m_LocalPosition: {x: 0.2800002, y: 0.5, z: -0.05600001}
+  m_LocalScale: {x: 1.25, y: 0.1862031, z: 0.16239794}
   m_Children:
   - {fileID: 5892634810200106900}
   m_Father: {fileID: 3894817726808940225}
@@ -749,11 +749,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3894817726808940225}
     m_Modifications:
-    - target: {fileID: 3152070418214343642, guid: 51b5d8ddb896b9444a7e083d3781b1f6,
-        type: 3}
-      propertyPath: allShieldPos
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 5046729691546593659, guid: 51b5d8ddb896b9444a7e083d3781b1f6,
         type: 3}
       propertyPath: m_IsActive
