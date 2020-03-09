@@ -47,6 +47,6 @@ public class TriggerEvent : MonoBehaviour
     {
         playedOnce = true;
         Debug.Log("Trigger Event On " + gameObject.name, this);
-        OnTriggerEnterEvent.Invoke();
+        OnTriggerEnterEvent?.Invoke();
     }
 }

@@ -33,17 +33,17 @@ public class TurnManager : MonoBehaviour
     public TurnState GetCurrentTurnState => currentTurnState;
     public void StartPlayerTurn()
     {
-        //Debug.Log("Start player turn !");
         currentTurnState = TurnState.PlayerTurn;
         OnStartPlayerTurn?.Invoke();
     }
 
     public void EndPlayerTurn()
     {
-        //Debug.Log("End player turn !");
-        currentTurnState = TurnState.BetweenPlayerAndEnemies;
+        //currentTurnState = TurnState.BetweenPlayerAndEnemies;
+        currentTurnState = TurnState.EnemyTurn;
         OnEndPlayerTurn?.Invoke();
 
+        currentEnemiesTurnCounter = 0;
         StartCoroutine("BetweenTurnsCoroutine");
     }
 
@@ -65,6 +65,13 @@ public class TurnManager : MonoBehaviour
     EnemyBase currentTurnEnemy = default;
     public void StartEnemiesTurn()
     {
+        if(orderedInGameEnemies.Count == 0)
+        {
+            currentTurnState = TurnState.ProgressionTurn;
+            StartProgressionTurn();
+            return;
+        }
+
         currentEnemiesTurnCounter = 0;
 
         if (orderedInGameEnemies.Count == 0)
@@ -109,7 +116,103 @@ public class TurnManager : MonoBehaviour
 
     public void EndEnemiesTurn()
     {
-        currentTurnState = TurnState.BetweenEnemiesAndPlayer;
+        //currentTurnState = TurnState.BetweenEnemiesAndSpawnPoints;
+        currentTurnState = TurnState.ProgressionTurn;
+        StartCoroutine("BetweenTurnsCoroutine");
+    }
+    #endregion
+
+    #region Progression Turn
+    public void StartProgressionTurn()
+    {
+        bool progressed = LevelProgressionManager.Instance.CheckForProgressTurn();
+
+        if (!progressed)
+        {
+            currentTurnState = TurnState.SpawnPointsTurn;
+            StartSpawnPointsTurn();
+            return;
+        }
+
+        //Instant Call, might be called on Level Manager
+        EndProgressionTurn();
+    }
+
+    public void EndProgressionTurn()
+    {
+        currentTurnState = TurnState.SpawnPointsTurn;
+        StartCoroutine("BetweenTurnsCoroutine");
+    }
+    #endregion
+
+    #region Pending Spawn Points Turn
+    List<EnemySpawnPoint> currentlyPendingSpawnPoints = new List<EnemySpawnPoint>();
+    public void AddPendingSpawnPoint(EnemySpawnPoint newSpawnPoint)
+    {
+        if (!currentlyPendingSpawnPoints.Contains(newSpawnPoint))
+            currentlyPendingSpawnPoints.Add(newSpawnPoint);
+    }
+
+    public void StartSpawnPointsTurn()
+    {
+        if (currentlyPendingSpawnPoints.Count == 0)
+        {
+            currentTurnState = TurnState.SpawnPointsTurn;
+            StartSwarmZonesTurn();
+            return;
+        }
+
+        foreach (EnemySpawnPoint pendingSpawnPoint in currentlyPendingSpawnPoints)
+        {
+            pendingSpawnPoint.SpawnPendingEnemy();
+        }
+
+        currentlyPendingSpawnPoints = new List<EnemySpawnPoint>();
+
+        EndSpawnPointsTurn();
+    }
+
+    public void EndSpawnPointsTurn()
+    {
+        currentTurnState = TurnState.SwarmZonesTurn;
+        StartCoroutine("BetweenTurnsCoroutine");
+    }
+    #endregion
+
+    #region Active Swarm Zone Turn
+    List<EnemySwarmZone> currentlyActiveSwarmZones = new List<EnemySwarmZone>();
+    public void ActivateSwarmZone(EnemySwarmZone newSwarmZone)
+    {
+        if (!currentlyActiveSwarmZones.Contains(newSwarmZone))
+            currentlyActiveSwarmZones.Add(newSwarmZone);
+    }
+    public void DeactivateSwarmZone(EnemySwarmZone swarmZoneToRemove)
+    {
+        if (!currentlyActiveSwarmZones.Contains(swarmZoneToRemove))
+            currentlyActiveSwarmZones.Add(swarmZoneToRemove);
+    }
+
+    public void StartSwarmZonesTurn()
+    {
+        if (currentlyActiveSwarmZones.Count == 0)
+        {
+            currentTurnState = TurnState.PlayerTurn;
+            StartPlayerTurn();
+            return;
+        }
+
+        foreach (EnemySwarmZone swarmZone in currentlyActiveSwarmZones)
+        {
+            swarmZone.StartWaveTurn();
+        }
+
+        // Instantly called
+        EndSwarmZonesTurn();
+    }
+
+    public void EndSwarmZonesTurn()
+    {
+        currentTurnState = TurnState.PlayerTurn;
         StartCoroutine("BetweenTurnsCoroutine");
     }
     #endregion
@@ -120,44 +223,48 @@ public class TurnManager : MonoBehaviour
 
         switch (currentTurnState)
         {
-            case TurnState.BetweenPlayerAndEnemies:
+            case TurnState.PlayerTurn:
                 waitDuration = 0.5f;
                 break;
             case TurnState.EnemyTurn:
-                waitDuration = 0.1f;
+                waitDuration = (currentEnemiesTurnCounter == 0 ? 0.5f : 0.1f);
                 break;
-            case TurnState.BetweenEnemiesAndPlayer:
+            case TurnState.ProgressionTurn:
+                waitDuration = 0.5f;
+                break;
+            case TurnState.SpawnPointsTurn:
+                waitDuration = 0.5f;
+                break;
+            case TurnState.SwarmZonesTurn:
                 waitDuration = 0.5f;
                 break;
         }
 
         yield return new WaitForSeconds(waitDuration);
 
-
-        if(currentTurnState == TurnState.BetweenEnemiesAndPlayer)
-        {
-            CheckGameProgression();
-            yield return new WaitForSeconds(waitDuration);
-        }
-
         switch (currentTurnState)
         {
-            case TurnState.BetweenPlayerAndEnemies:
-                StartEnemiesTurn();
-                break;
-            case TurnState.EnemyTurn:
-                StartEnemyTurn(orderedInGameEnemies[currentEnemiesTurnCounter]);
-                break;
-            case TurnState.BetweenEnemiesAndPlayer:
+            case TurnState.PlayerTurn:
                 StartPlayerTurn();
                 break;
+            case TurnState.EnemyTurn:
+                if (currentEnemiesTurnCounter == 0)
+                    StartEnemiesTurn();
+                else if (currentEnemiesTurnCounter == orderedInGameEnemies.Count)
+                    StartProgressionTurn();
+                else
+                    StartEnemyTurn(orderedInGameEnemies[currentEnemiesTurnCounter]);
+                break;
+            case TurnState.ProgressionTurn:
+                StartProgressionTurn();
+                break;
+            case TurnState.SpawnPointsTurn:
+                StartSpawnPointsTurn();
+                break;
+            case TurnState.SwarmZonesTurn:
+                StartSwarmZonesTurn();
+                break;
         }
-    }
-
-    public Action OnCheckGameProgression;
-    public void CheckGameProgression()
-    {
-        OnCheckGameProgression?.Invoke();
     }
 
     public void WonGame()
@@ -168,5 +275,10 @@ public class TurnManager : MonoBehaviour
 
 public enum TurnState
 {
-    PlayerTurn, BetweenPlayerAndEnemies, EnemyTurn, BetweenEnemiesAndPlayer, Won
+    PlayerTurn, //BetweenPlayerAndEnemies,
+    EnemyTurn, //BetweenEnemiesAndSpawnPoints,
+    ProgressionTurn,
+    SpawnPointsTurn, //BetweenSpawnPointsAndSwarmZones,
+    SwarmZonesTurn, //BetweenSwarmZoneAndPlayer,
+    Won
 }
