@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviour
         enemiesManager.OnInGameEnemiesChanged += turnManager.RefreshEnemyList;
         enemiesManager.GetAllAlreadyPlacedEnemies();
 
-        turnManager.OnCheckGameProgression += levelManager.CheckForProgressTurn;
         levelManager.OnGoalReached += WinGame;
 
         competencesUsabilityManager.OnRecallCompetenceChanged += playerMovementsManager.UpdateCurrentRecallCompetence;
@@ -123,6 +122,17 @@ public class GameManager : MonoBehaviour
             currentActionPointsAmount = 0;
             Debug.LogWarning("WARNING : Too much action points consumed, count got negative.");
         }
+        OnActionPointsAmountChanged?.Invoke(currentActionPointsAmount);
+    }
+
+    public void GainActionPoints(int amount)
+    {
+        currentActionPointsAmount += amount;
+        if (currentActionPointsAmount > maxActionPointsAmount)
+        {
+            currentActionPointsAmount = maxActionPointsAmount;
+        }
+
         OnActionPointsAmountChanged?.Invoke(currentActionPointsAmount);
     }
 
@@ -245,8 +255,7 @@ public class GameManager : MonoBehaviour
                 }
 
                 CallSelectActionEvent(ActionType.Move);
-                playerMovementsManager.GenerateDistancesPerActionPoints(currentActionPointsAmount);
-                playerMovementsManager.StartMovementPreparation();
+                playerMovementsManager.StartMovementPreparation(currentActionPointsAmount);
                 SetActionPointsDebugTextVisibility(true);
             }
             else
@@ -313,7 +322,7 @@ public class GameManager : MonoBehaviour
             switch (competencesUsabilityManager.GetCurrentCompetenceType)
             {
                 case ActionType.Throw:
-                    competencesUsabilityManager.LaunchThrowCompetence();
+                    competencesUsabilityManager.LaunchThrowCompetence(player.gameObject);
                     break;
 
                 case ActionType.Recall:

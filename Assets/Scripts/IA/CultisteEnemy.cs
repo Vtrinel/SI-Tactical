@@ -29,10 +29,20 @@ public class CultisteEnemy : IAEnemyVirtual
     {
         playerControlleur = GameManager.Instance.GetPlayer;
         player = playerControlleur.gameObject;
+        myShieldManager.myObjParent = gameObject;
     }
 
     public override void PlayerTurn()
     {
+        if (!haveDetectPlayer)
+        {
+            if (!CheckDetectionWithPlayer())
+            {
+                OnFinishTurn?.Invoke();
+                return;
+            }
+        }
+
         StartCoroutine(PlayerTurnCouroutine());
         projectileObj.SetActive(haveDisc);
     }
@@ -115,7 +125,6 @@ public class CultisteEnemy : IAEnemyVirtual
 
     void PrepareAttack()
     {
-        print("stop");
         myNavAgent.isStopped = true;
         myAnimator.SetBool("Preparing", true);
         transform.LookAt(player.transform);
@@ -179,11 +188,9 @@ public class CultisteEnemy : IAEnemyVirtual
             {
                 if (hit.transform.gameObject == player)
                 {
-                    print("oui");
                     return true;
                 }
             }
-            print("non");
         }
         return false;
     }
@@ -201,6 +208,9 @@ public class CultisteEnemy : IAEnemyVirtual
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, distanceOfDeplacement);
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, detectionPlayerRange);
     }
 
     private void Update()
@@ -213,12 +223,16 @@ public class CultisteEnemy : IAEnemyVirtual
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 11 && !haveDisc)
+        if (other.gameObject.layer == 11 && !haveDisc && isPlaying)
         {
-            if (!other.gameObject.GetComponent<DiscScript>().isAttacking)
+            DiscScript touchedDisc = other.GetComponent<DiscScript>();
+            if (touchedDisc != null)
             {
-                DiscManager.Instance.ReturnDiscInPool(other.GetComponent<DiscScript>());
-                haveDisc = true;
+                if (!touchedDisc.isAttacking)
+                {
+                    DiscManager.Instance.DestroyDisc(touchedDisc);
+                    haveDisc = true;
+                }
             }
         }
     }

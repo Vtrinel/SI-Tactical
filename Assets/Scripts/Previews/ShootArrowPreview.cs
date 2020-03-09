@@ -22,12 +22,25 @@ public class ShootArrowPreview : MonoBehaviour
         transform.position = selfPos;
         Arrow.position = trajectoryPoints[trajectoryPoints.Count - 1];
 
-        line.positionCount = trajectoryPoints.Count;
-        line.SetPositions(trajectoryPoints.ToArray());
-
         var lookPos = Arrow.position - trajectoryPoints[trajectoryPoints.Count - 2];
         lookPos.y = 0;
         if (lookPos != Vector3.zero)
             Arrow.rotation = Quaternion.LookRotation(lookPos);
+
+        List<Vector3> lineCorrector = new List<Vector3>();
+        float endPosDistance = Vector3.Distance(trajectoryPoints[0], endPoint.position);
+
+        foreach (Vector3 pos in trajectoryPoints)
+        {
+            if(Vector3.Distance(trajectoryPoints[0], pos) < endPosDistance)
+            {
+                lineCorrector.Add(pos);
+            }
+        }
+
+        lineCorrector.Add(endPoint.position);
+
+        line.positionCount = lineCorrector.Count;
+        line.SetPositions(lineCorrector.ToArray());
     }
 }

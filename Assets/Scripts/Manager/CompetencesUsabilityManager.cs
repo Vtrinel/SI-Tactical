@@ -242,7 +242,10 @@ public class CompetencesUsabilityManager
         DiscTrajectoryParameters trajectoryParameters = 
             DiscTrajectoryFactory.GetTrajectory(throwCompetence, _player.transform.position, trueTargetPosition,
             DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, null);
-        PreviewCompetencesManager.Instance.StartThrowPreview(new List<DiscTrajectoryParameters> { trajectoryParameters }, _player.transform.position);
+
+        List<DiscTrajectoryParameters> trajectories = new List<DiscTrajectoryParameters> { trajectoryParameters };
+        PreviewCompetencesManager.Instance.StartThrowPreview(trajectories, _player.transform.position);
+        PreviewCompetencesManager.Instance.UpdateThrowPreview(new List<DiscTrajectoryParameters> { trajectoryParameters });
     }
 
     public void UpdateThrowPreparation()
@@ -251,7 +254,9 @@ public class CompetencesUsabilityManager
         DiscTrajectoryParameters trajectoryParameters = 
             DiscTrajectoryFactory.GetTrajectory(throwCompetence, _player.transform.position, trueTargetPosition,
             DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, null);
-        PreviewCompetencesManager.Instance.UpdateThrowPreview(new List<DiscTrajectoryParameters> { trajectoryParameters });
+
+        List<DiscTrajectoryParameters> trajectories = new List<DiscTrajectoryParameters> { trajectoryParameters };
+        PreviewCompetencesManager.Instance.UpdateThrowPreview(trajectories);
     }
 
     public void EndThrowPreparation()
@@ -266,7 +271,8 @@ public class CompetencesUsabilityManager
         Vector3 playerPos = _player.transform.position;
         List<DiscTrajectoryParameters> recallTrajectoryParameters = new List<DiscTrajectoryParameters>();
 
-        foreach(DiscScript discInRange in DiscManager.Instance.GetInRangeDiscs)
+        List<DiscScript> recallableDiscs = DiscListingFactory.GetSortedRecallableDiscs(recallCompetence, DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+        foreach(DiscScript discInRange in recallableDiscs)
         {
             DiscTrajectoryParameters newParams = 
                 DiscTrajectoryFactory.GetTrajectory(recallCompetence, discInRange.transform.position, playerPos,
@@ -275,6 +281,7 @@ public class CompetencesUsabilityManager
         }
 
         PreviewCompetencesManager.Instance.StartRecallPreview(recallTrajectoryParameters, playerPos);
+        PreviewCompetencesManager.Instance.UpdateRecallPreview(recallTrajectoryParameters, playerPos);
     }
 
     public void UpdateRecallPreparation()
@@ -282,9 +289,10 @@ public class CompetencesUsabilityManager
         Vector3 playerPos = _player.transform.position;
         List<DiscTrajectoryParameters> recallTrajectoryParameters = new List<DiscTrajectoryParameters>();
 
-        foreach (DiscScript discInRange in DiscManager.Instance.GetInRangeDiscs)
+        List<DiscScript> recallableDiscs = DiscListingFactory.GetSortedRecallableDiscs(recallCompetence, DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+        foreach (DiscScript discInRange in recallableDiscs)
         {
-            DiscTrajectoryParameters newParams = 
+            DiscTrajectoryParameters newParams =
                 DiscTrajectoryFactory.GetTrajectory(recallCompetence, discInRange.transform.position, playerPos,
                 DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, discInRange);
             recallTrajectoryParameters.Add(newParams);
@@ -323,7 +331,7 @@ public class CompetencesUsabilityManager
         return trueTargetPos;
     }
 
-    public void LaunchThrowCompetence()
+    public void LaunchThrowCompetence(GameObject objLauncher)
     {
         currentlyInUseDiscs = new List<DiscScript>();
 
@@ -341,8 +349,9 @@ public class CompetencesUsabilityManager
 
         newDisc.SetIsBeingRecalled(false);
         newDisc.SetRetreivableByPlayer(false);
-        newDisc.StartTrajectory(trajectoryParameters);
+        newDisc.StartTrajectory(trajectoryParameters, objLauncher);
         currentlyInUseDiscs.Add(newDisc);
+        newDisc.OnTrajectoryStopped += RemoveDiscFromInUse;
         newDisc.OnReachedTrajectoryEnd += RemoveDiscFromInUse;
 
         ChangeUsabilityState(UsabilityState.Using, ActionType.Throw);
@@ -350,50 +359,17 @@ public class CompetencesUsabilityManager
     }
     #endregion
 
-    #region
+    #region Recall
     public void LaunchRecallCompetence()
     {
-        int remainingNumberOfDiscsToRecall = recallCompetence.GetNumberOfRecalledDiscs;
-        bool recallAll = remainingNumberOfDiscsToRecall == 0;
-        DiscsOrder discsRecallOrder = recallCompetence.GetRecallingOrder;
-        bool canRecallUnthrowedDiscs = recallCompetence.GetCanRecallUnthrowedDiscs;
+        List<DiscScript> discsToRecall = DiscListingFactory.GetSortedRecallableDiscs(recallCompetence, DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
 
-        List<DiscScript> throwedDiscs = DiscManager.Instance.GetAllThrowedDiscs;
-        List<DiscScript> inRangeDiscs = DiscManager.Instance.GetInRangeDiscs;
-        DiscScript previousRecalledDisc = null;
-
-        int currentDiscIndex = (discsRecallOrder == DiscsOrder.FromNewestToOldest ? throwedDiscs.Count - 1 : 0);
-        while (recallAll || remainingNumberOfDiscsToRecall > 0 && throwedDiscs.Count > 0)
+        foreach(DiscScript discToRecall in discsToRecall)
         {
-            DiscScript currentDisc = throwedDiscs[currentDiscIndex];
-            StartRecallDisc(currentDisc);
-            previousRecalledDisc = currentDisc;
+            StartRecallDisc(discToRecall);
+        }        
 
-            currentDiscIndex += (discsRecallOrder == DiscsOrder.FromNewestToOldest ? -1 : 1);
-            remainingNumberOfDiscsToRecall--;
-            if (currentDiscIndex < 0 || currentDiscIndex >= throwedDiscs.Count)
-            {
-                break;
-            }
-        }
-
-        if ((remainingNumberOfDiscsToRecall > 0 || recallAll) && canRecallUnthrowedDiscs)
-        {
-            foreach (DiscScript disc in inRangeDiscs)
-            {
-                if (throwedDiscs.Contains(disc))
-                    continue;
-
-                StartRecallDisc(disc);
-                previousRecalledDisc = disc;
-
-                remainingNumberOfDiscsToRecall--;
-                if (remainingNumberOfDiscsToRecall == 0)
-                    break;
-            }
-        }
-
-        if (previousRecalledDisc != null)
+        if (discsToRecall.Count > 0)
             ChangeUsabilityState(UsabilityState.Using, ActionType.Recall);
         else
             ResetUsabilityState();
@@ -408,16 +384,16 @@ public class CompetencesUsabilityManager
             DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, disc);
 
         disc.SetIsBeingRecalled(true);
-        disc.StartTrajectory(trajectoryParameters);
+        disc.StartTrajectory(trajectoryParameters, null);
         currentlyInUseDiscs.Add(disc);
-        disc.OnReachedTrajectoryEnd += RemoveDiscFromInUse;
+        disc.OnTrajectoryStopped += RemoveDiscFromInUse;
     }
     #endregion
 
     List<DiscScript> currentlyInUseDiscs = new List<DiscScript>();
     public void RemoveDiscFromInUse(DiscScript disc)
     {
-        disc.OnReachedTrajectoryEnd -= RemoveDiscFromInUse;
+        //disc.OnReachedTrajectoryEnd -= RemoveDiscFromInUse;
         currentlyInUseDiscs.Remove(disc);
 
         if (currentlyInUseDiscs.Count == 0)

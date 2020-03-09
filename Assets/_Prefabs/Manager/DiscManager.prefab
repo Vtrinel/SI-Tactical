@@ -44,18 +44,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5fb565e1044c794589287dace469f83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allDiscs: []
-  prefabDisc: {fileID: 4078095755978816970, guid: b1917bcbd37b72c41bb666f7abade850,
-    type: 3}
+  testDiscType: 1
   rangeOfPlayer: 9
   showDebugGizmo: 0
-  maxNumberOfPossessedDiscs: 3
   allDiscPoolParameters:
-  - discType: 0
-    discPrefab: {fileID: 4078095755978816970, guid: b1917bcbd37b72c41bb666f7abade850,
+  - discType: 1
+    discPrefab: {fileID: 3235506263182605041, guid: cc6577897f0e9cd40912c6c146e1fe99,
       type: 3}
-    baseNumberOfElements: 5
+    baseNumberOfElements: 3
+  - discType: 2
+    discPrefab: {fileID: 2845785499263362461, guid: b7fe194d2737a8248a240952f2d0bbcd,
+      type: 3}
+    baseNumberOfElements: 3
+  - discType: 4
+    discPrefab: {fileID: 2199810362974408048, guid: dee0400ff304edb439f34ba89a8daeef,
+      type: 3}
+    baseNumberOfElements: 3
+  - discType: 3
+    discPrefab: {fileID: 3235506263182605041, guid: bfad060530792544a950ea68235a0dfc,
+      type: 3}
+    baseNumberOfElements: 3
+  - discType: 5
+    discPrefab: {fileID: 3235506263182605041, guid: 1b602bfbe8370f84d943f9818955c9d6,
+      type: 3}
+    baseNumberOfElements: 3
   poolsParent: {fileID: 776263865927001006}
+  maxNumberOfPossessedDiscs: 3
 --- !u!1 &1291441904894891289
 GameObject:
   m_ObjectHideFlags: 0

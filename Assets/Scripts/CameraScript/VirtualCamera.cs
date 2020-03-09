@@ -6,15 +6,15 @@ using NaughtyAttributes;
 
 public class VirtualCamera : MonoBehaviour
 {
-    [SerializeField] protected CinemachineVirtualCamera virtualCam;
-    [SerializeField] private CameraShake cameraShake;
+    [SerializeField] protected CinemachineVirtualCamera virtualCam = default;
+    [SerializeField] private CameraShake cameraShake = default;
 
     [Header("Camera Zoom settings")]
     [SerializeField, ReadOnly] float iniCameraDistance = 15;
-    [SerializeField, ReadOnly] CinemachineFramingTransposer cinemachineFraming;
-    [SerializeField, ReadOnly] bool isZooming;
-    [SerializeField, ReadOnly] Vector3 iniDamping;
-    [SerializeField] Vector3 zoomDamping;
+    [SerializeField, ReadOnly] CinemachineFramingTransposer cinemachineFraming = default;
+    [SerializeField, ReadOnly] bool isZooming = default;
+    [SerializeField, ReadOnly] Vector3 iniDamping = default;
+    [SerializeField] Vector3 zoomDamping = default;
     [SerializeField] float resetDampingDelay = 0.5f;
 
     public CameraShake CameraShake { get => cameraShake; }

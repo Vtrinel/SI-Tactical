@@ -13,8 +13,10 @@ public class DiscScript : MonoBehaviour
 
     [Header("References")]
     [SerializeField] Rigidbody myRigidBody = default;
-    [SerializeField] Collider myCollider = default;
+    [SerializeField] CapsuleCollider myCollider = default;
+    public Vector3 GetColliderCenter => transform.position + myCollider.center;
     [SerializeField] Animator myAnimator = default;
+    [SerializeField] KnockbackableEntity knockbackSystem = default;
 
     [Header("Damages")]
     [SerializeField] DamageTag damageTag = DamageTag.Player;
@@ -27,9 +29,9 @@ public class DiscScript : MonoBehaviour
     TimerSystem accelerationDurationSystem = new TimerSystem();
 
     float currentSpeed = 0f;
-
     List<Vector3> currentTrajectory = new List<Vector3>();
     public System.Action<DiscScript> OnReachedTrajectoryEnd = default;
+    public System.Action<DiscScript> OnTrajectoryStopped = default;
 
     public bool isAttacking = false;
     bool isInRange = true;
@@ -42,10 +44,49 @@ public class DiscScript : MonoBehaviour
     bool retreivableByPlayer = false;
     bool isBeingRecalled = false;
 
-    Collider attachedObj;
-
     GameObject objLaunch;
+    GameObject lastObjTouch;
+
     Vector3 destination;
+
+    [Header("Modifiers")]
+    [SerializeField] bool blockedByEnemies = false;
+    [SerializeField] bool blockedByShields = true;
+    [SerializeField] bool blockedByObstacles = true;
+    public LayerMask GetTrajectoryCheckLayerMask => 1 << 10 | ((blockedByShields ? 1 : 0) << 12) | ((blockedByObstacles ? 1 : 0) << 14);
+    [SerializeField] List<DiscModifier> discModifiers = new List<DiscModifier>();
+
+    int numberOfStunedTurns = 0;
+
+    EffectZoneType effectZoneToInstantiateOnHit = EffectZoneType.None;
+    bool destroyOnHit = false;
+
+    public void SetUpModifiers()
+    {
+        numberOfStunedTurns = 0;
+        effectZoneToInstantiateOnHit = EffectZoneType.None;
+        destroyOnHit = false;
+
+        foreach (DiscModifier modifier in discModifiers)
+        {
+            if(numberOfStunedTurns == 0)
+            {
+                DiscModifierStun stunModifier = modifier as DiscModifierStun;
+                if (stunModifier != null)
+                    numberOfStunedTurns = stunModifier.GetNumberOfStunedTurns;
+            }
+
+            if(effectZoneToInstantiateOnHit == EffectZoneType.None)
+            {
+                DiscModifierEffectZone effectZoneModifier = modifier as DiscModifierEffectZone;
+                if (effectZoneModifier != null)
+                {
+                    effectZoneToInstantiateOnHit = effectZoneModifier.GetEffectZoneToCreateOnHit;
+                    destroyOnHit = effectZoneModifier.GetDiscProjectileOnHit;
+                }
+            }
+        }
+    }
 
     void Update()
     {
@@ -55,6 +96,116 @@ public class DiscScript : MonoBehaviour
         myAnimator.SetBool("Forward", isAttacking);
         myAnimator.SetBool("InRange", isInRange);
     }
+
+    private void OnEnable()
+    {
+        knockbackSystem.OnKnockbackUpdate += MoveKnockback;
+    }
+
+    private void OnDisable()
+    {
+        knockbackSystem.OnKnockbackUpdate -= MoveKnockback;
+    }
+
+    #region Movement Check
+    /// <summary>
+    /// Returns true if something was hit, and therefore the movement needs to stop
+    /// </summary>
+    /// <param name="startPosition"></param>
+    /// <param name="endPos"></param>
+    /// <returns></returns>
+    public bool TryToMoveFromTo(Vector3 startPosition, Vector3 endPos)
+    {
+        Vector3 direction = endPos - startPosition;
+        float distance = direction.magnitude;
+        direction.Normalize();
+
+        startPosition += myCollider.center;
+        endPos += myCollider.center;
+
+        RaycastHit hit = new RaycastHit();
+        if (Physics.SphereCast(startPosition, myCollider.radius, direction, out hit, distance, GetTrajectoryCheckLayerMask))
+        {
+            if (hit.collider.gameObject.layer != 10 || blockedByEnemies)
+            {
+                // test bouclier
+                if(hit.collider.gameObject.layer == 12)
+                {
+                    ShieldManager objShielManager = hit.transform.parent.GetComponent<ShieldManager>();
+
+                    if (objShielManager != null)
+                    {
+                        if(objShielManager.myObjParent == lastObjTouch)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                HandleCollision(hit, direction);
+
+                return true;
+            }
+            else
+            {
+                DamageableEntity hitDamageableEntity = hit.collider.GetComponent<DamageableEntity>();
+                if (hitDamageableEntity != null)
+                {
+                    hitDamageableEntity.ReceiveDamage(damageTag, new DamagesParameters(currentDamagesAmount, numberOfStunedTurns));
+
+                    lastObjTouch = hitDamageableEntity.gameObject;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public void MoveKnockback(Vector3 knockbackMove)
+    {
+        bool canMove = !TryToMoveFromTo(transform.position, transform.position + knockbackMove);
+        if (canMove)
+            transform.position += knockbackMove;
+    }
+
+    public void HandleCollision(RaycastHit hit, Vector3 initialMovementDirection)
+    {
+        InterruptTrajectory();
+        DemandeFx(hit.point);
+
+        Vector3 horizontalNormal = hit.normal;
+        horizontalNormal.y = 0;
+        horizontalNormal.Normalize();
+
+        // Place disc as close from the hit point as possible
+        Vector3 newPos = hit.point + horizontalNormal * (myCollider.radius + 0.01f);
+        newPos.y = 0;
+        transform.position = newPos;
+
+        // Gives the disc a knockback to simulate a rebound
+        Vector3 reflectedDirection = Vector3.Reflect(initialMovementDirection, horizontalNormal);
+        knockbackSystem.ReceiveKnockback(DamageTag.Environment, GetReboundOnObjectKnockback(), reflectedDirection);
+
+        DamageableEntity hitDamageableEntity = hit.collider.GetComponent<DamageableEntity>();
+        if (hitDamageableEntity != null)
+        {
+            hitDamageableEntity.ReceiveDamage(damageTag, new DamagesParameters(currentDamagesAmount, numberOfStunedTurns));
+
+            lastObjTouch = hitDamageableEntity.gameObject;
+        }
+
+        if(effectZoneToInstantiateOnHit != EffectZoneType.None)
+        {
+            EffectZone newEffectZone = EffectZonesManager.Instance.GetEffectZoneFromPool(effectZoneToInstantiateOnHit);
+            newEffectZone.StartZone(GetColliderCenter);
+
+            if (destroyOnHit)
+            {
+                DiscManager.Instance.DestroyDisc(this);
+            }
+        }
+    }
+    #endregion
 
     #region Trajectory
     public void SetRetreivableByPlayer(bool retreivable)
@@ -66,11 +217,14 @@ public class DiscScript : MonoBehaviour
         isBeingRecalled = recalled;
     }
 
-    public void StartTrajectory(DiscTrajectoryParameters newTrajectory)
+    public void StartTrajectory(DiscTrajectoryParameters newTrajectory, GameObject _launcher)
     {
+        objLaunch = _launcher;
         myRigidBody.velocity = Vector3.zero;
         myRigidBody.angularVelocity = Vector3.zero;
         myRigidBody.isKinematic = false;
+
+        lastObjTouch = null;
 
         isAttacking = true;
 
@@ -92,6 +246,10 @@ public class DiscScript : MonoBehaviour
             return;
         }
 
+        bool canMove = true;
+        Vector3 currentStartPosition = transform.position;
+        Vector3 currentEndPosition = transform.position;
+
         if (!accelerationDurationSystem.TimerOver)
         {
             accelerationDurationSystem.UpdateTimer();
@@ -104,22 +262,42 @@ public class DiscScript : MonoBehaviour
         Vector3 currentPositionToNextPosition = currentTrajectory[0] - transform.position;
         float currentPositionToNextPositionDistance = currentPositionToNextPosition.magnitude;
         Vector3 totalMovement = Vector3.zero;
+        Vector3 lastMovementDirection = Vector3.forward;
         int reachedTrajectoryPoints = 0;
 
-        if(currentPositionToNextPositionDistance > remainingReachableDistance)
+        if (currentPositionToNextPositionDistance > remainingReachableDistance)
         {
-            totalMovement += currentPositionToNextPosition.normalized * remainingReachableDistance;
+            Vector3 movement = currentPositionToNextPosition.normalized * remainingReachableDistance;
+            currentEndPosition = currentStartPosition + movement;
+            canMove = !TryToMoveFromTo(currentStartPosition, currentEndPosition);
+
+            totalMovement += movement;
+            lastMovementDirection = totalMovement.normalized;
         }
         else
         {
             while (remainingReachableDistance > 0)
             {
-                totalMovement += currentPositionToNextPosition.normalized * Mathf.Clamp(currentPositionToNextPositionDistance, 0, remainingReachableDistance);
+                Vector3 newMovement = currentPositionToNextPosition.normalized * Mathf.Clamp(currentPositionToNextPositionDistance, 0, remainingReachableDistance);
+
+                currentStartPosition = transform.position + totalMovement;
+                currentEndPosition = currentStartPosition + newMovement;
+
+                if (TryToMoveFromTo(currentStartPosition, currentEndPosition))
+                {
+                    canMove = false;
+                    break;
+                }
+
+                totalMovement += newMovement;
+
+                lastMovementDirection = newMovement.normalized;
+
                 remainingReachableDistance -= currentPositionToNextPositionDistance;
-                if(remainingReachableDistance > 0)
+                if (remainingReachableDistance > 0)
                     reachedTrajectoryPoints++;
 
-                if(reachedTrajectoryPoints == currentTrajectory.Count)
+                if (reachedTrajectoryPoints == currentTrajectory.Count)
                 {
                     reachedTrajectoryEnd = true;
                     break;
@@ -129,14 +307,26 @@ public class DiscScript : MonoBehaviour
                 currentPositionToNextPositionDistance = currentPositionToNextPosition.magnitude;
             }
         }
-        totalMovement.y = 0;
-        transform.position += totalMovement;
 
-        if(reachedTrajectoryPoints > 0)
-        while (reachedTrajectoryPoints > 0)
+        if (canMove)
         {
-            currentTrajectory.RemoveAt(0);
-            reachedTrajectoryPoints--;
+            totalMovement.y = 0;
+            transform.position += totalMovement;
+
+            if (reachedTrajectoryPoints > 0)
+            {
+                while (reachedTrajectoryPoints > 0)
+                {
+                    currentTrajectory.RemoveAt(0);
+                    reachedTrajectoryPoints--;
+                }
+            }
+
+            if (lastMovementDirection != Vector3.zero)
+            {
+                float rotY = Mathf.Atan2(lastMovementDirection.x, lastMovementDirection.z) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(0, rotY, 0);
+            }
         }
 
         if (reachedTrajectoryEnd)
@@ -145,6 +335,11 @@ public class DiscScript : MonoBehaviour
 
     public void InterruptTrajectory()
     {
+        OnTrajectoryStopped?.Invoke(this);
+
+        OnTrajectoryStopped = null;
+        OnReachedTrajectoryEnd = null;
+
         currentTrajectory = new List<Vector3>();
         isAttacking = false;
         SetRetreivableByPlayer(true);
@@ -152,7 +347,12 @@ public class DiscScript : MonoBehaviour
 
     public void EndTrajectory(bool checkIfRetreive)
     {
+        OnTrajectoryStopped?.Invoke(this);
         OnReachedTrajectoryEnd?.Invoke(this);
+
+        OnTrajectoryStopped = null;
+        OnReachedTrajectoryEnd = null;
+
         isAttacking = false;
         SetRetreivableByPlayer(true);
 
@@ -167,39 +367,42 @@ public class DiscScript : MonoBehaviour
     {
         isAttacking = false;
         EndTrajectory(false);
+        OnReachedTrajectoryEnd = null;
         DiscManager.Instance.PlayerRetreiveDisc(this);
+    }
+
+    public void ReboundOnObject(Vector3 reflectedDirection)
+    {
+        knockbackSystem.ReceiveKnockback(DamageTag.Environment, GetReboundOnObjectKnockback(), reflectedDirection);
+    }
+
+    public KnockbackParameters GetReboundOnObjectKnockback()
+    {
+        KnockbackParameters parameters = new KnockbackParameters();
+
+        parameters.knockbackForce = currentSpeed / 4f;
+        parameters.knockbackDuration = 0.02f;
+        parameters.knockbackAttenuationDuration = 0.08f;
+        parameters.canKnockbackDiscs = true;
+
+        return parameters;
     }
     #endregion
 
-    #region Collisions and Interaction
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject == objLaunch || !isAttacking) { return; }
-
-        DemandeFx(collision.contacts[0].point);
-
-        switch (collision.gameObject.layer)
-        {
-            default:
-                CollisionWithThisObj(collision.gameObject.transform);
-                isAttacking = false;
-                break;
-        }
-    }
-
+    #region Collisions and Interaction - OLD
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == objLaunch || !isAttacking) { return; }
+        return;
 
-        DemandeFx(other.ClosestPointOnBounds(transform.position));
+        if (other.gameObject == objLaunch || !isAttacking) { return; }
 
         switch (other.gameObject.layer)
         {
-            //Player
+            //Player --> rappel géré dans le déplacement  
             case 9:
-                //recall or touch player
                 if (!retreivableByPlayer)
                 {
+                    DemandeFx(other.ClosestPointOnBounds(transform.position));
                     break;
                 }
 
@@ -207,35 +410,56 @@ public class DiscScript : MonoBehaviour
 
                 break;
 
-            //ennemy
+            //ennemy --> dégâts gérés dans le déplacement
             case 10:
-                //take damage
-                //CollisionWithThisObj(other.transform);
-                //attachedObj = other;
-                //isAttacking = false;
+                DemandeFx(other.ClosestPointOnBounds(transform.position));
 
                 DamageableEntity hitDamageableEntity = other.GetComponent<DamageableEntity>();
                 if (hitDamageableEntity != null)
                 {
-                    hitDamageableEntity.ReceiveDamage(damageTag, currentDamagesAmount);
+                    hitDamageableEntity.ReceiveDamage(damageTag, new DamagesParameters(currentDamagesAmount, numberOfStunedTurns));
+
+                    lastObjTouch = other.gameObject;
                 }
+                if (!blockedByShields)
+                    break;
+
                 break;
 
-            default:
-                CollisionWithThisObj(other.transform);
-                attachedObj = other;
-                isAttacking = false;
+            //shield --> géré dans le déplacement
+            case 12:
+                if (!blockedByShields)
+                    break;
+
+                if (lastObjTouch == other.transform.parent.GetComponent<ShieldManager>().myObjParent) { return; } else
+                {
+                    DemandeFx(other.ClosestPointOnBounds(transform.position));
+                    CollisionWithThisObj(other.transform);
+                }
+
                 break;
+
+            //obstacle --> déplacement aussi
+            case 14:
+                if (!blockedByObstacles)
+                    break;
+
+                break;
+
+            /*default:
+                CollisionWithThisObj(other.transform);
+                break;*/
         }
     }
        
     void CollisionWithThisObj(Transform impactPoint)
     {
+        InterruptTrajectory();
+
         myAnimator.SetTrigger("Collision");
+        Debug.DrawRay(transform.position + -transform.right * .5f, Vector3.up, Color.red, 50);
 
-        Debug.DrawRay(transform.position + transform.forward * .5f, Vector3.up, Color.red, 50);
-
-        transform.position = transform.position + transform.forward * .5f;
+        transform.position = transform.position + -transform.right * .5f;
     }
     #endregion
 

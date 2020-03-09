@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class EnemyBase : MonoBehaviour
 {
+    [SerializeField] EnemyType enemyType = EnemyType.TouniBase;
+    public EnemyType GetEnemyType => enemyType;
+
+
     private void Start()
     {
         damageReceiptionSystem.SetUpSystem(false);
@@ -27,6 +31,8 @@ public class EnemyBase : MonoBehaviour
     public void Die()
     {
         Debug.Log(name + " (Enemy) is dead");
+        setedUpInitiative = false;
+
         OnEnemyDeath?.Invoke(this);
         Destroy(gameObject);
     }   
@@ -37,6 +43,13 @@ public class EnemyBase : MonoBehaviour
     public float GetEnemyInitiative => enemyInstanceInitiative;
     bool setedUpInitiative = false;
 
+    public void SpawnEnemy(Vector3 position)
+    {
+        transform.position = position;
+        gameObject.SetActive(true);
+        SetUpInitiative();
+    }
+
     public void SetUpInitiative()
     {
         if (setedUpInitiative)
@@ -44,15 +57,14 @@ public class EnemyBase : MonoBehaviour
 
         setedUpInitiative = true;
         enemyInstanceInitiative = baseInitiative + UnityEngine.Random.Range(0f, 1f);
+
+        name = name + " - " +  GetEnemyInitiative.ToString();
     }
 
-    #region Placeholder
-    [Header("Placeholder")]
-    [SerializeField] bool willAttackPlayerDebug = false;
+    #region Turn management
+
     public void StartTurn()
     {
-        //Debug.Log(name + "' turn");
-
         myIA.isPlaying = true;
         PlayMyTurn();
     }
@@ -74,11 +86,14 @@ public class EnemyBase : MonoBehaviour
     }
     #endregion
 
-
     #region IA
     [Header("IA")]
 
     [SerializeField] IAEnemyVirtual myIA = default;
+    public void SetPlayerDetected(bool detected)
+    {
+        myIA.haveDetectPlayer = detected;
+    }
 
     void PlayMyTurn()
     {
@@ -86,19 +101,6 @@ public class EnemyBase : MonoBehaviour
             return;
 
         myIA.PlayerTurn();
-    }
-
-    IEnumerator DebugCoroutine()
-    {
-        yield return new WaitForSeconds(0.5f);
-
-        if (willAttackPlayerDebug)
-        {
-            GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, 1);
-            yield return new WaitForSeconds(0.5f);
-        }
-
-        EndTurn();
     }
     #endregion
 

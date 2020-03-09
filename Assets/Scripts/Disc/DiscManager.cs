@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DiscManager : MonoBehaviour
 {
-    public DiscScript prefabDisc = default;
+    [SerializeField] DiscType testDiscType = DiscType.Piercing;
 
     public static float discHeight = 1f;
 
@@ -34,7 +34,6 @@ public class DiscManager : MonoBehaviour
         SetUpPools();
 
         #region TEST
-        //if()
         DiscScript[] alreadyInGameDiscs = FindObjectsOfType<DiscScript>();
         foreach(DiscScript disc in alreadyInGameDiscs)
         {
@@ -97,9 +96,9 @@ public class DiscManager : MonoBehaviour
                 newDiscQueue = new Queue<DiscScript>();
                 for (int i = 0; i < discPoolParameters.baseNumberOfElements; i++)
                 {
-                    newDisc = Instantiate(discPoolParameters.discPrefab, poolsParent);
+                    newDisc = Instantiate(discPoolParameters.discPrefab, newPoolParent);
+                    newDisc.SetUpModifiers();
                     newDisc.gameObject.SetActive(false);
-                    newDisc.transform.SetParent(newPoolParent);
                     newDisc.SetDiscType(discPoolParameters.discType);
                     newDiscQueue.Enqueue(newDisc);
                 }
@@ -123,6 +122,8 @@ public class DiscManager : MonoBehaviour
             else
             {
                 newDisc = Instantiate(discTypeToPrefab[discType], discTypeToPoolParent[discType]);
+                newDisc.SetUpModifiers();
+                newDisc.SetDiscType(discType);
                 newDisc.gameObject.SetActive(true);
             }
 
@@ -145,6 +146,14 @@ public class DiscManager : MonoBehaviour
         else
             Destroy(disc.gameObject);
     }
+
+    public void DestroyDisc(DiscScript disc)
+    {
+        if (throwedDiscs.Contains(disc))
+            throwedDiscs.Remove(disc);
+
+        ReturnDiscInPool(disc);
+    }
     #endregion
 
     #region Possessed Discs
@@ -156,15 +165,13 @@ public class DiscManager : MonoBehaviour
     { 
         maxNumberOfPossessedDiscs++;
 
-        /*DiscScript newDisc = GetDiscFromPool();
-        newDisc.gameObject.SetActive(false);
-        possessedDiscs.Push(newDisc);*/
+        possessedDiscs.Push(DiscType.Piercing);
     }
 
     public void FillPossessedDiscsWithBasicDiscs()
     {
         for(int i =0; i < maxNumberOfPossessedDiscs; i++)
-            possessedDiscs.Push(DiscType.Basic);
+            possessedDiscs.Push(testDiscType);
     }
 
     public void PlayerRetreiveDisc(DiscScript retreivedDisc)
@@ -177,7 +184,49 @@ public class DiscManager : MonoBehaviour
         }
         else
         {
+            DiscType retreivedDiscType = retreivedDisc.GetDiscType;
+            DiscOverload(retreivedDiscType);
             //Debug.Log("TOO MUCH DISCS, NOT ADDED BUT SUPPOSED TO BE SOMETHING");
+        }
+    }
+
+    [Header("Overlaod Effects")]
+    [SerializeField] int discOverloadPiercingGainedExperience = 2;
+    [SerializeField] int discOverloadGhostGainedActionPoints = 2;
+    [SerializeField] EffectZoneType discOverloadExplosiveEffectZoneType = EffectZoneType.ExplosiveDiscOverload;
+    [SerializeField] int discOverloadHeavyGainedHP = 2;
+    [SerializeField] EffectZoneType discOverloadShockwaveEffectZoneType = EffectZoneType.ShockwaveDiscOverload;
+    public void DiscOverload(DiscType overloadType)
+    {
+        switch (overloadType)
+        {
+            case DiscType.Piercing:
+                PlayerExperienceManager.Instance.GainExperience(discOverloadPiercingGainedExperience);
+                break;
+
+            case DiscType.Ghost:
+                GameManager.Instance.GainActionPoints(discOverloadGhostGainedActionPoints);
+                break;
+
+            case DiscType.Explosive:
+                EffectZone explosiveEffectZone = EffectZonesManager.Instance.GetEffectZoneFromPool(discOverloadExplosiveEffectZoneType);
+                if(explosiveEffectZone != null)
+                {
+                    explosiveEffectZone.StartZone(player.transform.position);
+                }
+                break;
+
+            case DiscType.Heavy:
+                GameManager.Instance.GetPlayer.damageReceiptionSystem.RegainLife(discOverloadHeavyGainedHP);
+                break;
+
+            case DiscType.Shockwave:
+                EffectZone shockwaveEffectZone = EffectZonesManager.Instance.GetEffectZoneFromPool(discOverloadShockwaveEffectZoneType);
+                if (shockwaveEffectZone != null)
+                {
+                    shockwaveEffectZone.StartZone(player.transform.position);
+                }
+                break;
         }
     }
 
@@ -258,7 +307,7 @@ public class DiscManager : MonoBehaviour
 
 public enum DiscType
 {
-    Basic
+    Basic, Piercing, Ghost, Explosive, Heavy, Shockwave
 }
 
 [System.Serializable]
