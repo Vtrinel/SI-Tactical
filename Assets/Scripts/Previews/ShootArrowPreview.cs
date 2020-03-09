@@ -11,11 +11,6 @@ public class ShootArrowPreview : MonoBehaviour
 
     public Transform Arrow;
 
-    private void Start()
-    {
-        line.positionCount = 2;
-    }
-
     public void SetPositions(List<Vector3> trajectoryPoints)
     {
         Vector3 selfPos = trajectoryPoints[0];
