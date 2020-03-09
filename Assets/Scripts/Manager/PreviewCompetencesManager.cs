@@ -104,6 +104,11 @@ public class PreviewCompetencesManager : MonoBehaviour
 
         justStartedMovementPreview = true;
         UpdateMovementPreview(startPosition, targetPosition, currentRecallComp, completelyUsedActionPoints);
+
+        foreach(EnemyBase enemy in EnemiesManager.Instance.GetAllInGameEnemiesOrdered)
+        {
+            enemy.DisplayAndActualisePreviewAttack();
+        }
     }
 
     public void UpdateMovementPreview(Vector3 startPosition, Vector3 targetPosition, CompetenceRecall currentRecallComp, int completelyUsedActionPoints)
@@ -129,6 +134,11 @@ public class PreviewCompetencesManager : MonoBehaviour
         movementGhostPreview.HidePreview();
 
         EndRecallPreview();
+
+        foreach (EnemyBase enemy in EnemiesManager.Instance.GetAllInGameEnemiesOrdered)
+        {
+            enemy.HidePreview(false);
+        }
     }
     #endregion
 
