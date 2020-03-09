@@ -126,6 +126,17 @@ public class GameManager : MonoBehaviour
         OnActionPointsAmountChanged?.Invoke(currentActionPointsAmount);
     }
 
+    public void GainActionPoints(int amount)
+    {
+        currentActionPointsAmount += amount;
+        if (currentActionPointsAmount > maxActionPointsAmount)
+        {
+            currentActionPointsAmount = maxActionPointsAmount;
+        }
+
+        OnActionPointsAmountChanged?.Invoke(currentActionPointsAmount);
+    }
+
     [SerializeField] UnityEngine.UI.Text actionPointsUseDebugText = default;
     public void SetActionPointsDebugTextVisibility(bool visible)
     {

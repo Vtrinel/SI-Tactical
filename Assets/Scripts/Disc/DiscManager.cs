@@ -185,13 +185,49 @@ public class DiscManager : MonoBehaviour
         else
         {
             DiscType retreivedDiscType = retreivedDisc.GetDiscType;
+            DiscOverload(retreivedDiscType);
             //Debug.Log("TOO MUCH DISCS, NOT ADDED BUT SUPPOSED TO BE SOMETHING");
         }
     }
 
-    public void DiscOverload()
+    [Header("Overlaod Effects")]
+    [SerializeField] int discOverloadPiercingGainedExperience = 2;
+    [SerializeField] int discOverloadGhostGainedActionPoints = 2;
+    [SerializeField] EffectZoneType discOverloadExplosiveEffectZoneType = EffectZoneType.ExplosiveDiscOverload;
+    [SerializeField] int discOverloadHeavyGainedHP = 2;
+    [SerializeField] EffectZoneType discOverloadShockwaveEffectZoneType = EffectZoneType.ShockwaveDiscOverload;
+    public void DiscOverload(DiscType overloadType)
     {
+        switch (overloadType)
+        {
+            case DiscType.Piercing:
+                PlayerExperienceManager.Instance.GainExperience(discOverloadPiercingGainedExperience);
+                break;
 
+            case DiscType.Ghost:
+                GameManager.Instance.GainActionPoints(discOverloadGhostGainedActionPoints);
+                break;
+
+            case DiscType.Explosive:
+                EffectZone explosiveEffectZone = EffectZonesManager.Instance.GetEffectZoneFromPool(discOverloadExplosiveEffectZoneType);
+                if(explosiveEffectZone != null)
+                {
+                    explosiveEffectZone.StartZone(player.transform.position);
+                }
+                break;
+
+            case DiscType.Heavy:
+                GameManager.Instance.GetPlayer.damageReceiptionSystem.RegainLife(discOverloadHeavyGainedHP);
+                break;
+
+            case DiscType.Shockwave:
+                EffectZone shockwaveEffectZone = EffectZonesManager.Instance.GetEffectZoneFromPool(discOverloadShockwaveEffectZoneType);
+                if (shockwaveEffectZone != null)
+                {
+                    shockwaveEffectZone.StartZone(player.transform.position);
+                }
+                break;
+        }
     }
 
     public DiscScript TakeFirstDiscFromPossessedDiscs()

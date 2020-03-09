@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class EnemyBase : MonoBehaviour
 {
+    [SerializeField] EnemyType enemyType = EnemyType.TouniBase;
+    public EnemyType GetEnemyType => enemyType;
+
+
     private void Start()
     {
         damageReceiptionSystem.SetUpSystem(false);
@@ -27,6 +31,8 @@ public class EnemyBase : MonoBehaviour
     public void Die()
     {
         Debug.Log(name + " (Enemy) is dead");
+        setedUpInitiative = false;
+
         OnEnemyDeath?.Invoke(this);
         Destroy(gameObject);
     }   
@@ -37,11 +43,12 @@ public class EnemyBase : MonoBehaviour
     public float GetEnemyInitiative => enemyInstanceInitiative;
     bool setedUpInitiative = false;
 
-    public void SpawnEnemy()
+    public void SpawnEnemy(Vector3 position)
     {
+        transform.position = position;
         gameObject.SetActive(true);
         SetUpInitiative();
-        EnemiesManager.Instance.AddEnemy(this);
+        //EnemiesManager.Instance.AddEnemy(this);
     }
 
     public void SetUpInitiative()
@@ -53,13 +60,10 @@ public class EnemyBase : MonoBehaviour
         enemyInstanceInitiative = baseInitiative + UnityEngine.Random.Range(0f, 1f);
     }
 
-    #region Placeholder
-    [Header("Placeholder")]
-    [SerializeField] bool willAttackPlayerDebug = false;
+    #region Turn management
+
     public void StartTurn()
     {
-        //Debug.Log(name + "' turn");
-
         myIA.isPlaying = true;
         PlayMyTurn();
     }
@@ -81,7 +85,6 @@ public class EnemyBase : MonoBehaviour
     }
     #endregion
 
-
     #region IA
     [Header("IA")]
 
@@ -89,23 +92,12 @@ public class EnemyBase : MonoBehaviour
 
     void PlayMyTurn()
     {
+        Debug.Log("PLAY");
+
         if (myIA == null)
             return;
 
         myIA.PlayerTurn();
-    }
-
-    IEnumerator DebugCoroutine()
-    {
-        yield return new WaitForSeconds(0.5f);
-
-        if (willAttackPlayerDebug)
-        {
-            GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, new DamagesParameters(1));
-            yield return new WaitForSeconds(0.5f);
-        }
-
-        EndTurn();
     }
     #endregion
 

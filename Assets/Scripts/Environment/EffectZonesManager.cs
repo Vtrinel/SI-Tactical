@@ -103,7 +103,7 @@ public class EffectZonesManager : MonoBehaviour
 
 public enum EffectZoneType
 {
-    None, PlayerRage, ExplosiveDisc, ShockwaveDisc
+    None, PlayerRage, ExplosiveDisc, ExplosiveDiscOverload, ShockwaveDisc, ShockwaveDiscOverload
 }
 
 [System.Serializable]
