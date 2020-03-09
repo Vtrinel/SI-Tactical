@@ -33,6 +33,8 @@ public class IAEnemyVirtual : MonoBehaviour
 
     public LayerMask detectionMaskRaycast;
 
+    public ShowPathSystem myShowPath;
+
     public virtual void PlayerTurn() { }
 
     public bool CheckDetectionWithPlayer()
