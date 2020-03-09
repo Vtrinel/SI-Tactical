@@ -60,8 +60,7 @@ public class TouniEnemy : IAEnemyVirtual
 
     void Move()
     {
-        destination = player.transform.position;
-
+        destination = CalculDestination(player.transform.position);
 
         myNavAgent.SetDestination(destination);
         myNavAgent.isStopped = false;
@@ -69,30 +68,14 @@ public class TouniEnemy : IAEnemyVirtual
         StartCoroutine(WaitDeplacement());
     }
 
-    Vector3 CalculDestination()
-    {
-        Vector3 pos = transform.position;
-        Vector3 dir = (this.transform.position - player.transform.position).normalized;
-
-        Debug.DrawLine(pos, pos + -dir * distanceOfDeplacement, Color.red, Mathf.Infinity);
-
-        return pos + -dir * distanceOfDeplacement;
-    }
-
     IEnumerator WaitDeplacement()
     {
-
         isPlaying = true;
-        float normalizedTime = 0;
 
-        while (normalizedTime < durationTurn)
+        while (myNavAgent.pathStatus != NavMeshPathStatus.PathComplete || myNavAgent.remainingDistance != 0)
         {
-            normalizedTime += Time.deltaTime;
-
             if (CanAttack())
             {
-                normalizedTime = durationTurn + 1;
-
                 myNavAgent.isStopped = true;
                 PrepareAttack();
                 yield return new WaitForSeconds(0.4f);
@@ -115,7 +98,7 @@ public class TouniEnemy : IAEnemyVirtual
         myAnimator.SetBool("Preparing", true);
         isPreparing = true;
 
-        transform.LookAt(CalculDestination());
+        transform.LookAt(player.transform);
     }
 
     void Attack()
