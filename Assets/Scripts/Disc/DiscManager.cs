@@ -10,7 +10,8 @@ public class DiscManager : MonoBehaviour
     public static float discHeight = 1f;
 
     public float rangeOfPlayer = 5;
-    public void AddOneMaxRangeOfPlayer() {
+    public void AddOneMaxRangeOfPlayer() 
+    {
         rangeOfPlayer += 1f;
     }
 
