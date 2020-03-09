@@ -29,5 +29,13 @@ public class ShootArrowPreview : MonoBehaviour
         lookPos.y = 0;
         if (lookPos != Vector3.zero)
             Arrow.rotation = Quaternion.LookRotation(lookPos);
+
+        Vector3 closerPoint = Vector3.zero;
+        float closerDistance = Mathf.Infinity;
+
+        foreach(Vector3 pos in trajectoryPoints)
+        {
+            //if(Vector3.Distance(pos, tra))
+        }
     }
 }

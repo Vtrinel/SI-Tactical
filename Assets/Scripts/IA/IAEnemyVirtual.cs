@@ -14,7 +14,7 @@ public class IAEnemyVirtual : MonoBehaviour
     public float attackRange;
     public int damage = 1;
 
-    [HideInInspector] public GameObject player;
+    public GameObject player;
     [HideInInspector] public PlayerController playerControlleur;
 
     [HideInInspector] public Vector3 destination;
@@ -42,7 +42,7 @@ public class IAEnemyVirtual : MonoBehaviour
             Debug.DrawRay(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, Color.green, 20);
 
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, out hit, attackRange, detectionMaskRaycast))
+            if (Physics.Raycast(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, out hit, detectionPlayerRange, detectionMaskRaycast))
             {
                 if (hit.transform.gameObject == player)
                 {
