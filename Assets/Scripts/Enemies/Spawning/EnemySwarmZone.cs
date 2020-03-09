@@ -27,9 +27,11 @@ public class EnemySwarmZone : MonoBehaviour
 
     [SerializeField] bool debugZone = true;
 
-    [Header("Parameters")]
+    #region Zone
+    [Header("Zone Parameters")]
     [SerializeField] float radius = 5f;
     [SerializeField] bool selfActivates = false;
+    [SerializeField] bool alwaysActivatedWhenActivatedOnce = true;
 
     SwarmZoneState currentState = SwarmZoneState.Inactive;
 
@@ -64,7 +66,10 @@ public class EnemySwarmZone : MonoBehaviour
 
     public void OnPlayerEntersZone()
     {
-        if(currentState == SwarmZoneState.Inactive)
+        if (!alwaysActivatedWhenActivatedOnce)
+            TurnManager.Instance.ActivateSwarmZone(this);
+
+        if (currentState == SwarmZoneState.Inactive)
         {
             OnPlayerEntersZoneFirstTime();
         }
@@ -73,16 +78,79 @@ public class EnemySwarmZone : MonoBehaviour
 
     public void OnPlayerEntersZoneFirstTime()
     {
-
+        if (alwaysActivatedWhenActivatedOnce)
+            TurnManager.Instance.ActivateSwarmZone(this);
     }
 
     public void OnPlayerExitsZone()
     {
+        if (!alwaysActivatedWhenActivatedOnce)
+            TurnManager.Instance.DeactivateSwarmZone(this);
         currentState = SwarmZoneState.PlayerOutZoneButEnteredOnce;
     }
+    #endregion
+
+    #region Wave Management
+    [Header("Wave Parameters")]
+    [SerializeField] List<WaveParameters> allWavesParameters = new List<WaveParameters>();
+    [SerializeField] bool infiniteSpawn = true;
+    [SerializeField] bool spawnedEnemiesAutoDetectPlayer = true;
+    int currentWaveCounter = 0;
+    int remainingNumberOfTurnsToWait = 0;
+
+    public void StartWaveTurn()
+    {
+        if (allWavesParameters.Count == 0)
+            return;
+
+        if (remainingNumberOfTurnsToWait > 0)
+        {
+            remainingNumberOfTurnsToWait--;
+        }
+        else
+        {
+            StartWave(allWavesParameters[currentWaveCounter]);
+
+            currentWaveCounter++;
+            if (currentWaveCounter >= allWavesParameters.Count)
+                currentWaveCounter = 0;
+        }
+    }
+
+    public void StartWave(WaveParameters waveToStart)
+    {
+        List<SpawnPointEnemyCouple> enemiesToSpawn = waveToStart.enemiesToSpawn;
+        remainingNumberOfTurnsToWait = waveToStart.numberOfWaitTurnAfterSpawned;
+
+        foreach (SpawnPointEnemyCouple couple in enemiesToSpawn)
+        {
+            couple.spawnPoint.StartSpawning(couple.enemyType, spawnedEnemiesAutoDetectPlayer);
+        }
+
+        EndWaveTurn();
+    }
+
+    public void EndWaveTurn()
+    {
+    }
+    #endregion
 }
 
 public enum SwarmZoneState
 {
     Inactive, PlayerInZone, PlayerOutZoneButEnteredOnce
+}
+
+[System.Serializable]
+public struct WaveParameters
+{
+    public List<SpawnPointEnemyCouple> enemiesToSpawn;
+    public int numberOfWaitTurnAfterSpawned;
+}
+
+[System.Serializable]
+public struct SpawnPointEnemyCouple
+{
+    public EnemyType enemyType;
+    public EnemySpawnPoint spawnPoint;
 }
