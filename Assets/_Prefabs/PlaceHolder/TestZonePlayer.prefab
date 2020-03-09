@@ -123,6 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eb8fa651d367d840952c04cc6c53f2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  effectZoneType: 0
   effectMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -138,11 +139,13 @@ MonoBehaviour:
     knockbackForce: 20
     knockbackDuration: 0.05
     knockbackAttenuationDuration: 0.2
+    canKnockbackDiscs: 0
   maxKnockbackDistance: 2
   minKnockbackParameters:
     knockbackForce: 5
     knockbackDuration: 0.05
     knockbackAttenuationDuration: 0.2
+    canKnockbackDiscs: 0
   minKnockbackDistance: 5
   knockbackDependingOnDistanceAttenuationCurve:
     serializedVersion: 2
@@ -168,4 +171,5 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  numberOfStunedTurns: 1
   debugZoneRenderer: {fileID: 2679825475115409010}

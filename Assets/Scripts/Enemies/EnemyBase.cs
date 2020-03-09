@@ -37,6 +37,13 @@ public class EnemyBase : MonoBehaviour
     public float GetEnemyInitiative => enemyInstanceInitiative;
     bool setedUpInitiative = false;
 
+    public void SpawnEnemy()
+    {
+        gameObject.SetActive(true);
+        SetUpInitiative();
+        EnemiesManager.Instance.AddEnemy(this);
+    }
+
     public void SetUpInitiative()
     {
         if (setedUpInitiative)
@@ -51,13 +58,15 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] bool willAttackPlayerDebug = false;
     public void StartTurn()
     {
-        Debug.Log(name + "' turn");
+        //Debug.Log(name + "' turn");
 
+        myIA.isPlaying = true;
         PlayMyTurn();
     }
 
     public void EndTurn()
     {
+        myIA.isPlaying = false;
         if(TurnManager.Instance.GetCurrentTurnState != TurnState.EnemyTurn)
         {
             return;
@@ -67,7 +76,7 @@ public class EnemyBase : MonoBehaviour
 
     public void InterruptAllAction()
     {
-        Debug.Log("Interrupt " + name + "'s actions");
+        //Debug.Log("Interrupt " + name + "'s actions");
         // TO DO : interrupt action of the linked AI, without calling EndTurn 
     }
     #endregion
@@ -92,7 +101,7 @@ public class EnemyBase : MonoBehaviour
 
         if (willAttackPlayerDebug)
         {
-            GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, 1);
+            GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, new DamagesParameters(1));
             yield return new WaitForSeconds(0.5f);
         }
 
@@ -108,7 +117,7 @@ public class EnemyBase : MonoBehaviour
 
         if (myIA == null)
             return;
-        myIA.OnIsAtDestination += EndTurn;
+        myIA.OnFinishTurn += EndTurn;
     }
 
     private void OnDisable()
@@ -120,6 +129,6 @@ public class EnemyBase : MonoBehaviour
         if (myIA == null)
             return;
 
-        myIA.OnIsAtDestination -= EndTurn;
+        myIA.OnFinishTurn -= EndTurn;
     }
 }

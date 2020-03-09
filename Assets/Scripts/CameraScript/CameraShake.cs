@@ -8,17 +8,17 @@ using UnityEngine.Events;
 public class CameraShake : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] CinemachineVirtualCamera virtualCamera;
+    [SerializeField] CinemachineVirtualCamera virtualCamera = default;
     private CinemachineBasicMultiChannelPerlin virtualCameraNoise;
 
-    [SerializeField, ReadOnly] private bool isShaking;
+    [SerializeField, ReadOnly] private bool isShaking = default;
     [SerializeField, ReadOnly] private float shakeTime = 0f;
-    [SerializeField, ReadOnly] ShakeSettings currentShakeSettings;
+    [SerializeField, ReadOnly] ShakeSettings currentShakeSettings = default;
 
     public bool IsShaking { get => isShaking; private set => isShaking = value; }
 
     [Header("Debug")]
-    [SerializeField] ShakeSettings debugShakeSetting;
+    [SerializeField] ShakeSettings debugShakeSetting = default;
 
     // Use this for initialization
     void Start()

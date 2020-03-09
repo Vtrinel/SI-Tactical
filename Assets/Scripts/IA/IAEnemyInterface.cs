@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public class IAEnemyVirtual : MonoBehaviour
 {
-    public UnityAction OnIsAtDestination;
+    public UnityAction OnFinishTurn;
 
     public NavMeshAgent myNavAgent;
 
@@ -21,9 +21,12 @@ public class IAEnemyVirtual : MonoBehaviour
 
     public Animator myAnimator;
 
+    public bool isPlaying = false;
     public bool isPreparing = false;
 
     public float durationTurn = 1;
+
+    public ShieldManager myShieldManager;
 
     public virtual void PlayerTurn() { }
 }

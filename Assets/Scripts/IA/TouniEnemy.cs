@@ -8,7 +8,7 @@ public class TouniEnemy : IAEnemyVirtual
 {
     public float angleAttack;
 
-    [SerializeField] LayerMask objCanBeAttecked;
+    [SerializeField] LayerMask objCanBeAttacked;
 
     private void OnEnable()
     {
@@ -24,6 +24,7 @@ public class TouniEnemy : IAEnemyVirtual
     {
         playerControlleur = GameManager.Instance.GetPlayer;
         player = playerControlleur.gameObject;
+        myShieldManager.myObjParent = gameObject;
     }
 
     public override void PlayerTurn()
@@ -44,7 +45,7 @@ public class TouniEnemy : IAEnemyVirtual
         {
             PrepareAttack();
             yield return new WaitForSeconds(0.4f);
-            OnIsAtDestination?.Invoke();
+            OnFinishTurn?.Invoke();
         }
         else
         {
@@ -75,6 +76,7 @@ public class TouniEnemy : IAEnemyVirtual
 
     IEnumerator WaitDeplacement()
     {
+        isPlaying = true;
         float normalizedTime = 0;
 
         while (normalizedTime < durationTurn)
@@ -90,8 +92,9 @@ public class TouniEnemy : IAEnemyVirtual
             yield return null;
         }
 
+        isPlaying = false;
         myNavAgent.isStopped = true;
-        OnIsAtDestination?.Invoke();
+        OnFinishTurn?.Invoke();
     }
 
     void PrepareAttack()
@@ -115,7 +118,7 @@ public class TouniEnemy : IAEnemyVirtual
 
         foreach(GameObject _obj in _objsTouched)
         {
-            _obj.GetComponent<DamageableEntity>().ReceiveDamage(DamageTag.Enemy, damage);
+            _obj.GetComponent<DamageableEntity>().ReceiveDamage(DamageTag.Enemy, new DamagesParameters(damage));
         }
     }
 
@@ -134,7 +137,7 @@ public class TouniEnemy : IAEnemyVirtual
         List<GameObject> objTouched = new List<GameObject>();
 
         RaycastHit[] hits;
-        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, transform.forward, attackRange, objCanBeAttecked);
+        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, transform.forward, attackRange, objCanBeAttacked);
         foreach(RaycastHit hit in hits)
         {
             if (!objTouched.Contains(hit.collider.gameObject))
@@ -143,7 +146,7 @@ public class TouniEnemy : IAEnemyVirtual
             }
         }
 
-        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, rightRayDirection, attackRange, objCanBeAttecked);
+        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, rightRayDirection, attackRange, objCanBeAttacked);
         foreach (RaycastHit hit in hits)
         {
             if (!objTouched.Contains(hit.collider.gameObject))
@@ -152,7 +155,7 @@ public class TouniEnemy : IAEnemyVirtual
             }
         }
 
-        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, transform.forward, attackRange, objCanBeAttecked);
+        hits = Physics.RaycastAll(transform.position + Vector3.up * 1, transform.forward, attackRange, objCanBeAttacked);
         foreach (RaycastHit hit in hits)
         {
             if (!objTouched.Contains(hit.collider.gameObject))
@@ -176,7 +179,7 @@ public class TouniEnemy : IAEnemyVirtual
     void ForceStopMyTurn()
     {
         StopAllCoroutines();
-        OnIsAtDestination?.Invoke();
+        OnFinishTurn?.Invoke();
     }
 
     private void OnDrawGizmos()

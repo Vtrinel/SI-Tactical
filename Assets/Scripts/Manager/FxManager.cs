@@ -11,8 +11,8 @@ public class FxManager : MonoBehaviour
     [SerializeField] List<GameObject> hitUse = new List<GameObject>();
 
 
-    [SerializeField] GameObject prefabExplo;
-    [SerializeField] GameObject prefabHit;
+    [SerializeField] GameObject prefabExplo = default;
+    [SerializeField] GameObject prefabHit = default;
 
     private static FxManager _instance;
     public static FxManager Instance { get { return _instance; } }
@@ -64,7 +64,6 @@ public class FxManager : MonoBehaviour
 
     GameObject CreateFx(fxType hisType)
     {
-        print(hisType);
         switch (hisType)
         {
             case fxType.Explosion:

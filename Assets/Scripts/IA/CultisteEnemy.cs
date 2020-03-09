@@ -7,6 +7,13 @@ using UnityEngine.Events;
 public class CultisteEnemy : IAEnemyVirtual
 {
     public bool haveDisc = false;
+    Vector3 shootPos;
+
+    [SerializeField] LineRenderer myLine;
+    [SerializeField] GameObject myArrow;
+    [SerializeField] GameObject posEndLine;
+    [SerializeField] GameObject projectileObj;
+    [SerializeField] GameObject projectilePrefab;
 
     private void OnEnable()
     {
@@ -22,11 +29,13 @@ public class CultisteEnemy : IAEnemyVirtual
     {
         playerControlleur = GameManager.Instance.GetPlayer;
         player = playerControlleur.gameObject;
+        myShieldManager.myObjParent = gameObject;
     }
 
     public override void PlayerTurn()
     {
         StartCoroutine(PlayerTurnCouroutine());
+        projectileObj.SetActive(haveDisc);
     }
 
     IEnumerator PlayerTurnCouroutine()
@@ -42,7 +51,7 @@ public class CultisteEnemy : IAEnemyVirtual
         {
             PrepareAttack();
             yield return new WaitForSeconds(0.4f);
-            OnIsAtDestination?.Invoke();
+            OnFinishTurn?.Invoke();
         }
         else
         {
@@ -52,15 +61,20 @@ public class CultisteEnemy : IAEnemyVirtual
 
     void Move()
     {
-        Transform newObjDestination = ResershDisc();
-        if (newObjDestination == null)
+        if (!haveDisc)
         {
-            print("<color=green> Null </color>");
-            OnIsAtDestination?.Invoke();
-            return;
+            Transform newObjDestination = ResershDisc();
+            if (newObjDestination == null)
+            {
+                OnFinishTurn?.Invoke();
+                return;
+            }
+            destination = newObjDestination.position;
         }
-
-        destination = ResershDisc().position;
+        else
+        {
+            destination = player.transform.position ;
+        }
 
         myNavAgent.SetDestination(destination);
         myNavAgent.isStopped = false;
@@ -68,18 +82,9 @@ public class CultisteEnemy : IAEnemyVirtual
         StartCoroutine(WaitDeplacement());
     }
 
-    Vector3 CalculDestination()
-    {
-        Vector3 pos = transform.position;
-        Vector3 dir = (this.transform.position - player.transform.position).normalized;
-
-        Debug.DrawLine(pos, pos + -dir * distanceOfDeplacement, Color.red, Mathf.Infinity);
-
-        return pos + -dir * distanceOfDeplacement;
-    }
-
     IEnumerator WaitDeplacement()
     {
+        isPlaying = true;
         float normalizedTime = 0;
 
         while (normalizedTime < durationTurn)
@@ -95,33 +100,62 @@ public class CultisteEnemy : IAEnemyVirtual
             yield return null;
         }
 
+        yield return new WaitForSeconds(0.4f);
+
+        //si il a chopé un disc sur la route
+        if (CanAttack())
+        {
+            PrepareAttack();
+            yield return new WaitForSeconds(0.4f);
+        }
+
+        isPlaying = false;
         myNavAgent.isStopped = true;
-        OnIsAtDestination?.Invoke();
+        OnFinishTurn?.Invoke();
     }
 
     void PrepareAttack()
     {
+        myNavAgent.isStopped = true;
         myAnimator.SetBool("Preparing", true);
-        isPreparing = true;
+        transform.LookAt(player.transform);
 
-        transform.LookAt(CalculDestination());
+        shootPos = player.transform.position;
+        isPreparing = true;
+    }
+
+    void SetPreview()
+    {
+        myArrow.transform.position = shootPos;
+
+        //direction de l'arrow
+        var lookPos = myArrow.transform.position - transform.position;
+        lookPos.y = 0;
+        myArrow.transform.rotation = Quaternion.LookRotation(lookPos);
+
+        myLine.SetPosition(0, transform.position);
+        myLine.SetPosition(1, posEndLine.transform.position);
+        //myLine.gameObject.SetActive(true);
     }
 
     void Attack()
     {
         myAnimator.SetTrigger("Attack");
         myAnimator.SetBool("Preparing", false);
-        LaunchDisc();
+        LaunchObj();
     }
 
-    void LaunchDisc()
+    void LaunchObj()
     {
+        GameObject newProjectile = Instantiate(projectilePrefab);
+        newProjectile.transform.position = transform.position;
 
+        newProjectile.GetComponent<ProjectileScript>().SetDestination(myArrow.transform.position, gameObject);
     }
 
     Transform ResershDisc()
     {
-        List<DiscScript> allCurrentDisc = DiscManager.Instance.GetAllDisclUse();
+        List<DiscScript> allCurrentDisc = DiscManager.Instance.GetAllInGameDiscs;
 
         if(allCurrentDisc.Count == 0) { return null; }
 
@@ -138,13 +172,12 @@ public class CultisteEnemy : IAEnemyVirtual
     {
         if (Vector3.Distance(transform.position, player.transform.position) < attackRange && haveDisc) 
         {
-            Vector3 forward = transform.TransformDirection(player.transform.position) * attackRange;
-            Debug.DrawRay(transform.position, forward, Color.green);
+            Debug.DrawRay(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, Color.green, 20);
 
             RaycastHit hit;
-            if(Physics.Raycast(transform.position, forward, out hit ,attackRange))
+            if (Physics.Raycast(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, out hit, attackRange))
             {
-                if(hit.collider.gameObject == player)
+                if (hit.transform.gameObject == player)
                 {
                     return true;
                 }
@@ -156,15 +189,39 @@ public class CultisteEnemy : IAEnemyVirtual
     void ForceStopMyTurn()
     {
         StopAllCoroutines();
-        OnIsAtDestination?.Invoke();
+        OnFinishTurn?.Invoke();
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        //Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(transform.position, attackRange);
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, distanceOfDeplacement);
+    }
+
+    private void Update()
+    {
+        if (isPreparing)
+        {
+            SetPreview();
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == 11 && !haveDisc && isPlaying)
+        {
+            DiscScript touchedDisc = other.GetComponent<DiscScript>();
+            if (touchedDisc != null)
+            {
+                if (!touchedDisc.isAttacking)
+                {
+                    DiscManager.Instance.DestroyDisc(touchedDisc);
+                    haveDisc = true;
+                }
+            }
+        }
     }
 }

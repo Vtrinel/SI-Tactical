@@ -42,11 +42,11 @@ public class GameManager : MonoBehaviour
         turnManager.OnCheckGameProgression += levelManager.CheckForProgressTurn;
         levelManager.OnGoalReached += WinGame;
 
+        competencesUsabilityManager.OnRecallCompetenceChanged += playerMovementsManager.UpdateCurrentRecallCompetence;
+
         playerExperienceManager.OnSetChanged += competencesUsabilityManager.UpdateSet;
         playerExperienceManager.OnMenuOpenedOrClosed += UpdatePlayerActability;
         playerExperienceManager.SetUp();
-
-        competencesUsabilityManager.OnRecallCompetenceChanged += playerMovementsManager.UpdateCurrentRecallCompetence;
     }
 
     private void Update()
@@ -165,8 +165,8 @@ public class GameManager : MonoBehaviour
 
     public void PlayerMaxLifeChange(int value)
     {
+        GetPlayer.damageReceiptionSystem.AddLifeBar(value);
         maxPlayerLifeAmount += value;
-        currentPlayerLifeAmount += value;
         OnPlayerMaxLifeAmountChanged?.Invoke(value);
     }
 
@@ -245,8 +245,7 @@ public class GameManager : MonoBehaviour
                 }
 
                 CallSelectActionEvent(ActionType.Move);
-                playerMovementsManager.GenerateDistancesPerActionPoints(currentActionPointsAmount);
-                playerMovementsManager.StartMovementPreparation();
+                playerMovementsManager.StartMovementPreparation(currentActionPointsAmount);
                 SetActionPointsDebugTextVisibility(true);
             }
             else
@@ -313,7 +312,7 @@ public class GameManager : MonoBehaviour
             switch (competencesUsabilityManager.GetCurrentCompetenceType)
             {
                 case ActionType.Throw:
-                    competencesUsabilityManager.LaunchThrowCompetence();
+                    competencesUsabilityManager.LaunchThrowCompetence(player.gameObject);
                     break;
 
                 case ActionType.Recall:

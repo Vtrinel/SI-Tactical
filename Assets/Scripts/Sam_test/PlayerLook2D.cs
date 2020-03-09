@@ -12,7 +12,7 @@ public class PlayerLook2D : MonoBehaviour
     {
         player = GameManager.Instance.GetPlayer.transform;
     }
-
+    
     // Update is called once per frame
     void Update()
     {
@@ -21,6 +21,7 @@ public class PlayerLook2D : MonoBehaviour
 
         var lookPos = player.position - transform.position;
         lookPos.y = 0;
-        transform.rotation = Quaternion.LookRotation(lookPos);
+        if (lookPos != Vector3.zero)
+            transform.rotation = Quaternion.LookRotation(lookPos);
     }
 }

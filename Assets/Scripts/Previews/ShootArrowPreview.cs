@@ -18,13 +18,16 @@ public class ShootArrowPreview : MonoBehaviour
 
     public void SetPositions(List<Vector3> trajectoryPoints)
     {
-        transform.position = trajectoryPoints[0];
-        Arrow.position = trajectoryPoints[1];
-        line.SetPosition(0, startPoint.position);
-        line.SetPosition(1, endPoint.position);
+        Vector3 selfPos = trajectoryPoints[0];
+        transform.position = selfPos;
+        Arrow.position = trajectoryPoints[trajectoryPoints.Count - 1];
+
+        line.positionCount = trajectoryPoints.Count;
+        line.SetPositions(trajectoryPoints.ToArray());
 
         var lookPos = Arrow.position - trajectoryPoints[trajectoryPoints.Count - 2];
         lookPos.y = 0;
-        Arrow.rotation = Quaternion.LookRotation(lookPos);
+        if (lookPos != Vector3.zero)
+            Arrow.rotation = Quaternion.LookRotation(lookPos);
     }
 }

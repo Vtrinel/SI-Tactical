@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3086187797140316300}
   - component: {fileID: 3086187797140316301}
+  - component: {fileID: 5136469731824068337}
   m_Layer: 0
   m_Name: MovementPreviewLine
   m_TagString: Untagged
@@ -128,3 +129,19 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
+--- !u!114 &5136469731824068337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3086187797140316302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82fe47ef7ca46d84bba4d86575290267, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  line: {fileID: 3086187797140316301}
+  lineHeight: 0.05
+  linePointPrefab: {fileID: 0}
+  baseNumberOfLinePoints: 5

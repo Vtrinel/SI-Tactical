@@ -75,7 +75,7 @@ public class ButtonUtilities : MonoBehaviour
         myIcon.color = selectedColor;
         myOutline.color = selectedColor;
 
-        myAudioSource.PlayOneShot(clickButtonSound);
+        //myAudioSource.PlayOneShot(clickButtonSound);
 
         myOutline.gameObject.SetActive(true);
     }

@@ -113,4 +113,26 @@ public class UIManager : MonoBehaviour
     }
 
     #endregion
+
+    #region AP Costs
+    [Header("Action poins cost")]
+    [SerializeField] Text actionPointsCostText = default;
+    [SerializeField] Transform actionPointsCostTextParent = default;
+
+    public void ShowActionPointsCostText()
+    {
+        actionPointsCostTextParent.gameObject.SetActive(true);
+    }
+
+    public void UpdateActionPointCostText(int cost, int total)
+    {
+        actionPointsCostText.text = cost + "/" + total + "AP";
+        actionPointsCostTextParent.localPosition = Input.mousePosition;
+    }
+
+    public void HideActionPointText()
+    {
+        actionPointsCostTextParent.gameObject.SetActive(false);
+    }
+    #endregion
 }
