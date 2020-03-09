@@ -4,38 +4,38 @@ using UnityEngine;
 
 public class ShootArrowPreview : MonoBehaviour
 {
-    public LineRenderer leftLine;
-    public LineRenderer rightLine;
+    public LineRenderer line;
 
-    public Transform startLeft;
-    public Transform startRight;
-
-    public Transform endLeft;
-    public Transform endRight;
+    public Transform startPoint;
+    public Transform endPoint;
 
     public Transform Arrow;
 
-    private void Start()
+    public void SetPositions(List<Vector3> trajectoryPoints)
     {
-        leftLine.positionCount = 2;
-        rightLine.positionCount = 2;
-    }
+        Vector3 selfPos = trajectoryPoints[0];
+        transform.position = selfPos;
+        Arrow.position = trajectoryPoints[trajectoryPoints.Count - 1];
 
-    // Update is called once per frame
-    void Update()
-    {
-        RefreshArrow();
-    }
+        var lookPos = Arrow.position - trajectoryPoints[trajectoryPoints.Count - 2];
+        lookPos.y = 0;
+        if (lookPos != Vector3.zero)
+            Arrow.rotation = Quaternion.LookRotation(lookPos);
 
-    void RefreshArrow()
-    {
-        leftLine.SetPosition(0, startLeft.position);
-        leftLine.SetPosition(1, endLeft.position);
+        List<Vector3> lineCorrector = new List<Vector3>();
+        float endPosDistance = Vector3.Distance(trajectoryPoints[0], endPoint.position);
 
-        rightLine.SetPosition(0, startRight.position);
-        rightLine.SetPosition(1, endRight.position);
+        foreach (Vector3 pos in trajectoryPoints)
+        {
+            if(Vector3.Distance(trajectoryPoints[0], pos) < endPosDistance)
+            {
+                lineCorrector.Add(pos);
+            }
+        }
 
-        //Vector3 dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
-        Arrow.position = GameManager.Instance.GetCurrentWorldMouseResult.mouseWorldPosition;
+        lineCorrector.Add(endPoint.position);
+
+        line.positionCount = lineCorrector.Count;
+        line.SetPositions(lineCorrector.ToArray());
     }
 }

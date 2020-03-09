@@ -296,6 +296,7 @@ GameObject:
   - component: {fileID: 2022475993876897125}
   - component: {fileID: 2022475993876897124}
   - component: {fileID: 3147054295566447194}
+  - component: {fileID: 5640311280364435821}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -334,11 +335,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshAgent: {fileID: 2022475993876897125}
   damageReceiptionSystem: {fileID: 3147054295566447194}
+  knockbackReceiptionSystem: {fileID: 5640311280364435821}
+  rageEffectZonePrefab: {fileID: 2679825475301777187, guid: 672902533ef626243b0a705c8e10a82b,
+    type: 3}
+  rageEffectZoneVerticalOffset: 1
   clickActionKey: 323
   selectMoveInput: 97
   throwCompetenceInput: 122
   recallCompetenceInput: 101
   specialCompetenceInput: 114
+  passTurnInput: 13
+  competenceMenuInput: 9
+  camForwardInput: 273
+  camBackwardInput: 274
+  camRightInput: 275
+  camLeftInput: 276
+  cursorMinCameraHorizontalMovementCoeff: 0.8
+  cursorMaxCameraHorizontalMovementCoeff: 0.95
+  cursorMinCameraVerticalMovementCoeff: 0.92
+  cursorMaxCameraVerticalMovementCoeff: 1
 --- !u!195 &2022475993876897125
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -389,6 +404,45 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageTag: 0
   maxLifeAmount: 10
+  currentLifeAmount: 0
+--- !u!114 &5640311280364435821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2022475993876897120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 237d0fe12f7b0f841a28fb7e5483579c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transformToMove: {fileID: 2022475993876897127}
+  knockbackAttenuationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2.0055795
+      outSlope: 2.0055795
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.50061953
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  damageTag: 0
 --- !u!1001 &5790622728258112184
 PrefabInstance:
   m_ObjectHideFlags: 0

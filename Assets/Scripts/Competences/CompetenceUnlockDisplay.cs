@@ -1,45 +1,66 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CompetenceUnlockDisplay : MonoBehaviour
 {
 
+    [Header("Interface of the competence")]
     public TextMeshProUGUI description;
     public TextMeshProUGUI ActionPoint;
-    public TextMeshProUGUI UnlockCost;
+    public Button unlockButton;
+    public Button equipButton;
 
-    private Competence competence;
+    private Competence Currentcompetence;
 
     #region Actions add
 
     private void OnEnable()
     {
         PlayerExperienceManager._instance.OnSelectCompetence += RefreshCompetence;
+        PlayerExperienceManager._instance.OnTryUnlockCompetence += RefreshCompetence;
     }
 
     private void OnDisable()
     {
         PlayerExperienceManager._instance.OnSelectCompetence -= RefreshCompetence;
+        PlayerExperienceManager._instance.OnTryUnlockCompetence -= RefreshCompetence;
     }
 
     #endregion
 
     // Change the UI for the competence info
-    private void RefreshCompetence()
+    private void RefreshCompetence(Competence competence)
     {
-        competence = PlayerExperienceManager._instance.GetSelectedCompetence();
+        Currentcompetence = PlayerExperienceManager._instance.GetSelectedCompetence();
 
-        if (competence)
+        if (Currentcompetence)
         {
-            description.text = competence.Getdescription;
-            ActionPoint.text = competence.GetActionPointsCost.ToString();
-            UnlockCost.text = competence.GetPointsCost.ToString();
+            description.text = Currentcompetence.GetCompetenceDescription;
+            ActionPoint.text = Currentcompetence.GetActionPointsCost.ToString();
+
+            // See if the competence can be unlocked or equiped
+            if (Currentcompetence.GetUnlockedState)
+            {
+                unlockButton.gameObject.SetActive(false);
+                equipButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                unlockButton.gameObject.SetActive(true);
+                equipButton.gameObject.SetActive(false);
+            }
         }
     }
 
     // Send the request to unlock the competence
-    public void unlockCompetence()
+    public void UnlockCompetence()
     {
-        PlayerExperienceManager._instance.CanUnlockCompetence(competence);
+        PlayerExperienceManager._instance.CanUnlockCompetence(Currentcompetence);
+    }
+
+    public void EquipCompetence()
+    {
+        PlayerExperienceManager._instance.EquipCompetence(Currentcompetence);
     }
 }

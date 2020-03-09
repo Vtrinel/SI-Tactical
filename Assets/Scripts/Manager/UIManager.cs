@@ -3,39 +3,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    #region Dummy public attributes
-
-    public int maxHealth = 3;
-
-    [MinValue(0), MaxValue(10)]
-    public int currentHealth = 3;
-
-    public int actionPoint = 3;
-
-    #endregion
-
-    #region Actions 
-
-    public UnityAction OnPlayerMove;
-    public UnityAction OnPlayerSpecial;
-    public UnityAction OnPlayerLaunch;
-    public UnityAction OnPlayerRecall;
-    public UnityAction OnPlayerSwap;
-
-    #endregion
-
     #region ButtonUtilities 
+    [Header("UI Parameters")]
     public GameObject ButtonMove;
     public GameObject ButtonLaunch;
     public GameObject ButtonRecall;
+    public Image goldSlider;
+
+    public GameObject buttonEndTurn;
     #endregion
 
     private static UIManager _instance;
     public static UIManager Instance { get { return _instance; } }
 
+    void OnEnable()
+    {
+        PlayerExperienceManager.Instance.OnGainExperience += AddExperience;
+        PlayerExperienceManager.Instance.OnLossExperience += LossExperience;
+        TurnManager.Instance.OnStartPlayerTurn += StartPlayerTurn;
+        TurnManager.Instance.OnEndPlayerTurn += EndPlayerTurn;
+    }
+
+    void OnDisable()
+    {
+        PlayerExperienceManager.Instance.OnGainExperience -= AddExperience;
+        PlayerExperienceManager.Instance.OnLossExperience -= LossExperience;
+        TurnManager.Instance.OnStartPlayerTurn -= StartPlayerTurn;
+        TurnManager.Instance.OnEndPlayerTurn -= EndPlayerTurn;
+    }
 
     private void Awake()
     {
@@ -49,57 +48,45 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    #region Menu interactions
-
-    public void Menu()
+    void StartPlayerTurn()
     {
-        Debug.Log("Menu");
+        buttonEndTurn.SetActive(true);
     }
 
-    public void EndTurn()
+    void EndPlayerTurn()
     {
-        Debug.Log("EndTurn");
+        buttonEndTurn.SetActive(false);
     }
 
-    public void UndoMove()
+    public void AddExperience(int experience)
     {
-        Debug.Log("UndoMove");
+        goldSlider.fillAmount += experience / 100;
     }
 
-    #endregion
-
-
-    #region Skills
-
-    public void Move()
+    public void LossExperience(int experience)
     {
-        Debug.Log("Move");
-        OnPlayerMove?.Invoke();
+        goldSlider.fillAmount -= experience / 100;
     }
 
-    public void Special()
+    #region AP Costs
+    [Header("Action poins cost")]
+    [SerializeField] Text actionPointsCostText = default;
+    [SerializeField] Transform actionPointsCostTextParent = default;
+
+    public void ShowActionPointsCostText()
     {
-        Debug.Log("Special");
-        OnPlayerSpecial?.Invoke();
+        actionPointsCostTextParent.gameObject.SetActive(true);
     }
 
-    public void Launch()
+    public void UpdateActionPointCostText(int cost, int total)
     {
-        Debug.Log("Launch");
-        OnPlayerLaunch?.Invoke();
+        actionPointsCostText.text = cost + "/" + total + "AP";
+        actionPointsCostTextParent.localPosition = Input.mousePosition;
     }
 
-    public void Recall()
+    public void HideActionPointText()
     {
-        Debug.Log("Recall");
-        OnPlayerRecall?.Invoke();
+        actionPointsCostTextParent.gameObject.SetActive(false);
     }
-
-    public void Swap()
-    {
-        Debug.Log("Swap");
-        OnPlayerSwap?.Invoke();
-    }
-
     #endregion
 }
