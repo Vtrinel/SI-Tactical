@@ -412,7 +412,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 468a1ac882e9c0b45b73cefd0639d0ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentDisc: 0
   discPiercing: {fileID: 1624951871807588838, guid: 8bb3ae63898c7a04094898955cb517d4,
     type: 3}
   discGhost: {fileID: 2841454759123073550, guid: c8e9fed0e9bcf1547a215f2efb7e997f,
@@ -1485,6 +1484,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1734451803055375092}
     m_Modifications:
+    - target: {fileID: 236336244396311172, guid: cf94a64815051f24c9fe7f219c1761cb,
+        type: 3}
+      propertyPath: maxNumberOfPossessedDiscs
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 236336244396311173, guid: cf94a64815051f24c9fe7f219c1761cb,
         type: 3}
       propertyPath: m_LocalPosition.x
