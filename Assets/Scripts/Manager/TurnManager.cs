@@ -35,6 +35,9 @@ public class TurnManager : MonoBehaviour
     {
         currentTurnState = TurnState.PlayerTurn;
         OnStartPlayerTurn?.Invoke();
+
+        if (CameraManager.instance != null)
+            CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
     }
 
     public void EndPlayerTurn()
@@ -87,6 +90,7 @@ public class TurnManager : MonoBehaviour
     public void StartEnemyTurn(EnemyBase enemy)
     {
         currentTurnEnemy = enemy;
+        CameraManager.instance.GetPlayerCamera.AttachFollowTransformTo(currentTurnEnemy.transform);
         enemy.StartTurn();
     }
 
@@ -135,13 +139,14 @@ public class TurnManager : MonoBehaviour
         }
 
         //Instant Call, might be called on Level Manager
-        EndProgressionTurn();
+        //EndProgressionTurn();
     }
 
     public void EndProgressionTurn()
     {
         currentTurnState = TurnState.SpawnPointsTurn;
         StartCoroutine("BetweenTurnsCoroutine");
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
     }
     #endregion
 
