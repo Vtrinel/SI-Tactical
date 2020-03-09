@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class DiscManager : MonoBehaviour
 {
-    public List<DiscScript> allDiscs = new List<DiscScript>();
-    List<DiscScript> discsUse = new List<DiscScript>();
+    [SerializeField] DiscType testDiscType = DiscType.Piercing;
 
-    public GameObject prefabDisc;
+    public static float discHeight = 1f;
 
-    public static float crystalHeight = 1f;
+    public float rangeOfPlayer = 5;
+    public void AddOneMaxRangeOfPlayer() {
+        rangeOfPlayer += 1f;
+    }
 
-    public float rangeOgPlayer = 5;
     Transform player;
 
+    [SerializeField] bool showDebugGizmo = false;
 
     private static DiscManager _instance;
     public static DiscManager Instance { get { return _instance; } }
@@ -28,46 +30,248 @@ public class DiscManager : MonoBehaviour
         {
             _instance = this;
         }
+
+        SetUpPools();
+
+        #region TEST
+        DiscScript[] alreadyInGameDiscs = FindObjectsOfType<DiscScript>();
+        foreach(DiscScript disc in alreadyInGameDiscs)
+        {
+            inGameDiscs.Add(disc);
+        }
+        #endregion
     }
 
     private void Start()
     {
         player = GameManager.Instance.GetPlayer.transform;
+        FillPossessedDiscsWithBasicDiscs();
     }
 
-    private void Update()
+    private void OnDrawGizmos()
     {
-        foreach(DiscScript disc in discsUse)
-        {
-            disc.isInRange = (Vector3.Distance(player.position, disc.transform.position) < 7);
-        }
+        if (!player) return;
+        if (!showDebugGizmo) return;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(player.transform.position, rangeOfPlayer);
+        Gizmos.color = new Color(Color.red.r, Color.red.g, Color.red.b, 0.35f);
+        Gizmos.DrawSphere(player.transform.position, rangeOfPlayer);
     }
 
-    public GameObject GetCrystal()
+    #region Pooling
+    [Header("Pooling")]
+    [SerializeField] List<DiscPoolParameters> allDiscPoolParameters = new List<DiscPoolParameters>();
+    [SerializeField] Transform poolsParent = default;
+    Dictionary<DiscType, Queue<DiscScript>> allDiscPools = new Dictionary<DiscType, Queue<DiscScript>>();
+    Dictionary<DiscType, DiscScript> discTypeToPrefab = new Dictionary<DiscType, DiscScript>();
+    Dictionary<DiscType, Transform> discTypeToPoolParent = new Dictionary<DiscType, Transform>();
+
+    List<DiscScript> inGameDiscs = new List<DiscScript>();
+    public List<DiscScript> GetAllInGameDiscs => inGameDiscs;
+    List<DiscScript> throwedDiscs = new List<DiscScript>();
+    public List<DiscScript> GetAllThrowedDiscs => throwedDiscs;
+
+    public void SetUpPools()
     {
-        foreach (DiscScript element in allDiscs)
+        allDiscPools = new Dictionary<DiscType, Queue<DiscScript>>();
+        discTypeToPrefab = new Dictionary<DiscType, DiscScript>();
+        discTypeToPoolParent = new Dictionary<DiscType, Transform>();
+
+        DiscScript newDisc = null;
+        Queue<DiscScript> newDiscQueue = new Queue<DiscScript>();
+        Transform newPoolParent = null;
+
+        foreach (DiscPoolParameters discPoolParameters in allDiscPoolParameters)
         {
-            if (!element.gameObject.activeSelf && !discsUse.Contains(element))
+            if (!allDiscPools.ContainsKey(discPoolParameters.discType))
             {
-                discsUse.Add(element.GetComponent<DiscScript>());
-                return element.gameObject;
+                newPoolParent = new GameObject().transform;
+                newPoolParent.SetParent(poolsParent);
+                newPoolParent.name = discPoolParameters.discType + "DiscsPool";
+                newPoolParent.transform.localPosition = new Vector3();
+
+                discTypeToPrefab.Add(discPoolParameters.discType, discPoolParameters.discPrefab);
+                discTypeToPoolParent.Add(discPoolParameters.discType, newPoolParent);
+
+                newDiscQueue = new Queue<DiscScript>();
+                for (int i = 0; i < discPoolParameters.baseNumberOfElements; i++)
+                {
+                    newDisc = Instantiate(discPoolParameters.discPrefab, newPoolParent);
+                    newDisc.SetUpModifiers();
+                    newDisc.gameObject.SetActive(false);
+                    newDisc.SetDiscType(discPoolParameters.discType);
+                    newDiscQueue.Enqueue(newDisc);
+                }
+
+                allDiscPools.Add(discPoolParameters.discType, newDiscQueue);
             }
         }
-
-        DiscScript newEnnemy = Instantiate(prefabDisc, transform).GetComponent<DiscScript>();
-        allDiscs.Add(newEnnemy);
-        discsUse.Add(newEnnemy);
-        return newEnnemy.gameObject;
     }
 
-    public void DeleteCrystal(GameObject element)
+    public DiscScript GetDiscFromPool(DiscType discType)
     {
-        element.SetActive(false);
-        discsUse.Remove(element.GetComponent<DiscScript>());
+        if (allDiscPools.ContainsKey(discType))
+        {
+            DiscScript newDisc = null;
+
+            if (allDiscPools[discType].Count > 0)
+            {
+                newDisc = allDiscPools[discType].Dequeue();
+                newDisc.gameObject.SetActive(true);
+            }
+            else
+            {
+                newDisc = Instantiate(discTypeToPrefab[discType], discTypeToPoolParent[discType]);
+                newDisc.SetUpModifiers();
+                newDisc.SetDiscType(discType);
+                newDisc.gameObject.SetActive(true);
+            }
+
+            inGameDiscs.Add(newDisc);
+
+            return newDisc;
+        }
+
+        return null;
     }
 
-    public List<DiscScript> GetAllCrystalUse()
+    public void ReturnDiscInPool(DiscScript disc)
     {
-        return discsUse;
+        DiscType discType = disc.GetDiscType;
+        disc.gameObject.SetActive(false);
+
+        inGameDiscs.Remove(disc);
+        if (allDiscPools.ContainsKey(discType))
+            allDiscPools[discType].Enqueue(disc);
+        else
+            Destroy(disc.gameObject);
     }
+
+    public void DestroyDisc(DiscScript disc)
+    {
+        if (throwedDiscs.Contains(disc))
+            throwedDiscs.Remove(disc);
+
+        ReturnDiscInPool(disc);
+    }
+    #endregion
+
+    #region Possessed Discs
+    [Header("Stock system")]
+    [SerializeField] int maxNumberOfPossessedDiscs = 3;
+    Stack<DiscType> possessedDiscs = new Stack<DiscType>();
+    public int GetPossessedDiscsCount => possessedDiscs.Count;
+    public void AddOneMaxNumberOfPossessedDiscs() 
+    { 
+        maxNumberOfPossessedDiscs++;
+
+        possessedDiscs.Push(DiscType.Piercing);
+    }
+
+    public void FillPossessedDiscsWithBasicDiscs()
+    {
+        for(int i =0; i < maxNumberOfPossessedDiscs; i++)
+            possessedDiscs.Push(testDiscType);
+    }
+
+    public void PlayerRetreiveDisc(DiscScript retreivedDisc)
+    {
+        throwedDiscs.Remove(retreivedDisc);
+        ReturnDiscInPool(retreivedDisc);
+        if (possessedDiscs.Count < maxNumberOfPossessedDiscs)
+        {
+            possessedDiscs.Push(retreivedDisc.GetDiscType);
+        }
+        else
+        {
+            //Debug.Log("TOO MUCH DISCS, NOT ADDED BUT SUPPOSED TO BE SOMETHING");
+        }
+    }
+
+    public DiscScript TakeFirstDiscFromPossessedDiscs()
+    {
+        if (possessedDiscs.Count == 0)
+            return null;
+
+        DiscScript newDisc = GetDiscFromPool(possessedDiscs.Pop());
+        if (newDisc != null)
+            throwedDiscs.Add(newDisc);
+
+        return newDisc;
+    }
+    #endregion
+
+    #region Proximity
+    public void CheckAllDiscsProximity(Vector3 playerPosition)
+    {
+        foreach (DiscScript disc in inGameDiscs)
+        {
+            disc.SetIsInRange(DiscIsInRange(playerPosition, disc.transform.position));
+        }
+    }
+
+    public bool DiscIsInRange(Vector3 playerPos, Vector3 discPos)
+    {
+        playerPos.y = discPos.y;
+        return Vector3.Distance(playerPos, discPos) <= rangeOfPlayer;
+    }
+
+    public List<DiscScript> GetAllInRangeDiscsFromPosition(Vector3 position)
+    {
+        List<DiscScript> inRangeFromPos = new List<DiscScript>();
+
+        foreach (DiscScript disc in inGameDiscs)
+        {
+            if (DiscIsInRange(position, disc.transform.position))
+                inRangeFromPos.Add(disc);
+        }
+
+        return inRangeFromPos;
+    }
+    
+    public int GetInRangeDiscsCount
+    {
+        get
+        {
+            int counter = 0;
+
+            foreach (DiscScript disc in inGameDiscs)
+            {
+                if (disc.IsInRange)
+                    counter++;
+            }
+
+            return counter;
+        }
+    }
+
+    public List<DiscScript> GetInRangeDiscs
+    {
+        get
+        {
+            List<DiscScript> list = new List<DiscScript>();
+
+            foreach (DiscScript disc in inGameDiscs)
+            {
+                if (disc.IsInRange)
+                    list.Add(disc);
+            }
+
+            return list;
+        }
+    }
+    #endregion    
+}
+
+public enum DiscType
+{
+    Basic, Piercing, Ghost, Explosive, Heavy, Shockwave
+}
+
+[System.Serializable]
+public struct DiscPoolParameters
+{
+    public DiscType discType;
+    public DiscScript discPrefab;
+    public int baseNumberOfElements;
 }

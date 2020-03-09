@@ -7,20 +7,20 @@ public class ShootTestSam : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        /*if (Input.GetMouseButtonDown(0))
         {
-            GameObject newDisc = DiscManager.Instance.GetCrystal();
+            DiscScript newDisc = DiscManager.Instance.GetCrystal();
 
-            newDisc.GetComponent<DiscScript>().AttackHere(transform, Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            newDisc.SetActive(true);
+            newDisc.AttackHere(transform, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            newDisc.gameObject.SetActive(true);
         }
 
         if (Input.GetMouseButtonDown(1))
         {
-            foreach(DiscScript disc in DiscManager.Instance.GetAllCrystalUse())
+            foreach(DiscScript disc in DiscManager.Instance.GetAllDisclUse())
             {
                 disc.RecallCrystal(transform);
             }
-        }
+        }*/
     }
 }

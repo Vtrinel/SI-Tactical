@@ -6,11 +6,10 @@ using NaughtyAttributes;
 public class CameraManager : MonoBehaviour
 {
     [SerializeField] List<VirtualCamera> virtualCameras;
-    [SerializeField, ReadOnly] PlayerCamera playerCamera;
+    [SerializeField] PlayerCamera playerCamera;
     [SerializeField, ReadOnly] VirtualCamera currentCamera;
     [SerializeField, ReadOnly] int activeCamPriority = 10;
     [SerializeField, ReadOnly] int inactiveCamPriority = 0;
-
 
     public static CameraManager instance;
     public PlayerCamera GetPlayerCamera => playerCamera;
@@ -47,7 +46,6 @@ public class CameraManager : MonoBehaviour
         for (int i = 0; i < virtualCameras.Count; i++)
         {
             VirtualCameras[i].SetPriority(VirtualCameras[i] == vCam ? activeCamPriority : inactiveCamPriority);
-            Debug.Log("Set Cam");
         }
 
         currentCamera = vCam;

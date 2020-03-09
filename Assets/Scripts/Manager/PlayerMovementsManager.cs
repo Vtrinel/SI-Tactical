@@ -14,7 +14,7 @@ public class PlayerMovementsManager
     public void UpdateSystem()
     {
         if (IsWillingToMove)
-            UpdateMovementPreview();
+            UpdateMovementPreparation();
     }
 
     PlayerController _player;
@@ -43,46 +43,97 @@ public class PlayerMovementsManager
         actionPointsUsedThisTurnToMove = 0;
     }
 
-    [Header("Movement - PH")]
-    [SerializeField] LineRenderer movementLinePreview = default;
-    [SerializeField] GameObject debugCirclePrefab = default;
-    List<GameObject> instanciatedDebugCircles = new List<GameObject>();
-    public void GenerateDebugCircles()
+    CompetenceRecall currentRecallCompetence = default;
+    public void UpdateCurrentRecallCompetence(CompetenceRecall competenceRecall)
     {
-        ClearInstantiatedDebugCircles();
-
-        foreach (float dist in currentDistancesByUsedActionPoints)
-        {
-            GameObject debugCircle = GameObject.Instantiate(debugCirclePrefab, _player.transform.position + Vector3.up * 0.01f, Quaternion.identity);
-            debugCircle.transform.localScale = Vector3.one * dist;
-            instanciatedDebugCircles.Add(debugCircle);
-        }
-    }
-    public void ClearInstantiatedDebugCircles()
-    {
-        if(instanciatedDebugCircles != null)
-        {
-            foreach (GameObject debugCircle in instanciatedDebugCircles)
-                GameObject.Destroy(debugCircle);
-        }
-        instanciatedDebugCircles = new List<GameObject>();
+        currentRecallCompetence = competenceRecall;
     }
 
-    public void UpdateLinePreviewState()
+    #region Preparation
+    int currentPreviewCost = 0;
+    int currentlyAvailableActionPoints = 0;
+    public void StartMovementPreparation(int availableActionPoints)
     {
-        if (movementLinePreview != null)
-            movementLinePreview.enabled = IsWillingToMove;
-    }
+        currentlyAvailableActionPoints = availableActionPoints;
 
-    public void StartMovementPreparation()
-    {
+        bool maxRangeMovement = false;
+
+        GenerateDistancesPerActionPoints(currentlyAvailableActionPoints);
+
         currentUsabilityState = UsabilityState.Preparing;
 
         currentPreviewCost = 0;
 
-        UpdateLinePreviewState();
+        Vector3 targetPosition = currentWorldMouseResult.mouseWorldPosition;
+        float movementDistance = Vector3.Distance(_player.transform.position, targetPosition);
+
+        int movementCost = GetActionPointsByDistance(movementDistance);
+        if (movementCost > currentlyAvailableActionPoints)
+        {
+            maxRangeMovement = true;
+            targetPosition = GetClampedTargetPosition(targetPosition);
+            movementCost = currentlyAvailableActionPoints;
+        }
+
+        if (movementCost != currentPreviewCost)
+        {
+            currentPreviewCost = movementCost;
+            OnPreparationAmountChanged?.Invoke(currentPreviewCost);
+        }
+
+        PreviewCompetencesManager.Instance.StartMovementPreview(currentDistancesByUsedActionPoints, _player.transform.position, targetPosition,
+            currentRecallCompetence, maxRangeMovement ? currentPreviewCost : currentPreviewCost - 1);
+        PreviewCompetencesManager.Instance.UpdateMovementPreview(_player.transform.position, targetPosition,
+            currentRecallCompetence, maxRangeMovement ? currentPreviewCost : currentPreviewCost - 1);
+
+        UIManager.Instance.ShowActionPointsCostText();
+        UIManager.Instance.UpdateActionPointCostText(movementCost, currentlyAvailableActionPoints);
     }
 
+    public void UpdateMovementPreparation()
+    {
+        bool maxRangeMovement = false;
+
+        Vector3 targetPosition = currentWorldMouseResult.mouseWorldPosition;
+        float movementDistance = Vector3.Distance(_player.transform.position, targetPosition);
+
+        int movementCost = GetActionPointsByDistance(movementDistance);
+        if (movementCost > availableActionPoints)
+        {
+            maxRangeMovement = true;
+            targetPosition = GetClampedTargetPosition(targetPosition);
+            movementCost = availableActionPoints;
+        }
+
+        if (movementCost != currentPreviewCost)
+        {
+            currentPreviewCost = movementCost;
+            OnPreparationAmountChanged?.Invoke(currentPreviewCost);
+        }
+
+        PreviewCompetencesManager.Instance.UpdateMovementPreview(_player.transform.position, targetPosition, 
+            currentRecallCompetence, maxRangeMovement ? currentPreviewCost : currentPreviewCost - 1);
+
+        UIManager.Instance.UpdateActionPointCostText(movementCost, currentlyAvailableActionPoints);
+    }
+
+    public void InterruptMovementPreparation()
+    {
+        currentUsabilityState = UsabilityState.None;
+
+        EndMovementPreparation();
+
+        currentDistancesByUsedActionPoints = new List<float>();
+    }
+
+    public void EndMovementPreparation()
+    {
+        PreviewCompetencesManager.Instance.EndMovementPreview();
+        UIManager.Instance.HideActionPointText();
+    }
+    #endregion
+
+    #region Distance - AP Relation
     public System.Action<int> OnPreparationAmountChanged;
     public void GenerateDistancesPerActionPoints(int actionPointAmount)
     {
@@ -96,8 +147,6 @@ public class PlayerMovementsManager
             totalDistance += GetDistanceByUsedActionPoints(i);
             currentDistancesByUsedActionPoints.Add(totalDistance);
         }
-
-        GenerateDebugCircles();
     }
 
     public float GetDistanceByUsedActionPoints(int actionPointsAmount)
@@ -132,38 +181,27 @@ public class PlayerMovementsManager
         return cost;
     }
 
-    public void InterruptMovementPreparation()
+    public float GetMaxDistance()
     {
-        currentUsabilityState = UsabilityState.None;
-
-        UpdateLinePreviewState();
-
-        currentDistancesByUsedActionPoints = new List<float>();
-
-        ClearInstantiatedDebugCircles();
+        return currentDistancesByUsedActionPoints[availableActionPoints - 1];
     }
 
-    int currentPreviewCost = 0;
-    public void UpdateMovementPreview()
+    public Vector3 GetClampedTargetPosition(Vector3 baseTargetPos)
     {
-        float movementDistance = Vector3.Distance(_player.transform.position, currentWorldMouseResult.mouseWorldPosition);
+        float maxDistance = GetMaxDistance();
 
-        int movementCost = GetActionPointsByDistance(movementDistance);
+        Vector3 playerPos = _player.transform.position;
+        Vector3 trueTargetPos = baseTargetPos;
+        trueTargetPos.y = playerPos.y;
 
-        if (movementLinePreview != null)
-        {
-            movementLinePreview.SetPositions(new Vector3[] { _player.transform.position + Vector3.up, currentWorldMouseResult.mouseWorldPosition + Vector3.up });
-            movementLinePreview.startColor = movementCost <= availableActionPoints ? Color.green : Color.red;
-            movementLinePreview.endColor = movementCost <= availableActionPoints ? Color.green : Color.red;
-        }
+        Vector3 moveDirection = (trueTargetPos - playerPos).normalized;
+        trueTargetPos = playerPos + moveDirection.normalized * maxDistance;
+        trueTargetPos.y = baseTargetPos.y;
 
-        if(movementCost != currentPreviewCost)
-        {
-            currentPreviewCost = movementCost;
-            OnPreparationAmountChanged?.Invoke(currentPreviewCost);
-        }
+        return trueTargetPos;
     }
-
+    #endregion
+       
     /// <summary>
     /// Return -1 if error (not enough points,...)
     /// Returns cost if succeeded
@@ -181,17 +219,18 @@ public class PlayerMovementsManager
 
         if(movementCost > availableActionPoints)
         {
-            Debug.Log("NOT ENOUGH POINTS TO MOVE");
-            return -1;
+            targetPosition = GetClampedTargetPosition(targetPosition);
+            movementCost = availableActionPoints;
         }
-
-        ClearInstantiatedDebugCircles();
 
         _player.MoveTo(targetPosition);
         currentUsabilityState = UsabilityState.Using;
-        UpdateLinePreviewState();
+
+        EndMovementPreparation();
 
         actionPointsUsedThisTurnToMove += movementCost;
+
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
 
         return movementCost;
     }

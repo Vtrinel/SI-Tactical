@@ -5,8 +5,6 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] EffectZone test = default;
-
     private void OnEnable()
     {
         GameManager.Instance.OnPlayerLifeAmountChanged += DebugLifeAmount;
@@ -25,6 +23,7 @@ public class PlayerController : MonoBehaviour
     {
         damageReceiptionSystem.SetUpSystem(true);
         navMeshAgent.isStopped = true;
+        positionStamp = transform.position;
     }
 
     private void Update()
@@ -35,23 +34,12 @@ public class PlayerController : MonoBehaviour
         if (ableToAct)
             UpdateInputs();
 
-        if (Input.GetKeyDown(KeyCode.K))
+        Vector3 currentPos = transform.position;
+        if (positionStamp != currentPos)
         {
-            Vector3 randomDir = Random.onUnitSphere;
-            randomDir.y = 0;
-            randomDir.Normalize();
-
-            knockbackReceiptionSystem.ReceiveKnockback(DamageTag.Enemy, new KnockbackParameters(10, 0.08f, 0.2f), randomDir);
-            Debug.DrawRay(transform.position + Vector3.up, randomDir * 3, Color.red);
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-            damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, 1);
-
-        if (Input.GetMouseButtonDown(1))
-        {
-            EffectZone newEffectZone = Instantiate(test);
-            newEffectZone.StartZone(GameManager.Instance.GetCurrentWorldMouseResult.mouseWorldPosition);
+            positionStamp = currentPos;
+            GameManager.Instance.OnPlayerPositionChanged?.Invoke(currentPos);
+            DiscManager.Instance.CheckAllDiscsProximity(transform.position);
         }
     }
 
@@ -67,7 +55,10 @@ public class PlayerController : MonoBehaviour
 
     public void StartPlayerRage(int currentLife, int lifeDifferential)
     {
-        Debug.Log("RAGE");
+        if (currentLife == 0)
+            return;
+
+        //Debug.Log("RAGE");
 
         EffectZone newRageEffectZone = Instantiate(rageEffectZonePrefab);
         newRageEffectZone.StartZone(transform.position + Vector3.up * rageEffectZoneVerticalOffset);
@@ -77,12 +68,12 @@ public class PlayerController : MonoBehaviour
 
     public void LifeReachedZero()
     {
-        Debug.Log("DEAD");
+        GameManager.Instance.LoseGame();
     }
 
     public void DebugLifeAmount(int amount)
     {
-        Debug.Log("Current life : " + amount);
+        //Debug.Log("Current life : " + amount);
     }
     #endregion
 
@@ -94,6 +85,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] KeyCode recallCompetenceInput = KeyCode.E;
     [SerializeField] KeyCode specialCompetenceInput = KeyCode.R;
     [SerializeField] KeyCode passTurnInput = KeyCode.Return;
+    [Space]
+    [SerializeField] KeyCode camForwardInput = KeyCode.UpArrow;
+    [SerializeField] KeyCode camBackwardInput = KeyCode.DownArrow;
+    [SerializeField] KeyCode camRightInput = KeyCode.RightArrow;
+    [SerializeField] KeyCode camLeftInput = KeyCode.LeftArrow;
+    public Vector2 GetCameraMoveKeyboardInput => new Vector2(
+        (Input.GetKey(camRightInput) ? 1 : 0) - (Input.GetKey(camLeftInput) ? 1 : 0), 
+        (Input.GetKey(camForwardInput)? 1 : 0) - (Input.GetKey(camBackwardInput) ? 1 : 0));
+
+    [SerializeField] float cursorMinCameraHorizontalMovementCoeff = 0.8f;
+    [SerializeField] float cursorMaxCameraHorizontalMovementCoeff = 0.95f;
+    [SerializeField] float cursorMinCameraVerticalMovementCoeff = 0.9f;
+    [SerializeField] float cursorMaxCameraVerticalMovementCoeff = 0.98f;
 
     bool ableToAct = false;
     public void SetAbleToAct(bool able)
@@ -121,12 +125,47 @@ public class PlayerController : MonoBehaviour
         {
             GameManager.Instance.SelectAction(ActionType.None);
             TurnManager.Instance.EndPlayerTurn();
+            CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+        }
+
+        Vector2 camKeyboardInputs = GetCameraMoveKeyboardInput;
+        if (camKeyboardInputs != Vector2.zero)
+        {
+            CameraManager.instance.GetPlayerCamera.MovePlayerCamera(camKeyboardInputs, true);
+        }
+        else
+        {
+            Vector2 unclampedMousePosition = Input.mousePosition;
+            Vector2 clampedMousePosition = unclampedMousePosition;
+            clampedMousePosition.x = Mathf.Clamp(clampedMousePosition.x, 0, Screen.width);
+            clampedMousePosition.y = Mathf.Clamp(clampedMousePosition.y, 0, Screen.height);
+            float cursorHorizontalCoeff = ((clampedMousePosition.x - Screen.width / 2)/ (Screen.width/2));
+            float cursorVerticalCoeff = ((clampedMousePosition.y - Screen.height / 2) / (Screen.height / 2));
+
+            float cursorHorizontalInput = Mathf.Clamp(
+                1 - ((cursorMaxCameraHorizontalMovementCoeff - Mathf.Abs(cursorHorizontalCoeff))/ (cursorMaxCameraHorizontalMovementCoeff - cursorMinCameraHorizontalMovementCoeff))
+                , 0, 1) * Mathf.Sign(cursorHorizontalCoeff);
+
+            float cursorVerticalInput = Mathf.Clamp(
+               1 - ((cursorMaxCameraVerticalMovementCoeff - Mathf.Abs(cursorVerticalCoeff)) / (cursorMaxCameraVerticalMovementCoeff - cursorMinCameraVerticalMovementCoeff))
+               , 0, 1) * Mathf.Sign(cursorVerticalCoeff);
+
+            if (unclampedMousePosition.x < 0 || unclampedMousePosition.x > Screen.width || unclampedMousePosition.y < 0 || unclampedMousePosition.y > Screen.height)
+            {
+                cursorHorizontalInput = 0;
+                cursorVerticalInput = 0;
+            }
+
+            Vector2 camCursorInput = new Vector2(cursorHorizontalInput, cursorVerticalInput);
+            if (camCursorInput != Vector2.zero)
+                CameraManager.instance.GetPlayerCamera.MovePlayerCamera(camCursorInput, false);
         }
     }
     #endregion
 
     #region Movement
-    bool moving;
+    Vector3 positionStamp = Vector3.zero;
+    bool moving = false;
     public void MoveTo(Vector3 targetPosition)
     {
         navMeshAgent.isStopped = false;
