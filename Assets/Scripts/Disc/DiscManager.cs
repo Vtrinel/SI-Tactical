@@ -162,23 +162,26 @@ public class DiscManager : MonoBehaviour
     [SerializeField] int maxNumberOfPossessedDiscs = 3;
     Stack<DiscType> possessedDiscs = new Stack<DiscType>();
     public int GetPossessedDiscsCount => possessedDiscs.Count;
+
+    public Action OnAddOneMaxDisc;
     public void AddOneMaxNumberOfPossessedDiscs() 
     { 
         maxNumberOfPossessedDiscs++;
 
         possessedDiscs.Push(DiscType.Piercing);
+        OnAddOneMaxDisc?.Invoke();
     }
 
-    public Action OnDiskFilled;
+    public Action OnDiscFilled;
     public void FillPossessedDiscsWithBasicDiscs()
     {
         for(int i =0; i < maxNumberOfPossessedDiscs; i++)
             possessedDiscs.Push(testDiscType);
 
-        OnDiskFilled?.Invoke();
+        OnDiscFilled?.Invoke();
     }
 
-    public Action<DiscScript> OnDiskAdded;
+    public Action<DiscScript> OnDiscAdded;
     public void PlayerRetreiveDisc(DiscScript retreivedDisc)
     {
         throwedDiscs.Remove(retreivedDisc);
@@ -186,7 +189,7 @@ public class DiscManager : MonoBehaviour
         if (possessedDiscs.Count < maxNumberOfPossessedDiscs)
         {
             possessedDiscs.Push(retreivedDisc.GetDiscType);
-            OnDiskAdded?.Invoke(retreivedDisc);
+            OnDiscAdded?.Invoke(retreivedDisc);
         }
         else
         {
@@ -236,7 +239,7 @@ public class DiscManager : MonoBehaviour
         }
     }
 
-    public Action OnDiskConsommed;
+    public Action OnDiscConsommed;
 
     public DiscScript TakeFirstDiscFromPossessedDiscs()
     {
@@ -247,7 +250,7 @@ public class DiscManager : MonoBehaviour
         if (newDisc != null)
         {
             throwedDiscs.Add(newDisc);
-            OnDiskConsommed?.Invoke();
+            OnDiscConsommed?.Invoke();
         }
 
         return newDisc;

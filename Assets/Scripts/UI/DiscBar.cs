@@ -11,21 +11,25 @@ public class DiscBar : MonoBehaviour
     [Header("Disc types")]
     // Types : Basic, Piercing, Ghost, Explosive, Heavy, Shockwave
     public GameObject discBasic;
-    public GameObject discPiercing;
-    public GameObject discGhost;
+    //public GameObject discPiercing;
+    //public GameObject discGhost;
 
     [SerializeField] List<GameObject> allDiscBarElement = new List<GameObject>();
 
     private void OnEnable()
     {
-        DiscManager.Instance.OnDiskConsommed += RemoveDiscFromBar;
-        GameManager.Instance.OnPlayerMaxLifeAmountChanged += UpdateMaxDiscBar;
+        DiscManager.Instance.OnDiscConsommed += RemoveDiscFromBar;
+        DiscManager.Instance.OnDiscFilled += CreateDiscBar;
+        DiscManager.Instance.OnDiscAdded += AddNewDisc;
+        DiscManager.Instance.OnAddOneMaxDisc += UpdateMaxDiscBar;
     }
 
     private void OnDisable()
     {
-        DiscManager.Instance.OnDiskConsommed -= RemoveDiscFromBar;
-        GameManager.Instance.OnPlayerMaxLifeAmountChanged -= UpdateMaxDiscBar;
+        DiscManager.Instance.OnDiscConsommed -= RemoveDiscFromBar;
+        DiscManager.Instance.OnDiscFilled -= CreateDiscBar;
+        DiscManager.Instance.OnDiscAdded -= AddNewDisc;
+        DiscManager.Instance.OnAddOneMaxDisc -= UpdateMaxDiscBar;
     }
 
 
@@ -41,8 +45,8 @@ public class DiscBar : MonoBehaviour
     {
         for (int i = 0; i < maxDisc; i++)
         {
-            GameObject newLifeBarElement = Instantiate(discBasic, gameObject.transform);
-            allDiscBarElement.Add(newLifeBarElement);
+            GameObject newDiscBarElement = Instantiate(discBasic, gameObject.transform);
+            allDiscBarElement.Add(newDiscBarElement);
         }
     }
 
@@ -66,17 +70,33 @@ public class DiscBar : MonoBehaviour
         }
     }
 
-    void UpdateMaxDiscBar(int _numberLives)
+    void AddNewDisc(DiscScript newDisc)
+    {
+        int i = 0;
+
+        foreach (GameObject _lifeBar in allDiscBarElement)
+        {
+            if (i < currentDisc)
+            {
+                //Oui
+                _lifeBar.GetComponent<Animator>().SetBool("Statut", true);
+            }
+            else
+            {
+                //Non
+                _lifeBar.GetComponent<Animator>().SetBool("Statut", false);
+            }
+            i++;
+        }
+    }
+
+    void UpdateMaxDiscBar()
     {
         // Add the new bars of lifes
-        for (int i = 0; i < _numberLives; i++)
-        {
-            GameObject newLifeBarElement = Instantiate(discBasic, gameObject.transform);
-            allDiscBarElement.Add(newLifeBarElement);
-        }
+        GameObject newLifeBarElement = Instantiate(discBasic, gameObject.transform);
+        allDiscBarElement.Add(newLifeBarElement);
 
-        maxDisc += _numberLives;
-        currentDisc += _numberLives;
+        maxDisc += 1;
 
         int j = 0;
 
