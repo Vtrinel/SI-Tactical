@@ -831,6 +831,11 @@ MonoBehaviour:
   isPreparing: 0
   durationTurn: 1
   myShieldManager: {fileID: 5388920296371151253}
+  haveDetectPlayer: 0
+  detectionPlayerRange: 10
+  detectionMaskRaycast:
+    serializedVersion: 2
+    m_Bits: 16896
   haveDisc: 0
   myLine: {fileID: 6698059227604151613}
   myArrow: {fileID: 3429749440041653220}

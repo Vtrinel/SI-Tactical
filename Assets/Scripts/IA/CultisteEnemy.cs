@@ -34,6 +34,15 @@ public class CultisteEnemy : IAEnemyVirtual
 
     public override void PlayerTurn()
     {
+        if (!haveDetectPlayer)
+        {
+            if (!CheckDetectionWithPlayer())
+            {
+                OnFinishTurn?.Invoke();
+                return;
+            }
+        }
+
         StartCoroutine(PlayerTurnCouroutine());
         projectileObj.SetActive(haveDisc);
     }
@@ -199,6 +208,9 @@ public class CultisteEnemy : IAEnemyVirtual
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, distanceOfDeplacement);
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, detectionPlayerRange);
     }
 
     private void Update()
