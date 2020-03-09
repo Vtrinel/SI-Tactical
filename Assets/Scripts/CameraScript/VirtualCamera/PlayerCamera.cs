@@ -8,7 +8,7 @@ public class PlayerCamera : VirtualCamera
 {
     [Header("Player Cam values")]
     [SerializeField] PlayerController player = default;
-    [SerializeField] Transform followTransform = default;
+    [SerializeField] CameraTarget followTransform = default;
 
     protected override void OnEnable()
     {
@@ -16,7 +16,8 @@ public class PlayerCamera : VirtualCamera
         player = GameManager.Instance.GetPlayer;
         //SetCameraTarget(player.transform);
         ResetPlayerCamera();
-        followTransform.SetParent(player.transform);
+        followTransform.transform.SetParent(player.transform);
+        followTransform.transform.position = player.transform.position;
         SetCameraTarget(followTransform.transform);
         SetCameraActive();
         
@@ -64,17 +65,34 @@ public class PlayerCamera : VirtualCamera
 
         Debug.DrawRay(transform.position, (rightMovement).normalized * 10f, Color.red);
 
-        followTransform.position += rightMovement + forwardMovement;
-        followTransform.position = new Vector3(
-                Mathf.Clamp(followTransform.position.x, minimumFreeCameraOffset.position.x, maximumFreeCameraOffset.position.x),
-                followTransform.position.y,
-                Mathf.Clamp(followTransform.position.z, minimumFreeCameraOffset.position.z, maximumFreeCameraOffset.position.z));
+        followTransform.transform.position += rightMovement + forwardMovement;
+        followTransform.transform.position = new Vector3(
+                Mathf.Clamp(followTransform.transform.position.x, minimumFreeCameraOffset.position.x, maximumFreeCameraOffset.position.x),
+                followTransform.transform.position.y,
+                Mathf.Clamp(followTransform.transform.position.z, minimumFreeCameraOffset.position.z, maximumFreeCameraOffset.position.z));
     }
 
     public void ResetPlayerCamera()
     {
-        followTransform.position = player.transform.position;
+        StartMovementToward(player.transform);
+        //followTransform.parent = player.transform;
+        //followTransform.position = player.transform.position;
     }
 
     #endregion
+
+    #region OtherCameraMovements
+    public void AttachFollowTransformTo(Transform newTrToFollow)
+    {
+        StartMovementToward(newTrToFollow);
+        //followTransform.parent = newTrToFollow;
+        //followTransform.position = newTrToFollow.position;
+    }
+    #endregion
+
+    public void StartMovementToward(Transform tr)
+    {
+        followTransform.transform.SetParent(tr);
+        followTransform.StartMovement();
+    }
 }
