@@ -49,6 +49,9 @@ public class TurnManager : MonoBehaviour
 
     public Action OnStartPlayerTurn;
     public Action OnEndPlayerTurn;
+
+    public Action OnStartEnemyTurn;
+    public Action OnEndEnemyTurn;
     #endregion
 
     #region Enemies Turn

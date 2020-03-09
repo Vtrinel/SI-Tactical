@@ -128,37 +128,42 @@ public class PlayerController : MonoBehaviour
             CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
         }
 
-        Vector2 camKeyboardInputs = GetCameraMoveKeyboardInput;
+
+
+            Vector2 camKeyboardInputs = GetCameraMoveKeyboardInput;
         if (camKeyboardInputs != Vector2.zero)
         {
             CameraManager.instance.GetPlayerCamera.MovePlayerCamera(camKeyboardInputs, true);
         }
         else
         {
-            Vector2 unclampedMousePosition = Input.mousePosition;
-            Vector2 clampedMousePosition = unclampedMousePosition;
-            clampedMousePosition.x = Mathf.Clamp(clampedMousePosition.x, 0, Screen.width);
-            clampedMousePosition.y = Mathf.Clamp(clampedMousePosition.y, 0, Screen.height);
-            float cursorHorizontalCoeff = ((clampedMousePosition.x - Screen.width / 2)/ (Screen.width/2));
-            float cursorVerticalCoeff = ((clampedMousePosition.y - Screen.height / 2) / (Screen.height / 2));
-
-            float cursorHorizontalInput = Mathf.Clamp(
-                1 - ((cursorMaxCameraHorizontalMovementCoeff - Mathf.Abs(cursorHorizontalCoeff))/ (cursorMaxCameraHorizontalMovementCoeff - cursorMinCameraHorizontalMovementCoeff))
-                , 0, 1) * Mathf.Sign(cursorHorizontalCoeff);
-
-            float cursorVerticalInput = Mathf.Clamp(
-               1 - ((cursorMaxCameraVerticalMovementCoeff - Mathf.Abs(cursorVerticalCoeff)) / (cursorMaxCameraVerticalMovementCoeff - cursorMinCameraVerticalMovementCoeff))
-               , 0, 1) * Mathf.Sign(cursorVerticalCoeff);
-
-            if (unclampedMousePosition.x < 0 || unclampedMousePosition.x > Screen.width || unclampedMousePosition.y < 0 || unclampedMousePosition.y > Screen.height)
+            if (!GameManager.Instance.GetCurrentWorldMouseResult.mouseIsOnUI)
             {
-                cursorHorizontalInput = 0;
-                cursorVerticalInput = 0;
-            }
+                Vector2 unclampedMousePosition = Input.mousePosition;
+                Vector2 clampedMousePosition = unclampedMousePosition;
+                clampedMousePosition.x = Mathf.Clamp(clampedMousePosition.x, 0, Screen.width);
+                clampedMousePosition.y = Mathf.Clamp(clampedMousePosition.y, 0, Screen.height);
+                float cursorHorizontalCoeff = ((clampedMousePosition.x - Screen.width / 2) / (Screen.width / 2));
+                float cursorVerticalCoeff = ((clampedMousePosition.y - Screen.height / 2) / (Screen.height / 2));
 
-            Vector2 camCursorInput = new Vector2(cursorHorizontalInput, cursorVerticalInput);
-            if (camCursorInput != Vector2.zero)
-                CameraManager.instance.GetPlayerCamera.MovePlayerCamera(camCursorInput, false);
+                float cursorHorizontalInput = Mathf.Clamp(
+                    1 - ((cursorMaxCameraHorizontalMovementCoeff - Mathf.Abs(cursorHorizontalCoeff)) / (cursorMaxCameraHorizontalMovementCoeff - cursorMinCameraHorizontalMovementCoeff))
+                    , 0, 1) * Mathf.Sign(cursorHorizontalCoeff);
+
+                float cursorVerticalInput = Mathf.Clamp(
+                   1 - ((cursorMaxCameraVerticalMovementCoeff - Mathf.Abs(cursorVerticalCoeff)) / (cursorMaxCameraVerticalMovementCoeff - cursorMinCameraVerticalMovementCoeff))
+                   , 0, 1) * Mathf.Sign(cursorVerticalCoeff);
+
+                if (unclampedMousePosition.x < 0 || unclampedMousePosition.x > Screen.width || unclampedMousePosition.y < 0 || unclampedMousePosition.y > Screen.height)
+                {
+                    cursorHorizontalInput = 0;
+                    cursorVerticalInput = 0;
+                }
+
+                Vector2 camCursorInput = new Vector2(cursorHorizontalInput, cursorVerticalInput);
+                if (camCursorInput != Vector2.zero)
+                    CameraManager.instance.GetPlayerCamera.MovePlayerCamera(camCursorInput, false);
+            }
         }
     }
     #endregion

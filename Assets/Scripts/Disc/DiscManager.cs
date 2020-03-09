@@ -184,8 +184,14 @@ public class DiscManager : MonoBehaviour
         }
         else
         {
+            DiscType retreivedDiscType = retreivedDisc.GetDiscType;
             //Debug.Log("TOO MUCH DISCS, NOT ADDED BUT SUPPOSED TO BE SOMETHING");
         }
+    }
+
+    public void DiscOverload()
+    {
+
     }
 
     public DiscScript TakeFirstDiscFromPossessedDiscs()
