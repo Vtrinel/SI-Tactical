@@ -29,21 +29,26 @@ public class PlayerExperienceManager : MonoBehaviour
     public GameObject specialInterface;
 
     //Actions
+    public Action<bool> OnEnterTotemZone;
     public Action<int> OnSelectTypeCompetence;
+    public Action<int> OnGainExperience;
+    public Action<int> OnLossExperience;
     public Action<Competence> OnSelectCompetence;
     public Action<Competence> OnTryUnlockCompetence;
     public Action<Competence> OnEquipCompetence;
     public Action<CompetenceThrow, CompetenceRecall, CompetenceSpecial> OnSetChanged;
-    public Action<int> OnGainExperience;
-    public Action<int> OnLossExperience;
+
 
     // Private Attributes
-    
+    [SerializeField] PlayerController playerController;
+
+    private bool canOpenCompetenceMenu = false;
+
     private Competence selectedCompetence;
 
-    CompetenceThrow equipedThrowCompetence = default;
-    CompetenceRecall equipedRecallCompetence = default;
-    CompetenceSpecial equipedSpecialCompetence = default;
+    private CompetenceThrow equipedThrowCompetence = default;
+    private CompetenceRecall equipedRecallCompetence = default;
+    private CompetenceSpecial equipedSpecialCompetence = default;
 
     
 
@@ -75,7 +80,7 @@ public class PlayerExperienceManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(playerController.GetCompetenceMenuInput) && canOpenCompetenceMenu)
         {
             IsCompetenceInterfaceShowing();
         }
@@ -108,7 +113,7 @@ public class PlayerExperienceManager : MonoBehaviour
                 break;
         }
 
-        // Compatence bar
+        // Competence experience bar
         if (competenceBar >= 100)
         {
             competenceBar = 100;
@@ -205,28 +210,6 @@ public class PlayerExperienceManager : MonoBehaviour
         return selectedCompetence;
     }
 
-    // Show the debug stats
-    public void ResumeStats()
-    {
-        ClearLog();
-
-        Debug.Log("Show all competences stats");
-        Debug.Log("<color=blue>Competences points : </color>" + canUnlockComp);
-        Debug.Log("<color=yellow>Equiped competences</color>");
-        Debug.Log("equipedThrowCompetence : " + equipedThrowCompetence.GetCompetenceName);
-        Debug.Log("equipedRecallCompetence : " + equipedRecallCompetence.GetCompetenceName);
-        Debug.Log("equipedSpecialCompetence : " + equipedSpecialCompetence.GetCompetenceName);
-    }
-
-    // Clear the console
-    public void ClearLog()
-    {
-        var assembly = Assembly.GetAssembly(typeof(UnityEditor.Editor));
-        var type = assembly.GetType("UnityEditor.LogEntries");
-        var method = type.GetMethod("Clear");
-        method.Invoke(new object(), null);
-    }
-
     public void GainExperience(int experience)
     {
         competenceBar += experience;
@@ -275,5 +258,13 @@ public class PlayerExperienceManager : MonoBehaviour
         isCanvasCompetenceShowed = !isCanvasCompetenceShowed;
         competenceCanvas.gameObject.SetActive(isCanvasCompetenceShowed);
         OnMenuOpenedOrClosed?.Invoke();
+    }
+
+    public void CanOpenCompetenceMenu(bool canOpen)
+    {
+        canOpenCompetenceMenu = canOpen;
+        OnEnterTotemZone?.Invoke(canOpen);
+
+        Debug.Log(canOpen);
     }
 }

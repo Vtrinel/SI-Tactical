@@ -85,6 +85,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] KeyCode recallCompetenceInput = KeyCode.E;
     [SerializeField] KeyCode specialCompetenceInput = KeyCode.R;
     [SerializeField] KeyCode passTurnInput = KeyCode.Return;
+    [SerializeField] KeyCode competenceMenuInput = KeyCode.Tab;
     [Space]
     [SerializeField] KeyCode camForwardInput = KeyCode.UpArrow;
     [SerializeField] KeyCode camBackwardInput = KeyCode.DownArrow;
@@ -100,6 +101,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float cursorMaxCameraVerticalMovementCoeff = 0.98f;
 
     bool ableToAct = false;
+
+    public KeyCode GetCompetenceMenuInput => competenceMenuInput;
+
     public void SetAbleToAct(bool able)
     {
         ableToAct = able;
