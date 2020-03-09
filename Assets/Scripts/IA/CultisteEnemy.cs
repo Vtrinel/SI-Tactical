@@ -78,11 +78,11 @@ public class CultisteEnemy : IAEnemyVirtual
                 OnFinishTurn?.Invoke();
                 return;
             }
-            destination = newObjDestination.position;
+            destination = CalculDestination(newObjDestination.position);
         }
         else
         {
-            destination = player.transform.position ;
+            destination = CalculDestination(player.transform.position);
         }
 
         myNavAgent.SetDestination(destination);
@@ -94,15 +94,13 @@ public class CultisteEnemy : IAEnemyVirtual
     IEnumerator WaitDeplacement()
     {
         isPlaying = true;
-        float normalizedTime = 0;
 
-        while (normalizedTime < durationTurn)
+        while (myNavAgent.pathStatus != NavMeshPathStatus.PathComplete || myNavAgent.remainingDistance != 0)
         {
-            normalizedTime += Time.deltaTime;
-
             if (CanAttack())
             {
-                normalizedTime = durationTurn + 1;
+                myNavAgent.isStopped = true;
+
                 PrepareAttack();
                 break;
             }
@@ -112,7 +110,7 @@ public class CultisteEnemy : IAEnemyVirtual
         yield return new WaitForSeconds(0.4f);
 
         //si il a chopé un disc sur la route
-        if (CanAttack())
+        if (CanAttack() && !isPreparing)
         {
             PrepareAttack();
             yield return new WaitForSeconds(0.4f);
