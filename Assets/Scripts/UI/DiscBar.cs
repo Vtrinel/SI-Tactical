@@ -9,10 +9,11 @@ public class DiscBar : MonoBehaviour
     [SerializeField] int currentDisc;
 
     [Header("Disc types")]
-    // Types : None , Piercing, Ghost, Explosive, Heavy, Shockwave
-    public GameObject discBasic;
-    //public GameObject discPiercing;
-    //public GameObject discGhost;
+    public GameObject discPiercing;
+    public GameObject discGhost;
+    public GameObject discExplosive;
+    public GameObject discHeavy;
+    public GameObject discShockwave;
 
     [SerializeField] List<GameObject> allDiscBarElement = new List<GameObject>();
 
@@ -41,7 +42,7 @@ public class DiscBar : MonoBehaviour
 
         for (int i = 0; i < maxDisc; i++)
         {
-            GameObject newDiscBarElement = Instantiate(discBasic, gameObject.transform);
+            GameObject newDiscBarElement = Instantiate(discPiercing, gameObject.transform);
             allDiscBarElement.Add(newDiscBarElement);
         }
     }
@@ -49,13 +50,42 @@ public class DiscBar : MonoBehaviour
     void RemoveDiscFromBar()
     {
         Destroy(allDiscBarElement[currentDisc]);
+        allDiscBarElement.RemoveAt(currentDisc);
 
         currentDisc--;
     }
 
     void AddNewDisc(DiscScript newDisc)
     {
-        GameObject newDiscBarElement = Instantiate(discBasic, gameObject.transform);
+        GameObject newDiscBarElement;
+
+        switch (newDisc.GetDiscType)
+        {
+            case DiscType.Piercing:
+                newDiscBarElement = Instantiate(discPiercing, gameObject.transform);
+                break;
+
+            case DiscType.Ghost:
+                newDiscBarElement = Instantiate(discGhost, gameObject.transform);
+                break;
+
+            case DiscType.Explosive:
+                newDiscBarElement = Instantiate(discExplosive, gameObject.transform);
+                break;
+
+            case DiscType.Heavy:
+                newDiscBarElement = Instantiate(discHeavy, gameObject.transform);
+                break;
+
+            case DiscType.Shockwave:
+                newDiscBarElement = Instantiate(discShockwave, gameObject.transform);
+                break;
+
+            default:
+                newDiscBarElement = Instantiate(discPiercing, gameObject.transform);
+                break;
+        }
+
         allDiscBarElement.Add(newDiscBarElement);
 
         currentDisc++;
@@ -63,8 +93,8 @@ public class DiscBar : MonoBehaviour
 
     void UpdateMaxDiscBar()
     {
-        GameObject newDiscBarElement = Instantiate(discBasic, gameObject.transform);
-        allDiscBarElement.Add(newDiscBarElement);
+        //GameObject newDiscBarElement = Instantiate(discPiercing, gameObject.transform);
+        //allDiscBarElement.Add(newDiscBarElement);
 
         maxDisc++;
         currentDisc++;
