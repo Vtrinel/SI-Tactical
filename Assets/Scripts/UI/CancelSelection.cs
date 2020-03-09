@@ -25,8 +25,6 @@ public class CancelSelection : MonoBehaviour
 
     public void ChangeStateCancelButton(bool state)
     {
-        Debug.Log("bool state ? : " + state);
-
         cancelButton.gameObject.SetActive(state);
     }
 

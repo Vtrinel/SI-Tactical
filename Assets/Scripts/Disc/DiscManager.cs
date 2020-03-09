@@ -321,7 +321,7 @@ public class DiscManager : MonoBehaviour
 
 public enum DiscType
 {
-    Basic, Piercing, Ghost, Explosive, Heavy, Shockwave
+    None, Piercing, Ghost, Explosive, Heavy, Shockwave
 }
 
 [System.Serializable]
