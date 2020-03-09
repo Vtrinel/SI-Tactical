@@ -43,8 +43,10 @@ public class LevelProgressionManager : MonoBehaviour
     public Action<int, int, int> OnProgressValueChanged;
     public Action OnGoalReached;
 
-    public void CheckForProgressTurn()
+    public bool CheckForProgressTurn()
     {
+        bool progressed = false;
+
         if (goalZone != null)
         {
             int thisTurnProgress = goalZone.GetProgressionAmount();
@@ -55,7 +57,7 @@ public class LevelProgressionManager : MonoBehaviour
                 currentProgressValue = Mathf.Clamp(currentProgressValue, 0, targetProgressValue);
 
                 OnProgressValueChanged?.Invoke(currentProgressValue, thisTurnProgress, targetProgressValue);
-
+                progressed = true;
                 //Debug.Log("Progress : " + currentProgressValue + "/" + targetProgressValue);
                 if (currentProgressValue == targetProgressValue)
                 {
@@ -66,5 +68,7 @@ public class LevelProgressionManager : MonoBehaviour
         }
         else
             Debug.LogWarning("WARNING : No LevelGoalZone on LevelManager");
+
+        return progressed;
     }
 }

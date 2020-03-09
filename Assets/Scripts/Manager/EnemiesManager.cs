@@ -96,14 +96,16 @@ public class EnemiesManager : MonoBehaviour
         Destroy(enemy.gameObject);
     }
 
-    public void SpawnEnemyAtPosition(EnemyType enemyType, Vector3 position)
+    public EnemyBase SpawnEnemyAtPosition(EnemyType enemyType, Vector3 position)
     {
         EnemyBase newEnemy = GetEnemyFromPool(enemyType);
         if (newEnemy == null)
-            return;
+            return null;
 
-        AddEnemy(newEnemy);
         newEnemy.SpawnEnemy(position);
+        AddEnemy(newEnemy);
+
+        return newEnemy;
     }
 
     public void DestroyEnemy(EnemyBase enemy)

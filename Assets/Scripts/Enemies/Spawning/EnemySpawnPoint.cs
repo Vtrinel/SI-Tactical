@@ -8,29 +8,45 @@ public class EnemySpawnPoint : MonoBehaviour
     /// This should be improved if possible
 
     [SerializeField] EnemyType definedEnemyToSpawn = EnemyType.None;
+    [SerializeField] bool definedEnemyWillAutoDetectPlayer = true;
+    [SerializeField] GameObject spawnZoneDebugObject = default;
 
     public void StartSpawning()
     {
         if (definedEnemyToSpawn == EnemyType.None)
             return;
-        StartSpawning(definedEnemyToSpawn);
+        StartSpawning(definedEnemyToSpawn, definedEnemyWillAutoDetectPlayer);
     }
 
-    EnemyType nextSpawnEnemyType = EnemyType.None;
-    public void StartSpawning(EnemyType enemyTypeToSpawn)
+    EnemyType spawnPendingEnemyType = EnemyType.None;
+    bool spawnPendingWillAutoDetectPlayer;
+    public void StartSpawning(EnemyType enemyTypeToSpawn, bool autoDetectPlayer)
     {
         if (enemyTypeToSpawn == EnemyType.None)
             return;
-        nextSpawnEnemyType = enemyTypeToSpawn;
+        spawnPendingEnemyType = enemyTypeToSpawn;
+        spawnPendingWillAutoDetectPlayer = autoDetectPlayer;
 
         /// NEXT STEP : add to spawn points to check on next player turn start + generate a preview
         /// For now, just spawn instant
-        SpawnEnemyOnSpawnPoint(nextSpawnEnemyType);
+        TurnManager.Instance.AddPendingSpawnPoint(this);
+        spawnZoneDebugObject.SetActive(true);
     }
 
-    public void SpawnEnemyOnSpawnPoint(EnemyType enemyTypeToSpawn)
+    public void SpawnPendingEnemy()
     {
-        EnemiesManager.Instance.SpawnEnemyAtPosition(enemyTypeToSpawn, transform.position);
+        SpawnEnemyOnSpawnPoint(spawnPendingEnemyType, spawnPendingWillAutoDetectPlayer);
+    }
+
+    public void SpawnEnemyOnSpawnPoint(EnemyType enemyTypeToSpawn, bool autoDetectPlayer)
+    {
+        EnemyBase enemyBase = EnemiesManager.Instance.SpawnEnemyAtPosition(enemyTypeToSpawn, transform.position);
+        if(enemyBase != null)
+        {
+            enemyBase.SetPlayerDetected(autoDetectPlayer);
+        }
+
+        spawnZoneDebugObject.SetActive(false);
     }
 
     private void OnDrawGizmos()

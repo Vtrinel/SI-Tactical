@@ -48,7 +48,6 @@ public class EnemyBase : MonoBehaviour
         transform.position = position;
         gameObject.SetActive(true);
         SetUpInitiative();
-        //EnemiesManager.Instance.AddEnemy(this);
     }
 
     public void SetUpInitiative()
@@ -58,6 +57,8 @@ public class EnemyBase : MonoBehaviour
 
         setedUpInitiative = true;
         enemyInstanceInitiative = baseInitiative + UnityEngine.Random.Range(0f, 1f);
+
+        name = name + " - " +  GetEnemyInitiative.ToString();
     }
 
     #region Turn management
@@ -89,11 +90,13 @@ public class EnemyBase : MonoBehaviour
     [Header("IA")]
 
     [SerializeField] IAEnemyVirtual myIA = default;
+    public void SetPlayerDetected(bool detected)
+    {
+        myIA.haveDetectPlayer = detected;
+    }
 
     void PlayMyTurn()
     {
-        Debug.Log("PLAY");
-
         if (myIA == null)
             return;
 
