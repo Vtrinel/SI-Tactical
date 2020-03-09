@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -168,12 +169,16 @@ public class DiscManager : MonoBehaviour
         possessedDiscs.Push(DiscType.Piercing);
     }
 
+    public Action OnDiskFilled;
     public void FillPossessedDiscsWithBasicDiscs()
     {
         for(int i =0; i < maxNumberOfPossessedDiscs; i++)
             possessedDiscs.Push(testDiscType);
+
+        OnDiskFilled?.Invoke();
     }
 
+    public Action<DiscScript> OnDiskAdded;
     public void PlayerRetreiveDisc(DiscScript retreivedDisc)
     {
         throwedDiscs.Remove(retreivedDisc);
@@ -181,6 +186,7 @@ public class DiscManager : MonoBehaviour
         if (possessedDiscs.Count < maxNumberOfPossessedDiscs)
         {
             possessedDiscs.Push(retreivedDisc.GetDiscType);
+            OnDiskAdded?.Invoke(retreivedDisc);
         }
         else
         {
@@ -230,6 +236,8 @@ public class DiscManager : MonoBehaviour
         }
     }
 
+    public Action OnDiskConsommed;
+
     public DiscScript TakeFirstDiscFromPossessedDiscs()
     {
         if (possessedDiscs.Count == 0)
@@ -237,7 +245,10 @@ public class DiscManager : MonoBehaviour
 
         DiscScript newDisc = GetDiscFromPool(possessedDiscs.Pop());
         if (newDisc != null)
+        {
             throwedDiscs.Add(newDisc);
+            OnDiskConsommed?.Invoke();
+        }
 
         return newDisc;
     }
