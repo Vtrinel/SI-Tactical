@@ -77,7 +77,7 @@ public class DiscBar : MonoBehaviour
 
     void RemoveDiscFromBar()
     {
-        
+        Destroy(allDiscBarElement[currentDisc]);
 
         allDiscBarElement.RemoveAt(currentDisc);
 

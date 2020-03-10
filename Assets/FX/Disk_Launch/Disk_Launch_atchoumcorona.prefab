@@ -5098,7 +5098,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.52
+      scalar: 0.76
       minScalar: 0.3
       maxCurve:
         serializedVersion: 2
@@ -9652,7 +9652,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7569440295073990845}
   m_LocalRotation: {x: -0.48335284, y: 0.5161105, z: -0.5161106, w: 0.48335284}
-  m_LocalPosition: {x: 0.79, y: 0.043, z: 0.224}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2443450093186301308}
@@ -10286,7 +10286,7 @@ ParticleSystem:
     serializedVersion: 6
     enabled: 1
     type: 4
-    angle: 45.65
+    angle: 12.39
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
@@ -10372,7 +10372,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0.06
     radius:
-      value: 1.23
+      value: 0.0001
       mode: 0
       spread: 0
       speed:
@@ -10675,12 +10675,12 @@ ParticleSystem:
           outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
-          value: 0.055298656
-          inSlope: -1.2741065
-          outSlope: -1.2741065
+          value: 0
+          inSlope: 0.33581868
+          outSlope: 0.33581868
           tangentMode: 0
           weightedMode: 0
-          inWeight: 0.08318901
+          inWeight: 0.08233541
           outWeight: 0.33333334
         m_PreInfinity: 2
         m_PostInfinity: 2
