@@ -226,6 +226,9 @@ public class GameManager : MonoBehaviour
     #region Player Inputs Reception
     public void SelectAction(ActionType actionType)
     {
+        if (!GetPlayerCanAct)
+            return;
+
         if (actionType == ActionType.None)
         {
             if (competencesUsabilityManager.IsPreparingCompetence)
@@ -379,18 +382,24 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void UpdatePlayerActability()
+    public bool GetPlayerCanAct
     {
-        bool canAct = 
-            !playerMovementsManager.IsMoving 
-            && 
-            !competencesUsabilityManager.IsUsingCompetence 
-            && 
+        get
+        {
+            return !playerMovementsManager.IsMoving
+            &&
+            !competencesUsabilityManager.IsUsingCompetence
+            &&
             turnManager.GetCurrentTurnState == TurnState.PlayerTurn
             &&
             !playerExperienceManager.IsUsingCompetencesMenu
-            && 
+            &&
             gameStarted && !gameWon && !gameLost;
+        }
+    }
+    public void UpdatePlayerActability()
+    {
+        bool canAct = GetPlayerCanAct;
 
         player.SetAbleToAct(canAct);
         SetActionPointsDebugTextVisibility(playerMovementsManager.IsWillingToMove || competencesUsabilityManager.IsPreparingCompetence);
@@ -451,6 +460,8 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("YOU LOSE");
         gameLost = true;
+        turnManager.InterruptEnemiesTurn();
+        turnManager.LostGame();
         UIManager.Instance.ShowLosePanel();
     }
     #endregion
