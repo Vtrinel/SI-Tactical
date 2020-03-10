@@ -34,6 +34,15 @@ public class CultisteEnemy : IAEnemyVirtual
 
     public override void PlayerTurn()
     {
+        if (!haveDetectPlayer)
+        {
+            if (!CheckDetectionWithPlayer())
+            {
+                OnFinishTurn?.Invoke();
+                return;
+            }
+        }
+
         StartCoroutine(PlayerTurnCouroutine());
         projectileObj.SetActive(haveDisc);
     }
@@ -69,11 +78,11 @@ public class CultisteEnemy : IAEnemyVirtual
                 OnFinishTurn?.Invoke();
                 return;
             }
-            destination = newObjDestination.position;
+            destination = CalculDestination(newObjDestination.position);
         }
         else
         {
-            destination = player.transform.position ;
+            destination = CalculDestination(player.transform.position);
         }
 
         myNavAgent.SetDestination(destination);
@@ -85,15 +94,13 @@ public class CultisteEnemy : IAEnemyVirtual
     IEnumerator WaitDeplacement()
     {
         isPlaying = true;
-        float normalizedTime = 0;
 
-        while (normalizedTime < durationTurn)
+        while (myNavAgent.pathStatus != NavMeshPathStatus.PathComplete || myNavAgent.remainingDistance != 0)
         {
-            normalizedTime += Time.deltaTime;
-
             if (CanAttack())
             {
-                normalizedTime = durationTurn + 1;
+                myNavAgent.isStopped = true;
+
                 PrepareAttack();
                 break;
             }
@@ -103,7 +110,7 @@ public class CultisteEnemy : IAEnemyVirtual
         yield return new WaitForSeconds(0.4f);
 
         //si il a chopé un disc sur la route
-        if (CanAttack())
+        if (CanAttack() && !isPreparing)
         {
             PrepareAttack();
             yield return new WaitForSeconds(0.4f);
@@ -199,6 +206,9 @@ public class CultisteEnemy : IAEnemyVirtual
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, distanceOfDeplacement);
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, detectionPlayerRange);
     }
 
     private void Update()
@@ -213,10 +223,14 @@ public class CultisteEnemy : IAEnemyVirtual
     {
         if (other.gameObject.layer == 11 && !haveDisc && isPlaying)
         {
-            if (!other.gameObject.GetComponent<DiscScript>().isAttacking)
+            DiscScript touchedDisc = other.GetComponent<DiscScript>();
+            if (touchedDisc != null)
             {
-                DiscManager.Instance.ReturnDiscInPool(other.GetComponent<DiscScript>());
-                haveDisc = true;
+                if (!touchedDisc.isAttacking)
+                {
+                    DiscManager.Instance.DestroyDisc(touchedDisc);
+                    haveDisc = true;
+                }
             }
         }
     }

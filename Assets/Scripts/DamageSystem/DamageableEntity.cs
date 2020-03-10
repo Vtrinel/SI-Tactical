@@ -24,6 +24,7 @@ public class DamageableEntity : MonoBehaviour
     /// </summary>
     public Action<int, int> OnReceivedDamages;
     public Action OnLifeReachedZero;
+    public Action<int> OnReceivedStun;
 
     public void SetUpSystem(bool isPlayer)
     {
@@ -42,17 +43,23 @@ public class DamageableEntity : MonoBehaviour
             GameManager.Instance.PlayerLifeChange(currentLifeAmount);
     }
 
-    public void ReceiveDamage(DamageTag sourceDamageTag, int damageAmount)
+    public void ReceiveDamage(DamageTag sourceDamageTag, DamagesParameters damagesParameters)
     {
         if (sourceDamageTag != DamageTag.Environment && sourceDamageTag == damageTag)
             return;
 
-        if (damageAmount == 0)
+        if (damagesParameters._damages == 0)
             return;
 
-        LoseLife(damageAmount);
+        LoseLife(damagesParameters._damages);
 
-        OnReceivedDamages?.Invoke(currentLifeAmount, -Mathf.Abs(damageAmount));
+        OnReceivedDamages?.Invoke(currentLifeAmount, -Mathf.Abs(damagesParameters._damages));
+
+        if (damagesParameters._numberOfStunedTurns > 0)
+        {
+            //Debug.Log(name + " is stuned for " + damagesParameters._numberOfStunedTurns + " turn" + (damagesParameters._numberOfStunedTurns > 1 ? "s" : ""));
+            OnReceivedStun?.Invoke(damagesParameters._numberOfStunedTurns);
+        }
     }
 
     public void LoseLife(int amount)
@@ -89,4 +96,21 @@ public class DamageableEntity : MonoBehaviour
     }
 }
 
-public enum DamageTag { Player, Enemy, Environment }
+public struct DamagesParameters
+{
+    public DamagesParameters(int damages)
+    {
+        _damages = damages;
+        _numberOfStunedTurns = 0;
+    }
+    public DamagesParameters(int damages, int stunedTurns)
+    {
+        _damages = damages;
+        _numberOfStunedTurns = stunedTurns;
+    }
+
+    public int _damages;
+    public int _numberOfStunedTurns;
+}
+
+public enum DamageTag { Player, Enemy, Environment, Disc }

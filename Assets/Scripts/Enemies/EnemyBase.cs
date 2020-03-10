@@ -6,11 +6,12 @@ using UnityEngine.UI;
 
 public class EnemyBase : MonoBehaviour
 {
+    [SerializeField] EnemyType enemyType = EnemyType.TouniBase;
+    public EnemyType GetEnemyType => enemyType;
+
     private void Start()
     {
-        damageReceiptionSystem.SetUpSystem(false);
-
-        SetUpInitiative();
+        SpawnEnemy(transform.position, _lootedDiscType);
     }
 
     [Header("References")]
@@ -26,7 +27,12 @@ public class EnemyBase : MonoBehaviour
     public Action<EnemyBase> OnEnemyDeath;
     public void Die()
     {
+        CheckForLootedDisc();
+
         Debug.Log(name + " (Enemy) is dead");
+        spawned = false;
+        setedUpInitiative = false;
+        
         OnEnemyDeath?.Invoke(this);
         Destroy(gameObject);
     }   
@@ -37,6 +43,45 @@ public class EnemyBase : MonoBehaviour
     public float GetEnemyInitiative => enemyInstanceInitiative;
     bool setedUpInitiative = false;
 
+    [Header("Loot")]
+    [SerializeField] DiscType _lootedDiscType = DiscType.None;
+    [SerializeField] GameObject lootDiscIndicator = default;
+
+    public void CheckForLootedDisc()
+    {
+        if(_lootedDiscType != DiscType.None)
+        {
+            DiscScript newDisc = DiscManager.Instance.GetDiscFromPool(_lootedDiscType);
+            if(newDisc != null)
+            {
+                newDisc.transform.position = transform.position;
+            }
+        }
+    }
+
+    bool spawned = false;
+    public void SpawnEnemy(Vector3 position, DiscType lootedDiscType)
+    {
+        if (spawned)
+            return;
+
+        spawned = true;
+
+        damageReceiptionSystem.SetUpSystem(false);
+        transform.position = position;
+        gameObject.SetActive(true);
+        SetUpInitiative();
+        _lootedDiscType = lootedDiscType;
+
+        if (_lootedDiscType != DiscType.None)
+            Debug.Log(name + " will loot " + _lootedDiscType + " disc");
+
+        if (lootDiscIndicator != null)
+        {
+            lootDiscIndicator.SetActive(_lootedDiscType != DiscType.None);
+        }
+    }
+
     public void SetUpInitiative()
     {
         if (setedUpInitiative)
@@ -44,15 +89,14 @@ public class EnemyBase : MonoBehaviour
 
         setedUpInitiative = true;
         enemyInstanceInitiative = baseInitiative + UnityEngine.Random.Range(0f, 1f);
+
+        name = name + " - " +  GetEnemyInitiative.ToString();
     }
 
-    #region Placeholder
-    [Header("Placeholder")]
-    [SerializeField] bool willAttackPlayerDebug = false;
+    #region Turn management
+
     public void StartTurn()
     {
-        //Debug.Log(name + "' turn");
-
         myIA.isPlaying = true;
         PlayMyTurn();
     }
@@ -64,7 +108,8 @@ public class EnemyBase : MonoBehaviour
         {
             return;
         }
-        TurnManager.Instance.EndEnemyTurn(this);
+
+        TurnManager.Instance.EndEnemyTurn(this, GetPlayerDetected);
     }
 
     public void InterruptAllAction()
@@ -74,11 +119,15 @@ public class EnemyBase : MonoBehaviour
     }
     #endregion
 
-
     #region IA
     [Header("IA")]
 
-    [SerializeField] IAEnemyVirtual myIA = default;
+    public IAEnemyVirtual myIA = default;
+    public void SetPlayerDetected(bool detected)
+    {
+        myIA.haveDetectPlayer = detected;
+    }
+    public bool GetPlayerDetected => myIA.haveDetectPlayer;
 
     void PlayMyTurn()
     {
@@ -86,19 +135,6 @@ public class EnemyBase : MonoBehaviour
             return;
 
         myIA.PlayerTurn();
-    }
-
-    IEnumerator DebugCoroutine()
-    {
-        yield return new WaitForSeconds(0.5f);
-
-        if (willAttackPlayerDebug)
-        {
-            GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, 1);
-            yield return new WaitForSeconds(0.5f);
-        }
-
-        EndTurn();
     }
     #endregion
 
@@ -123,5 +159,17 @@ public class EnemyBase : MonoBehaviour
             return;
 
         myIA.OnFinishTurn -= EndTurn;
+    }
+
+    public void DisplayAndActualisePreviewAttack(Transform target)
+    {
+        myIA.myShowPath.SetValue(myIA.distanceOfDeplacement, myIA.attackRange);
+        myIA.myShowPath.ShowOrHide(true);
+        myIA.myShowPath.SetTargetPosition(target);
+    }
+
+    public void HidePreview(bool value)
+    {
+        myIA.myShowPath.ShowOrHide(value);
     }
 }

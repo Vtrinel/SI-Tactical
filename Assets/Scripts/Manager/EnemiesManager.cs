@@ -22,6 +22,7 @@ public class EnemiesManager : MonoBehaviour
 
     [Header("Enemies in Game")]
     List<EnemyBase> allInGameEnemiesOrdered = new List<EnemyBase>();
+    public List<EnemyBase> GetAllInGameEnemiesOrdered => allInGameEnemiesOrdered;
     public Action<List<EnemyBase>> OnInGameEnemiesChanged;
 
     public void AddEnemy(EnemyBase newEnemy)
@@ -62,8 +63,68 @@ public class EnemiesManager : MonoBehaviour
 
         foreach(EnemyBase enemy in alreadyPlacedEnemies)
         {
+            if (!enemy.gameObject.activeInHierarchy)
+                continue;
+
             enemy.SetUpInitiative();
             AddEnemy(enemy);
         }
     }
+
+    /// For now, the spawning system isn't really a pool system, but I created the methods so it will be easy to create a pool system
+    [Header("Spawning System")]
+    [SerializeField] List<EnemyPoolParameters> allEnemyPoolParameters = new List<EnemyPoolParameters>();
+
+    public EnemyBase GetEnemyFromPool(EnemyType enemyType)
+    {
+        foreach(EnemyPoolParameters enemyPoolParameters in allEnemyPoolParameters)
+        {
+            if(enemyPoolParameters.enemyType == enemyType)
+            {
+                EnemyBase newEnemy = Instantiate(enemyPoolParameters.enemyPrefab, transform);
+
+                return newEnemy;
+            }
+        }
+
+        return null;
+    }
+
+    public void ReturnEnemyInPool(EnemyBase enemy)
+    {
+        EnemyType returnedEnemyType = enemy.GetEnemyType;
+
+        Destroy(enemy.gameObject);
+    }
+
+    public EnemyBase SpawnEnemyAtPosition(EnemyType enemyType, Vector3 position, DiscType lootedDiscType)
+    {
+        EnemyBase newEnemy = GetEnemyFromPool(enemyType);
+        if (newEnemy == null)
+            return null;
+
+        newEnemy.SpawnEnemy(position, lootedDiscType);
+        AddEnemy(newEnemy);
+
+        return newEnemy;
+    }
+
+    public void DestroyEnemy(EnemyBase enemy)
+    {
+        RemoveEnemy(enemy);
+        ReturnEnemyInPool(enemy);
+    }
+}
+
+[System.Serializable]
+public struct EnemyPoolParameters
+{
+    public EnemyType enemyType;
+    public EnemyBase enemyPrefab;
+    public int baseNumberOfElements;
+}
+
+public enum EnemyType
+{
+    None, TouniBase, TouniShield, TouniChaser, TouniChaserShield, CultistBase, CultistChaser
 }

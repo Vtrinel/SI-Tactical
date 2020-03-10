@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class EffectZone : MonoBehaviour
 {
+    [SerializeField] EffectZoneType effectZoneType = EffectZoneType.PlayerRage;
+    public EffectZoneType GetEffectZoneType => effectZoneType;
+    public void SetEffectZoneType(EffectZoneType zoneType)
+    {
+        effectZoneType = zoneType;
+    }
+
     [Header("Dimensions")]
     [SerializeField] LayerMask effectMask = ~0;
     [SerializeField] float startRadius = 0f;
@@ -14,16 +21,19 @@ public class EffectZone : MonoBehaviour
     TimerSystem persistanceDurationSystem = new TimerSystem();
     float currentRadius = 0f;
 
-    [Header("Effects")]
+    [Header("Effects : Damaging")]
     [SerializeReference] DamageTag sourceTag = DamageTag.Player;
     [SerializeField] bool damaging = false;
     [SerializeField] int damageAmount = 1;
+    [Header("Effects : Knockback")]
     [SerializeField] bool knockbacking = false;
-    [SerializeField] KnockbackParameters maxKnockbackParameters = new KnockbackParameters(20f, 0.05f, 0.2f);
+    [SerializeField] KnockbackParameters maxKnockbackParameters = new KnockbackParameters(20f, 0.05f, 0.2f, false);
     [SerializeField] float maxKnockbackDistance = 2f;
-    [SerializeField] KnockbackParameters minKnockbackParameters = new KnockbackParameters(10f, 0.05f, 0.2f);
+    [SerializeField] KnockbackParameters minKnockbackParameters = new KnockbackParameters(10f, 0.05f, 0.2f, false);
     [SerializeField] float minKnockbackDistance = 5f;
     [SerializeField] AnimationCurve knockbackDependingOnDistanceAttenuationCurve = AnimationCurve.Linear(0, 0, 1, 1);
+    [Header("Effects : Stun")]
+    [SerializeField] int numberOfStunedTurns = 0;
 
     [Header("Debug")]
     [SerializeField] MeshRenderer debugZoneRenderer = default;
@@ -38,9 +48,10 @@ public class EffectZone : MonoBehaviour
         growingDurationSystem.StartTimer();
 
         persistanceDurationSystem.ChangeTimerValue(persistanceDuration);
-        persistanceDurationSystem.SetUp(DestroyZone);
+        persistanceDurationSystem.SetUp(EndZone);
         persistanceDurationSystem.StartTimer();
 
+        UpdateRadius();
     }
 
     private void Update()
@@ -73,7 +84,7 @@ public class EffectZone : MonoBehaviour
             {
                 DamageableEntity hitDamageable = hitCollider.GetComponent<DamageableEntity>();
                 if (hitDamageable != null)
-                    hitDamageable.ReceiveDamage(sourceTag, damageAmount);
+                    hitDamageable.ReceiveDamage(sourceTag, new DamagesParameters(damageAmount, numberOfStunedTurns));
             }
 
             if (knockbacking)
@@ -113,8 +124,8 @@ public class EffectZone : MonoBehaviour
             debugZoneRenderer.transform.localScale = Vector3.one * currentRadius * 2;
     }
 
-    public void DestroyZone()
+    public void EndZone()
     {
-        Destroy(gameObject);
+        EffectZonesManager.Instance.ReturnEffectZoneInPool(this);
     }
 }

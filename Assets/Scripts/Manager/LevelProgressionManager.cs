@@ -43,28 +43,44 @@ public class LevelProgressionManager : MonoBehaviour
     public Action<int, int, int> OnProgressValueChanged;
     public Action OnGoalReached;
 
-    public void CheckForProgressTurn()
+    public bool CheckForProgressTurn()
     {
+        bool progressed = false;
+
         if (goalZone != null)
         {
             int thisTurnProgress = goalZone.GetProgressionAmount();
 
             if (thisTurnProgress > 0)
             {
-                currentProgressValue += thisTurnProgress;
-                currentProgressValue = Mathf.Clamp(currentProgressValue, 0, targetProgressValue);
-
-                OnProgressValueChanged?.Invoke(currentProgressValue, thisTurnProgress, targetProgressValue);
-
-                //Debug.Log("Progress : " + currentProgressValue + "/" + targetProgressValue);
-                if (currentProgressValue == targetProgressValue)
-                {
-                    currentProgressValue = targetProgressValue;
-                    OnGoalReached?.Invoke();
-                }
+                StartCoroutine(LookAtGoal(thisTurnProgress));
+                progressed = true;
             }
         }
         else
             Debug.LogWarning("WARNING : No LevelGoalZone on LevelManager");
+
+        return progressed;
+    }
+
+    public IEnumerator LookAtGoal(int thisTurnProgress)
+    {
+        CameraManager.instance.GetPlayerCamera.AttachFollowTransformTo(goalZone.transform);
+
+        yield return new WaitForSeconds(1f);
+
+        currentProgressValue += thisTurnProgress;
+        currentProgressValue = Mathf.Clamp(currentProgressValue, 0, targetProgressValue);
+
+        OnProgressValueChanged?.Invoke(currentProgressValue, thisTurnProgress, targetProgressValue);
+        if (currentProgressValue == targetProgressValue)
+        {
+            currentProgressValue = targetProgressValue;
+            OnGoalReached?.Invoke();
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        TurnManager.Instance.EndProgressionTurn();
     }
 }

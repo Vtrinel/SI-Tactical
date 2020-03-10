@@ -242,7 +242,10 @@ public class CompetencesUsabilityManager
         DiscTrajectoryParameters trajectoryParameters = 
             DiscTrajectoryFactory.GetTrajectory(throwCompetence, _player.transform.position, trueTargetPosition,
             DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, null);
-        PreviewCompetencesManager.Instance.StartThrowPreview(new List<DiscTrajectoryParameters> { trajectoryParameters }, _player.transform.position);
+
+        List<DiscTrajectoryParameters> trajectories = new List<DiscTrajectoryParameters> { trajectoryParameters };
+        PreviewCompetencesManager.Instance.StartThrowPreview(trajectories, _player.transform.position);
+        PreviewCompetencesManager.Instance.UpdateThrowPreview(new List<DiscTrajectoryParameters> { trajectoryParameters });
     }
 
     public void UpdateThrowPreparation()
@@ -251,7 +254,9 @@ public class CompetencesUsabilityManager
         DiscTrajectoryParameters trajectoryParameters = 
             DiscTrajectoryFactory.GetTrajectory(throwCompetence, _player.transform.position, trueTargetPosition,
             DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, null);
-        PreviewCompetencesManager.Instance.UpdateThrowPreview(new List<DiscTrajectoryParameters> { trajectoryParameters });
+
+        List<DiscTrajectoryParameters> trajectories = new List<DiscTrajectoryParameters> { trajectoryParameters };
+        PreviewCompetencesManager.Instance.UpdateThrowPreview(trajectories);
     }
 
     public void EndThrowPreparation()
@@ -276,6 +281,7 @@ public class CompetencesUsabilityManager
         }
 
         PreviewCompetencesManager.Instance.StartRecallPreview(recallTrajectoryParameters, playerPos);
+        PreviewCompetencesManager.Instance.UpdateRecallPreview(recallTrajectoryParameters, playerPos);
     }
 
     public void UpdateRecallPreparation()
@@ -345,6 +351,7 @@ public class CompetencesUsabilityManager
         newDisc.SetRetreivableByPlayer(false);
         newDisc.StartTrajectory(trajectoryParameters, objLauncher);
         currentlyInUseDiscs.Add(newDisc);
+        newDisc.OnTrajectoryStopped += RemoveDiscFromInUse;
         newDisc.OnReachedTrajectoryEnd += RemoveDiscFromInUse;
 
         ChangeUsabilityState(UsabilityState.Using, ActionType.Throw);
@@ -379,14 +386,14 @@ public class CompetencesUsabilityManager
         disc.SetIsBeingRecalled(true);
         disc.StartTrajectory(trajectoryParameters, null);
         currentlyInUseDiscs.Add(disc);
-        disc.OnReachedTrajectoryEnd += RemoveDiscFromInUse;
+        disc.OnTrajectoryStopped += RemoveDiscFromInUse;
     }
     #endregion
 
     List<DiscScript> currentlyInUseDiscs = new List<DiscScript>();
     public void RemoveDiscFromInUse(DiscScript disc)
     {
-        disc.OnReachedTrajectoryEnd -= RemoveDiscFromInUse;
+        //disc.OnReachedTrajectoryEnd -= RemoveDiscFromInUse;
         currentlyInUseDiscs.Remove(disc);
 
         if (currentlyInUseDiscs.Count == 0)

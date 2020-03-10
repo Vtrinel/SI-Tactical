@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [System.Serializable]
 public class PlayerMovementsManager
@@ -10,18 +11,18 @@ public class PlayerMovementsManager
         _player = player;
         _player.OnPlayerReachedMovementDestination += EndMovement;
 
-        movementPlayerPreview = Object.Instantiate(movementPlayerPreviewPrefab);
-        movementPlayerPreview.SetActive(false);
+        _playerNavMeshAgent = player.GetNavMeshAgent;
     }
 
     public void UpdateSystem()
     {
-        //if (IsWillingToMove)
-            //UpdateMovementPreview(currentWorldMouseResult.mouseWorldPosition);
+        if (IsWillingToMove)
+            UpdateMovementPreparation();
     }
 
-    PlayerController _player;
-    WorldMouseResult currentWorldMouseResult;
+    PlayerController _player = default;
+    NavMeshAgent _playerNavMeshAgent = default;
+    WorldMouseResult currentWorldMouseResult = default;
     public void UpdateCurrentWorldMouseResult(WorldMouseResult result)
     {
         currentWorldMouseResult = result;
@@ -46,50 +47,42 @@ public class PlayerMovementsManager
         actionPointsUsedThisTurnToMove = 0;
     }
 
-    #region Preview
-    [Header("Movement Preview")]
-    [SerializeField] GameObject movementPlayerPreviewPrefab = default;
-    GameObject movementPlayerPreview = default;
     CompetenceRecall currentRecallCompetence = default;
     public void UpdateCurrentRecallCompetence(CompetenceRecall competenceRecall)
     {
         currentRecallCompetence = competenceRecall;
     }
 
-    bool justStartedMovementPreview = false;
-    public void StartMovementPreview(Vector3 targetPosition)
-    {
-        if (movementLinePreview != null)
-            movementLinePreview.enabled = true;
-
-        GenerateDebugCircles();
-        movementPlayerPreview.SetActive(true);
-
-        //List<DiscScript> inRangeFromPositionDiscs = DiscManager.Instance.GetAllInRangeDiscsFromPosition(targetPosition);
-        List<DiscTrajectoryParameters> discsInNewPositionRangeParameters = GetDiscInRangeTrajectory(targetPosition);
-        PreviewCompetencesManager.Instance.StartRecallPreview(discsInNewPositionRangeParameters, targetPosition);
-
-        justStartedMovementPreview = true;
-        UpdateMovementPreview(targetPosition);
-    }
-
+    #region Preparation
     int currentPreviewCost = 0;
-    public void UpdateMovementPreview(Vector3 targetPosition)
+    int currentlyAvailableActionPoints = 0;
+    public void StartMovementPreparation(int availableActionPoints)
     {
-        float movementDistance = Vector3.Distance(_player.transform.position, targetPosition);
+        currentlyAvailableActionPoints = availableActionPoints;
 
-        int movementCost = GetActionPointsByDistance(movementDistance);
-        if(movementCost > availableActionPoints)
+        GenerateDistancesPerActionPoints(currentlyAvailableActionPoints);
+
+        currentUsabilityState = UsabilityState.Preparing;
+
+        currentPreviewCost = 0;
+
+        List<Vector3> trueMovementTrajectory = GetClampedTrajectory(currentWorldMouseResult.mouseWorldPosition);
+        float movementDistance = 0;
+        for (int i = 1; i < trueMovementTrajectory.Count; i++)
         {
-            targetPosition = GetClampedTargetPosition(targetPosition);
-            movementCost = availableActionPoints;
+            movementDistance += Vector3.Distance(trueMovementTrajectory[i - 1], trueMovementTrajectory[i]);
         }
 
-        if (movementLinePreview != null)
+        bool maxRangeMovement = Mathf.Abs(movementDistance - GetMaxDistance()) < 0.01f;
+
+        Vector3 targetPosition = trueMovementTrajectory[trueMovementTrajectory.Count - 1];
+
+        int movementCost = GetActionPointsByDistance(movementDistance);
+        if (movementCost > currentlyAvailableActionPoints)
         {
-            movementLinePreview.SetPositions(new Vector3[] { _player.transform.position + Vector3.up, targetPosition + Vector3.up });
-            movementLinePreview.startColor = movementCost <= availableActionPoints ? Color.green : Color.red;
-            movementLinePreview.endColor = movementCost <= availableActionPoints ? Color.green : Color.red;
+            maxRangeMovement = true;
+            targetPosition = GetClampedTargetPosition(targetPosition);
+            movementCost = currentlyAvailableActionPoints;
         }
 
         if (movementCost != currentPreviewCost)
@@ -98,86 +91,63 @@ public class PlayerMovementsManager
             OnPreparationAmountChanged?.Invoke(currentPreviewCost);
         }
 
-        movementPlayerPreview.transform.position = targetPosition;
+        PreviewCompetencesManager.Instance.StartMovementPreview(currentDistancesByUsedActionPoints, trueMovementTrajectory,
+            currentRecallCompetence, maxRangeMovement ? currentPreviewCost : currentPreviewCost - 1, maxRangeMovement);
 
-        if (!justStartedMovementPreview)
-        {
-            List<DiscTrajectoryParameters> discsInNewPositionRangeParameters = GetDiscInRangeTrajectory(targetPosition);
-            PreviewCompetencesManager.Instance.UpdateRecallPreview(discsInNewPositionRangeParameters, targetPosition);
-        }
-        else
-            justStartedMovementPreview = false;
+        UIManager.Instance.ShowActionPointsCostText();
+        UIManager.Instance.UpdateActionPointCostText(movementCost, currentlyAvailableActionPoints);
     }
 
-    public void EndMovementPreview()
+    public void UpdateMovementPreparation()
     {
-        justStartedMovementPreview = false;
+        List<Vector3> trueMovementTrajectory = GetClampedTrajectory(currentWorldMouseResult.mouseWorldPosition);
+        float movementDistance = 0;
+        for(int i = 1; i < trueMovementTrajectory.Count; i++)
+        {
+            movementDistance += Vector3.Distance(trueMovementTrajectory[i-1], trueMovementTrajectory[i]);
+        }
 
-        if (movementLinePreview != null)
-            movementLinePreview.enabled = false;
+        bool maxRangeMovement = Mathf.Abs(movementDistance - GetMaxDistance()) < 0.01f;
 
-        ClearInstantiatedDebugCircles();
-        movementPlayerPreview.SetActive(false);
-        PreviewCompetencesManager.Instance.EndRecallPreview();
-        //PreviewCompetencesManager.Instance.EndPreviewCamera();
+        Vector3 targetPosition = trueMovementTrajectory[trueMovementTrajectory.Count - 1];
+
+        int movementCost = GetActionPointsByDistance(movementDistance);
+        if (movementCost > availableActionPoints)
+        {
+            maxRangeMovement = true;
+            targetPosition = GetClampedTargetPosition(targetPosition);
+            movementCost = availableActionPoints;
+        }
+
+        if (movementCost != currentPreviewCost)
+        {
+            currentPreviewCost = movementCost;
+            OnPreparationAmountChanged?.Invoke(currentPreviewCost);
+        }
+
+        PreviewCompetencesManager.Instance.UpdateMovementPreview(trueMovementTrajectory, 
+            currentRecallCompetence, maxRangeMovement ? currentPreviewCost : currentPreviewCost - 1, maxRangeMovement);
+
+        UIManager.Instance.UpdateActionPointCostText(movementCost, currentlyAvailableActionPoints);
     }
 
-    public List<DiscTrajectoryParameters> GetDiscInRangeTrajectory(Vector3 targetPosition)
+    public void InterruptMovementPreparation()
     {
-        List<DiscScript> recallableFromPosition = 
-            DiscListingFactory.GetSortedRecallableDiscs(currentRecallCompetence, 
-            DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetAllInRangeDiscsFromPosition(targetPosition));
+        currentUsabilityState = UsabilityState.None;
 
-        List<DiscTrajectoryParameters> allTrajParams = new List<DiscTrajectoryParameters>();
-        foreach (DiscScript disc in recallableFromPosition)
-        {
-            DiscTrajectoryParameters newTrajParams =
-                DiscTrajectoryFactory.GetTrajectory(currentRecallCompetence, disc.transform.position, targetPosition,
-                DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, disc);
-            allTrajParams.Add(newTrajParams);
-        }
-        return allTrajParams;
+        EndMovementPreparation();
+
+        currentDistancesByUsedActionPoints = new List<float>();
     }
 
-    [Header("Movement - PH")]
-    [SerializeField] LineRenderer movementLinePreview = default;
-    [SerializeField] GameObject debugCirclePrefab = default;
-    List<GameObject> instanciatedDebugCircles = new List<GameObject>();
-    public void GenerateDebugCircles()
+    public void EndMovementPreparation()
     {
-        ClearInstantiatedDebugCircles();
-
-        foreach (float dist in currentDistancesByUsedActionPoints)
-        {
-            GameObject debugCircle = GameObject.Instantiate(debugCirclePrefab, _player.transform.position + Vector3.up * 0.01f, Quaternion.identity);
-            debugCircle.transform.localScale = Vector3.one * dist;
-            instanciatedDebugCircles.Add(debugCircle);
-        }
-    }
-    public void ClearInstantiatedDebugCircles()
-    {
-        if(instanciatedDebugCircles != null)
-        {
-            foreach (GameObject debugCircle in instanciatedDebugCircles)
-                GameObject.Destroy(debugCircle);
-        }
-        instanciatedDebugCircles = new List<GameObject>();
+        PreviewCompetencesManager.Instance.EndMovementPreview();
+        UIManager.Instance.HideActionPointText();
     }
     #endregion
 
-    public void StartMovementPreparation()
-    {
-        currentUsabilityState = UsabilityState.Preparing;
-
-        currentPreviewCost = 0;
-
-        PreviewCompetencesManager.Instance.StartMovementPreview(
-            currentDistancesByUsedActionPoints, 
-            _player.transform.position, currentWorldMouseResult.mouseWorldPosition, 
-            currentRecallCompetence); 
-        //StartMovementPreview(currentWorldMouseResult.mouseWorldPosition);
-    }
-
+    #region Distance - AP Relation
     public System.Action<int> OnPreparationAmountChanged;
     public void GenerateDistancesPerActionPoints(int actionPointAmount)
     {
@@ -193,7 +163,6 @@ public class PlayerMovementsManager
         }
     }
 
-    #region Distance - AP Relation
     public float GetDistanceByUsedActionPoints(int actionPointsAmount)
     {
         float floatedActionPoints = (float)actionPointsAmount;
@@ -245,18 +214,44 @@ public class PlayerMovementsManager
 
         return trueTargetPos;
     }
-    #endregion
 
-    public void InterruptMovementPreparation()
+    public List<Vector3> GetClampedTrajectory(Vector3 baseTargetPos)
     {
-        currentUsabilityState = UsabilityState.None;
+        _playerNavMeshAgent.SetDestination(baseTargetPos);
 
-        //EndMovementPreview();
-        PreviewCompetencesManager.Instance.EndMovementPreview();
+        List<Vector3> trajectory = new List<Vector3>();
+        float maxDist = GetMaxDistance();
+        float currentDistance = 0;
+        float previousDistance = 0;
 
-        currentDistancesByUsedActionPoints = new List<float>();
+        trajectory.Add(_player.transform.position);
+
+        NavMeshPath _path = _playerNavMeshAgent.path;
+        Vector3 previousPos = trajectory[0];
+        foreach (Vector3 step in _path.corners)
+        {
+            Vector3 totalMovement = step - previousPos;
+
+            currentDistance += totalMovement.magnitude;
+            if(currentDistance >= maxDist)
+            {
+                currentDistance = maxDist;
+                trajectory.Add(previousPos + totalMovement.normalized * (currentDistance - previousDistance));
+                break;
+            }
+            else
+            {
+                trajectory.Add(step);
+                previousDistance = currentDistance;
+            }
+
+            previousPos = step;
+        }
+
+        return trajectory;
     }
-
+    #endregion
+       
     /// <summary>
     /// Return -1 if error (not enough points,...)
     /// Returns cost if succeeded
@@ -268,21 +263,22 @@ public class PlayerMovementsManager
         if (IsMoving)
             return -1;
 
-        float movementDistance = Vector3.Distance(_player.transform.position, currentWorldMouseResult.mouseWorldPosition);
+        List<Vector3> trajectory = GetClampedTrajectory(targetPosition);
+        targetPosition = trajectory[trajectory.Count - 1];
 
-        int movementCost = GetActionPointsByDistance(movementDistance);
-
-        if(movementCost > availableActionPoints)
+        float movementDistance = 0;
+        for (int i = 1; i < trajectory.Count; i++)
         {
-            targetPosition = GetClampedTargetPosition(targetPosition);
-            movementCost = availableActionPoints;
+            movementDistance += Vector3.Distance(trajectory[i - 1], trajectory[i]);
         }
 
-        ClearInstantiatedDebugCircles();
+        int movementCost = GetActionPointsByDistance(movementDistance);
+        
 
         _player.MoveTo(targetPosition);
         currentUsabilityState = UsabilityState.Using;
-        EndMovementPreview();
+
+        EndMovementPreparation();
 
         actionPointsUsedThisTurnToMove += movementCost;
 

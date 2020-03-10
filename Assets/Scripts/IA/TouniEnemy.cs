@@ -29,21 +29,26 @@ public class TouniEnemy : IAEnemyVirtual
 
     public override void PlayerTurn()
     {
+        if (!haveDetectPlayer)
+        {
+            if (!CheckDetectionWithPlayer())
+            {
+                OnFinishTurn?.Invoke();
+                return;
+            }
+        }
+
         StartCoroutine(PlayerTurnCouroutine());
     }
 
     IEnumerator PlayerTurnCouroutine()
     {
-        if (isPreparing)
-        {
-            Attack();
-            isPreparing = false;
-            yield return new WaitForSeconds(1);
-        }
-
         if (CanAttack())
         {
             PrepareAttack();
+            yield return new WaitForSeconds(0.4f);
+            Attack();
+            isPreparing = false;
             yield return new WaitForSeconds(0.4f);
             OnFinishTurn?.Invoke();
         }
@@ -55,8 +60,7 @@ public class TouniEnemy : IAEnemyVirtual
 
     void Move()
     {
-        destination = player.transform.position;
-
+        destination = CalculDestination(player.transform.position);
 
         myNavAgent.SetDestination(destination);
         myNavAgent.isStopped = false;
@@ -64,29 +68,21 @@ public class TouniEnemy : IAEnemyVirtual
         StartCoroutine(WaitDeplacement());
     }
 
-    Vector3 CalculDestination()
-    {
-        Vector3 pos = transform.position;
-        Vector3 dir = (this.transform.position - player.transform.position).normalized;
-
-        Debug.DrawLine(pos, pos + -dir * distanceOfDeplacement, Color.red, Mathf.Infinity);
-
-        return pos + -dir * distanceOfDeplacement;
-    }
-
     IEnumerator WaitDeplacement()
     {
         isPlaying = true;
-        float normalizedTime = 0;
 
-        while (normalizedTime < durationTurn)
+        while (myNavAgent.pathStatus != NavMeshPathStatus.PathComplete || myNavAgent.remainingDistance != 0)
         {
-            normalizedTime += Time.deltaTime;
-
             if (CanAttack())
             {
-                normalizedTime = durationTurn + 1;
+                myNavAgent.isStopped = true;
                 PrepareAttack();
+                yield return new WaitForSeconds(0.4f);
+                Attack();
+                isPreparing = false;
+                yield return new WaitForSeconds(0.4f);
+
                 break;
             }
             yield return null;
@@ -102,7 +98,7 @@ public class TouniEnemy : IAEnemyVirtual
         myAnimator.SetBool("Preparing", true);
         isPreparing = true;
 
-        transform.LookAt(CalculDestination());
+        transform.LookAt(player.transform);
     }
 
     void Attack()
@@ -118,7 +114,9 @@ public class TouniEnemy : IAEnemyVirtual
 
         foreach(GameObject _obj in _objsTouched)
         {
-            _obj.GetComponent<DamageableEntity>().ReceiveDamage(DamageTag.Enemy, damage);
+            DamageableEntity hitDamageableEntity = _obj.GetComponent<DamageableEntity>();
+            if (hitDamageableEntity != null)
+                hitDamageableEntity.ReceiveDamage(DamageTag.Enemy, new DamagesParameters(damage));
         }
     }
 
@@ -205,5 +203,8 @@ public class TouniEnemy : IAEnemyVirtual
         Gizmos.DrawRay(transform.position, rightRayDirection);
         Gizmos.DrawRay(transform.position, leftRayDirection);
         Gizmos.DrawLine(transform.position + leftRayDirection, transform.position + rightRayDirection);
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, detectionPlayerRange);
     }
 }
