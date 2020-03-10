@@ -30,7 +30,8 @@ public class PreviewCompetencesManager : MonoBehaviour
     [SerializeField] GameObject discEffectZonePreviewPrefab = default;
     GameObject discEffectZonePreview = default;
 
-    float discEffectRange = 0;
+    float discThrowRange = 0;
+    float discRecallRange = 0;
 
     #region
     [Header("Movement")]
@@ -215,9 +216,9 @@ public class PreviewCompetencesManager : MonoBehaviour
     #region Throw
     public void StartThrowPreview(List<DiscTrajectoryParameters> trajectoryParameters, Vector3 playerPosition)
     {
-        discEffectRange = DiscManager.Instance.rangeOfPlayer;
+        discThrowRange = DiscManager.Instance.throwRange;
         discEffectZonePreview.gameObject.SetActive(true);
-        discEffectZonePreview.transform.localScale = Vector3.one * discEffectRange;
+        discEffectZonePreview.transform.localScale = Vector3.one * discThrowRange;
         discEffectZonePreview.transform.position = playerPosition + Vector3.up * 0.01f;
 
         UpdateNumberOfShownTrajectories(trajectoryParameters.Count);
@@ -239,9 +240,9 @@ public class PreviewCompetencesManager : MonoBehaviour
 
     public void StartRecallPreview(List<DiscTrajectoryParameters> trajectoryParameters, Vector3 recallPosition)
     {
-        discEffectRange = DiscManager.Instance.rangeOfPlayer;
+        discRecallRange = DiscManager.Instance.recallRange;
         discEffectZonePreview.SetActive(true);
-        discEffectZonePreview.transform.localScale = Vector3.one * discEffectRange;
+        discEffectZonePreview.transform.localScale = Vector3.one * discRecallRange;
         discEffectZonePreview.transform.position = recallPosition + Vector3.up * 0.01f;
 
         UpdateNumberOfShownTrajectories(trajectoryParameters.Count);

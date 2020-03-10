@@ -11,11 +11,13 @@ public class CompetencesUsabilityManager
         _player = player;
     }
 
+    int currentActionPoints = 0;
     public void UpdateSystem()
     {
         if(IsPreparingCompetence)
         {
             UpdatePreparation();
+            UIManager.Instance.UpdateActionPointCostText(GetCurrentCompetenceCost(), currentActionPoints);
         }
     }
 
@@ -40,7 +42,8 @@ public class CompetencesUsabilityManager
     [SerializeField] CompetenceSpecial specialCompetence = default;
     public CompetenceSpecial GetSpecialCompetence => specialCompetence;
 
-    float maxDiscRange = 0;
+    float maxRecallRange = 0;
+    float maxThrowRange = 0;
 
     public void UpdateSet(CompetenceThrow throwComp, CompetenceRecall recallComp, CompetenceSpecial specialComp)
     {
@@ -91,13 +94,16 @@ public class CompetencesUsabilityManager
                     trySelectResult = ActionSelectionResult.NoNearbyDisc;
                 }
             }
-
+            currentActionPoints = totalActionPoints;
         }
 
         switch (trySelectResult)
         {
             case ActionSelectionResult.EnoughActionPoints:
                 ChangeUsabilityState(UsabilityState.Preparing, compType);
+                UIManager.Instance.GetActionBar.UpdatePreConsommationPointBar(totalActionPoints, GetCurrentCompetenceCost());
+                UIManager.Instance.ShowActionPointsCostText();
+                UIManager.Instance.UpdateActionPointCostText(GetCurrentCompetenceCost(), totalActionPoints);
                 break;
 
             case ActionSelectionResult.NotEnoughActionPoints:
@@ -161,7 +167,10 @@ public class CompetencesUsabilityManager
     public void ChangeUsabilityState(UsabilityState usabilityState, ActionType compType)
     {
         if (usabilityState == UsabilityState.Preparing)
-            maxDiscRange = DiscManager.Instance.rangeOfPlayer;
+        {
+            maxRecallRange = DiscManager.Instance.recallRange;
+            maxThrowRange = DiscManager.Instance.throwRange;
+        }
 
         if (currentUsabilityState == UsabilityState.Preparing)
             EndPreparation();
@@ -317,10 +326,10 @@ public class CompetencesUsabilityManager
         trueTargetPos.y = playerPos.y;
 
         float distance = Vector3.Distance(trueTargetPos, playerPos);
-        if(distance > maxDiscRange)
+        if(distance > maxThrowRange)
         {
             Vector3 throwDirection = (trueTargetPos - playerPos).normalized;
-            trueTargetPos = playerPos + throwDirection * maxDiscRange;
+            trueTargetPos = playerPos + throwDirection * maxThrowRange;
         }
         else if(distance < minThrowDistance)
         {

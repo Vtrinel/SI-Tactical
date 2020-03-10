@@ -8,6 +8,7 @@ public class EnemyBase : MonoBehaviour
 {
     [SerializeField] EnemyType enemyType = EnemyType.TouniBase;
     public EnemyType GetEnemyType => enemyType;
+    public int goldGain = 10;
 
     private void Start()
     {
@@ -18,7 +19,6 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] DamageableEntity damageReceiptionSystem = default;
     [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
     [SerializeField] Image lifeBar = default;
-    [SerializeField] MeshRenderer enemyRenderer = default;
     public void UpdateLifeBarFill(int currentAmount, int damageDelta)
     {
         lifeBar.fillAmount = damageReceiptionSystem.GetCurrentLifePercent;
@@ -35,6 +35,7 @@ public class EnemyBase : MonoBehaviour
         
         OnEnemyDeath?.Invoke(this);
         Destroy(gameObject);
+        PlayerExperienceManager.Instance.GainGold(goldGain);
     }   
 
     [Header("Common Values")]
@@ -97,12 +98,14 @@ public class EnemyBase : MonoBehaviour
 
     public void StartTurn()
     {
+        myIA.myNavAgent.avoidancePriority = 10;
         myIA.isPlaying = true;
         PlayMyTurn();
     }
 
     public void EndTurn()
     {
+        myIA.myNavAgent.avoidancePriority = 50;
         myIA.isPlaying = false;
         if(TurnManager.Instance.GetCurrentTurnState != TurnState.EnemyTurn)
         {

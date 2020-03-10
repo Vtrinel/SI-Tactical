@@ -13,8 +13,11 @@ public class TriggerEvent : MonoBehaviour
     private void OnDrawGizmos()
     {
         if (collider == null) collider = GetComponent<BoxCollider>();
+        Gizmos.matrix = Matrix4x4.TRS(this.transform.TransformPoint(collider.center), this.transform.rotation, this.transform.lossyScale);
         Gizmos.color = new Color(Color.green.r, Color.green.g, Color.green.b, 0.4f);
-        Gizmos.DrawCube(transform.position + collider.center, collider.size);
+        Gizmos.DrawCube(Vector3.zero, collider.size);
+
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -40,7 +43,7 @@ public class TriggerEvent : MonoBehaviour
             default:
                 
                 break;
-        }
+        }    
     }
 
     void PlayEvent()

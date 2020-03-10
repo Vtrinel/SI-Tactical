@@ -62,17 +62,15 @@ public class TouniEnemy : IAEnemyVirtual
     {
         destination = CalculDestination(player.transform.position);
 
-        myNavAgent.SetDestination(destination);
         myNavAgent.isStopped = false;
+        myNavAgent.SetDestination(destination);
 
         StartCoroutine(WaitDeplacement());
     }
 
     IEnumerator WaitDeplacement()
     {
-        isPlaying = true;
-
-        while (myNavAgent.pathStatus != NavMeshPathStatus.PathComplete || myNavAgent.remainingDistance != 0)
+        do
         {
             if (CanAttack())
             {
@@ -82,11 +80,12 @@ public class TouniEnemy : IAEnemyVirtual
                 Attack();
                 isPreparing = false;
                 yield return new WaitForSeconds(0.4f);
-
                 break;
             }
             yield return null;
-        }
+
+        } while (myNavAgent.remainingDistance != 0);
+
 
         isPlaying = false;
         myNavAgent.isStopped = true;
@@ -106,6 +105,8 @@ public class TouniEnemy : IAEnemyVirtual
         myAnimator.SetTrigger("Attack");
         myAnimator.SetBool("Preparing", false);
         CollisionAttack();
+
+        GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, new DamagesParameters(damage));
     }
 
     void CollisionAttack()
@@ -115,7 +116,7 @@ public class TouniEnemy : IAEnemyVirtual
         foreach(GameObject _obj in _objsTouched)
         {
             DamageableEntity hitDamageableEntity = _obj.GetComponent<DamageableEntity>();
-            if (hitDamageableEntity != null)
+            if (hitDamageableEntity != null && hitDamageableEntity.gameObject != player)
                 hitDamageableEntity.ReceiveDamage(DamageTag.Enemy, new DamagesParameters(damage));
         }
     }
