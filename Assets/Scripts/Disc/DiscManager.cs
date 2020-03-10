@@ -9,10 +9,12 @@ public class DiscManager : MonoBehaviour
 
     public static float discHeight = 1f;
 
-    public float rangeOfPlayer = 5;
+    public float recallRange = 12;
+    public float throwRange = 9;
     public void AddOneMaxRangeOfPlayer() 
     {
-        rangeOfPlayer += 1f;
+        recallRange++;
+        throwRange++;
     }
 
     Transform player;
@@ -55,9 +57,9 @@ public class DiscManager : MonoBehaviour
         if (!player) return;
         if (!showDebugGizmo) return;
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(player.transform.position, rangeOfPlayer);
+        Gizmos.DrawWireSphere(player.transform.position, recallRange);
         Gizmos.color = new Color(Color.red.r, Color.red.g, Color.red.b, 0.35f);
-        Gizmos.DrawSphere(player.transform.position, rangeOfPlayer);
+        Gizmos.DrawSphere(player.transform.position, recallRange);
     }
 
     #region Pooling
@@ -174,6 +176,8 @@ public class DiscManager : MonoBehaviour
         OnAddOneMaxDisc?.Invoke();
     }
 
+    public Action<Stack<DiscType>> OnDiscUpdate;
+
     public Action<int, int, DiscType> OnDiscFilled;
     public void FillPossessedDiscsWithBasicDiscs()
     {
@@ -182,6 +186,7 @@ public class DiscManager : MonoBehaviour
             possessedDiscs.Push(testDiscType);
 
         OnDiscFilled?.Invoke(maxNumberOfPossessedDiscs, currentPossessedDiscs, testDiscType);
+        OnDiscUpdate?.Invoke(possessedDiscs);
     }
 
     public Action<DiscScript> OnDiscAdded;
@@ -193,6 +198,7 @@ public class DiscManager : MonoBehaviour
         {
             possessedDiscs.Push(retreivedDisc.GetDiscType);
             OnDiscAdded?.Invoke(retreivedDisc);
+            OnDiscUpdate?.Invoke(possessedDiscs);
         }
         else
         {
@@ -254,6 +260,7 @@ public class DiscManager : MonoBehaviour
         {
             throwedDiscs.Add(newDisc);
             OnDiscConsommed?.Invoke();
+            OnDiscUpdate?.Invoke(possessedDiscs);
         }
         return newDisc;
     }
@@ -272,7 +279,7 @@ public class DiscManager : MonoBehaviour
     public bool DiscIsInRange(Vector3 playerPos, Vector3 discPos)
     {
         playerPos.y = discPos.y;
-        return Vector3.Distance(playerPos, discPos) <= rangeOfPlayer;
+        return Vector3.Distance(playerPos, discPos) <= recallRange;
     }
 
     public List<DiscScript> GetAllInRangeDiscsFromPosition(Vector3 position)

@@ -13,16 +13,32 @@ public class EnemyBase : MonoBehaviour
     private void Start()
     {
         SpawnEnemy(transform.position, _lootedDiscType);
+        InitLifeBar(damageReceiptionSystem.GetCurrentLifeAmount);
     }
 
     [Header("References")]
     [SerializeField] DamageableEntity damageReceiptionSystem = default;
     [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
-    [SerializeField] Image lifeBar = default;
-    [SerializeField] MeshRenderer enemyRenderer = default;
+    [SerializeField] Transform lifeBarParent;
+    [SerializeField] GameObject lifeBarEnemyPrefab;
+    List<Image> lifeBarList = new List<Image>();
+
+    void InitLifeBar(int lifeNumber)
+    {
+        for(int i=0; i < lifeNumber; i++)
+        {
+            lifeBarList.Add(Instantiate(lifeBarEnemyPrefab, lifeBarParent).GetComponent<Image>());
+        }
+    }
+
     public void UpdateLifeBarFill(int currentAmount, int damageDelta)
     {
-        lifeBar.fillAmount = damageReceiptionSystem.GetCurrentLifePercent;
+        int i = 1;
+        foreach(Image bar in lifeBarList)
+        {
+            bar.enabled = (currentAmount <= i);
+            i++;
+        }
     }
 
     public Action<EnemyBase> OnEnemyDeath;
@@ -99,12 +115,14 @@ public class EnemyBase : MonoBehaviour
 
     public void StartTurn()
     {
+        myIA.myNavAgent.avoidancePriority = 10;
         myIA.isPlaying = true;
         PlayMyTurn();
     }
 
     public void EndTurn()
     {
+        myIA.myNavAgent.avoidancePriority = 50;
         myIA.isPlaying = false;
         if(TurnManager.Instance.GetCurrentTurnState != TurnState.EnemyTurn)
         {

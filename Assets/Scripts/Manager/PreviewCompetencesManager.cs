@@ -30,9 +30,10 @@ public class PreviewCompetencesManager : MonoBehaviour
     [SerializeField] GameObject discEffectZonePreviewPrefab = default;
     GameObject discEffectZonePreview = default;
 
-    float discEffectRange = 0;
+    float discThrowRange = 0;
+    float discRecallRange = 0;
 
-    #region
+    #region Movement
     [Header("Movement")]
     [SerializeField] Transform movementPreviewsParent = default;
     [SerializeField] bool showMovementCircles = false;
@@ -45,6 +46,8 @@ public class PreviewCompetencesManager : MonoBehaviour
 
     [SerializeField] MovementGhostPreview movementGhostPreviewPrefab = default;
     [SerializeField, ReadOnly] MovementGhostPreview movementGhostPreview = default;
+    [SerializeField] Material baseGhostMaterial = default;
+    [SerializeField] Material cantMoveThereMaterial = default;
 
     public void InstantiateMovementPreviewElements()
     {
@@ -60,12 +63,16 @@ public class PreviewCompetencesManager : MonoBehaviour
 
         movementGhostPreview = Instantiate(movementGhostPreviewPrefab, movementPreviewsParent);
         movementGhostPreview.HidePreview();
+        baseGhostMaterial = movementGhostPreview.GetRenderer.material;
+
     }
 
     bool justStartedMovementPreview = default;
     List<float> currentMovementDistances = new List<float>();
     public void StartMovementPreview(List<float> distances, List<Vector3> trajectory, CompetenceRecall currentRecallComp, int completelyUsedActionPoints, bool reachMax)
     {
+        movementGhostPreview.GetRenderer.material = baseGhostMaterial;
+
         Vector3 startPosition = trajectory[0];
         Vector3 targetPosition = trajectory[trajectory.Count - 1];
 
@@ -215,9 +222,9 @@ public class PreviewCompetencesManager : MonoBehaviour
     #region Throw
     public void StartThrowPreview(List<DiscTrajectoryParameters> trajectoryParameters, Vector3 playerPosition)
     {
-        discEffectRange = DiscManager.Instance.rangeOfPlayer;
+        discThrowRange = DiscManager.Instance.throwRange;
         discEffectZonePreview.gameObject.SetActive(true);
-        discEffectZonePreview.transform.localScale = Vector3.one * discEffectRange;
+        discEffectZonePreview.transform.localScale = Vector3.one * discThrowRange;
         discEffectZonePreview.transform.position = playerPosition + Vector3.up * 0.01f;
 
         UpdateNumberOfShownTrajectories(trajectoryParameters.Count);
@@ -239,9 +246,9 @@ public class PreviewCompetencesManager : MonoBehaviour
 
     public void StartRecallPreview(List<DiscTrajectoryParameters> trajectoryParameters, Vector3 recallPosition)
     {
-        discEffectRange = DiscManager.Instance.rangeOfPlayer;
+        discRecallRange = DiscManager.Instance.recallRange;
         discEffectZonePreview.SetActive(true);
-        discEffectZonePreview.transform.localScale = Vector3.one * discEffectRange;
+        discEffectZonePreview.transform.localScale = Vector3.one * discRecallRange;
         discEffectZonePreview.transform.position = recallPosition + Vector3.up * 0.01f;
 
         UpdateNumberOfShownTrajectories(trajectoryParameters.Count);
@@ -261,6 +268,51 @@ public class PreviewCompetencesManager : MonoBehaviour
     {
         discEffectZonePreview.SetActive(false);
         UpdateNumberOfShownTrajectories(0);
+    }
+    #endregion
+    #endregion
+
+    #region Special
+
+    #region Teleportation
+    public void StartTeleportationPreview(Vector3 startPos, Vector3 targetPos, bool canTeleport, CompetenceRecall currentRecallComp)
+    {
+        movementGhostPreview.GetRenderer.material = canTeleport ? baseGhostMaterial : cantMoveThereMaterial;
+        discEffectZonePreview.gameObject.SetActive(true);
+        discEffectZonePreview.transform.localScale = Vector3.one * DiscManager.Instance.recallRange;
+        discEffectZonePreview.transform.position = startPos + Vector3.up * 0.01f;
+
+        movementGhostPreview.gameObject.SetActive(true);
+        movementGhostPreview.transform.position = targetPos;
+
+        List<DiscTrajectoryParameters> discsInNewPositionRangeParameters = DiscListingFactory.GetDiscInRangeTrajectory(targetPos, currentRecallComp);
+        StartRecallPreview(discsInNewPositionRangeParameters, targetPos);
+
+        foreach (EnemyBase enemy in EnemiesManager.Instance.GetAllInGameEnemiesOrdered)
+        {
+            enemy.DisplayAndActualisePreviewAttack(movementGhostPreview.transform);
+        }
+
+    }
+
+    public void UpdateTeleportationPreview(Vector3 position, bool canTeleport, CompetenceRecall currentRecallComp)
+    {
+        movementGhostPreview.GetRenderer.material = canTeleport ? baseGhostMaterial : cantMoveThereMaterial;
+        movementGhostPreview.transform.position = position;
+
+        List<DiscTrajectoryParameters> discsInNewPositionRangeParameters = DiscListingFactory.GetDiscInRangeTrajectory(position, currentRecallComp);
+        UpdateRecallPreview(discsInNewPositionRangeParameters, position);
+    }
+
+    public void EndTeleportationPreview()
+    {
+        movementGhostPreview.gameObject.SetActive(false);
+
+        EndRecallPreview();
+        foreach (EnemyBase enemy in EnemiesManager.Instance.GetAllInGameEnemiesOrdered)
+        {
+            enemy.HidePreview(false);
+        }
     }
     #endregion
     #endregion
