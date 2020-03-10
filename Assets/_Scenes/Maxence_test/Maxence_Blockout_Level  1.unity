@@ -106,7 +106,7 @@ NavMeshSettings:
   m_BuildSettings:
     serializedVersion: 2
     agentTypeID: 0
-    agentRadius: 0.3
+    agentRadius: 0.11
     agentHeight: 2
     agentSlope: 41.4
     agentClimb: 0.4
@@ -114,7 +114,7 @@ NavMeshSettings:
     maxJumpAcrossDistance: 0
     minRegionArea: 2
     manualCellSize: 0
-    cellSize: 0.1
+    cellSize: 0.036666665
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 4086579}
   - component: {fileID: 4086578}
   - component: {fileID: 4086577}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Bord
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -455,6 +455,86 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4086575}
   m_Mesh: {fileID: 186800030}
+--- !u!1001 &17201606
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 357071455}
+    m_Modifications:
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8.90625
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -10.0234375
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.36621094
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4916804047441029860, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8490550320200220956, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: definedLootedDisc
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 80b6d32fcd34ae64884e98e74db867cf, type: 3}
+--- !u!4 &17201607 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+    type: 3}
+  m_PrefabInstance: {fileID: 17201606}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &18257799
 GameObject:
   m_ObjectHideFlags: 0
@@ -468,7 +548,7 @@ GameObject:
   - component: {fileID: 18257803}
   - component: {fileID: 18257802}
   - component: {fileID: 18257801}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (17)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -795,7 +875,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150608
+  m_Name: pb_Mesh162634
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -958,7 +1038,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150084
+  m_Name: pb_Mesh162100
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1115,6 +1195,12 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!4 &26454494 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1432790500}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &77085555
 GameObject:
   m_ObjectHideFlags: 0
@@ -1128,7 +1214,7 @@ GameObject:
   - component: {fileID: 77085559}
   - component: {fileID: 77085558}
   - component: {fileID: 77085557}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (26)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1528,6 +1614,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a55013bb880c4d4593c33c75a728920, type: 3}
+--- !u!114 &95059120 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2448579990752399657, guid: 75829edf64b31c948b287e32cb294910,
+    type: 3}
+  m_PrefabInstance: {fileID: 1299231480}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fa8513ef99fd6645a2d4ed5ae3944d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &159362349
 GameObject:
   m_ObjectHideFlags: 0
@@ -1541,7 +1639,7 @@ GameObject:
   - component: {fileID: 159362353}
   - component: {fileID: 159362352}
   - component: {fileID: 159362351}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (47)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1875,7 +1973,7 @@ GameObject:
   - component: {fileID: 182357996}
   - component: {fileID: 182357995}
   - component: {fileID: 182357994}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2202,7 +2300,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149950
+  m_Name: pb_Mesh161966
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2365,7 +2463,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149702
+  m_Name: pb_Mesh161722
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2571,7 +2669,7 @@ GameObject:
   - component: {fileID: 249053040}
   - component: {fileID: 249053039}
   - component: {fileID: 249053038}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (39)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2898,7 +2996,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149874
+  m_Name: pb_Mesh161890
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3068,7 +3166,7 @@ GameObject:
   - component: {fileID: 300392891}
   - component: {fileID: 300392890}
   - component: {fileID: 300392889}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (16)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3395,7 +3493,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150326
+  m_Name: pb_Mesh162346
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3558,7 +3656,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150510
+  m_Name: pb_Mesh162534
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3728,7 +3826,7 @@ GameObject:
   - component: {fileID: 323086460}
   - component: {fileID: 323086459}
   - component: {fileID: 323086458}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4055,7 +4153,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149938
+  m_Name: pb_Mesh161954
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4312,7 +4410,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149714
+  m_Name: pb_Mesh161734
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -38139,6 +38237,42 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 356461658}
   m_Mesh: {fileID: 499296309}
+--- !u!1 &357071454
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 357071455}
+  m_Layer: 0
+  m_Name: Spawnpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &357071455
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 357071454}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -10.09375, y: 10.0234375, z: -17.36621}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 26454494}
+  - {fileID: 1828701674}
+  - {fileID: 1469484721}
+  - {fileID: 17201607}
+  - {fileID: 1465620877}
+  - {fileID: 453122659}
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &370208674
 GameObject:
   m_ObjectHideFlags: 0
@@ -38152,7 +38286,7 @@ GameObject:
   - component: {fileID: 370208678}
   - component: {fileID: 370208677}
   - component: {fileID: 370208676}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (13)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38479,7 +38613,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150274
+  m_Name: pb_Mesh162294
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -38983,7 +39117,7 @@ GameObject:
   - component: {fileID: 386947166}
   - component: {fileID: 386947165}
   - component: {fileID: 386947164}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Bord
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39357,7 +39491,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149732
+  m_Name: pb_Mesh161750
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -39574,7 +39708,7 @@ GameObject:
   - component: {fileID: 441303626}
   - component: {fileID: 441303625}
   - component: {fileID: 441303624}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (23)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39901,7 +40035,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150046
+  m_Name: pb_Mesh162062
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -40071,7 +40205,7 @@ GameObject:
   - component: {fileID: 445297546}
   - component: {fileID: 445297545}
   - component: {fileID: 445297544}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (45)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40392,6 +40526,86 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 445297542}
   m_Mesh: {fileID: 1263542908}
+--- !u!1001 &453122658
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 357071455}
+    m_Modifications:
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -13.90625
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -10.0234375
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 5.866211
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4916804047441029860, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8490550320200220956, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: definedLootedDisc
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 80b6d32fcd34ae64884e98e74db867cf, type: 3}
+--- !u!4 &453122659 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+    type: 3}
+  m_PrefabInstance: {fileID: 453122658}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &458404214
 GameObject:
   m_ObjectHideFlags: 0
@@ -40405,7 +40619,7 @@ GameObject:
   - component: {fileID: 458404218}
   - component: {fileID: 458404217}
   - component: {fileID: 458404216}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (35)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40739,7 +40953,7 @@ GameObject:
   - component: {fileID: 463035140}
   - component: {fileID: 463035139}
   - component: {fileID: 463035138}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (12)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41073,7 +41287,7 @@ GameObject:
   - component: {fileID: 465411321}
   - component: {fileID: 465411320}
   - component: {fileID: 465411319}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (32)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41436,7 +41650,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149836
+  m_Name: pb_Mesh161852
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -41599,7 +41813,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149794
+  m_Name: pb_Mesh161810
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -41762,7 +41976,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150306
+  m_Name: pb_Mesh162326
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -41932,7 +42146,7 @@ GameObject:
   - component: {fileID: 665555380}
   - component: {fileID: 665555379}
   - component: {fileID: 665555378}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (52)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42259,7 +42473,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150628
+  m_Name: pb_Mesh162656
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -42429,7 +42643,7 @@ GameObject:
   - component: {fileID: 710152283}
   - component: {fileID: 710152282}
   - component: {fileID: 710152281}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Bord
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42756,7 +42970,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150460
+  m_Name: pb_Mesh162484
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -42926,7 +43140,7 @@ GameObject:
   - component: {fileID: 785637459}
   - component: {fileID: 785637458}
   - component: {fileID: 785637457}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (28)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43253,7 +43467,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149780
+  m_Name: pb_Mesh161796
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -43423,7 +43637,7 @@ GameObject:
   - component: {fileID: 805740287}
   - component: {fileID: 805740286}
   - component: {fileID: 805740285}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (24)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43804,7 +44018,7 @@ GameObject:
   - component: {fileID: 815035063}
   - component: {fileID: 815035062}
   - component: {fileID: 815035061}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (43)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44144,7 +44358,7 @@ GameObject:
   - component: {fileID: 823068430}
   - component: {fileID: 823068429}
   - component: {fileID: 823068428}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (33)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44565,7 +44779,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150236
+  m_Name: pb_Mesh162254
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -44728,7 +44942,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150522
+  m_Name: pb_Mesh162546
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -45032,7 +45246,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149848
+  m_Name: pb_Mesh161864
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -45202,7 +45416,7 @@ GameObject:
   - component: {fileID: 927735967}
   - component: {fileID: 927735966}
   - component: {fileID: 927735965}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45529,7 +45743,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150362
+  m_Name: pb_Mesh162386
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -48229,7 +48443,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150484
+  m_Name: pb_Mesh162508
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -48446,7 +48660,7 @@ GameObject:
   - component: {fileID: 977523652}
   - component: {fileID: 977523651}
   - component: {fileID: 977523650}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48780,7 +48994,7 @@ GameObject:
   - component: {fileID: 999128566}
   - component: {fileID: 999128565}
   - component: {fileID: 999128564}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (14)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49107,7 +49321,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149760
+  m_Name: pb_Mesh161776
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -49277,7 +49491,7 @@ GameObject:
   - component: {fileID: 1000212145}
   - component: {fileID: 1000212144}
   - component: {fileID: 1000212143}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (40)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49604,7 +49818,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150134
+  m_Name: pb_Mesh162152
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -49767,7 +49981,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150122
+  m_Name: pb_Mesh162140
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -49930,7 +50144,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150032
+  m_Name: pb_Mesh162048
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -50100,7 +50314,7 @@ GameObject:
   - component: {fileID: 1042291147}
   - component: {fileID: 1042291146}
   - component: {fileID: 1042291145}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (18)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50427,7 +50641,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150376
+  m_Name: pb_Mesh162400
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -50597,7 +50811,7 @@ GameObject:
   - component: {fileID: 1060999238}
   - component: {fileID: 1060999237}
   - component: {fileID: 1060999236}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (21)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51012,6 +51226,56 @@ Transform:
   m_Father: {fileID: 922914082}
   m_RootOrder: 55
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!1 &1063224361
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1063224363}
+  - component: {fileID: 1063224362}
+  m_Layer: 0
+  m_Name: Swarm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1063224362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063224361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ac98de3a3e65724fab9635b882313ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugZone: 1
+  radius: 10
+  selfActivates: 0
+  alwaysActivatedWhenActivatedOnce: 1
+  allWavesParameters: []
+  infiniteSpawn: 1
+  spawnedEnemiesAutoDetectPlayer: 1
+--- !u!4 &1063224363
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063224361}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -27, y: 1, z: 8.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1074858408
 GameObject:
   m_ObjectHideFlags: 0
@@ -51025,7 +51289,7 @@ GameObject:
   - component: {fileID: 1074858412}
   - component: {fileID: 1074858411}
   - component: {fileID: 1074858410}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (15)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51352,7 +51616,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150472
+  m_Name: pb_Mesh162496
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -51515,7 +51779,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150000
+  m_Name: pb_Mesh162016
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -51685,7 +51949,7 @@ GameObject:
   - component: {fileID: 1144272412}
   - component: {fileID: 1144272411}
   - component: {fileID: 1144272410}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (42)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52012,7 +52276,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150534
+  m_Name: pb_Mesh162558
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -52175,7 +52439,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149926
+  m_Name: pb_Mesh161942
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -52508,7 +52772,7 @@ GameObject:
   - component: {fileID: 1234267835}
   - component: {fileID: 1234267834}
   - component: {fileID: 1234267833}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52835,7 +53099,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149914
+  m_Name: pb_Mesh161930
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -53052,7 +53316,7 @@ GameObject:
   - component: {fileID: 1267637131}
   - component: {fileID: 1267637130}
   - component: {fileID: 1267637129}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53379,7 +53643,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149986
+  m_Name: pb_Mesh162002
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -53542,7 +53806,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150014
+  m_Name: pb_Mesh162030
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -53774,7 +54038,7 @@ PrefabInstance:
     - target: {fileID: 2448579990752399662, guid: 75829edf64b31c948b287e32cb294910,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2448579990752399662, guid: 75829edf64b31c948b287e32cb294910,
         type: 3}
@@ -53819,7 +54083,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150546
+  m_Name: pb_Mesh162570
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -53989,7 +54253,7 @@ GameObject:
   - component: {fileID: 1304273876}
   - component: {fileID: 1304273875}
   - component: {fileID: 1304273874}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (22)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54323,7 +54587,7 @@ GameObject:
   - component: {fileID: 1311966597}
   - component: {fileID: 1311966596}
   - component: {fileID: 1311966595}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (44)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54650,7 +54914,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150428
+  m_Name: pb_Mesh162452
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -54867,7 +55131,7 @@ GameObject:
   - component: {fileID: 1349944215}
   - component: {fileID: 1349944214}
   - component: {fileID: 1349944213}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55241,7 +55505,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150202
+  m_Name: pb_Mesh162220
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -55411,7 +55675,7 @@ GameObject:
   - component: {fileID: 1383468034}
   - component: {fileID: 1383468033}
   - component: {fileID: 1383468032}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56061,7 +56325,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149748
+  m_Name: pb_Mesh161764
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -56223,37 +56487,37 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 357071455}
     m_Modifications:
     - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10.704196
+      value: 5.59375
       objectReference: {fileID: 0}
     - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -10.0234375
       objectReference: {fileID: 0}
     - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -11.516908
+      value: 14.866211
       objectReference: {fileID: 0}
     - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
         type: 3}
@@ -56263,7 +56527,7 @@ PrefabInstance:
     - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
         type: 3}
@@ -56298,7 +56562,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150166
+  m_Name: pb_Mesh162184
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -56468,7 +56732,7 @@ GameObject:
   - component: {fileID: 1465098240}
   - component: {fileID: 1465098239}
   - component: {fileID: 1465098238}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (27)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56789,13 +57053,173 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1465098236}
   m_Mesh: {fileID: 929276204}
+--- !u!1001 &1465620876
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 357071455}
+    m_Modifications:
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.59375
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -10.0234375
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 21.86621
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4916804047441029860, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8490550320200220956, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: definedLootedDisc
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 80b6d32fcd34ae64884e98e74db867cf, type: 3}
+--- !u!4 &1465620877 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1465620876}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1469484720
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 357071455}
+    m_Modifications:
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.09375
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -10.0234375
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -6.133789
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4916804047441029860, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8490550320200220956, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: definedLootedDisc
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 80b6d32fcd34ae64884e98e74db867cf, type: 3}
+--- !u!4 &1469484721 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1469484720}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1503548904
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150410
+  m_Name: pb_Mesh162434
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -56965,7 +57389,7 @@ GameObject:
   - component: {fileID: 1578804688}
   - component: {fileID: 1578804687}
   - component: {fileID: 1578804686}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (20)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57433,7 +57857,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149862
+  m_Name: pb_Mesh161878
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -57596,7 +58020,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150256
+  m_Name: pb_Mesh162274
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -57759,7 +58183,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150180
+  m_Name: pb_Mesh162198
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -57929,7 +58353,7 @@ GameObject:
   - component: {fileID: 1673093561}
   - component: {fileID: 1673093560}
   - component: {fileID: 1673093559}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (38)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58596,7 +59020,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149900
+  m_Name: pb_Mesh161916
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -58759,7 +59183,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150148
+  m_Name: pb_Mesh162166
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -58923,6 +59347,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 425657829959952679, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 560228294854462294, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
         type: 3}
       propertyPath: m_Enabled
@@ -59195,6 +59624,28 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5034729389730966010, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: testDiscType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6538747667959666325, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: startThrowCompetence
+      value: 
+      objectReference: {fileID: 11400000, guid: a5c7209861a8a8043bdf7f7d46b04be2,
+        type: 2}
+    - target: {fileID: 6538747667959666325, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: startRecallCompetence
+      value: 
+      objectReference: {fileID: 11400000, guid: 8814397f64654294fa8cf616a6024156,
+        type: 2}
+    - target: {fileID: 6583912201355048081, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: goalZone
+      value: 
+      objectReference: {fileID: 95059120}
     - target: {fileID: 7360405968755364706, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
         type: 3}
       propertyPath: player
@@ -59250,7 +59701,7 @@ GameObject:
   - component: {fileID: 1762371026}
   - component: {fileID: 1762371025}
   - component: {fileID: 1762371024}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (48)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60760,6 +61211,86 @@ Transform:
   m_Father: {fileID: 922914082}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -2.0640001, y: -44.591003, z: -3.44}
+--- !u!1001 &1828701673
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 357071455}
+    m_Modifications:
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 11.59375
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -10.0234375
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 5.366211
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4916804047441029860, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8490550320200220956, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: definedLootedDisc
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 80b6d32fcd34ae64884e98e74db867cf, type: 3}
+--- !u!4 &1828701674 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3890984183674013253, guid: 80b6d32fcd34ae64884e98e74db867cf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1828701673}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1844357029
 GameObject:
   m_ObjectHideFlags: 0
@@ -60773,7 +61304,7 @@ GameObject:
   - component: {fileID: 1844357033}
   - component: {fileID: 1844357032}
   - component: {fileID: 1844357031}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (25)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63820,7 +64351,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149972
+  m_Name: pb_Mesh161988
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -63983,7 +64514,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150286
+  m_Name: pb_Mesh162306
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -64153,7 +64684,7 @@ GameObject:
   - component: {fileID: 1965181284}
   - component: {fileID: 1965181283}
   - component: {fileID: 1965181282}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (30)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64487,7 +65018,7 @@ GameObject:
   - component: {fileID: 1972589942}
   - component: {fileID: 1972589941}
   - component: {fileID: 1972589940}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (37)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -65161,7 +65692,7 @@ GameObject:
   - component: {fileID: 1975798819}
   - component: {fileID: 1975798818}
   - component: {fileID: 1975798817}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (46)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -65495,7 +66026,7 @@ GameObject:
   - component: {fileID: 1976159686}
   - component: {fileID: 1976159685}
   - component: {fileID: 1976159684}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (41)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -66047,7 +66578,7 @@ GameObject:
   - component: {fileID: 2023556910}
   - component: {fileID: 2023556912}
   - component: {fileID: 2023556911}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Statue (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -66410,7 +66941,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150218
+  m_Name: pb_Mesh162236
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -66627,7 +67158,7 @@ GameObject:
   - component: {fileID: 2061538376}
   - component: {fileID: 2061538375}
   - component: {fileID: 2061538374}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Rocher (34)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -66954,7 +67485,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh149810
+  m_Name: pb_Mesh161826
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -67117,7 +67648,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh150104
+  m_Name: pb_Mesh162120
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -67334,7 +67865,7 @@ GameObject:
   - component: {fileID: 2132277040}
   - component: {fileID: 2132277039}
   - component: {fileID: 2132277038}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Bord
   m_TagString: Untagged
   m_Icon: {fileID: 0}
