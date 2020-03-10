@@ -42,7 +42,6 @@ public class TurnManager : MonoBehaviour
 
     public void EndPlayerTurn()
     {
-        //currentTurnState = TurnState.BetweenPlayerAndEnemies;
         currentTurnState = TurnState.EnemyTurn;
         OnEndPlayerTurn?.Invoke();
 
