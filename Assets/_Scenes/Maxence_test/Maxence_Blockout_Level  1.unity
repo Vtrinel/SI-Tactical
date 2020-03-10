@@ -527,6 +527,11 @@ PrefabInstance:
       propertyPath: definedLootedDisc
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8490550320200220956, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: definedEnemyToSpawn
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80b6d32fcd34ae64884e98e74db867cf, type: 3}
 --- !u!4 &16224932 stripped
@@ -1364,6 +1369,11 @@ PrefabInstance:
         type: 3}
       propertyPath: definedLootedDisc
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8490550320200220956, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: definedEnemyToSpawn
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80b6d32fcd34ae64884e98e74db867cf, type: 3}
@@ -2393,6 +2403,11 @@ PrefabInstance:
         type: 3}
       propertyPath: definedLootedDisc
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8490550320200220956, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: definedEnemyToSpawn
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80b6d32fcd34ae64884e98e74db867cf, type: 3}
@@ -41823,6 +41838,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 463035136}
   m_Mesh: {fileID: 332187216}
+--- !u!114 &463296654 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8490550320200220956, guid: 80b6d32fcd34ae64884e98e74db867cf,
+    type: 3}
+  m_PrefabInstance: {fileID: 34149733}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bbc93153f092804aab74979bf385306, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &465411317
 GameObject:
   m_ObjectHideFlags: 0
@@ -42157,6 +42184,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465411317}
   m_Mesh: {fileID: 183815527}
+--- !u!114 &473476603 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8490550320200220956, guid: 80b6d32fcd34ae64884e98e74db867cf,
+    type: 3}
+  m_PrefabInstance: {fileID: 16224931}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bbc93153f092804aab74979bf385306, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &487281324
 GameObject:
   m_ObjectHideFlags: 0
@@ -42581,6 +42620,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8057853571154104354, guid: 0f7587bdbbff5cb4fa9bf566553e4375,
+        type: 3}
+      propertyPath: _lootedDiscType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8057853571154104364, guid: 0f7587bdbbff5cb4fa9bf566553e4375,
         type: 3}
       propertyPath: m_Name
@@ -42730,6 +42774,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8057853571154104354, guid: 0f7587bdbbff5cb4fa9bf566553e4375,
+        type: 3}
+      propertyPath: _lootedDiscType
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8057853571154104364, guid: 0f7587bdbbff5cb4fa9bf566553e4375,
         type: 3}
@@ -43043,6 +43092,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3894817726808940227, guid: 893cd22381f57fc4c9b33803043b0314,
+        type: 3}
+      propertyPath: _lootedDiscType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3894817726808940237, guid: 893cd22381f57fc4c9b33803043b0314,
         type: 3}
@@ -43571,7 +43625,7 @@ PrefabInstance:
     - target: {fileID: 5276651464432637289, guid: 68061edd2dceecb4089e4ee603710357,
         type: 3}
       propertyPath: OnTriggerEnterEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5276651464432637289, guid: 68061edd2dceecb4089e4ee603710357,
         type: 3}
@@ -43581,7 +43635,7 @@ PrefabInstance:
     - target: {fileID: 5276651464432637289, guid: 68061edd2dceecb4089e4ee603710357,
         type: 3}
       propertyPath: OnTriggerEnterEvent.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5276651464432637289, guid: 68061edd2dceecb4089e4ee603710357,
         type: 3}
@@ -43621,7 +43675,7 @@ PrefabInstance:
     - target: {fileID: 5276651464432637289, guid: 68061edd2dceecb4089e4ee603710357,
         type: 3}
       propertyPath: OnTriggerEnterEvent.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5276651464432637289, guid: 68061edd2dceecb4089e4ee603710357,
         type: 3}
@@ -53082,7 +53136,34 @@ MonoBehaviour:
   radius: 10
   selfActivates: 0
   alwaysActivatedWhenActivatedOnce: 1
-  allWavesParameters: []
+  allWavesParameters:
+  - enemiesToSpawn:
+    - enemyType: 2
+      spawnPoint: {fileID: 1358328349}
+      attachedDiscType: 0
+    - enemyType: 1
+      spawnPoint: {fileID: 209033727}
+      attachedDiscType: 2
+    numberOfWaitTurnAfterSpawned: 1
+  - enemiesToSpawn:
+    - enemyType: 1
+      spawnPoint: {fileID: 816862185}
+      attachedDiscType: 0
+    - enemyType: 5
+      spawnPoint: {fileID: 473476603}
+      attachedDiscType: 3
+    - enemyType: 1
+      spawnPoint: {fileID: 1712826961}
+      attachedDiscType: 0
+    numberOfWaitTurnAfterSpawned: 1
+  - enemiesToSpawn:
+    - enemyType: 1
+      spawnPoint: {fileID: 463296654}
+      attachedDiscType: 2
+    - enemyType: 2
+      spawnPoint: {fileID: 1407856811}
+      attachedDiscType: 0
+    numberOfWaitTurnAfterSpawned: 1
   infiniteSpawn: 1
   spawnedEnemiesAutoDetectPlayer: 1
 --- !u!4 &1063224363
@@ -53160,6 +53241,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8057853571154104354, guid: 0f7587bdbbff5cb4fa9bf566553e4375,
+        type: 3}
+      propertyPath: _lootedDiscType
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8057853571154104364, guid: 0f7587bdbbff5cb4fa9bf566553e4375,
         type: 3}
@@ -54650,7 +54736,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-59680
+  m_Name: pb_Mesh-284568
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -57582,6 +57668,11 @@ PrefabInstance:
       propertyPath: definedLootedDisc
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8490550320200220956, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: definedEnemyToSpawn
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80b6d32fcd34ae64884e98e74db867cf, type: 3}
 --- !u!4 &1323074222 stripped
@@ -59046,6 +59137,18 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &1407856811 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8490550320200220956, guid: 80b6d32fcd34ae64884e98e74db867cf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1323074221}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bbc93153f092804aab74979bf385306, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &1426449697
 Mesh:
   m_ObjectHideFlags: 0
@@ -59851,6 +59954,11 @@ PrefabInstance:
         type: 3}
       propertyPath: definedLootedDisc
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8490550320200220956, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: definedEnemyToSpawn
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80b6d32fcd34ae64884e98e74db867cf, type: 3}
@@ -62943,7 +63051,7 @@ PrefabInstance:
         type: 3}
       propertyPath: startRecallCompetence
       value: 
-      objectReference: {fileID: 11400000, guid: 8814397f64654294fa8cf616a6024156,
+      objectReference: {fileID: 11400000, guid: 77cc318e6885ae54e91cea965e594bd4,
         type: 2}
     - target: {fileID: 6538747667959666325, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
         type: 3}
@@ -63402,21 +63510,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2022475993876897127, guid: 7ef40f4a7347c7f4e8ce88eceed61347,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.4099
-      objectReference: {fileID: 0}
-    - target: {fileID: 2022475993876897127, guid: 7ef40f4a7347c7f4e8ce88eceed61347,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.4099
-      objectReference: {fileID: 0}
-    - target: {fileID: 2022475993876897127, guid: 7ef40f4a7347c7f4e8ce88eceed61347,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.4099
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ef40f4a7347c7f4e8ce88eceed61347, type: 3}
@@ -67801,6 +67894,11 @@ PrefabInstance:
       propertyPath: definedLootedDisc
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8490550320200220956, guid: 80b6d32fcd34ae64884e98e74db867cf,
+        type: 3}
+      propertyPath: definedEnemyToSpawn
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80b6d32fcd34ae64884e98e74db867cf, type: 3}
 --- !u!4 &1946296051 stripped
@@ -71484,6 +71582,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8057853571154104354, guid: 0f7587bdbbff5cb4fa9bf566553e4375,
+        type: 3}
+      propertyPath: _lootedDiscType
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8057853571154104364, guid: 0f7587bdbbff5cb4fa9bf566553e4375,
         type: 3}
