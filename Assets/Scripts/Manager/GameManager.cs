@@ -334,6 +334,8 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        bool validatedAction = true;
+
         if (playerMovementsManager.IsWillingToMove)
         {
             int cost = playerMovementsManager.TryStartMovement(GetCurrentWorldMouseResult.mouseWorldPosition);
@@ -347,7 +349,6 @@ public class GameManager : MonoBehaviour
         else if(competencesUsabilityManager.IsPreparingCompetence)
         {
             int cost = competencesUsabilityManager.GetCurrentCompetenceCost();
-            CallUnselectActionEvent(competencesUsabilityManager.GetCurrentCompetenceType);
             switch (competencesUsabilityManager.GetCurrentCompetenceType)
             {
                 case ActionType.Throw:
@@ -359,12 +360,18 @@ public class GameManager : MonoBehaviour
                     break;
 
                 case ActionType.Special:
+                    validatedAction = competencesUsabilityManager.LaunchSpecialCompetence();
                     break;
             }
-            ConsumeActionPoints(cost);
+            if (validatedAction)
+            {
+                ConsumeActionPoints(cost);
+                CallUnselectActionEvent(competencesUsabilityManager.GetCurrentCompetenceType);
+            }
         }
 
-        UpdatePlayerActability();
+        if(validatedAction)
+            UpdatePlayerActability();
     }
 
     public void CallSelectActionEvent(ActionType actionType)
