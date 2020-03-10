@@ -115,7 +115,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.6
+      scalar: 0.3
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1047,6 +1047,33 @@ ParticleSystem:
           weightedMode: 0
           inWeight: 0
           outWeight: 0
+        - serializedVersion: 3
+          time: 0.14444003
+          value: 0.95924985
+          inSlope: -1.6546599
+          outSlope: -1.6546599
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.26266983
+          value: 0.9677991
+          inSlope: -1.4723155
+          outSlope: -1.4723155
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.58881193
+          value: 0.97087145
+          inSlope: -1.4794751
+          outSlope: -1.4794751
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
         - serializedVersion: 3
           time: 0.996521
           value: 0.19815063
@@ -4927,7 +4954,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.3
+      scalar: 0.2
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -5412,7 +5439,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 6
+    maxNumParticles: 4
     size3D: 0
     rotation3D: 0
     gravityModifier:
@@ -9650,7 +9677,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6513562057051053364}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 2.5821779, y: 1.1898627, z: -0.93296266}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2909907369342573123}
@@ -14398,7 +14425,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2909729731991498397
 Transform:
   m_ObjectHideFlags: 0

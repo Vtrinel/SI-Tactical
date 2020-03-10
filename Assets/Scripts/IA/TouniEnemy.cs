@@ -74,6 +74,8 @@ public class TouniEnemy : IAEnemyVirtual
 
         while (myNavAgent.pathStatus != NavMeshPathStatus.PathComplete || myNavAgent.remainingDistance != 0)
         {
+            Debug.Log("Try move");
+
             if (CanAttack())
             {
                 myNavAgent.isStopped = true;

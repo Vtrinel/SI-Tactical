@@ -4,13 +4,15 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: CFX_Anim_Triangle2_AlphaBlendedPremult
-  m_Shader: {fileID: 207, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 10750, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
@@ -18,11 +20,20 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 398da4b026da3fd4dbe04dfc2ba43f09, type: 3}
+        m_Texture: {fileID: 2800000, guid: b2cb9c21c6e43a4439c76548f2d663a4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - _ColorMask: 15
+    - _Cutoff: 0.5
     - _InvFade: 0.5537313
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
     m_Colors:
+    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _TintColor: {r: 0.42537314, g: 0.42537314, b: 0.42537314, a: 0.5019608}
