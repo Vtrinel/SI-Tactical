@@ -21,12 +21,15 @@ public class PointActionBar : MonoBehaviour
 
         GameManager.Instance.OnActionPointsAmountChanged += UpdatePointBar;
         competencesUsabilityManager.OnCompetenceStateChanged += UpdatePreConsommationPointBar;
+        competencesUsabilityManager.OnCompetenceStateChanged += UpdatePreConsommationPointBar;
+        TurnManager.Instance.OnStartPlayerTurn += ResetStateBar;
     }
 
     private void OnDisable()
     {
         GameManager.Instance.OnActionPointsAmountChanged -= UpdatePointBar;
         competencesUsabilityManager.OnCompetenceStateChanged -= UpdatePreConsommationPointBar;
+        TurnManager.Instance.OnStartPlayerTurn -= ResetStateBar;
     }
 
     void Start()
@@ -70,26 +73,50 @@ public class PointActionBar : MonoBehaviour
     // Update the action point bar to show the previsualisation of the action poin bar
     void UpdatePreConsommationPointBar()
     {
-        if (!competencesUsabilityManager.IsPreparingCompetence)
+        if (competencesUsabilityManager.IsPreparingCompetence)
         {
-            return;
+            int currentConsommationPoint = GameManager.Instance.GetCurrentActionPointsAmount - competencesUsabilityManager.GetCurrentCompetenceCost();
+            int i = 0;
+
+            foreach (GameObject _pointBar in allPointBarElement)
+            {
+                if (i < currentConsommationPoint)
+                {
+                    _pointBar.GetComponent<Animator>().SetBool("Preview", false);
+                }
+                else
+                {
+                    _pointBar.GetComponent<Animator>().SetBool("Preview", true);
+                }
+                i++;
+            }
         }
+        else
+        {
+            int currentActionPoint = GameManager.Instance.GetCurrentActionPointsAmount;
+            int i = 0;
 
-        int currentConsommationPoint = GameManager.Instance.GetCurrentActionPointsAmount - competencesUsabilityManager.GetCurrentCompetenceCost();
+            foreach (GameObject _pointBar in allPointBarElement)
+            {
+                if (i < currentActionPoint)
+                {
+                    _pointBar.GetComponent<Animator>().SetBool("Statut", true);
+                }
+                else
+                {
+                    _pointBar.GetComponent<Animator>().SetBool("Statut", false);
+                }
+                i++;
+            }
+        }
+        
+    }
 
-        int i = 0;
-
+    void ResetStateBar()
+    {
         foreach (GameObject _pointBar in allPointBarElement)
         {
-            if (i < currentConsommationPoint)
-            {
-                _pointBar.GetComponent<Animator>().SetBool("Preview", false);
-            }
-            else
-            {
-                _pointBar.GetComponent<Animator>().SetBool("Preview", true);
-            }
-            i++;
+            _pointBar.GetComponent<Animator>().SetBool("Preview", false);
         }
     }
 }

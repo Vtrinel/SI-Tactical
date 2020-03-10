@@ -186,6 +186,13 @@ public class GameManager : MonoBehaviour
         OnPlayerMaxLifeAmountChanged?.Invoke(value);
     }
 
+    public Action<int> OnCancelSelectedAction;
+
+    public void SendRemainingActionPoint()
+    {
+        OnCancelSelectedAction?.Invoke(currentActionPointsAmount);
+    }
+
     #region Mouse World Result
     [Header("Mouse World Result")]
     [SerializeField] LayerMask worldMouseLayerMask = default;
