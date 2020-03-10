@@ -31,8 +31,8 @@ public class PlayerExperienceManager : MonoBehaviour
     //Actions
     public Action<bool> OnEnterTotemZone;
     public Action<int> OnSelectTypeCompetence;
-    public Action<int> OnGainExperience;
-    public Action<int> OnLossExperience;
+    public Action<int> OnGainGold;
+    public Action<int> OnLossGold;
     public Action<Competence> OnSelectCompetence;
     public Action<Competence> OnTryUnlockCompetence;
     public Action<Competence> OnEquipCompetence;
@@ -58,11 +58,13 @@ public class PlayerExperienceManager : MonoBehaviour
     [SerializeField] CompetenceSpecial startSpecialCompetence = default;
 
     private int competenceTypeSelected = 0; // 0 = throw, 1 = recall, 2 = special
-    private int competenceBar = 0; // 0 => 100. At 100, unlock a competence point
+    [SerializeField] int goldBar = 0; // 0 => 100. At 100, unlock a competence point
+    [SerializeField] int goldToUnlockCompetence = 100;
     private bool canUnlockComp = false;
 
     private bool isCanvasCompetenceShowed = false;
     public bool IsUsingCompetencesMenu => isCanvasCompetenceShowed;
+    public int GetGoldQuantity => goldBar;
 
     // For the singleton
     private void Awake()
@@ -114,9 +116,9 @@ public class PlayerExperienceManager : MonoBehaviour
         }
 
         // Competence experience bar
-        if (competenceBar >= 100)
+        if (goldBar >= goldToUnlockCompetence)
         {
-            competenceBar = 100;
+            goldBar = goldToUnlockCompetence;
             canUnlockComp = true;
 
             competenceInfoText.text = "Competence point available";
@@ -150,21 +152,14 @@ public class PlayerExperienceManager : MonoBehaviour
     // Check if a competence can be unlocked and unlock it if possible
     public void CanUnlockCompetence(Competence competence)
     {
-
         if (canUnlockComp)
         {
-            if (competence.CanUnlockCompetence())
+            if (competence.CanUnlockCompetence() && competence)
             {
-                competenceBar = 0;
-                OnLossExperience?.Invoke(100);
-                Debug.Log("Competence unlocked");
+                goldBar = 0;
+                OnLossGold?.Invoke(goldToUnlockCompetence);
             }
         }
-        else
-        {
-            Debug.Log("Not enough competence point");
-        }
-
         OnTryUnlockCompetence?.Invoke(competence);
     }
 
@@ -210,11 +205,16 @@ public class PlayerExperienceManager : MonoBehaviour
         return selectedCompetence;
     }
 
-    public void GainExperience(int experience)
+    public void GainGold(int experience)
     {
-        competenceBar += experience;
-        OnGainExperience?.Invoke(experience);
+        goldBar += experience;
+        OnGainGold?.Invoke(experience);
+    }
 
+    public void LossGold(int experience)
+    {
+        goldBar -= experience;
+        OnLossGold?.Invoke(experience);
     }
 
     public void AddMaximumDisc()
@@ -224,8 +224,8 @@ public class PlayerExperienceManager : MonoBehaviour
             DiscManager.Instance.AddOneMaxNumberOfPossessedDiscs();
 
             canUnlockComp = false;
-            competenceBar = 0;
-            OnLossExperience?.Invoke(100);
+            goldBar = 0;
+            OnLossGold?.Invoke(100);
         }
     }
 
@@ -236,8 +236,8 @@ public class PlayerExperienceManager : MonoBehaviour
             DiscManager.Instance.AddOneMaxRangeOfPlayer();
 
             canUnlockComp = false;
-            competenceBar = 0;
-            OnLossExperience?.Invoke(100);
+            goldBar = 0;
+            OnLossGold?.Invoke(100);
         }
     }
 
@@ -248,8 +248,8 @@ public class PlayerExperienceManager : MonoBehaviour
             GameManager.Instance.PlayerMaxLifeChange(1);
 
             canUnlockComp = false;
-            competenceBar = 0;
-            OnLossExperience?.Invoke(100);
+            goldBar = 0;
+            OnLossGold?.Invoke(100);
         }
     }
 
@@ -264,7 +264,5 @@ public class PlayerExperienceManager : MonoBehaviour
     {
         canOpenCompetenceMenu = canOpen;
         OnEnterTotemZone?.Invoke(canOpen);
-
-        Debug.Log(canOpen);
     }
 }
