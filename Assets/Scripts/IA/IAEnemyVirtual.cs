@@ -58,20 +58,18 @@ public class IAEnemyVirtual : MonoBehaviour
     {
         myNavAgent.isStopped = true;
         myNavAgent.SetDestination(_targetPos);
-        myNavAgent.SetDestination(Vector3.zero);
-        myNavAgent.SetDestination(_targetPos);
 
         NavMeshPath _path = myNavAgent.path;
 
         float currentDistance = 0;
-        Debug.DrawRay(myNavAgent.destination, Vector3.up * 8f, Color.blue, 15f);
+        Debug.DrawRay(myNavAgent.destination, Vector3.up * 8f, Color.blue, 5f);
         foreach (Vector3 pos in _path.corners)
-            Debug.DrawRay(pos, Vector3.up * 4f, Color.red, 15f);
+            Debug.DrawRay(pos, Vector3.up * 4f, Color.red, 5f);
 
         Debug.LogWarning("Start path (" + _path.corners.Length + " points calculated)");
         for (int i = 1; i < _path.corners.Length; i++)
         {
-            Debug.DrawLine(_path.corners[i - 1] + Vector3.up, _path.corners[i] + Vector3.up, Color.green, 15f);
+            Debug.DrawLine(_path.corners[i - 1] + Vector3.up, _path.corners[i] + Vector3.up, Color.green, 5f);
         }
 
         for (var i = 1; i < _path.corners.Length; i++)
