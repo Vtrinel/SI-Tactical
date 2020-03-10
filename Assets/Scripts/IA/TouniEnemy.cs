@@ -105,6 +105,8 @@ public class TouniEnemy : IAEnemyVirtual
         myAnimator.SetTrigger("Attack");
         myAnimator.SetBool("Preparing", false);
         CollisionAttack();
+
+        GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, new DamagesParameters(damage));
     }
 
     void CollisionAttack()
@@ -114,7 +116,7 @@ public class TouniEnemy : IAEnemyVirtual
         foreach(GameObject _obj in _objsTouched)
         {
             DamageableEntity hitDamageableEntity = _obj.GetComponent<DamageableEntity>();
-            if (hitDamageableEntity != null)
+            if (hitDamageableEntity != null && hitDamageableEntity.gameObject != player)
                 hitDamageableEntity.ReceiveDamage(DamageTag.Enemy, new DamagesParameters(damage));
         }
     }
