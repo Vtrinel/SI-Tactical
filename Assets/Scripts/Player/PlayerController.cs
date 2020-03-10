@@ -192,11 +192,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     public System.Action OnPlayerReachedMovementDestination;
-<<<<<<< HEAD
-    #endregion
-=======
     #endregion    
 
     public CircularDiscRoation circularDisc;
->>>>>>> 8c3c56caee20755bac05f4dedb59fce0eea52412
 }
