@@ -48,6 +48,7 @@ MonoBehaviour:
   discEffectZonePreviewPrefab: {fileID: 5422921156114304414, guid: bd953f988de7cc94d8e7bdcb02be7f43,
     type: 3}
   movementPreviewsParent: {fileID: 1018087709340607024}
+  showMovementCircles: 0
   movementCirclePreviewPrefab: {fileID: 3367563325628557913, guid: e7e2440f0e19ee44795d4827c3a240a9,
     type: 3}
   startNumberOfMovementCirclePreviews: 5
@@ -58,6 +59,9 @@ MonoBehaviour:
   movementGhostPreviewPrefab: {fileID: -3380746140047232949, guid: 2df3e8208d37d0644af915b9e5ac701e,
     type: 3}
   movementGhostPreview: {fileID: 0}
+  baseGhostMaterial: {fileID: 2100000, guid: 497f0bc1351f48940a8d84c90b1c04ac, type: 2}
+  cantMoveThereMaterial: {fileID: 2100000, guid: 52203a742277c9b40bc30bad927ed324,
+    type: 2}
   trajectoryPreviewParent: {fileID: 1512136055357825963}
   arrowPreviewPrefab: {fileID: 9222989131551337375, guid: 2b50be5a8ff1e8c469ac021eb0a8e1fd,
     type: 3}
