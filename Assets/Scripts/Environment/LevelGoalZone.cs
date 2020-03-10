@@ -9,7 +9,7 @@ public class LevelGoalZone : MonoBehaviour
     {
         debugZone.transform.localScale = Vector3.one * zoneRadius;
         debugZone.color = normalColor;
-        progressBar.fillAmount = 0;
+        if (progressBar) progressBar.fillAmount = 0;
     }
 
     [Header("Main Parameters")]
@@ -51,7 +51,7 @@ public class LevelGoalZone : MonoBehaviour
 
     public void UpdateProgressionBar(int currentProgress, int deltaProgress, int targetProgress)
     {
-        if(progressBar != null)
+        if (progressBar != null)
         {
             progressBar.fillAmount = (float)currentProgress / targetProgress;
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,8 @@ public class DiscManager : MonoBehaviour
     public static float discHeight = 1f;
 
     public float rangeOfPlayer = 5;
-    public void AddOneMaxRangeOfPlayer() {
+    public void AddOneMaxRangeOfPlayer() 
+    {
         rangeOfPlayer += 1f;
     }
 
@@ -159,21 +161,30 @@ public class DiscManager : MonoBehaviour
     #region Possessed Discs
     [Header("Stock system")]
     [SerializeField] int maxNumberOfPossessedDiscs = 3;
+    [SerializeField] int currentPossessedDiscs = 3;
     Stack<DiscType> possessedDiscs = new Stack<DiscType>();
     public int GetPossessedDiscsCount => possessedDiscs.Count;
+
+    public Action OnAddOneMaxDisc;
     public void AddOneMaxNumberOfPossessedDiscs() 
     { 
         maxNumberOfPossessedDiscs++;
 
         possessedDiscs.Push(DiscType.Piercing);
+        OnAddOneMaxDisc?.Invoke();
     }
 
+    public Action<int, int, DiscType> OnDiscFilled;
     public void FillPossessedDiscsWithBasicDiscs()
     {
-        for(int i =0; i < maxNumberOfPossessedDiscs; i++)
+                        // maxNumberOfPossessedDiscs normalement
+        for (int i =0; i < currentPossessedDiscs; i++) 
             possessedDiscs.Push(testDiscType);
+
+        OnDiscFilled?.Invoke(maxNumberOfPossessedDiscs, currentPossessedDiscs, testDiscType);
     }
 
+    public Action<DiscScript> OnDiscAdded;
     public void PlayerRetreiveDisc(DiscScript retreivedDisc)
     {
         throwedDiscs.Remove(retreivedDisc);
@@ -181,6 +192,7 @@ public class DiscManager : MonoBehaviour
         if (possessedDiscs.Count < maxNumberOfPossessedDiscs)
         {
             possessedDiscs.Push(retreivedDisc.GetDiscType);
+            OnDiscAdded?.Invoke(retreivedDisc);
         }
         else
         {
@@ -230,6 +242,8 @@ public class DiscManager : MonoBehaviour
         }
     }
 
+    public Action OnDiscConsommed;
+
     public DiscScript TakeFirstDiscFromPossessedDiscs()
     {
         if (possessedDiscs.Count == 0)
@@ -237,13 +251,16 @@ public class DiscManager : MonoBehaviour
 
         DiscScript newDisc = GetDiscFromPool(possessedDiscs.Pop());
         if (newDisc != null)
+        {
             throwedDiscs.Add(newDisc);
-
+            OnDiscConsommed?.Invoke();
+        }
         return newDisc;
     }
     #endregion
 
     #region Proximity
+
     public void CheckAllDiscsProximity(Vector3 playerPosition)
     {
         foreach (DiscScript disc in inGameDiscs)
@@ -270,7 +287,7 @@ public class DiscManager : MonoBehaviour
 
         return inRangeFromPos;
     }
-    
+
     public int GetInRangeDiscsCount
     {
         get

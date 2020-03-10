@@ -12,6 +12,7 @@ public class ShowPathSystem : MonoBehaviour
     float attackRange;
 
     bool showPreview = false;
+    Transform target = default;
 
     public void SetValue(float _distance, float _attackRange)
     {
@@ -24,8 +25,15 @@ public class ShowPathSystem : MonoBehaviour
         showPreview = value;
     }
 
+    public void SetTargetPosition(Transform targ)
+    {
+        target = targ;
+    }
+
     private void Update()
     {
+        return;
+
         if (showPreview)
         {
             DrawPath();
@@ -40,21 +48,33 @@ public class ShowPathSystem : MonoBehaviour
     public void DrawPath()
     {
         myNavAgent.isStopped = true;
-        myNavAgent.SetDestination(GameManager.Instance.GetCurrentWorldMouseResult.mouseWorldPosition);
+        myNavAgent.SetDestination(target.position);
 
         NavMeshPath _path = myNavAgent.path;
 
         List<Vector3> canPos = new List<Vector3>();
         canPos.Add(transform.position);
 
-        List<Vector3> cantPos = new List<Vector3>();
+        List<Vector3> attackPos = new List<Vector3>();
 
         float currentDistance = 0;
+        float currentAttackDistance = 0;
+
         for (var i = 1; i < _path.corners.Length; i++)
         {
             if (currentDistance > distance)
             {
-                cantPos.Add(_path.corners[i]);
+                if(currentAttackDistance + Vector3.Distance(attackPos[attackPos.Count - 1], _path.corners[i]) > attackRange)
+                {
+                    lineDeplacement.positionCount = 0;
+                    lineCantDeplacement.positionCount = 0;
+                    return;
+                }
+                else
+                {
+                    attackPos.Add(_path.corners[i]);
+                    currentAttackDistance += Vector3.Distance(_path.corners[i - 1], _path.corners[i]);
+                }
             }
             else
             {
@@ -73,18 +93,34 @@ public class ShowPathSystem : MonoBehaviour
 
                     canPos.Add(targetPosition);
 
-                    cantPos.Add(targetPosition);
-                    cantPos.Add(_path.corners[i]);
+                    attackPos.Add(targetPosition);
+
+                    if(Vector3.Distance(targetPosition, _path.corners[i]) > attackRange)
+                    {
+                        lineDeplacement.positionCount = 0;
+                        lineCantDeplacement.positionCount = 0;
+                        return;
+                    }
+                    else
+                    {
+                        attackPos.Add(_path.corners[i]);
+                        currentAttackDistance += Vector3.Distance(targetPosition, _path.corners[i]);
+                    }
 
                     currentDistance += Vector3.Distance(_path.corners[i - 1], _path.corners[i]);
                 }
             }
+
+            SetLines(canPos, attackPos);
         }
+    }
 
-        lineDeplacement.positionCount = canPos.Count;
-        lineDeplacement.SetPositions(canPos.ToArray());
+    void SetLines(List<Vector3> _canPos, List<Vector3> _attackPos)
+    {
+        lineDeplacement.positionCount = _canPos.Count;
+        lineDeplacement.SetPositions(_canPos.ToArray());
 
-        lineCantDeplacement.positionCount = cantPos.Count;
-        lineCantDeplacement.SetPositions(cantPos.ToArray());
+        lineCantDeplacement.positionCount = _attackPos.Count;
+        lineCantDeplacement.SetPositions(_attackPos.ToArray());
     }
 }
