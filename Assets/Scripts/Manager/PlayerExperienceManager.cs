@@ -153,7 +153,7 @@ public class PlayerExperienceManager : MonoBehaviour
 
         if (canUnlockComp)
         {
-            if (competence.CanUnlockCompetence())
+            if (competence.CanUnlockCompetence() && competence)
             {
                 competenceBar = 0;
                 OnLossExperience?.Invoke(100);
@@ -264,7 +264,5 @@ public class PlayerExperienceManager : MonoBehaviour
     {
         canOpenCompetenceMenu = canOpen;
         OnEnterTotemZone?.Invoke(canOpen);
-
-        Debug.Log(canOpen);
     }
 }

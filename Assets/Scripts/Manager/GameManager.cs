@@ -103,6 +103,21 @@ public class GameManager : MonoBehaviour
     public int maxActionPointsAmount = 10;
     [SerializeField] int currentActionPointsAmount;
     public int GetCurrentActionPointsAmount => currentActionPointsAmount;
+    /*public int GetAboutToUseActionPoints
+    {
+        get
+        {
+            if (competencesUsabilityManager.IsPreparingCompetence)
+            {
+                return competencesUsabilityManager.GetCurrentCompetenceCost();
+            }
+            else if ()
+            {
+
+            }
+            return 0;
+        }
+    }*/
 
     public System.Action<int> OnActionPointsAmountChanged;
     
@@ -156,7 +171,9 @@ public class GameManager : MonoBehaviour
     [Header("Player Systems")]
     [SerializeField] PlayerMovementsManager playerMovementsManager = default;
     [SerializeField] CompetencesUsabilityManager competencesUsabilityManager = default;
-    
+
+    public CompetencesUsabilityManager GetCompetencesUsabilityManager() => competencesUsabilityManager;
+
     public Competence GetCurrentlySelectedCompetence => competencesUsabilityManager.GetCurrentCompetence;
     public Action<bool> OnMoveActionSelectionStateChanged;
     public Action<bool> OnThrowCompetenceSelectionStateChanged;
@@ -182,6 +199,13 @@ public class GameManager : MonoBehaviour
         GetPlayer.damageReceiptionSystem.AddLifeBar(value);
         maxPlayerLifeAmount += value;
         OnPlayerMaxLifeAmountChanged?.Invoke(value);
+    }
+
+    public Action<int> OnCancelSelectedAction;
+
+    public void SendRemainingActionPoint()
+    {
+        OnCancelSelectedAction?.Invoke(currentActionPointsAmount);
     }
 
     #region Mouse World Result
@@ -226,6 +250,9 @@ public class GameManager : MonoBehaviour
     #region Player Inputs Reception
     public void SelectAction(ActionType actionType)
     {
+        if (!GetPlayerCanAct)
+            return;
+
         if (actionType == ActionType.None)
         {
             if (competencesUsabilityManager.IsPreparingCompetence)
@@ -307,7 +334,6 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        //Debug.Log("EH");
         if (playerMovementsManager.IsWillingToMove)
         {
             int cost = playerMovementsManager.TryStartMovement(GetCurrentWorldMouseResult.mouseWorldPosition);
@@ -362,6 +388,8 @@ public class GameManager : MonoBehaviour
 
     public void CallUnselectActionEvent(ActionType actionType)
     {
+        UIManager.Instance.GetActionBar.UpdatePreConsommationPointBar(currentActionPointsAmount, 0);
+        UIManager.Instance.HideActionPointText();
         switch (actionType)
         {
             case ActionType.Move:
@@ -379,18 +407,26 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void UpdatePlayerActability()
+    public bool GetPlayerCanAct
     {
-        bool canAct = 
-            !playerMovementsManager.IsMoving 
-            && 
-            !competencesUsabilityManager.IsUsingCompetence 
-            && 
+        get
+        {
+            return !playerMovementsManager.IsMoving
+            &&
+            !competencesUsabilityManager.IsUsingCompetence
+            &&
             turnManager.GetCurrentTurnState == TurnState.PlayerTurn
             &&
             !playerExperienceManager.IsUsingCompetencesMenu
-            && 
+            &&
             gameStarted && !gameWon && !gameLost;
+        }
+    }
+    public void UpdatePlayerActability()
+    {
+        bool canAct = GetPlayerCanAct;
+
+        UIManager.Instance.ChangeEndTurnButtonVisibility(canAct);
 
         player.SetAbleToAct(canAct);
         SetActionPointsDebugTextVisibility(playerMovementsManager.IsWillingToMove || competencesUsabilityManager.IsPreparingCompetence);
@@ -451,6 +487,8 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("YOU LOSE");
         gameLost = true;
+        turnManager.InterruptEnemiesTurn();
+        turnManager.LostGame();
         UIManager.Instance.ShowLosePanel();
     }
     #endregion

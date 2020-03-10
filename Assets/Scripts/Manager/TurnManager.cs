@@ -41,6 +41,8 @@ public class TurnManager : MonoBehaviour
 
         if (CameraManager.instance != null)
             CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+
+        UIManager.Instance.PlayStartTurnAnimation(currentTurnState, enemiesSpawnedThisTurn, currentlyPendingSpawnPoints.Count > 0);
     }
 
     public void EndPlayerTurn()
@@ -68,8 +70,10 @@ public class TurnManager : MonoBehaviour
 
     int currentEnemiesTurnCounter = 0;
     EnemyBase currentTurnEnemy = default;
+    bool oneEnemyActed= false;
     public void StartEnemiesTurn()
     {
+        oneEnemyActed = false;
         if(orderedInGameEnemies.Count == 0)
         {
             currentTurnState = TurnState.ProgressionTurn;
@@ -98,6 +102,11 @@ public class TurnManager : MonoBehaviour
         if (enemy.GetPlayerDetected)
         {
             CameraManager.instance.GetPlayerCamera.AttachFollowTransformTo(enemy.transform);
+            if (!oneEnemyActed)
+            {
+                oneEnemyActed = true;
+                UIManager.Instance.PlayStartTurnAnimation(currentTurnState, false, false);
+            }
         }
     }
 
@@ -165,6 +174,7 @@ public class TurnManager : MonoBehaviour
     #endregion
 
     #region Pending Spawn Points Turn
+    bool enemiesSpawnedThisTurn = false;
     List<EnemySpawnPoint> currentlyPendingSpawnPoints = new List<EnemySpawnPoint>();
     public void AddPendingSpawnPoint(EnemySpawnPoint newSpawnPoint)
     {
@@ -174,12 +184,16 @@ public class TurnManager : MonoBehaviour
 
     public void StartSpawnPointsTurn()
     {
+        enemiesSpawnedThisTurn = false;
+
         if (currentlyPendingSpawnPoints.Count == 0)
         {
             currentTurnState = TurnState.SpawnPointsTurn;
             StartSwarmZonesTurn();
             return;
         }
+
+        enemiesSpawnedThisTurn = true;
 
         foreach (EnemySpawnPoint pendingSpawnPoint in currentlyPendingSpawnPoints)
         {
