@@ -401,6 +401,8 @@ public class GameManager : MonoBehaviour
     {
         bool canAct = GetPlayerCanAct;
 
+        UIManager.Instance.ChangeEndTurnButtonVisibility(canAct);
+
         player.SetAbleToAct(canAct);
         SetActionPointsDebugTextVisibility(playerMovementsManager.IsWillingToMove || competencesUsabilityManager.IsPreparingCompetence);
     }
