@@ -176,6 +176,8 @@ public class DiscManager : MonoBehaviour
         OnAddOneMaxDisc?.Invoke();
     }
 
+    public Action<Stack<DiscType>> OnDiscUpdate;
+
     public Action<int, int, DiscType> OnDiscFilled;
     public void FillPossessedDiscsWithBasicDiscs()
     {
@@ -184,6 +186,7 @@ public class DiscManager : MonoBehaviour
             possessedDiscs.Push(testDiscType);
 
         OnDiscFilled?.Invoke(maxNumberOfPossessedDiscs, currentPossessedDiscs, testDiscType);
+        OnDiscUpdate?.Invoke(possessedDiscs);
     }
 
     public Action<DiscScript> OnDiscAdded;
@@ -195,6 +198,7 @@ public class DiscManager : MonoBehaviour
         {
             possessedDiscs.Push(retreivedDisc.GetDiscType);
             OnDiscAdded?.Invoke(retreivedDisc);
+            OnDiscUpdate?.Invoke(possessedDiscs);
         }
         else
         {
@@ -256,6 +260,7 @@ public class DiscManager : MonoBehaviour
         {
             throwedDiscs.Add(newDisc);
             OnDiscConsommed?.Invoke();
+            OnDiscUpdate?.Invoke(possessedDiscs);
         }
         return newDisc;
     }
