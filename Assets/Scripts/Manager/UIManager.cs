@@ -22,18 +22,17 @@ public class UIManager : MonoBehaviour
 
     void OnEnable()
     {
-        PlayerExperienceManager.Instance.OnGainExperience += AddExperience;
-        PlayerExperienceManager.Instance.OnLossExperience += LossExperience;
-        TurnManager.Instance.OnStartPlayerTurn += StartPlayerTurn;
-        TurnManager.Instance.OnEndPlayerTurn += EndPlayerTurn;
+        PlayerExperienceManager.Instance.OnGainGold += AddExperience;
+        PlayerExperienceManager.Instance.OnLossGold += LossExperience;
+        
     }
 
     void OnDisable()
     {
-        PlayerExperienceManager.Instance.OnGainExperience -= AddExperience;
-        PlayerExperienceManager.Instance.OnLossExperience -= LossExperience;
-        TurnManager.Instance.OnStartPlayerTurn -= StartPlayerTurn;
-        TurnManager.Instance.OnEndPlayerTurn -= EndPlayerTurn;
+        PlayerExperienceManager.Instance.OnGainGold -= AddExperience;
+        PlayerExperienceManager.Instance.OnLossGold -= LossExperience;
+        //TurnManager.Instance.OnStartPlayerTurn -= StartPlayerTurn;
+        //TurnManager.Instance.OnEndPlayerTurn -= EndPlayerTurn;
     }
 
     private void Awake()
@@ -50,30 +49,35 @@ public class UIManager : MonoBehaviour
         ShowStartPanel();
     }
 
-    void StartPlayerTurn()
+    public void ChangeEndTurnButtonVisibility(bool visible)
     {
-        buttonEndTurn.SetActive(true);
-    }
-
-    void EndPlayerTurn()
-    {
-        buttonEndTurn.SetActive(false);
+        buttonEndTurn.SetActive(visible);
     }
 
     public void AddExperience(int experience)
     {
-        goldSlider.fillAmount += experience / 100;
+        goldSlider.fillAmount += PlayerExperienceManager.Instance.GetGoldQuantity / 100.0f;
     }
 
     public void LossExperience(int experience)
     {
-        goldSlider.fillAmount -= experience / 100;
+        if (PlayerExperienceManager.Instance.GetGoldQuantity > 0)
+        {
+            goldSlider.fillAmount += PlayerExperienceManager.Instance.GetGoldQuantity / 100.0f;
+
+        }
+        else
+        {
+            goldSlider.fillAmount = 0;
+        }
     }
 
     #region AP Costs
     [Header("Action poins cost")]
     [SerializeField] Text actionPointsCostText = default;
     [SerializeField] Transform actionPointsCostTextParent = default;
+    [SerializeField] PointActionBar actionBar = default;
+    public PointActionBar GetActionBar => actionBar;
 
     public void ShowActionPointsCostText()
     {
@@ -118,6 +122,7 @@ public class UIManager : MonoBehaviour
     }
     #endregion
 
+    #region Turn Management
     [Header("Turn Management")]
     [SerializeField] Animation startTurnAnimation = default;
     [SerializeField] Text turnStateText = default;
@@ -157,4 +162,5 @@ public class UIManager : MonoBehaviour
             usedTextsCounter++;
         }
     }
+    #endregion
 }
