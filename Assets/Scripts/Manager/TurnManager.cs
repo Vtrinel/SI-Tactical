@@ -95,6 +95,9 @@ public class TurnManager : MonoBehaviour
 
     public void StartEnemyTurn(EnemyBase enemy)
     {
+        if (currentTurnState != TurnState.EnemyTurn)
+            return;
+        Debug.Log("MAIS");
         currentTurnEnemy = enemy;
 
         enemy.StartTurn();
@@ -130,16 +133,18 @@ public class TurnManager : MonoBehaviour
     public Action OnEnemyTurnInterruption;
     public void InterruptEnemiesTurn()
     {
+        Debug.Log("STOP");
+        EndEnemiesTurn();
+
         OnEnemyTurnInterruption?.Invoke();
         currentEnemiesTurnCounter = orderedInGameEnemies.Count;
         currentTurnEnemy = null;
-
-        EndEnemiesTurn();
     }
 
     public void EndEnemiesTurn()
     {
         //currentTurnState = TurnState.BetweenEnemiesAndSpawnPoints;
+        Debug.Log("INTERRUPT");
         currentTurnState = TurnState.ProgressionTurn;
         StartCoroutine("BetweenTurnsCoroutine");
     }
