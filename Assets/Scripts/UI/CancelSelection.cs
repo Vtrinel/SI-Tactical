@@ -31,6 +31,5 @@ public class CancelSelection : MonoBehaviour
     public void CancelCurrentAction()
     {
         GameManager.Instance.SelectAction(ActionType.None);
-        Debug.Log("Cancel action");
     }
 }

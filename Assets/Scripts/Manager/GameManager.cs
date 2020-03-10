@@ -152,7 +152,9 @@ public class GameManager : MonoBehaviour
     [Header("Player Systems")]
     [SerializeField] PlayerMovementsManager playerMovementsManager = default;
     [SerializeField] CompetencesUsabilityManager competencesUsabilityManager = default;
-    
+
+    public CompetencesUsabilityManager GetCompetencesUsabilityManager() => competencesUsabilityManager;
+
     public Competence GetCurrentlySelectedCompetence => competencesUsabilityManager.GetCurrentCompetence;
     public Action<bool> OnMoveActionSelectionStateChanged;
     public Action<bool> OnThrowCompetenceSelectionStateChanged;
