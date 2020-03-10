@@ -192,5 +192,5 @@ public class PlayerController : MonoBehaviour
         }
     }
     public System.Action OnPlayerReachedMovementDestination;
-    #endregion    
+    #endregion
 }
