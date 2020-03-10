@@ -33,6 +33,8 @@ public class IAEnemyVirtual : MonoBehaviour
 
     public ShowPathSystem myShowPath;
 
+    public LineRenderer lineTest;
+
     public virtual void PlayerTurn() { }
 
     public bool CheckDetectionWithPlayer()
@@ -54,25 +56,14 @@ public class IAEnemyVirtual : MonoBehaviour
         return false;
     }
 
-    public Vector3 CalculDestination(Vector3 _targetPos)
-    {
-        myNavAgent.isStopped = true;
-        myNavAgent.SetDestination(_targetPos);
-        myNavAgent.SetDestination(Vector3.zero);
-        myNavAgent.SetDestination(_targetPos);
+    public Vector3 CalculDestination(Vector3 _targetPos) {
 
-        NavMeshPath _path = myNavAgent.path;
+        myNavAgent.isStopped = true;
+        NavMeshPath _path = new NavMeshPath();
+
+        NavMesh.CalculatePath(transform.position, _targetPos, NavMesh.AllAreas, _path);
 
         float currentDistance = 0;
-        Debug.DrawRay(myNavAgent.destination, Vector3.up * 8f, Color.blue, 15f);
-        foreach (Vector3 pos in _path.corners)
-            Debug.DrawRay(pos, Vector3.up * 4f, Color.red, 15f);
-
-        Debug.LogWarning("Start path (" + _path.corners.Length + " points calculated)");
-        for (int i = 1; i < _path.corners.Length; i++)
-        {
-            Debug.DrawLine(_path.corners[i - 1] + Vector3.up, _path.corners[i] + Vector3.up, Color.green, 15f);
-        }
 
         for (var i = 1; i < _path.corners.Length; i++)
         {
@@ -93,7 +84,7 @@ public class IAEnemyVirtual : MonoBehaviour
         }
 
         Debug.LogWarning("ENEMY : PATH NOT FOUND (" + _path.corners.Length + " points calculated)");
-        return Vector3.zero;
+        return _targetPos;
     }
 
 }

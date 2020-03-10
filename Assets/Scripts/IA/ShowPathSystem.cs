@@ -32,8 +32,6 @@ public class ShowPathSystem : MonoBehaviour
 
     private void Update()
     {
-        return;
-
         if (showPreview)
         {
             DrawPath();
