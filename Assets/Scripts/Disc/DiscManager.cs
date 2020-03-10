@@ -161,6 +161,7 @@ public class DiscManager : MonoBehaviour
     #region Possessed Discs
     [Header("Stock system")]
     [SerializeField] int maxNumberOfPossessedDiscs = 3;
+    [SerializeField] int currentPossessedDiscs = 3;
     Stack<DiscType> possessedDiscs = new Stack<DiscType>();
     public int GetPossessedDiscsCount => possessedDiscs.Count;
 
@@ -173,13 +174,14 @@ public class DiscManager : MonoBehaviour
         OnAddOneMaxDisc?.Invoke();
     }
 
-    public Action<int> OnDiscFilled;
+    public Action<int, int, DiscType> OnDiscFilled;
     public void FillPossessedDiscsWithBasicDiscs()
     {
-        for(int i =0; i < maxNumberOfPossessedDiscs; i++)
+                        // maxNumberOfPossessedDiscs normalement
+        for (int i =0; i < currentPossessedDiscs; i++) 
             possessedDiscs.Push(testDiscType);
 
-        OnDiscFilled?.Invoke(maxNumberOfPossessedDiscs);
+        OnDiscFilled?.Invoke(maxNumberOfPossessedDiscs, currentPossessedDiscs, testDiscType);
     }
 
     public Action<DiscScript> OnDiscAdded;
@@ -251,7 +253,6 @@ public class DiscManager : MonoBehaviour
         if (newDisc != null)
         {
             throwedDiscs.Add(newDisc);
-            Debug.Log("disc throwed");
             OnDiscConsommed?.Invoke();
         }
         return newDisc;

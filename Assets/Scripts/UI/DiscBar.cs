@@ -26,28 +26,59 @@ public class DiscBar : MonoBehaviour
 
     private void OnDisable()
     {
-        DiscManager.Instance.OnDiscConsommed -= RemoveDiscFromBar;
         DiscManager.Instance.OnDiscFilled -= CreateDiscBar;
         DiscManager.Instance.OnDiscAdded -= AddNewDisc;
         DiscManager.Instance.OnAddOneMaxDisc -= UpdateMaxDiscBar;
+        DiscManager.Instance.OnDiscConsommed -= RemoveDiscFromBar;
     }
 
-    void CreateDiscBar(int maxNumberOfPossessedDiscs)
+    void CreateDiscBar(int maxDiscs, int currentDiscs, DiscType discType)
     {
-        maxDisc = maxNumberOfPossessedDiscs;
-        //currentDisc = maxDisc-1;
+        maxDisc = maxDiscs;
+        currentDisc = currentDiscs;
+
+        GameObject newDiscType;
+
+        switch (discType)
+        {
+            case DiscType.Piercing:
+                newDiscType = discPiercing;
+                break;
+
+            case DiscType.Ghost:
+                newDiscType = discGhost;
+                break;
+
+            case DiscType.Explosive:
+                newDiscType = discExplosive;
+                break;
+
+            case DiscType.Heavy:
+                newDiscType = discHeavy;
+                break;
+
+            case DiscType.Shockwave:
+                newDiscType = discShockwave;
+                break;
+
+            default:
+                newDiscType = discPiercing;
+                break;
+        }
 
         for (int i = 0; i < currentDisc; i++)
         {
-            GameObject newDiscBarElement = Instantiate(discPiercing, gameObject.transform);
-            allDiscBarElement.Add(newDiscBarElement);
+            GameObject newDisc = Instantiate(newDiscType, gameObject.transform);
+            allDiscBarElement.Add(newDisc);
         }
 
-        currentDisc = currentDisc - 1;
+        currentDisc--;
     }
 
     void RemoveDiscFromBar()
     {
+        
+
         allDiscBarElement.RemoveAt(currentDisc);
 
         currentDisc--;

@@ -412,7 +412,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 468a1ac882e9c0b45b73cefd0639d0ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentDisc: 0
   discPiercing: {fileID: 1624951871807588838, guid: 8bb3ae63898c7a04094898955cb517d4,
     type: 3}
   discGhost: {fileID: 2841454759123073550, guid: c8e9fed0e9bcf1547a215f2efb7e997f,
@@ -1245,6 +1244,21 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 224442792416299904, guid: 87d3ebbabf62fde4d923de32ce207ad0,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 28.719727
+      objectReference: {fileID: 0}
+    - target: {fileID: 224701334031835624, guid: 87d3ebbabf62fde4d923de32ce207ad0,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 397.4004
+      objectReference: {fileID: 0}
+    - target: {fileID: 224701334031835624, guid: 87d3ebbabf62fde4d923de32ce207ad0,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -478.3501
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 87d3ebbabf62fde4d923de32ce207ad0, type: 3}
 --- !u!224 &425657829959952679 stripped
@@ -1485,6 +1499,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1734451803055375092}
     m_Modifications:
+    - target: {fileID: 236336244396311172, guid: cf94a64815051f24c9fe7f219c1761cb,
+        type: 3}
+      propertyPath: maxNumberOfPossessedDiscs
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 236336244396311172, guid: cf94a64815051f24c9fe7f219c1761cb,
+        type: 3}
+      propertyPath: testDiscType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 236336244396311173, guid: cf94a64815051f24c9fe7f219c1761cb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2800,6 +2824,18 @@ PrefabInstance:
       propertyPath: competenceInfoText
       value: 
       objectReference: {fileID: 8411255175031891491}
+    - target: {fileID: 3051049089595102683, guid: bcb73cf9d029fb64089c754d5ebc844e,
+        type: 3}
+      propertyPath: startThrowCompetence
+      value: 
+      objectReference: {fileID: 11400000, guid: 6504fcacdb13d38479012c0ebc0b2c14,
+        type: 2}
+    - target: {fileID: 3051049089595102683, guid: bcb73cf9d029fb64089c754d5ebc844e,
+        type: 3}
+      propertyPath: startRecallCompetence
+      value: 
+      objectReference: {fileID: 11400000, guid: 0175b2a280fea0f43a117e32fed4523c,
+        type: 2}
     - target: {fileID: 5751697598210789945, guid: bcb73cf9d029fb64089c754d5ebc844e,
         type: 3}
       propertyPath: m_LocalPosition.x

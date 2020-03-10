@@ -12,6 +12,11 @@ public class EnemySpawnPoint : MonoBehaviour
     [SerializeField] DiscType definedLootedDisc = DiscType.None;
     [SerializeField] GameObject spawnZoneDebugObject = default;
 
+    private void Start()
+    {
+        spawnZoneDebugObject?.SetActive(false);
+    }
+
     public void StartSpawning()
     {
         if (definedEnemyToSpawn == EnemyType.None)

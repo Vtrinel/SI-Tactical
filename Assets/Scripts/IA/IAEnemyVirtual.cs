@@ -24,8 +24,6 @@ public class IAEnemyVirtual : MonoBehaviour
     public bool isPlaying = false;
     public bool isPreparing = false;
 
-    public float durationTurn = 1;
-
     public ShieldManager myShieldManager;
 
     public bool haveDetectPlayer = false;
@@ -55,4 +53,36 @@ public class IAEnemyVirtual : MonoBehaviour
         }
         return false;
     }
+
+    public Vector3 CalculDestination(Vector3 _targetPos)
+    {
+        myNavAgent.isStopped = true;
+        myNavAgent.SetDestination(_targetPos);
+
+        NavMeshPath _path = myNavAgent.path;
+
+        float currentDistance = 0;
+
+        for (var i = 1; i < _path.corners.Length; i++)
+        {
+            if (currentDistance + Vector3.Distance(_path.corners[i - 1], _path.corners[i]) < distanceOfDeplacement)
+            {
+                currentDistance += Vector3.Distance(_path.corners[i - 1], _path.corners[i]);
+            }
+            else
+            {
+                //Calcule de coupure de la ligne
+                float distanceTokeep = distanceOfDeplacement - currentDistance;
+
+                Vector3 dir = _path.corners[i] - _path.corners[i - 1];
+                Vector3 targetPosition = _path.corners[i - 1] + dir.normalized * distanceTokeep;
+
+                return targetPosition;
+            }
+        }
+
+        Debug.LogWarning("ENEMY : PATH NOT FOUND");
+        return Vector3.zero;
+    }
+
 }
