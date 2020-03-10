@@ -62,20 +62,16 @@ public class TouniEnemy : IAEnemyVirtual
     {
         destination = CalculDestination(player.transform.position);
 
-        myNavAgent.SetDestination(destination);
         myNavAgent.isStopped = false;
+        myNavAgent.SetDestination(destination);
 
         StartCoroutine(WaitDeplacement());
     }
 
     IEnumerator WaitDeplacement()
     {
-        isPlaying = true;
-
-        while (myNavAgent.pathStatus != NavMeshPathStatus.PathComplete || myNavAgent.remainingDistance != 0)
+        do
         {
-            Debug.Log("Try move");
-
             if (CanAttack())
             {
                 myNavAgent.isStopped = true;
@@ -84,11 +80,12 @@ public class TouniEnemy : IAEnemyVirtual
                 Attack();
                 isPreparing = false;
                 yield return new WaitForSeconds(0.4f);
-
                 break;
             }
             yield return null;
-        }
+
+        } while (myNavAgent.remainingDistance != 0);
+
 
         isPlaying = false;
         myNavAgent.isStopped = true;

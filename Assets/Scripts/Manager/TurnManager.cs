@@ -29,20 +29,24 @@ public class TurnManager : MonoBehaviour
     }
 
     #region Player Turn
-    TurnState currentTurnState = TurnState.PlayerTurn;
+    TurnState currentTurnState = TurnState.GameNotStarted;
     public TurnState GetCurrentTurnState => currentTurnState;
     public void StartPlayerTurn()
     {
-        currentTurnState = TurnState.PlayerTurn;
+        if (currentTurnState == TurnState.Won || currentTurnState == TurnState.Lost)
+            return;
+
+            currentTurnState = TurnState.PlayerTurn;
         OnStartPlayerTurn?.Invoke();
 
         if (CameraManager.instance != null)
             CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+
+        UIManager.Instance.PlayStartTurnAnimation(currentTurnState, enemiesSpawnedThisTurn, currentlyPendingSpawnPoints.Count > 0);
     }
 
     public void EndPlayerTurn()
     {
-        //currentTurnState = TurnState.BetweenPlayerAndEnemies;
         currentTurnState = TurnState.EnemyTurn;
         OnEndPlayerTurn?.Invoke();
 
@@ -66,8 +70,10 @@ public class TurnManager : MonoBehaviour
 
     int currentEnemiesTurnCounter = 0;
     EnemyBase currentTurnEnemy = default;
+    bool oneEnemyActed= false;
     public void StartEnemiesTurn()
     {
+        oneEnemyActed = false;
         if(orderedInGameEnemies.Count == 0)
         {
             currentTurnState = TurnState.ProgressionTurn;
@@ -96,6 +102,11 @@ public class TurnManager : MonoBehaviour
         if (enemy.GetPlayerDetected)
         {
             CameraManager.instance.GetPlayerCamera.AttachFollowTransformTo(enemy.transform);
+            if (!oneEnemyActed)
+            {
+                oneEnemyActed = true;
+                UIManager.Instance.PlayStartTurnAnimation(currentTurnState, false, false);
+            }
         }
     }
 
@@ -152,13 +163,18 @@ public class TurnManager : MonoBehaviour
 
     public void EndProgressionTurn()
     {
+        if (currentTurnState == TurnState.Won || currentTurnState == TurnState.Lost)
+            return;
+
         currentTurnState = TurnState.SpawnPointsTurn;
         StartCoroutine("BetweenTurnsCoroutine");
+
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
     }
     #endregion
 
     #region Pending Spawn Points Turn
+    bool enemiesSpawnedThisTurn = false;
     List<EnemySpawnPoint> currentlyPendingSpawnPoints = new List<EnemySpawnPoint>();
     public void AddPendingSpawnPoint(EnemySpawnPoint newSpawnPoint)
     {
@@ -168,12 +184,16 @@ public class TurnManager : MonoBehaviour
 
     public void StartSpawnPointsTurn()
     {
+        enemiesSpawnedThisTurn = false;
+
         if (currentlyPendingSpawnPoints.Count == 0)
         {
             currentTurnState = TurnState.SpawnPointsTurn;
             StartSwarmZonesTurn();
             return;
         }
+
+        enemiesSpawnedThisTurn = true;
 
         foreach (EnemySpawnPoint pendingSpawnPoint in currentlyPendingSpawnPoints)
         {
@@ -285,14 +305,19 @@ public class TurnManager : MonoBehaviour
     {
         currentTurnState = TurnState.Won;
     }
+
+    public void LostGame()
+    {
+        currentTurnState = TurnState.Won;
+    }
 }
 
 public enum TurnState
 {
-    PlayerTurn, //BetweenPlayerAndEnemies,
-    EnemyTurn, //BetweenEnemiesAndSpawnPoints,
+    PlayerTurn, 
+    EnemyTurn, 
     ProgressionTurn,
-    SpawnPointsTurn, //BetweenSpawnPointsAndSwarmZones,
-    SwarmZonesTurn, //BetweenSwarmZoneAndPlayer,
-    Won
+    SpawnPointsTurn, 
+    SwarmZonesTurn, 
+    GameNotStarted, Won, Lost
 }
