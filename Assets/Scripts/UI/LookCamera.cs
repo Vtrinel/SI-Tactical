@@ -7,6 +7,8 @@ public class LookCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.rotation = Quaternion.LookRotation(transform.position - Camera.main.transform.position);
+        var lookPos = Camera.main.transform.position - transform.position;
+        lookPos.x = 0;
+        transform.rotation = Quaternion.LookRotation(lookPos);
     }
 }
