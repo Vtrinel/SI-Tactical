@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -34,7 +36,7 @@ public class GameManager : MonoBehaviour
         turnManager.OnStartPlayerTurn += StartPlayerTurn;
         turnManager.OnEndPlayerTurn += EndPlayerTurn;
 
-        turnManager.StartPlayerTurn();
+        //turnManager.StartPlayerTurn();
 
         enemiesManager.OnInGameEnemiesChanged += turnManager.RefreshEnemyList;
         enemiesManager.GetAllAlreadyPlacedEnemies();
@@ -55,6 +57,8 @@ public class GameManager : MonoBehaviour
 
         playerMovementsManager.UpdateSystem();
         competencesUsabilityManager.UpdateSystem();
+
+        UpdateGameManagement();
     }
 
     private void LateUpdate()
@@ -205,8 +209,7 @@ public class GameManager : MonoBehaviour
 
         foreach (RaycastHit hit in hits)
         {
-            PlayerInputSurface hitInputSurface = hit.collider.GetComponent<PlayerInputSurface>();
-            if (hitInputSurface != null)
+            if(hit.collider.gameObject.layer == 8)
             {
                 result.mouseWorldPosition = hit.point;
             }
@@ -385,7 +388,9 @@ public class GameManager : MonoBehaviour
             && 
             turnManager.GetCurrentTurnState == TurnState.PlayerTurn
             &&
-            !playerExperienceManager.IsUsingCompetencesMenu;
+            !playerExperienceManager.IsUsingCompetencesMenu
+            && 
+            gameStarted && !gameWon && !gameLost;
 
         player.SetAbleToAct(canAct);
         SetActionPointsDebugTextVisibility(playerMovementsManager.IsWillingToMove || competencesUsabilityManager.IsPreparingCompetence);
@@ -393,14 +398,60 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Game Management
+    bool gameStarted = false;
+    bool gameWon = false;
+    bool gameLost = false;
+    [Header("Game Management")]
+    [SerializeField] KeyCode gameManagementActionKey = KeyCode.Return;
+
+    public void UpdateGameManagement()
+    {
+        if (!gameStarted)
+        {
+            if (Input.GetKeyDown(gameManagementActionKey))
+                StartGame();
+        }
+        else if (gameWon || gameLost)
+        {
+            if (Input.GetKeyDown(gameManagementActionKey))
+                RestartGame();
+        }
+    }
+
+    public void StartGame()
+    {
+        gameStarted = true;
+        UIManager.Instance.HideStartPanel();
+        StartCoroutine(StartGameCoroutine());
+    }
+
+    IEnumerator StartGameCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+        turnManager.StartPlayerTurn();
+    }
+
+    bool restarting = false;
+    public void RestartGame()
+    {
+        if (restarting) return;
+        restarting = true;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
     public void WinGame()
     {
         Debug.Log("YOU WIN");
+        gameWon = true;
+        turnManager.WonGame();
+        UIManager.Instance.ShowWinPanel();
     }
 
     public void LoseGame()
     {
         Debug.Log("YOU LOSE");
+        gameLost = true;
+        UIManager.Instance.ShowLosePanel();
     }
     #endregion
 }

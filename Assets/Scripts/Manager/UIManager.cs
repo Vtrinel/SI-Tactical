@@ -46,6 +46,8 @@ public class UIManager : MonoBehaviour
         {
             _instance = this;
         }
+
+        ShowStartPanel();
     }
 
     void StartPlayerTurn()
@@ -89,4 +91,70 @@ public class UIManager : MonoBehaviour
         actionPointsCostTextParent.gameObject.SetActive(false);
     }
     #endregion
+
+    #region Game Management
+    [Header("Game Management")]
+    [SerializeField] GameObject startPanel = default;
+    [SerializeField] GameObject winPanel = default;
+    [SerializeField] GameObject losePanel = default;
+    public void ShowStartPanel()
+    {
+        startPanel.SetActive(true);
+    }
+
+    public void HideStartPanel()
+    {
+        startPanel.SetActive(false);
+    }
+
+    public void ShowWinPanel()
+    {
+        winPanel.SetActive(true);
+    }
+
+    public void ShowLosePanel()
+    {
+        losePanel.SetActive(true);
+    }
+    #endregion
+
+    [Header("Turn Management")]
+    [SerializeField] Animation startTurnAnimation = default;
+    [SerializeField] Text turnStateText = default;
+    [SerializeField] Text additionalInfoText1 = default;
+    [SerializeField] Text additionalInfoText2 = default;
+    public void PlayStartTurnAnimation(TurnState currentTurnState, bool newEnemiesappeared, bool newEnemiesIncoming)
+    {
+        startTurnAnimation.Play();
+        switch (currentTurnState)
+        {
+            case TurnState.PlayerTurn:
+                turnStateText.text = "New turn";
+                break;
+            case TurnState.EnemyTurn:
+                turnStateText.text = "Enemies turn";
+                break;
+        }
+
+        additionalInfoText1.gameObject.SetActive(false);
+        additionalInfoText2.gameObject.SetActive(false);
+
+        int usedTextsCounter = 0;
+        if (newEnemiesappeared)
+        {
+            Text textToUse = (usedTextsCounter == 0 ? additionalInfoText1 : additionalInfoText2);
+            textToUse.gameObject.SetActive(true);
+            textToUse.text = "New foes appeared";
+
+            usedTextsCounter++;
+        }
+        if (newEnemiesIncoming)
+        {
+            Text textToUse = (usedTextsCounter == 0 ? additionalInfoText1 : additionalInfoText2);
+            textToUse.gameObject.SetActive(true);
+            textToUse.text = "New foes incoming";
+
+            usedTextsCounter++;
+        }
+    }
 }
