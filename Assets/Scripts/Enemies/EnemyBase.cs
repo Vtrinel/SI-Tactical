@@ -8,6 +8,7 @@ public class EnemyBase : MonoBehaviour
 {
     [SerializeField] EnemyType enemyType = EnemyType.TouniBase;
     public EnemyType GetEnemyType => enemyType;
+    public int goldGain = 10;
 
     private void Start()
     {
@@ -35,6 +36,7 @@ public class EnemyBase : MonoBehaviour
         
         OnEnemyDeath?.Invoke(this);
         Destroy(gameObject);
+        PlayerExperienceManager.Instance.GainGold(goldGain);
     }   
 
     [Header("Common Values")]

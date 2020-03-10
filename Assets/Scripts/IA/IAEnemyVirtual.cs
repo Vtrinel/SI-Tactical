@@ -33,13 +33,15 @@ public class IAEnemyVirtual : MonoBehaviour
 
     public ShowPathSystem myShowPath;
 
+    public LineRenderer lineTest;
+
     public virtual void PlayerTurn() { }
 
     public bool CheckDetectionWithPlayer()
     {
         if (Vector3.Distance(transform.position, player.transform.position) < detectionPlayerRange)
         {
-            Debug.DrawRay(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, Color.green, 20);
+            //Debug.DrawRay(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, Color.magenta, 20);
 
             RaycastHit hit;
             if (Physics.Raycast(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, out hit, detectionPlayerRange, detectionMaskRaycast))
@@ -54,12 +56,12 @@ public class IAEnemyVirtual : MonoBehaviour
         return false;
     }
 
-    public Vector3 CalculDestination(Vector3 _targetPos)
-    {
-        myNavAgent.isStopped = true;
-        myNavAgent.SetDestination(_targetPos);
+    public Vector3 CalculDestination(Vector3 _targetPos) {
 
-        NavMeshPath _path = myNavAgent.path;
+        myNavAgent.isStopped = true;
+        NavMeshPath _path = new NavMeshPath();
+
+        NavMesh.CalculatePath(transform.position, _targetPos, NavMesh.AllAreas, _path);
 
         float currentDistance = 0;
 
@@ -81,8 +83,8 @@ public class IAEnemyVirtual : MonoBehaviour
             }
         }
 
-        Debug.LogWarning("ENEMY : PATH NOT FOUND");
-        return Vector3.zero;
+        Debug.LogWarning("ENEMY : PATH NOT FOUND (" + _path.corners.Length + " points calculated)");
+        return _targetPos;
     }
 
 }

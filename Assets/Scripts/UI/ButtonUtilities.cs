@@ -92,8 +92,8 @@ public class ButtonUtilities : MonoBehaviour
 
     public void OnClickButton()
     {
-        ActiveOrDisable(!statut);
         GameManager.Instance.SelectAction(myActionType);
+        //ActiveOrDisable(!statut);
     }
 
     void ActiveOrDisable(bool value)

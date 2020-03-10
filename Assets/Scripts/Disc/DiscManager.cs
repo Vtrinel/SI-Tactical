@@ -213,7 +213,7 @@ public class DiscManager : MonoBehaviour
         switch (overloadType)
         {
             case DiscType.Piercing:
-                PlayerExperienceManager.Instance.GainExperience(discOverloadPiercingGainedExperience);
+                PlayerExperienceManager.Instance.GainGold(discOverloadPiercingGainedExperience);
                 break;
 
             case DiscType.Ghost:
