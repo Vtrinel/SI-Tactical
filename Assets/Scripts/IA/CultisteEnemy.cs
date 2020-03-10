@@ -30,6 +30,9 @@ public class CultisteEnemy : IAEnemyVirtual
         playerControlleur = GameManager.Instance.GetPlayer;
         player = playerControlleur.gameObject;
         myShieldManager.myObjParent = gameObject;
+
+        myNavAgent.isStopped = true;
+        myNavAgent.SetDestination(player.transform.position);
     }
 
     public override void PlayerTurn()
@@ -95,7 +98,7 @@ public class CultisteEnemy : IAEnemyVirtual
     {
         isPlaying = true;
 
-        while (myNavAgent.pathStatus != NavMeshPathStatus.PathComplete || myNavAgent.remainingDistance != 0)
+        do
         {
             if (CanAttack())
             {
@@ -105,7 +108,8 @@ public class CultisteEnemy : IAEnemyVirtual
                 break;
             }
             yield return null;
-        }
+
+        } while (myNavAgent.remainingDistance != 0);
 
         yield return new WaitForSeconds(0.4f);
 
