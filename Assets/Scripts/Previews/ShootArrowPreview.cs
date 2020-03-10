@@ -27,7 +27,11 @@ public class ShootArrowPreview : MonoBehaviour
 
         foreach (Vector3 pos in trajectoryPoints)
         {
-            if(Vector3.Distance(trajectoryPoints[0], pos) < endPosDistance)
+            if(Vector3.Distance(Arrow.position, pos) < 1.6f)
+            {
+                break;
+            }
+            else
             {
                 lineCorrector.Add(pos);
             }

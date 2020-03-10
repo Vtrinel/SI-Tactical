@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DiscScript : MonoBehaviour
 {
-    [SerializeField] DiscType _discType = DiscType.None;
+    [SerializeField] DiscType _discType = DiscType.Piercing;
     public void SetDiscType(DiscType discType)
     {
         _discType = discType;
