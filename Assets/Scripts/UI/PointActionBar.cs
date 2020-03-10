@@ -11,16 +11,24 @@ public class PointActionBar : MonoBehaviour
 
     public GameObject pointAction;
 
+    CompetencesUsabilityManager competencesUsabilityManager = default;
     List<GameObject> allPointBarElement = new List<GameObject>();
+
 
     private void OnEnable()
     {
+        competencesUsabilityManager = GameManager.Instance.GetCompetencesUsabilityManager();
+
         GameManager.Instance.OnActionPointsAmountChanged += UpdatePointBar;
+        //competencesUsabilityManager.OnCompetenceStateChanged += UpdatePreConsommationPointBar;
+        TurnManager.Instance.OnStartPlayerTurn += ResetStateBar;
     }
 
     private void OnDisable()
     {
         GameManager.Instance.OnActionPointsAmountChanged -= UpdatePointBar;
+        //competencesUsabilityManager.OnCompetenceStateChanged -= UpdatePreConsommationPointBar;
+        TurnManager.Instance.OnStartPlayerTurn -= ResetStateBar;
     }
 
     void Start()
@@ -58,6 +66,34 @@ public class PointActionBar : MonoBehaviour
                 _pointBar.GetComponent<Animator>().SetBool("Statut", false);
             }
             i++;
+        }
+    }
+
+    // Update the action point bar to show the previsualisation of the action poin bar
+    public void UpdatePreConsommationPointBar(int possessedActionPoints, int aboutToUseActionPoints)
+    {
+        int currentConsommationPoint = possessedActionPoints - aboutToUseActionPoints;
+        int i = 0;
+
+        foreach (GameObject _pointBar in allPointBarElement)
+        {
+            if (i < currentConsommationPoint)
+            {
+                _pointBar.GetComponent<Animator>().SetBool("Preview", false);
+            }
+            else
+            {
+                _pointBar.GetComponent<Animator>().SetBool("Preview", true);
+            }
+            i++;
+        }
+    }
+
+    void ResetStateBar()
+    {
+        foreach (GameObject _pointBar in allPointBarElement)
+        {
+            _pointBar.GetComponent<Animator>().SetBool("Preview", false);
         }
     }
 }

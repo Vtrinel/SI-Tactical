@@ -89,6 +89,7 @@ public class PlayerMovementsManager
         {
             currentPreviewCost = movementCost;
             OnPreparationAmountChanged?.Invoke(currentPreviewCost);
+            UIManager.Instance.GetActionBar.UpdatePreConsommationPointBar(availableActionPoints, movementCost);
         }
 
         PreviewCompetencesManager.Instance.StartMovementPreview(currentDistancesByUsedActionPoints, trueMovementTrajectory,
@@ -123,6 +124,7 @@ public class PlayerMovementsManager
         {
             currentPreviewCost = movementCost;
             OnPreparationAmountChanged?.Invoke(currentPreviewCost);
+            UIManager.Instance.GetActionBar.UpdatePreConsommationPointBar(availableActionPoints, movementCost);
         }
 
         PreviewCompetencesManager.Instance.UpdateMovementPreview(trueMovementTrajectory, 
