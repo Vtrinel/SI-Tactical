@@ -57,6 +57,7 @@ public class FloatButton : MonoBehaviour
 
         GameManager.Instance.SelectAction(ActionType.None);
         TurnManager.Instance.EndPlayerTurn();
+        GameManager.Instance.SetOnMouseInUI(false);
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
     }
 
