@@ -91,16 +91,6 @@ public class TurnManager : MonoBehaviour
     {
         currentTurnEnemy = enemy;
 
-        /*if (!enemy.GetPlayerDetected)
-        {
-            enemy.myIA.CheckDetectionWithPlayer();
-            if (!enemy.GetPlayerDetected)
-            {
-                EndEnemyTurn(enemy, false);
-                return;
-            }
-        }*/
-
         enemy.StartTurn();
 
         if (enemy.GetPlayerDetected)
@@ -122,8 +112,8 @@ public class TurnManager : MonoBehaviour
 
         if (playedItsTurn)
             StartCoroutine("BetweenTurnsCoroutine");
-        //else
-            //StartEnemyTurn(orderedInGameEnemies[currentEnemiesTurnCounter]);
+        else
+            StartEnemyTurn(orderedInGameEnemies[currentEnemiesTurnCounter]);
     }
 
     public Action OnEnemyTurnInterruption;
