@@ -129,10 +129,10 @@ public class UIManager : MonoBehaviour
         switch (currentTurnState)
         {
             case TurnState.PlayerTurn:
-                turnStateText.text = "New turn";
+                turnStateText.text = "NEW TURN";
                 break;
             case TurnState.EnemyTurn:
-                turnStateText.text = "Enemies turn";
+                turnStateText.text = "ENEMIES TURN";
                 break;
         }
 
