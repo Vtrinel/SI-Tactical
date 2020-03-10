@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] NavMeshAgent navMeshAgent = default;
+    public NavMeshAgent GetNavMeshAgent => navMeshAgent;
     public DamageableEntity damageReceiptionSystem = default;
     [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
 

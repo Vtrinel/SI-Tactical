@@ -24,8 +24,6 @@ public class IAEnemyVirtual : MonoBehaviour
     public bool isPlaying = false;
     public bool isPreparing = false;
 
-    public float durationTurn = 1;
-
     public ShieldManager myShieldManager;
 
     public bool haveDetectPlayer = false;
@@ -41,7 +39,7 @@ public class IAEnemyVirtual : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, player.transform.position) < detectionPlayerRange)
         {
-            Debug.DrawRay(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, Color.green, 20);
+            //Debug.DrawRay(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, Color.magenta, 20);
 
             RaycastHit hit;
             if (Physics.Raycast(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, out hit, detectionPlayerRange, detectionMaskRaycast))
@@ -55,4 +53,47 @@ public class IAEnemyVirtual : MonoBehaviour
         }
         return false;
     }
+
+    public Vector3 CalculDestination(Vector3 _targetPos)
+    {
+        myNavAgent.isStopped = true;
+        myNavAgent.SetDestination(_targetPos);
+        myNavAgent.SetDestination(Vector3.zero);
+        myNavAgent.SetDestination(_targetPos);
+
+        NavMeshPath _path = myNavAgent.path;
+
+        float currentDistance = 0;
+        Debug.DrawRay(myNavAgent.destination, Vector3.up * 8f, Color.blue, 15f);
+        foreach (Vector3 pos in _path.corners)
+            Debug.DrawRay(pos, Vector3.up * 4f, Color.red, 15f);
+
+        Debug.LogWarning("Start path (" + _path.corners.Length + " points calculated)");
+        for (int i = 1; i < _path.corners.Length; i++)
+        {
+            Debug.DrawLine(_path.corners[i - 1] + Vector3.up, _path.corners[i] + Vector3.up, Color.green, 15f);
+        }
+
+        for (var i = 1; i < _path.corners.Length; i++)
+        {
+            if (currentDistance + Vector3.Distance(_path.corners[i - 1], _path.corners[i]) < distanceOfDeplacement)
+            {
+                currentDistance += Vector3.Distance(_path.corners[i - 1], _path.corners[i]);
+            }
+            else
+            {
+                //Calcule de coupure de la ligne
+                float distanceTokeep = distanceOfDeplacement - currentDistance;
+
+                Vector3 dir = _path.corners[i] - _path.corners[i - 1];
+                Vector3 targetPosition = _path.corners[i - 1] + dir.normalized * distanceTokeep;
+
+                return targetPosition;
+            }
+        }
+
+        Debug.LogWarning("ENEMY : PATH NOT FOUND (" + _path.corners.Length + " points calculated)");
+        return Vector3.zero;
+    }
+
 }

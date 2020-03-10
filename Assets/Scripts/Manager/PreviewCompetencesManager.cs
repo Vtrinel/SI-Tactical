@@ -35,6 +35,7 @@ public class PreviewCompetencesManager : MonoBehaviour
     #region
     [Header("Movement")]
     [SerializeField] Transform movementPreviewsParent = default;
+    [SerializeField] bool showMovementCircles = false;
     [SerializeField] MovementCirclePreview movementCirclePreviewPrefab = default;
     [SerializeField] int startNumberOfMovementCirclePreviews = 5;
     [SerializeField, ReadOnly] List<MovementCirclePreview> movementCirclePreviews = new List<MovementCirclePreview>();
@@ -63,57 +64,66 @@ public class PreviewCompetencesManager : MonoBehaviour
 
     bool justStartedMovementPreview = default;
     List<float> currentMovementDistances = new List<float>();
-    public void StartMovementPreview(List<float> distances, Vector3 startPosition, Vector3 targetPosition, CompetenceRecall currentRecallComp, int completelyUsedActionPoints)
+    public void StartMovementPreview(List<float> distances, List<Vector3> trajectory, CompetenceRecall currentRecallComp, int completelyUsedActionPoints, bool reachMax)
     {
+        Vector3 startPosition = trajectory[0];
+        Vector3 targetPosition = trajectory[trajectory.Count - 1];
+
         #region Circles
-        int newNumber = distances.Count;
-        if (newNumber > movementCirclePreviews.Count)
+        if (showMovementCircles)
         {
-            for (int i = movementCirclePreviews.Count; i < newNumber; i++)
+            int newNumber = distances.Count;
+            if (newNumber > movementCirclePreviews.Count)
             {
-                MovementCirclePreview newMovementCirclePreview = Instantiate(movementCirclePreviewPrefab, movementPreviewsParent);
-                newMovementCirclePreview.ShowPreview();
-                movementCirclePreviews.Add(newMovementCirclePreview);
+                for (int i = movementCirclePreviews.Count; i < newNumber; i++)
+                {
+                    MovementCirclePreview newMovementCirclePreview = Instantiate(movementCirclePreviewPrefab, movementPreviewsParent);
+                    newMovementCirclePreview.ShowPreview();
+                    movementCirclePreviews.Add(newMovementCirclePreview);
+                }
             }
-        }
 
-        Vector3 circlePos = new Vector3(startPosition.x, 0.01f, startPosition.z);
-        for (int i = 0; i < newNumber; i++)
-        {
-            movementCirclePreviews[i].ShowPreview();
-            movementCirclePreviews[i].ChangeRadius(distances[i]);
-            movementCirclePreviews[i].transform.position = circlePos;
-        }
+            Vector3 circlePos = new Vector3(startPosition.x, 0.01f, startPosition.z);
+            for (int i = 0; i < newNumber; i++)
+            {
+                movementCirclePreviews[i].ShowPreview();
+                movementCirclePreviews[i].ChangeRadius(distances[i]);
+                movementCirclePreviews[i].transform.position = circlePos;
+            }
 
-        for(int i = newNumber; i < movementCirclePreviews.Count; i++)
-        {
-            movementCirclePreviews[i].HidePreview();
+            for (int i = newNumber; i < movementCirclePreviews.Count; i++)
+            {
+                movementCirclePreviews[i].HidePreview();
+            }
         }
         #endregion
 
         currentMovementDistances = distances;
 
         movementLinePreview.ShowPreview();
-        movementLinePreview.UpdateLine(startPosition, targetPosition, currentMovementDistances, completelyUsedActionPoints);
+        movementLinePreview.UpdateLine(trajectory, currentMovementDistances, completelyUsedActionPoints, reachMax);
 
         movementGhostPreview.ShowPreview();
-        movementGhostPreview.transform.position = targetPosition;
+        movementGhostPreview.transform.position = trajectory[trajectory.Count - 1];
 
         List<DiscTrajectoryParameters> discsInNewPositionRangeParameters = DiscListingFactory.GetDiscInRangeTrajectory(targetPosition, currentRecallComp);
         StartRecallPreview(discsInNewPositionRangeParameters, targetPosition);
 
         justStartedMovementPreview = true;
-        UpdateMovementPreview(startPosition, targetPosition, currentRecallComp, completelyUsedActionPoints);
+        UpdateMovementPreview(trajectory, currentRecallComp, completelyUsedActionPoints, reachMax);
 
         foreach(EnemyBase enemy in EnemiesManager.Instance.GetAllInGameEnemiesOrdered)
         {
-            enemy.DisplayAndActualisePreviewAttack();
+            enemy.DisplayAndActualisePreviewAttack(movementGhostPreview.transform);
         }
     }
 
-    public void UpdateMovementPreview(Vector3 startPosition, Vector3 targetPosition, CompetenceRecall currentRecallComp, int completelyUsedActionPoints)
+    public void UpdateMovementPreview(List<Vector3> trajectory, CompetenceRecall currentRecallComp, int completelyUsedActionPoints, bool reachMax)
     {
-        movementLinePreview.UpdateLine(startPosition, targetPosition, currentMovementDistances, completelyUsedActionPoints);
+        Vector3 startPosition = trajectory[0];
+        Vector3 targetPosition = trajectory[trajectory.Count - 1];
+
+        movementLinePreview.UpdateLine(trajectory, currentMovementDistances, completelyUsedActionPoints, reachMax);
         movementGhostPreview.transform.position = targetPosition;
 
         if (!justStartedMovementPreview)
@@ -127,8 +137,11 @@ public class PreviewCompetencesManager : MonoBehaviour
 
     public void EndMovementPreview()
     {
-        foreach (MovementCirclePreview circlePreview in movementCirclePreviews)
-            circlePreview.HidePreview();
+        if (showMovementCircles)
+        {
+            foreach (MovementCirclePreview circlePreview in movementCirclePreviews)
+                circlePreview.HidePreview();
+        }
 
         movementLinePreview.HidePreview();
         movementGhostPreview.HidePreview();

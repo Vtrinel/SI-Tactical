@@ -108,7 +108,8 @@ public class EnemyBase : MonoBehaviour
         {
             return;
         }
-        TurnManager.Instance.EndEnemyTurn(this);
+
+        TurnManager.Instance.EndEnemyTurn(this, GetPlayerDetected);
     }
 
     public void InterruptAllAction()
@@ -126,6 +127,7 @@ public class EnemyBase : MonoBehaviour
     {
         myIA.haveDetectPlayer = detected;
     }
+    public bool GetPlayerDetected => myIA.haveDetectPlayer;
 
     void PlayMyTurn()
     {
@@ -159,10 +161,11 @@ public class EnemyBase : MonoBehaviour
         myIA.OnFinishTurn -= EndTurn;
     }
 
-    public void DisplayAndActualisePreviewAttack()
+    public void DisplayAndActualisePreviewAttack(Transform target)
     {
         myIA.myShowPath.SetValue(myIA.distanceOfDeplacement, myIA.attackRange);
         myIA.myShowPath.ShowOrHide(true);
+        myIA.myShowPath.SetTargetPosition(target);
     }
 
     public void HidePreview(bool value)

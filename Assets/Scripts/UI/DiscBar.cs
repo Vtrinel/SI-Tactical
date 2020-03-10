@@ -1,18 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class DiscBar : MonoBehaviour
 {
     private int maxDisc;
 
-    [SerializeField] int currentDisc;
+    [SerializeField] int currentDisc = 3;
 
     [Header("Disc types")]
-    // Types : None , Piercing, Ghost, Explosive, Heavy, Shockwave
-    public GameObject discBasic;
-    //public GameObject discPiercing;
-    //public GameObject discGhost;
+    public GameObject discPiercing;
+    public GameObject discGhost;
+    public GameObject discExplosive;
+    public GameObject discHeavy;
+    public GameObject discShockwave;
 
     [SerializeField] List<GameObject> allDiscBarElement = new List<GameObject>();
 
@@ -26,36 +26,95 @@ public class DiscBar : MonoBehaviour
 
     private void OnDisable()
     {
-        DiscManager.Instance.OnDiscConsommed -= RemoveDiscFromBar;
         DiscManager.Instance.OnDiscFilled -= CreateDiscBar;
         DiscManager.Instance.OnDiscAdded -= AddNewDisc;
         DiscManager.Instance.OnAddOneMaxDisc -= UpdateMaxDiscBar;
+        DiscManager.Instance.OnDiscConsommed -= RemoveDiscFromBar;
     }
 
-    void CreateDiscBar(int maxNumberOfPossessedDiscs)
+    void CreateDiscBar(int maxDiscs, int currentDiscs, DiscType discType)
     {
-        maxDisc = maxNumberOfPossessedDiscs;
-        currentDisc = maxDisc-1;
+        maxDisc = maxDiscs;
+        currentDisc = currentDiscs;
 
-        Debug.Log("test ?");
+        GameObject newDiscType;
 
-        for (int i = 0; i < maxDisc; i++)
+        switch (discType)
         {
-            GameObject newDiscBarElement = Instantiate(discBasic, gameObject.transform);
-            allDiscBarElement.Add(newDiscBarElement);
+            case DiscType.Piercing:
+                newDiscType = discPiercing;
+                break;
+
+            case DiscType.Ghost:
+                newDiscType = discGhost;
+                break;
+
+            case DiscType.Explosive:
+                newDiscType = discExplosive;
+                break;
+
+            case DiscType.Heavy:
+                newDiscType = discHeavy;
+                break;
+
+            case DiscType.Shockwave:
+                newDiscType = discShockwave;
+                break;
+
+            default:
+                newDiscType = discPiercing;
+                break;
         }
+
+        for (int i = 0; i < currentDisc; i++)
+        {
+            GameObject newDisc = Instantiate(newDiscType, gameObject.transform);
+            allDiscBarElement.Add(newDisc);
+        }
+
+        currentDisc--;
     }
 
     void RemoveDiscFromBar()
     {
         Destroy(allDiscBarElement[currentDisc]);
 
+        allDiscBarElement.RemoveAt(currentDisc);
+
         currentDisc--;
     }
 
     void AddNewDisc(DiscScript newDisc)
     {
-        GameObject newDiscBarElement = Instantiate(discBasic, gameObject.transform);
+        GameObject newDiscBarElement;
+
+        switch (newDisc.GetDiscType)
+        {
+            case DiscType.Piercing:
+                newDiscBarElement = Instantiate(discPiercing, gameObject.transform);
+                break;
+
+            case DiscType.Ghost:
+                newDiscBarElement = Instantiate(discGhost, gameObject.transform);
+                break;
+
+            case DiscType.Explosive:
+                newDiscBarElement = Instantiate(discExplosive, gameObject.transform);
+                break;
+
+            case DiscType.Heavy:
+                newDiscBarElement = Instantiate(discHeavy, gameObject.transform);
+                break;
+
+            case DiscType.Shockwave:
+                newDiscBarElement = Instantiate(discShockwave, gameObject.transform);
+                break;
+
+            default:
+                newDiscBarElement = Instantiate(discPiercing, gameObject.transform);
+                break;
+        }
+
         allDiscBarElement.Add(newDiscBarElement);
 
         currentDisc++;
@@ -63,8 +122,8 @@ public class DiscBar : MonoBehaviour
 
     void UpdateMaxDiscBar()
     {
-        GameObject newDiscBarElement = Instantiate(discBasic, gameObject.transform);
-        allDiscBarElement.Add(newDiscBarElement);
+        //GameObject newDiscBarElement = Instantiate(discPiercing, gameObject.transform);
+        //allDiscBarElement.Add(newDiscBarElement);
 
         maxDisc++;
         currentDisc++;
