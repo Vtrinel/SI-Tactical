@@ -103,6 +103,21 @@ public class GameManager : MonoBehaviour
     public int maxActionPointsAmount = 10;
     [SerializeField] int currentActionPointsAmount;
     public int GetCurrentActionPointsAmount => currentActionPointsAmount;
+    /*public int GetAboutToUseActionPoints
+    {
+        get
+        {
+            if (competencesUsabilityManager.IsPreparingCompetence)
+            {
+                return competencesUsabilityManager.GetCurrentCompetenceCost();
+            }
+            else if ()
+            {
+
+            }
+            return 0;
+        }
+    }*/
 
     public System.Action<int> OnActionPointsAmountChanged;
     
@@ -319,7 +334,6 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        //Debug.Log("EH");
         if (playerMovementsManager.IsWillingToMove)
         {
             int cost = playerMovementsManager.TryStartMovement(GetCurrentWorldMouseResult.mouseWorldPosition);
@@ -374,6 +388,8 @@ public class GameManager : MonoBehaviour
 
     public void CallUnselectActionEvent(ActionType actionType)
     {
+        UIManager.Instance.GetActionBar.UpdatePreConsommationPointBar(currentActionPointsAmount, 0);
+        UIManager.Instance.HideActionPointText();
         switch (actionType)
         {
             case ActionType.Move:

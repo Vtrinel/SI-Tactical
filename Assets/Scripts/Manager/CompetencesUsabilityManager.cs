@@ -11,11 +11,13 @@ public class CompetencesUsabilityManager
         _player = player;
     }
 
+    int currentActionPoints = 0;
     public void UpdateSystem()
     {
         if(IsPreparingCompetence)
         {
             UpdatePreparation();
+            UIManager.Instance.UpdateActionPointCostText(GetCurrentCompetenceCost(), currentActionPoints);
         }
     }
 
@@ -91,13 +93,16 @@ public class CompetencesUsabilityManager
                     trySelectResult = ActionSelectionResult.NoNearbyDisc;
                 }
             }
-
+            currentActionPoints = totalActionPoints;
         }
 
         switch (trySelectResult)
         {
             case ActionSelectionResult.EnoughActionPoints:
                 ChangeUsabilityState(UsabilityState.Preparing, compType);
+                UIManager.Instance.GetActionBar.UpdatePreConsommationPointBar(totalActionPoints, GetCurrentCompetenceCost());
+                UIManager.Instance.ShowActionPointsCostText();
+                UIManager.Instance.UpdateActionPointCostText(GetCurrentCompetenceCost(), totalActionPoints);
                 break;
 
             case ActionSelectionResult.NotEnoughActionPoints:

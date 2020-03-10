@@ -69,6 +69,8 @@ public class UIManager : MonoBehaviour
     [Header("Action poins cost")]
     [SerializeField] Text actionPointsCostText = default;
     [SerializeField] Transform actionPointsCostTextParent = default;
+    [SerializeField] PointActionBar actionBar = default;
+    public PointActionBar GetActionBar => actionBar;
 
     public void ShowActionPointsCostText()
     {

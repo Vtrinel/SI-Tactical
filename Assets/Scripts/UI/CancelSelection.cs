@@ -31,6 +31,7 @@ public class CancelSelection : MonoBehaviour
     public void CancelCurrentAction()
     {
         GameManager.Instance.SelectAction(ActionType.None);
+        GameManager.Instance.SetOnMouseInUI(false);
     }
 
 }
