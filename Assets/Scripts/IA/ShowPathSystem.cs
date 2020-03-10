@@ -12,6 +12,7 @@ public class ShowPathSystem : MonoBehaviour
     float attackRange;
 
     bool showPreview = false;
+    Transform target = default;
 
     public void SetValue(float _distance, float _attackRange)
     {
@@ -22,6 +23,11 @@ public class ShowPathSystem : MonoBehaviour
     public void ShowOrHide(bool value)
     {
         showPreview = value;
+    }
+
+    public void SetTargetPosition(Transform targ)
+    {
+        target = targ;
     }
 
     private void Update()
@@ -40,7 +46,7 @@ public class ShowPathSystem : MonoBehaviour
     public void DrawPath()
     {
         myNavAgent.isStopped = true;
-        myNavAgent.SetDestination(GameManager.Instance.GetCurrentWorldMouseResult.mouseWorldPosition);
+        myNavAgent.SetDestination(target.position);
 
         NavMeshPath _path = myNavAgent.path;
 

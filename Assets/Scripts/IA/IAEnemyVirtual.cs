@@ -65,7 +65,6 @@ public class IAEnemyVirtual : MonoBehaviour
 
         for (var i = 1; i < _path.corners.Length; i++)
         {
-
             if (currentDistance + Vector3.Distance(_path.corners[i - 1], _path.corners[i]) < distanceOfDeplacement)
             {
                 currentDistance += Vector3.Distance(_path.corners[i - 1], _path.corners[i]);
@@ -82,6 +81,7 @@ public class IAEnemyVirtual : MonoBehaviour
             }
         }
 
+        Debug.LogWarning("ENEMY : PATH NOT FOUND");
         return Vector3.zero;
     }
 

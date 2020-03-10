@@ -104,7 +104,9 @@ public class TurnManager : MonoBehaviour
         enemy.StartTurn();
 
         if (enemy.GetPlayerDetected)
-            CameraManager.instance.GetPlayerCamera.AttachFollowTransformTo(currentTurnEnemy.transform);
+        {
+            CameraManager.instance.GetPlayerCamera.AttachFollowTransformTo(enemy.transform);
+        }
     }
 
     public void EndEnemyTurn(EnemyBase enemy, bool playedItsTurn)
@@ -120,8 +122,8 @@ public class TurnManager : MonoBehaviour
 
         if (playedItsTurn)
             StartCoroutine("BetweenTurnsCoroutine");
-        else
-            StartEnemyTurn(orderedInGameEnemies[currentEnemiesTurnCounter]);
+        //else
+            //StartEnemyTurn(orderedInGameEnemies[currentEnemiesTurnCounter]);
     }
 
     public Action OnEnemyTurnInterruption;
