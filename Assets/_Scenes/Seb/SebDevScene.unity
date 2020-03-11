@@ -1915,7 +1915,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bbc93153f092804aab74979bf385306, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  definedEnemyToSpawn: 5
+  definedEnemyToSpawn: 1
   definedEnemyWillAutoDetectPlayer: 1
   definedLootedDisc: 3
   spawnZoneDebugObject: {fileID: 638371783}
@@ -2773,7 +2773,7 @@ PrefabInstance:
     - target: {fileID: 6583912201355048081, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
         type: 3}
       propertyPath: targetProgressValue
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7360405968755364706, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
         type: 3}
@@ -2824,6 +2824,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MustHavePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 8714799692346380087, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8714799692346380087, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6, type: 3}

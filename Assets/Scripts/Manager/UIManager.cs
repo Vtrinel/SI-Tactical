@@ -163,4 +163,41 @@ public class UIManager : MonoBehaviour
         }
     }
     #endregion
+
+    #region Goal Management
+    [Header("Goal Management")]
+    [SerializeField] Animator goalPanelAnimator = default;
+    [SerializeField] Text turnGoalText = default;
+    [SerializeField] Text turnGoalValueText = default;
+    int totalNumberOfTurnsToWait = 0;
+    int remainingNumberOfTurnsToWait = 0;
+
+    public void SetUpGoalPanel(int numberOfTurnsToWait)
+    {
+        totalNumberOfTurnsToWait = numberOfTurnsToWait;
+        remainingNumberOfTurnsToWait = numberOfTurnsToWait;
+        turnGoalText.text = "Stay near the god's statue for " + totalNumberOfTurnsToWait + " turns";
+        turnGoalValueText.text = remainingNumberOfTurnsToWait.ToString();
+
+        goalPanelAnimator.SetTrigger("showGoalPanel");
+    }
+
+    public void OnGoalZoneReached()
+    {
+        goalPanelAnimator.SetTrigger("reachedGoalZone");
+    }
+
+    public void UpdateRemainingNumberOfTurns(int remaining)
+    {
+        remainingNumberOfTurnsToWait = remaining;
+        //turnGoalText.text = "Stay near the god's statue for " + remainingNumberOfTurnsToWait + " more turns";
+        turnGoalValueText.text = remainingNumberOfTurnsToWait.ToString();
+        goalPanelAnimator.SetTrigger("updateGoal");
+    }
+
+    public void OnGoalTurnAmountReached()
+    {
+        goalPanelAnimator.SetTrigger("reachedGoalTurn");
+    }
+    #endregion
 }

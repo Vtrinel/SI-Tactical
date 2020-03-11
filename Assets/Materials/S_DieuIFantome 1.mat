@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: S_DieuIFantome 1
+  m_Shader: {fileID: 4800000, guid: 3ff3913f0e4ffd940a6bae1952c5bec9, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _DisplacmentMap:
+        m_Texture: {fileID: 2800000, guid: 9356c8d0cbb79e04399fb57f38b142ed, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Noise:
+        m_Texture: {fileID: 2800000, guid: 7fb759a1879092349b53f26a5726fe5c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _T_MaskShadow_M:
+        m_Texture: {fileID: 2800000, guid: d79129f6cd72e5f4bba6313211067f09, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _T_Triangle2_M:
+        m_Texture: {fileID: 2800000, guid: 07d0b1a345caff34a91b9825ef411d37, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _T_Triangle_M:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _T_WoodTile_D:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TextureSample0:
+        m_Texture: {fileID: 2800000, guid: e986fe073d211414c95bc96f2beb772f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _DisplacmentStrengh: 0
+    - _GradientMax: -2
+    - _GradientMin: -2
+    - _MaskPower: 0
+    - _Opacity: 0
+    - _ShadowMaskIntensity: 0
+    - _ShadowOpacity: 0
+    - _ShadowStep: 0.1
+    - _SucePute: 0
+    - _Tilling: 0.5
+    - _Transparence: 1.28
+    - __dirty: 0
+    m_Colors:
+    - _Color: {r: 1, g: 0.48846585, b: 0.078431346, a: 0}
+    - _DisolvColor: {r: 1, g: 0.848044, b: 0.40094337, a: 0}
+    - _Emissive: {r: 0, g: 0, b: 0, a: 0}
+    - _Emmissive: {r: 0.95283014, g: 0.6754391, b: 0.2202296, a: 1}
+    - _PannerSpeed: {r: 0, g: 0, b: 0, a: 0}
+    - _Shadow_Color: {r: 0.32075465, g: 0.03782484, b: 0.03782484, a: 0}

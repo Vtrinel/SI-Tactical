@@ -14,7 +14,6 @@ public class PlayerCamera : VirtualCamera
     {
         base.OnEnable();
         player = GameManager.Instance.GetPlayer;
-        //SetCameraTarget(player.transform);
         ResetPlayerCamera();
         followTransform.transform.SetParent(player.transform);
         followTransform.transform.position = player.transform.position;
@@ -92,7 +91,6 @@ public class PlayerCamera : VirtualCamera
 
     public void StartMovementToward(Transform tr)
     {
-        followTransform.transform.SetParent(tr);
-        followTransform.StartMovement();
+        followTransform.StartMovement(tr);
     }
 }
