@@ -14,6 +14,9 @@ public class DiscBar : MonoBehaviour
     public GameObject discHeavy;
     public GameObject discShockwave;
 
+    [Header("Disc types")]
+    [SerializeField] GameObject discIconHolder;
+
     [SerializeField] List<GameObject> allDiscBarElement = new List<GameObject>();
 
     private void OnEnable()
@@ -22,6 +25,12 @@ public class DiscBar : MonoBehaviour
         DiscManager.Instance.OnDiscConsommed += RemoveDiscFromBar;
         DiscManager.Instance.OnDiscAdded += AddNewDisc;
         DiscManager.Instance.OnAddOneMaxDisc += UpdateMaxDiscBar;
+
+        if (discIconHolder == null)
+        {
+            Debug.LogWarning("DISC ICON HOLDER NOT SET", this);
+            discIconHolder = gameObject;
+        }
     }
 
     private void OnDisable()
@@ -68,7 +77,7 @@ public class DiscBar : MonoBehaviour
 
         for (int i = 0; i < currentDisc; i++)
         {
-            GameObject newDisc = Instantiate(newDiscType, gameObject.transform);
+            GameObject newDisc = Instantiate(newDiscType, discIconHolder.transform);
             allDiscBarElement.Add(newDisc);
         }
 
@@ -91,27 +100,27 @@ public class DiscBar : MonoBehaviour
         switch (newDisc.GetDiscType)
         {
             case DiscType.Piercing:
-                newDiscBarElement = Instantiate(discPiercing, gameObject.transform);
+                newDiscBarElement = Instantiate(discPiercing, discIconHolder.transform);
                 break;
 
             case DiscType.Ghost:
-                newDiscBarElement = Instantiate(discGhost, gameObject.transform);
+                newDiscBarElement = Instantiate(discGhost, discIconHolder.transform);
                 break;
 
             case DiscType.Explosive:
-                newDiscBarElement = Instantiate(discExplosive, gameObject.transform);
+                newDiscBarElement = Instantiate(discExplosive, discIconHolder.transform);
                 break;
 
             case DiscType.Heavy:
-                newDiscBarElement = Instantiate(discHeavy, gameObject.transform);
+                newDiscBarElement = Instantiate(discHeavy, discIconHolder.transform);
                 break;
 
             case DiscType.Shockwave:
-                newDiscBarElement = Instantiate(discShockwave, gameObject.transform);
+                newDiscBarElement = Instantiate(discShockwave, discIconHolder.transform);
                 break;
 
             default:
-                newDiscBarElement = Instantiate(discPiercing, gameObject.transform);
+                newDiscBarElement = Instantiate(discPiercing, discIconHolder.transform);
                 break;
         }
 
