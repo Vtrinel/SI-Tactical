@@ -102,12 +102,24 @@ public class DiscScript : MonoBehaviour
     {
         knockbackSystem.OnKnockbackUpdate += MoveKnockback;
         knockbackSystem.OnKnockbackEnded += GenerateKnockbackZoneOnEndTrajectory;
+
+        if (tooltipCollider != null)
+        {
+            tooltipCollider.OnStartTooltip += StartHovering;
+            tooltipCollider.OnEndTooltip += EndHovering;
+        }
     }
 
     private void OnDisable()
     {
         knockbackSystem.OnKnockbackUpdate -= MoveKnockback;
         knockbackSystem.OnKnockbackEnded -= GenerateKnockbackZoneOnEndTrajectory;
+
+        if (tooltipCollider != null)
+        {
+            tooltipCollider.OnStartTooltip -= StartHovering;
+            tooltipCollider.OnEndTooltip -= EndHovering;
+        }
     }
 
     #region Movement Check
@@ -497,5 +509,18 @@ public class DiscScript : MonoBehaviour
         newFx.transform.rotation = Random.rotation;
     }
     #endregion
+
+    [Header("Tooltips")]
+    [SerializeField] TooltipCollider tooltipCollider = default;
+
+    public void StartHovering()
+    {
+        //Debug.Log("Start Hovering " + name);
+    }
+
+    public void EndHovering()
+    {
+        //Debug.Log("End Hovering " + name);
+    }
 }
 

@@ -481,6 +481,7 @@ Transform:
   - {fileID: 5259017069687773447}
   - {fileID: 3196084217544516654}
   - {fileID: 6030834499045096819}
+  - {fileID: 1608273199875318346}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -525,6 +526,7 @@ MonoBehaviour:
   _lootedDiscType: 0
   lootDiscIndicator: {fileID: 0}
   myIA: {fileID: 7209678692314394212}
+  tooltipCollider: {fileID: 6570538112667868485}
 --- !u!114 &3894817726808940226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -717,6 +719,70 @@ Transform:
   m_Father: {fileID: 2102294264349746717}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6501890131878365831
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1608273199875318346}
+  - component: {fileID: 3400612581991280276}
+  - component: {fileID: 6570538112667868485}
+  m_Layer: 15
+  m_Name: TooltipCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1608273199875318346
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6501890131878365831}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3894817726808940225}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &3400612581991280276
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6501890131878365831}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6570538112667868485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6501890131878365831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa07a7f3baf14514d9bc8dac55945efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  informations:
+    tooltipName: Cultist
+    tooltipDescription: A range enemy that will look for your disks to destroy them,
+      and then attack you
+    tooltipAdditionalInformationValue: 0
+    tooltipAdditionalInformationType: 0
 --- !u!1 &8228210363981870650
 GameObject:
   m_ObjectHideFlags: 0
@@ -1177,15 +1243,15 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 3480513343435543746}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7626413247913365439 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6456809469422476157, guid: 63234ee1d16265d41bfaaafaa13d74fc,
-    type: 3}
-  m_PrefabInstance: {fileID: 3480513343435543746}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8081044398203650225 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4641213821387363443, guid: 63234ee1d16265d41bfaaafaa13d74fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 3480513343435543746}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7626413247913365439 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6456809469422476157, guid: 63234ee1d16265d41bfaaafaa13d74fc,
     type: 3}
   m_PrefabInstance: {fileID: 3480513343435543746}
   m_PrefabAsset: {fileID: 0}

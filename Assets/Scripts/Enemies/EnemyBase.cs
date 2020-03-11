@@ -177,6 +177,12 @@ public class EnemyBase : MonoBehaviour
         damageReceiptionSystem.OnLifeReachedZero += Die;
         TurnManager.Instance.OnEnemyTurnInterruption += InterruptAllAction;
 
+        if (tooltipCollider != null)
+        {
+            tooltipCollider.OnStartTooltip += StartHovering;
+            tooltipCollider.OnEndTooltip += EndHovering;
+        }
+
         if (myIA == null)
             return;
         myIA.OnFinishTurn += EndTurn;
@@ -187,6 +193,12 @@ public class EnemyBase : MonoBehaviour
         damageReceiptionSystem.OnLifeAmountChanged -= UpdateLifeBarFill;
         damageReceiptionSystem.OnLifeReachedZero -= Die;
         TurnManager.Instance.OnEnemyTurnInterruption -= InterruptAllAction;
+
+        if (tooltipCollider != null)
+        {
+            tooltipCollider.OnStartTooltip -= StartHovering;
+            tooltipCollider.OnEndTooltip -= EndHovering;
+        }
 
         if (myIA == null)
             return;
@@ -204,5 +216,18 @@ public class EnemyBase : MonoBehaviour
     public void HidePreview(bool value)
     {
         myIA.myShowPath.ShowOrHide(value);
+    }
+
+    [Header("Tooltips")]
+    [SerializeField] TooltipCollider tooltipCollider = default;
+
+    public void StartHovering()
+    {
+        //Debug.Log("Start Hovering " + name);
+    }
+
+    public void EndHovering()
+    {
+        //Debug.Log("End Hovering " + name);
     }
 }

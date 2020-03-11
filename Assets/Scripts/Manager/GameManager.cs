@@ -62,6 +62,8 @@ public class GameManager : MonoBehaviour
         competencesUsabilityManager.UpdateSystem();
 
         UpdateGameManagement();
+
+        tooltipsManagementSystem.UpdateSystem(currentWorldMouseResult.currentTooltipable);
     }
 
     private void LateUpdate()
@@ -233,16 +235,29 @@ public class GameManager : MonoBehaviour
 
         Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit[] hits = Physics.RaycastAll(cameraRay, mouseCheckMaxDistance, worldMouseLayerMask);
+        ITooltipable foundTooltipable = null;
 
         foreach (RaycastHit hit in hits)
         {
-            if(hit.collider.gameObject.layer == 8)
+            if (hit.collider.gameObject.layer == 8)
             {
                 result.mouseWorldPosition = hit.point;
+            }
+            else
+            {
+                if (!OnMouseInUI)
+                {
+                    if (foundTooltipable == null && hit.collider.gameObject.layer == 15)
+                    {
+                        foundTooltipable = hit.collider.GetComponent<ITooltipable>();
+                    }
+                }
             }
         }
 
         result.mouseIsOnUI = OnMouseInUI;
+        if (!OnMouseInUI)
+            result.currentTooltipable = foundTooltipable;
 
         return result;
     }
@@ -527,6 +542,9 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.ShowLosePanel();
     }
     #endregion
+
+    [Header("Tooltips management")]
+    [SerializeField] TooltipsManagementSystem tooltipsManagementSystem = default; 
 }
 
 public enum ActionType
@@ -543,6 +561,7 @@ public struct WorldMouseResult
 {
     public Vector3 mouseWorldPosition;
     public bool mouseIsOnUI;
+    public ITooltipable currentTooltipable;
 }
 
 public enum ActionSelectionResult
