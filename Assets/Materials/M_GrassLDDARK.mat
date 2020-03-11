@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Grass
+  m_Name: M_GrassLDDARK
   m_Shader: {fileID: 4800000, guid: 2cb5c5c6241cce546ace8a9110b73002, type: 3}
-  m_ShaderKeywords: _TOGGLESWITCH0_ON
+  m_ShaderKeywords: 
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -25,10 +25,6 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _T_Grass_M:
         m_Texture: {fileID: 2800000, guid: be7c3481a4f88464f8744d78c725f2b7, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _T_MaskShadow2_M:
-        m_Texture: {fileID: 2800000, guid: 7fb759a1879092349b53f26a5726fe5c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _T_MaskShadow_M:
@@ -48,12 +44,10 @@ Material:
     - _ShadowMaskIntensity: 0
     - _ShadowOpacity: 0
     - _ShadowStep: 0
-    - _Tilling: 1
-    - _ToggleSwitch0: 1
+    - _Tilling: 0.08
     - __dirty: 0
     m_Colors:
     - _ASEOutlineColor: {r: 1, g: 1, b: 1, a: 0}
-    - _Color: {r: 0.4056604, g: 0.380785, b: 0.38216496, a: 0}
+    - _Color: {r: 0.31132078, g: 0.29810435, b: 0.29810435, a: 0}
     - _Emlissive: {r: 0, g: 0, b: 0, a: 0}
     - _Shadow_Color: {r: 0.32075462, g: 0.03782484, b: 0.03782484, a: 0}
-    - _Vector0: {r: 0, g: 0, b: 0, a: 0}
