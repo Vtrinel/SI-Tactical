@@ -217,6 +217,7 @@ public class GameManager : MonoBehaviour
     [Header("Mouse World Result")]
     [SerializeField] LayerMask worldMouseLayerMask = default;
     [SerializeField] float mouseCheckMaxDistance = 50.0f;
+    [SerializeField] UIRaycaster uiRaycaster = default;
     bool calculatedCurrentWorldMouseResult = false;
     WorldMouseResult currentWorldMouseResult = default;
     public WorldMouseResult GetCurrentWorldMouseResult
@@ -235,7 +236,7 @@ public class GameManager : MonoBehaviour
 
         Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit[] hits = Physics.RaycastAll(cameraRay, mouseCheckMaxDistance, worldMouseLayerMask);
-        ITooltipable foundTooltipable = null;
+        ITooltipable foundTooltipable = uiRaycaster.CheckForUITooltipable();
 
         foreach (RaycastHit hit in hits)
         {
