@@ -503,10 +503,10 @@ public class DiscScript : MonoBehaviour
     #region Feedbacks
     void DemandeFx(Vector3 collision)
     {
-        GameObject newFx = FxManager.Instance.DemandeFx(FxManager.fxType.Hit);
+        FxManager.Instance.DemandeFx(FxType.Hit, collision);
 
-        newFx.transform.position = collision;
-        newFx.transform.rotation = Random.rotation;
+        //newFx.transform.position = collision;
+        //newFx.transform.rotation = Random.rotation;
     }
     #endregion
 
