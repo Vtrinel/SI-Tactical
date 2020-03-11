@@ -8,6 +8,9 @@ public class TouniEnemy : IAEnemyVirtual
 {
     public float angleAttack;
 
+    [Header("Feedbacks")]
+    [SerializeField] Sound soundAttack = Sound.TouniATK;
+
     [SerializeField] LayerMask objCanBeAttacked;
 
     private void OnEnable()

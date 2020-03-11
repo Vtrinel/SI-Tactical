@@ -36,8 +36,6 @@ public class GameManager : MonoBehaviour
         turnManager.OnStartPlayerTurn += StartPlayerTurn;
         turnManager.OnEndPlayerTurn += EndPlayerTurn;
 
-        //turnManager.StartPlayerTurn();
-
         enemiesManager.OnInGameEnemiesChanged += turnManager.RefreshEnemyList;
         enemiesManager.GetAllAlreadyPlacedEnemies();
 
@@ -47,7 +45,12 @@ public class GameManager : MonoBehaviour
 
         playerExperienceManager.OnSetChanged += competencesUsabilityManager.UpdateSet;
         playerExperienceManager.OnMenuOpenedOrClosed += UpdatePlayerActability;
-        playerExperienceManager.SetUp();
+        playerExperienceManager.SetUp();        
+    }
+
+    private void Start()
+    {
+        SetUpGame();
     }
 
     private void Update()
@@ -326,11 +329,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //Action Event
-    public Action OnAnimDiscThrown;
-    public Action OnAnimDiscCallback;
-    public Action OnAnimSpecialLaunch;
-
     public void OnPlayerClickAction()
     {
         if (OnMouseInUI)
@@ -357,11 +355,11 @@ public class GameManager : MonoBehaviour
             switch (competencesUsabilityManager.GetCurrentCompetenceType)
             {
                 case ActionType.Throw:
-                    StartCoroutine(LaunchThrow());
+                    competencesUsabilityManager.LaunchThrowCompetence(player.gameObject);
                     break;
 
                 case ActionType.Recall:
-                    StartCoroutine(LaunchRecall());
+                    competencesUsabilityManager.LaunchRecallCompetence();
                     break;
 
                 case ActionType.Special:
@@ -377,28 +375,6 @@ public class GameManager : MonoBehaviour
 
         if(validatedAction)
             UpdatePlayerActability();
-    }
-
-    [SerializeField] float timerAnimThrow = 1;
-    [SerializeField] float timerAnimRecall = 1;
-    [SerializeField] float timerAnimSpecial = 1;
-
-    IEnumerator LaunchThrow()
-    {
-        yield return new WaitForSeconds(timerAnimThrow);
-        competencesUsabilityManager.LaunchThrowCompetence(player.gameObject);
-    }
-
-    IEnumerator LaunchRecall()
-    {
-        yield return new WaitForSeconds(timerAnimRecall);
-        competencesUsabilityManager.LaunchRecallCompetence();
-    }
-
-    IEnumerator LaunchSpecial(bool value)
-    {
-        yield return new WaitForSeconds(timerAnimSpecial);
-        //validatedAction = competencesUsabilityManager.LaunchSpecialCompetence();
     }
 
     public void CallSelectActionEvent(ActionType actionType)
@@ -473,15 +449,34 @@ public class GameManager : MonoBehaviour
     bool gameLost = false;
     [Header("Game Management")]
     [SerializeField] KeyCode gameManagementActionKey = KeyCode.Return;
+    [SerializeField] bool playIntroCutscene = false;
+    [SerializeField] float cutsceneStayOnObjectiveDuration = 2f;
+    [SerializeField] float cutsceneObjectiveToPlayerDuration = 4f;
+    [SerializeField] AnimationCurve cutsceneCameraMovementCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
+    private void SetUpGame()
+    {
+        if (playIntroCutscene)
+        {
+            CameraManager.instance.GetPlayerCamera.InstantPlaceCameraOnTransform(levelManager.GetGoalZone.transform);
+            StartCoroutine(IntroCutscene());
+        }
+        else
+        {
+            CameraManager.instance.GetPlayerCamera.InstantPlaceCameraOnTransform(player.transform);
+            StartGame();
+        }
+    }
+    IEnumerator IntroCutscene()
+    {
+        yield return new WaitForSeconds(cutsceneStayOnObjectiveDuration);
+        CameraManager.instance.GetPlayerCamera.StartMovementToward(player.transform, cutsceneObjectiveToPlayerDuration, cutsceneCameraMovementCurve);
+        CameraManager.instance.GetPlayerCamera.SetUpEndMovementEvent(StartGame);
+    }
 
     public void UpdateGameManagement()
     {
-        if (!gameStarted)
-        {
-            if (Input.GetKeyDown(gameManagementActionKey))
-                StartGame();
-        }
-        else if (gameWon || gameLost)
+        if (gameWon || gameLost)
         {
             if (Input.GetKeyDown(gameManagementActionKey))
                 RestartGame();

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class CameraTarget : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] AnimationCurve movementCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    AnimationCurve initialMovementCurve = default;
 
     [Header("Min Duration")]
     [SerializeField] float minDuration = 0.1f;
@@ -21,6 +23,14 @@ public class CameraTarget : MonoBehaviour
     Vector3 fakedLocalPosition = default;
     Transform trToFollow = default;
 
+    Action OnCameraMovementEndedEvent = default;
+
+    private void Awake()
+    {
+        movementDurationSystem.SetUp(OnCameraMovementEnded);
+        initialMovementCurve = movementCurve;
+    }
+
     bool isUsingPlayerMovement = default;
     public void SetIsUsingPlayerMovement(bool usingPlayerMovement)
     {
@@ -29,14 +39,41 @@ public class CameraTarget : MonoBehaviour
 
     public void StartMovement(Transform newTrToFollow)
     {
+        float distance = movementStartFakePos.magnitude;
+        float duration = Mathf.Lerp(minDuration, maxDuration, Mathf.Clamp((maxDurationDistance - distance) / (maxDurationDistance - minDurationDistance), 0, 1));
+        StartMovement(newTrToFollow, duration, initialMovementCurve);
+    }
+
+    public void StartMovement(Transform newTrToFollow, float forcedDuration, AnimationCurve forcedMovementCurve)
+    {
+        movementCurve = forcedMovementCurve;
+
         trToFollow = newTrToFollow;
         movementStartFakePos = transform.position - trToFollow.position;
-        float distance = movementStartFakePos.magnitude;
 
-        float duration = Mathf.Lerp(minDuration, maxDuration, Mathf.Clamp((maxDurationDistance - distance)/ (maxDurationDistance - minDurationDistance), 0, 1));
+        float duration = forcedDuration;
 
         movementDurationSystem.ChangeTimerValue(duration);
         movementDurationSystem.StartTimer();
+    }
+
+    public void InstantPlace(Transform newTrToFollow)
+    {
+        trToFollow = newTrToFollow;
+        fakedLocalPosition = Vector3.zero;
+        movementDurationSystem.EndTimer();
+    }
+
+    public void SetActionToPlayOnEndedMovement(Action OnMovementEnd)
+    {
+        OnCameraMovementEndedEvent = OnMovementEnd;
+    }
+
+    public void OnCameraMovementEnded()
+    {
+        OnCameraMovementEndedEvent?.Invoke();
+        OnCameraMovementEndedEvent = null;
+        movementCurve = initialMovementCurve;
     }
 
     public void Update()
