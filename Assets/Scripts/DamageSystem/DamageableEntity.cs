@@ -50,6 +50,10 @@ public class DamageableEntity : MonoBehaviour
 
         if (damagesParameters._damages == 0)
             return;
+        if (!_isPlayer)
+        {
+            TimeManager.Instance.StartFreezeFrame();
+        }
 
         LoseLife(damagesParameters._damages);
 
