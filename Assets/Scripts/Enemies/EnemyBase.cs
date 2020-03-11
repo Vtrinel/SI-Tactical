@@ -33,11 +33,9 @@ public class EnemyBase : MonoBehaviour
 
     public void UpdateLifeBarFill(int currentAmount, int damageDelta)
     {
-        print(currentAmount);
         int i = 1;
         foreach(Image bar in lifeBarList)
         {
-            print(i + " : " + !(currentAmount < i));
             bar.enabled = !(currentAmount < i);
             i++;
         }
@@ -48,7 +46,7 @@ public class EnemyBase : MonoBehaviour
     {
         CheckForLootedDisc();
 
-        Debug.Log(name + " (Enemy) is dead");
+        //Debug.Log(name + " (Enemy) is dead");
         spawned = false;
         setedUpInitiative = false;
         
