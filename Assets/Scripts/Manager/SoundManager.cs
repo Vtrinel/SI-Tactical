@@ -35,7 +35,7 @@ public class SoundManager : MonoBehaviour
     public void Initialized()
     {
         soundTimerDictionary = new Dictionary<Sound, float>();
-        soundTimerDictionary[Sound.PlayerMove] = 0f;
+        //soundTimerDictionary[Sound.PlayerMove] = 0f;
     }
 
     // To play a sound from another class : SoundManagerScript.PlaySound("NameOfTheSound");
@@ -66,22 +66,25 @@ public class SoundManager : MonoBehaviour
         switch (sound)
         {
             // Sound that shouldn't be repeated to fast
-            case Sound.PlayerMove:
-                if (soundTimerDictionary.ContainsKey(sound))
-                {
-                    float lastTimePlayed = soundTimerDictionary[sound];
-                    float playerMoveTimerMax = 0.05f;
-                    if (lastTimePlayed + playerMoveTimerMax < Time.time)
-                    {
-                        soundTimerDictionary[sound] = Time.time;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                break;
+            //case Sound.PlayerMove:
+            //    if (soundTimerDictionary.ContainsKey(sound))
+            //    {
+            //        float lastTimePlayed = soundTimerDictionary[sound];
+            //        float playerMoveTimerMax = 0.05f;
+            //        if (lastTimePlayed + playerMoveTimerMax < Time.time)
+            //        {
+            //            soundTimerDictionary[sound] = Time.time;
+            //            return true;
+            //        }
+            //        else
+            //        {
+            //            return false;
+            //        }
+            //    }
+            //    break;
+
+            case Sound.none:
+                return false;
 
             default:
                 return true;
@@ -103,21 +106,35 @@ public class SoundManager : MonoBehaviour
     }
 
 
-    // List of all the sounds
-    public enum Sound
-    {
-        PlayerMove,
-        PlayerAttack,
-        EnnemyHit,
-        EnnemyDie,
-        GainGold
-    }
+   
+}
 
-    // Group a name and an audioclip
-    [System.Serializable]
-    public class SoundAudioClip
-    {
-        public SoundManager.Sound sound;
-        public AudioClip audioClip;
-    }
+// List of all the sounds
+public enum Sound
+{
+    ThrowDisc,
+    RecallDisc,
+    PlayerGetHit,
+    PlayerMovement,
+    ExplosionDisc,
+    ShockwaveDisc,
+    EnemyDamaged,
+    EnemyDeath,
+    EnemyMove,
+    EnemyMove2,
+    EnemyMove3,
+    EnemyMove4,
+    CultistATK,
+    TouniATK,
+    ShieldGetHit,
+    WallGetHit,
+    none
+}
+
+// Group a name and an audioclip
+[System.Serializable]
+public class SoundAudioClip
+{
+    public Sound sound;
+    public AudioClip audioClip;
 }

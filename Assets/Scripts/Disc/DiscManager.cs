@@ -192,6 +192,8 @@ public class DiscManager : MonoBehaviour
     public Action<DiscScript> OnDiscAdded;
     public void PlayerRetreiveDisc(DiscScript retreivedDisc)
     {
+        SoundManager.Instance.PlaySound(Sound.RecallDisc, player.position);
+
         throwedDiscs.Remove(retreivedDisc);
         ReturnDiscInPool(retreivedDisc);
         if (possessedDiscs.Count < maxNumberOfPossessedDiscs)
@@ -261,6 +263,8 @@ public class DiscManager : MonoBehaviour
             throwedDiscs.Add(newDisc);
             OnDiscConsommed?.Invoke();
             OnDiscUpdate?.Invoke(possessedDiscs);
+
+            SoundManager.Instance.PlaySound(Sound.ThrowDisc, newDisc.transform.position);
         }
         return newDisc;
     }
