@@ -11,9 +11,9 @@ public class VirtualCamera : MonoBehaviour
 
     [Header("Camera Zoom settings")]
     [SerializeField, ReadOnly] float iniCameraDistance = 15;
-    [SerializeField, ReadOnly] CinemachineFramingTransposer cinemachineFraming = default;
+    [SerializeField, ReadOnly] protected CinemachineFramingTransposer cinemachineFraming = default;
     [SerializeField, ReadOnly] bool isZooming = default;
-    [SerializeField, ReadOnly] Vector3 iniDamping = default;
+    [SerializeField, ReadOnly] protected Vector3 iniDamping = default;
     [SerializeField] Vector3 zoomDamping = default;
     [SerializeField] float resetDampingDelay = 0.5f;
 
