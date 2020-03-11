@@ -21,6 +21,7 @@ public class LevelGoalZone : MonoBehaviour
     [SerializeField] Color playerIsInRangeColor = Color.yellow;
     [SerializeField] Image progressBar = default;
 
+    bool playerEnteredOnce = false;
     bool playerIsInRange = false;
     public void CheckIfPlayerIsInRange(Vector3 playerPos)
     {
@@ -42,6 +43,11 @@ public class LevelGoalZone : MonoBehaviour
         playerIsInRange = inRange;
 
         debugZone.color = playerIsInRange ? playerIsInRangeColor : normalColor;
+        if (!playerEnteredOnce)
+        {
+            playerEnteredOnce = true;
+            UIManager.Instance.OnGoalZoneReached();
+        }
     }
 
     public int GetProgressionAmount()

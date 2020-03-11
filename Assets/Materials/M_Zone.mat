@@ -10,7 +10,7 @@ Material:
   m_Name: M_Zone
   m_Shader: {fileID: 4800000, guid: 3d078f904e6934b429d4faab98263f6f, type: 3}
   m_ShaderKeywords: 
-  m_LightmapFlags: 4
+  m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -52,7 +52,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _T_Zone_M:
-        m_Texture: {fileID: 2800000, guid: a381390953b51bd4d815e366dd277880, type: 3}
+        m_Texture: {fileID: 2800000, guid: 7119a501250f58c49a197569a168cbe2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TextureSample0:
@@ -64,6 +64,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - _BulgeSpeed: 0.193
     - _DisplacementStrengh: 100
     - _DisplacmentStrengh: 0
     - _GradientMax: 0
@@ -76,7 +77,7 @@ Material:
     - _Tilling: 0.5
     - __dirty: 0
     m_Colors:
-    - _Color: {r: 1, g: 0.55620337, b: 0, a: 0}
+    - _Color: {r: 0.24528301, g: 0.13516453, b: 0, a: 0}
     - _Displacement: {r: 0, g: 0, b: 0.008, a: 0}
     - _Emmissive: {r: 1, g: 0.5883902, b: 0.06132078, a: 0}
     - _PannerSpeed: {r: 0, g: 0, b: 0, a: 0}

@@ -7,6 +7,7 @@ public class PlayerAnimation : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] Animator playerAnimator;
+    PlayerController _player;
 
     [Header("Parameter Name")]
     [SerializeField] string throwTriggerParameter = "Throw";
@@ -14,6 +15,8 @@ public class PlayerAnimation : MonoBehaviour
     [SerializeField] string specialTriggerParameter = "Special";
     [SerializeField] string isMovingBoolParameter = "IsMoving";
     [SerializeField] string damagedTriggerParameter = "Damaged";
+    [SerializeField] string rageTriggerParameter = "Rage";
+    [SerializeField] string deathTriggerParameter = "Dead";
 
     [Header("Debug")]
     [SerializeField] bool debugMode;
@@ -21,9 +24,10 @@ public class PlayerAnimation : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscThrown += Throw;
-        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscCallback += Callback;
+        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscThrownAnimEvent += Throw;
+        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscRecallAnimEvent += Callback;
         GameManager.Instance.GetCompetencesUsabilityManager().OnSpecialLaunch += LaunchSpecial;
+        GameManager.Instance.GetPlayer.OnPlayerReceivedDamages += Damaged;
         GameManager.Instance.GetPlayer.OnMoveChange += SetMovement;
 
         if(playerAnimator == null)
@@ -35,11 +39,17 @@ public class PlayerAnimation : MonoBehaviour
 
     private void OnDisable()
     {
-        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscThrown -= Throw;
-        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscCallback -= Callback;
+        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscThrownAnimEvent -= Throw;
+        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscRecallAnimEvent -= Callback;
         GameManager.Instance.GetCompetencesUsabilityManager().OnSpecialLaunch -= LaunchSpecial;
+        GameManager.Instance.GetPlayer.OnPlayerReceivedDamages -= Damaged;
         GameManager.Instance.GetPlayer.OnMoveChange -= SetMovement;
 
+    }
+
+    private void Start()
+    {
+        _player = GameManager.Instance.GetPlayer;
     }
 
     private void Update()
@@ -74,8 +84,32 @@ public class PlayerAnimation : MonoBehaviour
     }
 
     [Button]
-    public void Damaged()
+    public void Damaged(bool dead)
     {
         playerAnimator.SetTrigger(damagedTriggerParameter);
+        playerAnimator.SetTrigger(dead ? deathTriggerParameter : rageTriggerParameter);
     }
+
+    #region Anim Events
+    public void LaunchCompetenceForReal()
+    {
+        GameManager.Instance.LaunchCompetenceForReal();
+    }
+
+    public void PlayRageFx()
+    {
+        Debug.Log("PLAY RAGE FX");
+    }
+
+    public void CreateRageZone()
+    {
+        _player.PlayRage();
+    }
+
+    public void EndRageAnimation()
+    {
+        Debug.Log("GO ON");
+        TurnManager.Instance.EndPlayerRage();
+    }
+    #endregion
 }

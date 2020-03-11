@@ -46,7 +46,7 @@ public class UIManager : MonoBehaviour
             _instance = this;
         }
 
-        ShowStartPanel();
+        //ShowStartPanel();
     }
 
     public void ChangeEndTurnButtonVisibility(bool visible)
@@ -176,23 +176,28 @@ public class UIManager : MonoBehaviour
     {
         totalNumberOfTurnsToWait = numberOfTurnsToWait;
         remainingNumberOfTurnsToWait = numberOfTurnsToWait;
-        turnGoalText.text = "Stay near the god's statue for " + remainingNumberOfTurnsToWait + " more turns";
+        turnGoalText.text = "Stay near the god's statue for " + totalNumberOfTurnsToWait + " turns";
         turnGoalValueText.text = remainingNumberOfTurnsToWait.ToString();
 
-        goalPanelAnimator.SetTrigger("showGoal");
+        goalPanelAnimator.SetTrigger("showGoalPanel");
     }
 
     public void OnGoalZoneReached()
     {
-        goalPanelAnimator.SetTrigger("reachedGoal");
+        goalPanelAnimator.SetTrigger("reachedGoalZone");
     }
 
     public void UpdateRemainingNumberOfTurns(int remaining)
     {
         remainingNumberOfTurnsToWait = remaining;
-        turnGoalText.text = "Stay near the god's statue for " + remainingNumberOfTurnsToWait + " more turns";
+        //turnGoalText.text = "Stay near the god's statue for " + remainingNumberOfTurnsToWait + " more turns";
         turnGoalValueText.text = remainingNumberOfTurnsToWait.ToString();
         goalPanelAnimator.SetTrigger("updateGoal");
+    }
+
+    public void OnGoalTurnAmountReached()
+    {
+        goalPanelAnimator.SetTrigger("reachedGoalTurn");
     }
     #endregion
 }

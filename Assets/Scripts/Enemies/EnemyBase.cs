@@ -8,11 +8,16 @@ public class EnemyBase : MonoBehaviour
 {
     [SerializeField] EnemyType enemyType = EnemyType.TouniBase;
     public EnemyType GetEnemyType => enemyType;
-    public int goldGain = 10;
+    [SerializeField] int goldGain = 10;
 
     private void Start()
     {
         SpawnEnemy(transform.position, _lootedDiscType);
+        if(_lootedDiscType != DiscType.None)
+        {
+            TouniFourrureBasique.material = TouniFourrureAndMaskAlt;
+            TouniMaskBasique.material = TouniFourrureAndMaskAlt;
+        }
     }
 
     [Header("References")]
@@ -21,6 +26,11 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] Transform lifeBarParent;
     [SerializeField] GameObject lifeBarEnemyPrefab;
     List<Image> lifeBarList = new List<Image>();
+
+    public MeshRenderer TouniFourrureBasique;
+    public MeshRenderer TouniMaskBasique;
+    public Material TouniFourrureAndMaskAlt;
+
 
     void InitLifeBar(int lifeNumber)
     {
@@ -51,6 +61,7 @@ public class EnemyBase : MonoBehaviour
         
         OnEnemyDeath?.Invoke(this);
         PlayerExperienceManager.Instance.GainGold(goldGain);
+        SoundManager.Instance.PlaySound(Sound.EnemyDeath, gameObject.transform.position);
         Destroy(gameObject);
         
     }   

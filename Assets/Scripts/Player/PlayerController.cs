@@ -10,14 +10,14 @@ public class PlayerController : MonoBehaviour
     {
         GameManager.Instance.OnPlayerLifeAmountChanged += DebugLifeAmount;
         damageReceiptionSystem.OnLifeReachedZero += LifeReachedZero;
-        damageReceiptionSystem.OnReceivedDamages += StartPlayerRage;
+        damageReceiptionSystem.OnReceivedDamages += OnReceivedDamages;
     }
 
     private void OnDisable()
     {
         GameManager.Instance.OnPlayerLifeAmountChanged -= DebugLifeAmount;
         damageReceiptionSystem.OnLifeReachedZero -= LifeReachedZero;
-        damageReceiptionSystem.OnReceivedDamages -= StartPlayerRage;
+        damageReceiptionSystem.OnReceivedDamages -= OnReceivedDamages;
     }
 
     private void Start()
@@ -55,17 +55,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] EffectZone rageEffectZonePrefab = default;
     [SerializeField] float rageEffectZoneVerticalOffset = 1f;
 
-    public void StartPlayerRage(int currentLife, int lifeDifferential)
+    public Action<bool> OnPlayerReceivedDamages = default;
+
+    public void OnReceivedDamages(int currentLife, int lifeDifferential)
     {
-        if (currentLife == 0)
-            return;
+        TurnManager.Instance.InterruptEnemiesTurn();
+        OnPlayerReceivedDamages?.Invoke(currentLife == 0);
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+    }
 
-        //Debug.Log("RAGE");
-
+    public void PlayRage()
+    {
         EffectZone newRageEffectZone = Instantiate(rageEffectZonePrefab);
         newRageEffectZone.StartZone(transform.position + Vector3.up * rageEffectZoneVerticalOffset);
-
-        TurnManager.Instance.InterruptEnemiesTurn();
     }
 
     public void LifeReachedZero()
@@ -197,8 +199,38 @@ public class PlayerController : MonoBehaviour
             OnPlayerReachedMovementDestination?.Invoke();
         }
     }
-    public System.Action OnPlayerReachedMovementDestination;
-    #endregion    
+    public Action OnPlayerReachedMovementDestination;
+    #endregion
 
-    public CircularDiscRoation circularDisc;
+    #region Others
+    TimerSystem lookRotationTimer = new TimerSystem();
+    AnimationCurve rotationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    Vector3 startLookDirection = Vector3.zero;
+    Vector3 targetLookDirection = Vector3.zero;
+
+    public void StartLookAt(Vector3 position)
+    {
+        lookRotationTimer.ChangeTimerValue(0.3f);
+        startLookDirection = transform.forward;
+        targetLookDirection = position - transform.position;
+        targetLookDirection.y = 0;
+        targetLookDirection.Normalize();
+
+        StartCoroutine(LookAtPosition());
+    }
+
+    IEnumerator LookAtPosition()
+    {
+        lookRotationTimer.StartTimer();
+
+        while (!lookRotationTimer.TimerOver)
+        {
+            lookRotationTimer.UpdateTimer();
+            Vector3 currentLookDir = Vector3.Slerp(startLookDirection, targetLookDirection, lookRotationTimer.GetTimerCoefficient);
+            float rotY = Mathf.Atan2(currentLookDir.x, currentLookDir.z) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, rotY, 0);
+            yield return new WaitForEndOfFrame();
+        }
+    }
+    #endregion
 }

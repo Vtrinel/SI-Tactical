@@ -28,14 +28,16 @@ public class SoundManager : MonoBehaviour
     //[SerializeField] float BGMFadeSpead;
     //[SerializeField] AudioClip BGM;
 
+    [Header("audios enemy movements")]
+    public AudioClip[] enemyMovementList;
+
     [Header("Audioclip list")]
     public SoundAudioClip[] soundAudioClipList;
 
-
-    public void Initialized()
+    public void Start()
     {
         soundTimerDictionary = new Dictionary<Sound, float>();
-        soundTimerDictionary[Sound.PlayerMove] = 0f;
+        soundTimerDictionary[Sound.EnemyMove] = 0f;
     }
 
     // To play a sound from another class : SoundManagerScript.PlaySound("NameOfTheSound");
@@ -65,12 +67,12 @@ public class SoundManager : MonoBehaviour
     {
         switch (sound)
         {
-            // Sound that shouldn't be repeated to fast
-            case Sound.PlayerMove:
+            //Sound that shouldn't be repeated to fast
+            case Sound.EnemyMove:
                 if (soundTimerDictionary.ContainsKey(sound))
                 {
                     float lastTimePlayed = soundTimerDictionary[sound];
-                    float playerMoveTimerMax = 0.05f;
+                    float playerMoveTimerMax = 0.4f;
                     if (lastTimePlayed + playerMoveTimerMax < Time.time)
                     {
                         soundTimerDictionary[sound] = Time.time;
@@ -82,6 +84,9 @@ public class SoundManager : MonoBehaviour
                     }
                 }
                 break;
+
+            case Sound.none:
+                return false;
 
             default:
                 return true;
@@ -96,6 +101,29 @@ public class SoundManager : MonoBehaviour
         {
             if (soundAudioClip.sound == sound)
             {
+                // Random sound for the enemy movement
+                if (sound == Sound.EnemyMove)
+                {
+                    var random = Random.value;
+
+                    if (random >= 0.75)
+                    {
+                        return enemyMovementList[0];
+                    }
+                    if (random >= 0.50 && random < 0.75)
+                    {
+                        return enemyMovementList[1];
+                    }
+                    if (random >= 0.25 && random < 0.50)
+                    {
+                        return enemyMovementList[2];
+                    }
+                    if (random < 0.25)
+                    {
+                        return enemyMovementList[3];
+                    }
+                }
+                
                 return soundAudioClip.audioClip;
             }
         }
@@ -103,21 +131,32 @@ public class SoundManager : MonoBehaviour
     }
 
 
-    // List of all the sounds
-    public enum Sound
-    {
-        PlayerMove,
-        PlayerAttack,
-        EnnemyHit,
-        EnnemyDie,
-        GainGold
-    }
 
-    // Group a name and an audioclip
-    [System.Serializable]
-    public class SoundAudioClip
-    {
-        public SoundManager.Sound sound;
-        public AudioClip audioClip;
-    }
+}
+
+// List of all the sounds
+public enum Sound
+{
+    ThrowDisc,
+    RecallDisc,
+    PlayerGetHit,
+    PlayerMovement,
+    ExplosionDisc,
+    ShockwaveDisc,
+    EnemyDamaged,
+    EnemyDeath,
+    EnemyMove,
+    CultistATK,
+    TouniATK,
+    ShieldGetHit,
+    WallGetHit,
+    none
+}
+
+// Group a name and an audioclip
+[System.Serializable]
+public class SoundAudioClip
+{
+    public Sound sound;
+    public AudioClip audioClip;
 }
