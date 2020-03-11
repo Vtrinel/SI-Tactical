@@ -186,6 +186,10 @@ MonoBehaviour:
   lifeBarParent: {fileID: 2519136697415901786}
   lifeBarEnemyPrefab: {fileID: 5825457385157316566, guid: 839c48820711a904e85284d88787d70d,
     type: 3}
+  TouniFourrureBasique: {fileID: 4134900633940122005}
+  TouniMaskBasique: {fileID: 1597767924429795665}
+  TouniFourrureAndMaskAlt: {fileID: 2100000, guid: 6b98a8472f7eb21479a5e6101368c9c1,
+    type: 2}
   baseInitiative: 5
   _lootedDiscType: 0
   lootDiscIndicator: {fileID: 0}
@@ -272,8 +276,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16896
   myShowPath: {fileID: 6440992863608027990}
-  lineTest: {fileID: 0}
   angleAttack: 60
+  soundAttack: 13
   objCanBeAttacked:
     serializedVersion: 2
     m_Bits: 1536
@@ -478,6 +482,18 @@ PrefabInstance:
 --- !u!4 &7363764972736929242 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 13cc0886eb479864b98f483710cab353,
+    type: 3}
+  m_PrefabInstance: {fileID: 2543388050313672384}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1597767924429795665 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -5375181933916600431, guid: 13cc0886eb479864b98f483710cab353,
+    type: 3}
+  m_PrefabInstance: {fileID: 2543388050313672384}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &4134900633940122005 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1885305980210818901, guid: 13cc0886eb479864b98f483710cab353,
     type: 3}
   m_PrefabInstance: {fileID: 2543388050313672384}
   m_PrefabAsset: {fileID: 0}

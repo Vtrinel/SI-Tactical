@@ -13,6 +13,11 @@ public class EnemyBase : MonoBehaviour
     private void Start()
     {
         SpawnEnemy(transform.position, _lootedDiscType);
+        if(_lootedDiscType != DiscType.None)
+        {
+            TouniFourrureBasique.material = TouniFourrureAndMaskAlt;
+            TouniMaskBasique.material = TouniFourrureAndMaskAlt;
+        }
     }
 
     [Header("References")]
@@ -21,6 +26,11 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] Transform lifeBarParent;
     [SerializeField] GameObject lifeBarEnemyPrefab;
     List<Image> lifeBarList = new List<Image>();
+
+    public MeshRenderer TouniFourrureBasique;
+    public MeshRenderer TouniMaskBasique;
+    public Material TouniFourrureAndMaskAlt;
+
 
     void InitLifeBar(int lifeNumber)
     {

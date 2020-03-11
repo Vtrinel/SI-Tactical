@@ -8,9 +8,6 @@ public class TouniEnemy : IAEnemyVirtual
 {
     public float angleAttack;
 
-    [Header("Feedbacks")]
-    [SerializeField] Sound soundAttack = Sound.TouniATK;
-
     [SerializeField] LayerMask objCanBeAttacked;
 
     private void OnEnable()
@@ -89,6 +86,8 @@ public class TouniEnemy : IAEnemyVirtual
             }
             yield return null;
 
+            SoundManager.Instance.PlaySound(Sound.EnemyMove, gameObject.transform.position);
+
         } while (myNavAgent.remainingDistance != 0);
 
 
@@ -112,6 +111,7 @@ public class TouniEnemy : IAEnemyVirtual
         CollisionAttack();
 
         GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, new DamagesParameters(damage));
+        SoundManager.Instance.PlaySound(Sound.TouniATK, GameManager.Instance.GetPlayer.transform.position);
     }
 
     void CollisionAttack()
