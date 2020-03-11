@@ -18,6 +18,8 @@ public class CameraTarget : MonoBehaviour
     TimerSystem movementDurationSystem = new TimerSystem();
     Vector3 movementStartPos = Vector3.zero;
 
+    Transform trToFollow = default;
+
     public void StartMovement()
     {
         movementStartPos = transform.localPosition;
