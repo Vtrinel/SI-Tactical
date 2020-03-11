@@ -88,6 +88,8 @@ public class CultisteEnemy : IAEnemyVirtual
             destination = CalculDestination(player.transform.position);
         }
 
+        LookPosition(destination);
+
         myNavAgent.SetDestination(destination);
         myNavAgent.isStopped = false;
 

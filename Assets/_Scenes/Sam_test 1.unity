@@ -4644,7 +4644,7 @@ PrefabInstance:
     - target: {fileID: 3894817726808940225, guid: 893cd22381f57fc4c9b33803043b0314,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.9238793
+      value: -0.99979943
       objectReference: {fileID: 0}
     - target: {fileID: 3894817726808940225, guid: 893cd22381f57fc4c9b33803043b0314,
         type: 3}
@@ -4654,7 +4654,7 @@ PrefabInstance:
     - target: {fileID: 3894817726808940225, guid: 893cd22381f57fc4c9b33803043b0314,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.38268393
+      value: -0.020029671
       objectReference: {fileID: 0}
     - target: {fileID: 3894817726808940225, guid: 893cd22381f57fc4c9b33803043b0314,
         type: 3}
@@ -4669,7 +4669,7 @@ PrefabInstance:
     - target: {fileID: 3894817726808940225, guid: 893cd22381f57fc4c9b33803043b0314,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -135
+      value: -182.295
       objectReference: {fileID: 0}
     - target: {fileID: 3894817726808940225, guid: 893cd22381f57fc4c9b33803043b0314,
         type: 3}
@@ -4680,6 +4680,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Touni
+      objectReference: {fileID: 0}
+    - target: {fileID: 8771358726133287938, guid: 893cd22381f57fc4c9b33803043b0314,
+        type: 3}
+      propertyPath: allShieldPos
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 893cd22381f57fc4c9b33803043b0314, type: 3}
@@ -26314,6 +26319,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5034729389730966010, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: testDiscType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6538747667959666325, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
         type: 3}
       propertyPath: playerController
@@ -26366,10 +26376,50 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7898826191790649243, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7898826191790649243, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: m_textInfo.spaceCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7898826191790649243, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7898826191790649243, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7898826191790649243, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: m_textInfo.pageCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7898826191790649243, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: m_textInfo.materialCount
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8580657153005565620, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
         type: 3}
       propertyPath: m_Name
       value: MustHavePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 8714799692346380087, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8714799692346380087, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6, type: 3}

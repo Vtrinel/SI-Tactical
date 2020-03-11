@@ -9,6 +9,7 @@ public class PlayerCamera : VirtualCamera
     [Header("Player Cam values")]
     [SerializeField] PlayerController player = default;
     [SerializeField] CameraTarget followTransform = default;
+    Transform trToFollow = default;
 
     protected override void OnEnable()
     {
@@ -92,6 +93,7 @@ public class PlayerCamera : VirtualCamera
 
     public void StartMovementToward(Transform tr)
     {
+        //trToFollow
         followTransform.transform.SetParent(tr);
         followTransform.StartMovement();
     }
