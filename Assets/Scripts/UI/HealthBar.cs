@@ -12,36 +12,16 @@ public class HealthBar : MonoBehaviour
 
     public GameObject healthPoint;
 
-    [SerializeField] List<GameObject> allLifeBarElement = new List<GameObject>();
+    [SerializeField] List<LifeElement> allLifeBarElement = new List<LifeElement>();
 
     private void OnEnable()
     {
         GameManager.Instance.OnPlayerLifeAmountChanged += UpdateLifeBar;
-        GameManager.Instance.OnPlayerMaxLifeAmountChanged += UpdateMaxLifeBar;
     }
 
     private void OnDisable()
     {
         GameManager.Instance.OnPlayerLifeAmountChanged -= UpdateLifeBar;
-        GameManager.Instance.OnPlayerMaxLifeAmountChanged -= UpdateMaxLifeBar;
-    }
-
-
-    void Start()
-    {
-        maxHealth = GameManager.Instance.maxPlayerLifeAmount;
-        currentHealth = GameManager.Instance.GetCurrentPlayerLifeAmount;
-
-        CreateHealthBar();
-    }
-
-    void CreateHealthBar()
-    {
-        for (int i = 0; i < maxHealth; i++)
-        {
-            GameObject newLifeBarElement = Instantiate(healthPoint, gameObject.transform);
-            allLifeBarElement.Add(newLifeBarElement);
-        }
     }
 
     void UpdateLifeBar(int _numberLives)
@@ -50,49 +30,10 @@ public class HealthBar : MonoBehaviour
 
         int i = 0;
 
-        foreach(GameObject _lifeBar in allLifeBarElement)
+        foreach(LifeElement _lifeElement in allLifeBarElement)
         {
-            if(i < currentHealth)
-            {
-                //Oui
-                _lifeBar.GetComponent<Animator>().SetBool("Statut", true);
-            }
-            else
-            {
-                //Non
-                _lifeBar.GetComponent<Animator>().SetBool("Statut", false);
-            }
+            _lifeElement.SetValue(i < currentHealth);
             i++;
-        }
-    }
-
-    void UpdateMaxLifeBar(int _numberLives)
-    {
-        // Add the new bars of lifes
-        for (int i = 0; i < _numberLives; i++)
-        {
-            GameObject newLifeBarElement = Instantiate(healthPoint, gameObject.transform);
-            allLifeBarElement.Add(newLifeBarElement);
-        }
-
-        maxHealth += _numberLives;
-        currentHealth += _numberLives;
-
-        int j = 0;
-
-        foreach (GameObject _lifeBar in allLifeBarElement)
-        {
-            if (j < currentHealth)
-            {
-                //Oui
-                _lifeBar.GetComponent<Animator>().SetBool("Statut", true);
-            }
-            else
-            {
-                //Non
-                _lifeBar.GetComponent<Animator>().SetBool("Statut", false);
-            }
-            j++;
         }
     }
 }

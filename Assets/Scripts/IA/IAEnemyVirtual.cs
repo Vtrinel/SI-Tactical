@@ -39,7 +39,7 @@ public class IAEnemyVirtual : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, player.transform.position) < detectionPlayerRange)
         {
-            Debug.DrawRay(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, Color.green, 20);
+            //Debug.DrawRay(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, Color.magenta, 20);
 
             RaycastHit hit;
             if (Physics.Raycast(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, out hit, detectionPlayerRange, detectionMaskRaycast))
@@ -54,18 +54,17 @@ public class IAEnemyVirtual : MonoBehaviour
         return false;
     }
 
-    public Vector3 CalculDestination(Vector3 _targetPos)
-    {
-        myNavAgent.isStopped = true;
-        myNavAgent.SetDestination(_targetPos);
+    public Vector3 CalculDestination(Vector3 _targetPos) {
 
-        NavMeshPath _path = myNavAgent.path;
+        myNavAgent.isStopped = true;
+        NavMeshPath _path = new NavMeshPath();
+
+        NavMesh.CalculatePath(transform.position, _targetPos, NavMesh.AllAreas, _path);
 
         float currentDistance = 0;
 
         for (var i = 1; i < _path.corners.Length; i++)
         {
-
             if (currentDistance + Vector3.Distance(_path.corners[i - 1], _path.corners[i]) < distanceOfDeplacement)
             {
                 currentDistance += Vector3.Distance(_path.corners[i - 1], _path.corners[i]);
@@ -82,7 +81,12 @@ public class IAEnemyVirtual : MonoBehaviour
             }
         }
 
-        return Vector3.zero;
+        Debug.LogWarning("ENEMY : PATH NOT FOUND (" + _path.corners.Length + " points calculated)");
+        return _targetPos;
     }
 
+    public void LookPosition(Vector3 _pos)
+    {
+        transform.LookAt(_pos);
+    }
 }

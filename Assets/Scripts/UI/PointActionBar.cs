@@ -6,38 +6,27 @@ using UnityEngine;
 public class PointActionBar : MonoBehaviour
 {
     private int maxPoint = 6;
-
     private int currentPoint;
-
     public GameObject pointAction;
+    [SerializeField] List<PAElement> allPointBarElement = new List<PAElement>();
 
-    List<GameObject> allPointBarElement = new List<GameObject>();
 
     private void OnEnable()
     {
         GameManager.Instance.OnActionPointsAmountChanged += UpdatePointBar;
+        //TurnManager.Instance.OnStartPlayerTurn += ResetStateBar;
     }
 
     private void OnDisable()
     {
         GameManager.Instance.OnActionPointsAmountChanged -= UpdatePointBar;
+        //TurnManager.Instance.OnStartPlayerTurn -= ResetStateBar;
     }
 
     void Start()
     {
         maxPoint = GameManager.Instance.maxActionPointsAmount;
         currentPoint = GameManager.Instance.GetCurrentActionPointsAmount;
-
-        CreateHealthBar();
-    }
-
-    void CreateHealthBar()
-    {
-        for (int i = 0; i < maxPoint; i++)
-        {
-            GameObject newPointBarElement = Instantiate(pointAction, gameObject.transform);
-            allPointBarElement.Add(newPointBarElement);
-        }
     }
 
     void UpdatePointBar(int value)
@@ -45,19 +34,16 @@ public class PointActionBar : MonoBehaviour
         currentPoint = value;
         int i = 0;
 
-        foreach(GameObject _pointBar in allPointBarElement)
+        foreach(PAElement _pointBar in allPointBarElement)
         {
-            if(i < currentPoint)
-            {
-                //Oui
-                _pointBar.GetComponent<Animator>().SetBool("Statut", true);
-            }
-            else
-            {
-                //Non
-                _pointBar.GetComponent<Animator>().SetBool("Statut", false);
-            }
+            _pointBar.SetValue(i < currentPoint);
             i++;
         }
+    }
+
+    // Update the action point bar to show the previsualisation of the action poin bar
+    public void UpdatePreConsommationPointBar(int possessedActionPoints, int aboutToUseActionPoints)
+    {
+        //A REFAIRE
     }
 }

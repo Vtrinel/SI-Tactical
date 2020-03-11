@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -34,8 +36,6 @@ public class GameManager : MonoBehaviour
         turnManager.OnStartPlayerTurn += StartPlayerTurn;
         turnManager.OnEndPlayerTurn += EndPlayerTurn;
 
-        turnManager.StartPlayerTurn();
-
         enemiesManager.OnInGameEnemiesChanged += turnManager.RefreshEnemyList;
         enemiesManager.GetAllAlreadyPlacedEnemies();
 
@@ -45,7 +45,12 @@ public class GameManager : MonoBehaviour
 
         playerExperienceManager.OnSetChanged += competencesUsabilityManager.UpdateSet;
         playerExperienceManager.OnMenuOpenedOrClosed += UpdatePlayerActability;
-        playerExperienceManager.SetUp();
+        playerExperienceManager.SetUp();        
+    }
+
+    private void Start()
+    {
+        SetUpGame();
     }
 
     private void Update()
@@ -55,6 +60,8 @@ public class GameManager : MonoBehaviour
 
         playerMovementsManager.UpdateSystem();
         competencesUsabilityManager.UpdateSystem();
+
+        UpdateGameManagement();
     }
 
     private void LateUpdate()
@@ -99,6 +106,21 @@ public class GameManager : MonoBehaviour
     public int maxActionPointsAmount = 10;
     [SerializeField] int currentActionPointsAmount;
     public int GetCurrentActionPointsAmount => currentActionPointsAmount;
+    /*public int GetAboutToUseActionPoints
+    {
+        get
+        {
+            if (competencesUsabilityManager.IsPreparingCompetence)
+            {
+                return competencesUsabilityManager.GetCurrentCompetenceCost();
+            }
+            else if ()
+            {
+
+            }
+            return 0;
+        }
+    }*/
 
     public System.Action<int> OnActionPointsAmountChanged;
     
@@ -152,7 +174,9 @@ public class GameManager : MonoBehaviour
     [Header("Player Systems")]
     [SerializeField] PlayerMovementsManager playerMovementsManager = default;
     [SerializeField] CompetencesUsabilityManager competencesUsabilityManager = default;
-    
+
+    public CompetencesUsabilityManager GetCompetencesUsabilityManager() => competencesUsabilityManager;
+
     public Competence GetCurrentlySelectedCompetence => competencesUsabilityManager.GetCurrentCompetence;
     public Action<bool> OnMoveActionSelectionStateChanged;
     public Action<bool> OnThrowCompetenceSelectionStateChanged;
@@ -180,6 +204,13 @@ public class GameManager : MonoBehaviour
         OnPlayerMaxLifeAmountChanged?.Invoke(value);
     }
 
+    public Action<int> OnCancelSelectedAction;
+
+    public void SendRemainingActionPoint()
+    {
+        OnCancelSelectedAction?.Invoke(currentActionPointsAmount);
+    }
+
     #region Mouse World Result
     [Header("Mouse World Result")]
     [SerializeField] LayerMask worldMouseLayerMask = default;
@@ -205,8 +236,7 @@ public class GameManager : MonoBehaviour
 
         foreach (RaycastHit hit in hits)
         {
-            PlayerInputSurface hitInputSurface = hit.collider.GetComponent<PlayerInputSurface>();
-            if (hitInputSurface != null)
+            if(hit.collider.gameObject.layer == 8)
             {
                 result.mouseWorldPosition = hit.point;
             }
@@ -223,6 +253,9 @@ public class GameManager : MonoBehaviour
     #region Player Inputs Reception
     public void SelectAction(ActionType actionType)
     {
+        if (!GetPlayerCanAct)
+            return;
+
         if (actionType == ActionType.None)
         {
             if (competencesUsabilityManager.IsPreparingCompetence)
@@ -304,7 +337,8 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        //Debug.Log("EH");
+        bool validatedAction = true;
+
         if (playerMovementsManager.IsWillingToMove)
         {
             int cost = playerMovementsManager.TryStartMovement(GetCurrentWorldMouseResult.mouseWorldPosition);
@@ -318,7 +352,6 @@ public class GameManager : MonoBehaviour
         else if(competencesUsabilityManager.IsPreparingCompetence)
         {
             int cost = competencesUsabilityManager.GetCurrentCompetenceCost();
-            CallUnselectActionEvent(competencesUsabilityManager.GetCurrentCompetenceType);
             switch (competencesUsabilityManager.GetCurrentCompetenceType)
             {
                 case ActionType.Throw:
@@ -330,12 +363,18 @@ public class GameManager : MonoBehaviour
                     break;
 
                 case ActionType.Special:
+                    validatedAction = competencesUsabilityManager.LaunchSpecialCompetence();
                     break;
             }
-            ConsumeActionPoints(cost);
+            if (validatedAction)
+            {
+                ConsumeActionPoints(cost);
+                CallUnselectActionEvent(competencesUsabilityManager.GetCurrentCompetenceType);
+            }
         }
 
-        UpdatePlayerActability();
+        if(validatedAction)
+            UpdatePlayerActability();
     }
 
     public void CallSelectActionEvent(ActionType actionType)
@@ -359,6 +398,8 @@ public class GameManager : MonoBehaviour
 
     public void CallUnselectActionEvent(ActionType actionType)
     {
+        UIManager.Instance.GetActionBar.UpdatePreConsommationPointBar(currentActionPointsAmount, 0);
+        UIManager.Instance.HideActionPointText();
         switch (actionType)
         {
             case ActionType.Move:
@@ -376,31 +417,114 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void UpdatePlayerActability()
+    public bool GetPlayerCanAct
     {
-        bool canAct = 
-            !playerMovementsManager.IsMoving 
-            && 
-            !competencesUsabilityManager.IsUsingCompetence 
-            && 
+        get
+        {
+            return !playerMovementsManager.IsMoving
+            &&
+            !competencesUsabilityManager.IsUsingCompetence
+            &&
             turnManager.GetCurrentTurnState == TurnState.PlayerTurn
             &&
-            !playerExperienceManager.IsUsingCompetencesMenu;
+            !playerExperienceManager.IsUsingCompetencesMenu
+            &&
+            gameStarted && !gameWon && !gameLost;
+        }
+    }
+    public void UpdatePlayerActability()
+    {
+        bool canAct = GetPlayerCanAct;
+
+        UIManager.Instance.ChangeEndTurnButtonVisibility(canAct);
 
         player.SetAbleToAct(canAct);
         SetActionPointsDebugTextVisibility(playerMovementsManager.IsWillingToMove || competencesUsabilityManager.IsPreparingCompetence);
     }
+
+    public void LaunchCompetenceForReal()
+    {
+        competencesUsabilityManager.LaunchCompetenceForReal();
+    }
     #endregion
 
     #region Game Management
+    bool gameStarted = false;
+    bool gameWon = false;
+    bool gameLost = false;
+    [Header("Game Management")]
+    [SerializeField] KeyCode gameManagementActionKey = KeyCode.Return;
+    [SerializeField] bool playIntroCutscene = false;
+    [SerializeField] float cutsceneStayOnObjectiveDuration = 2f;
+    [SerializeField] float cutsceneObjectiveToPlayerDuration = 4f;
+    [SerializeField] AnimationCurve cutsceneCameraMovementCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
+    private void SetUpGame()
+    {
+        if (playIntroCutscene)
+        {
+            CameraManager.instance.GetPlayerCamera.InstantPlaceCameraOnTransform(levelManager.GetGoalZone.transform);
+            StartCoroutine(IntroCutscene());
+        }
+        else
+        {
+            CameraManager.instance.GetPlayerCamera.InstantPlaceCameraOnTransform(player.transform);
+            StartGame();
+        }
+    }
+    IEnumerator IntroCutscene()
+    {
+        yield return new WaitForSeconds(cutsceneStayOnObjectiveDuration);
+        CameraManager.instance.GetPlayerCamera.StartMovementToward(player.transform, cutsceneObjectiveToPlayerDuration, cutsceneCameraMovementCurve);
+        CameraManager.instance.GetPlayerCamera.SetUpEndMovementEvent(StartGame);
+    }
+
+    public void UpdateGameManagement()
+    {
+        if (gameWon || gameLost)
+        {
+            if (Input.GetKeyDown(gameManagementActionKey))
+                RestartGame();
+        }
+    }
+
+    public void StartGame()
+    {
+        gameStarted = true;
+        UIManager.Instance.HideStartPanel();
+        StartCoroutine(StartGameCoroutine());
+    }
+
+    IEnumerator StartGameCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+        turnManager.StartPlayerTurn();
+        levelManager.SetUpGoalAnimation();
+    }
+
+    bool restarting = false;
+    public void RestartGame()
+    {
+        if (restarting) return;
+        restarting = true;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
     public void WinGame()
     {
-        Debug.Log("YOU WIN");
+        //Debug.Log("YOU WIN");
+        gameWon = true;
+        turnManager.WonGame();
+        UIManager.Instance.ShowWinPanel();
     }
 
     public void LoseGame()
     {
-        Debug.Log("YOU LOSE");
+        //Debug.Log("YOU LOSE");
+        gameLost = true;
+        turnManager.InterruptEnemiesTurn();
+        turnManager.LostGame();
+        UIManager.Instance.ShowLosePanel();
     }
     #endregion
 }

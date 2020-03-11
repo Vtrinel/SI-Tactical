@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [System.Serializable]
 public class PlayerMovementsManager
@@ -9,6 +10,8 @@ public class PlayerMovementsManager
     {
         _player = player;
         _player.OnPlayerReachedMovementDestination += EndMovement;
+
+        _playerNavMeshAgent = player.GetNavMeshAgent;
     }
 
     public void UpdateSystem()
@@ -17,8 +20,9 @@ public class PlayerMovementsManager
             UpdateMovementPreparation();
     }
 
-    PlayerController _player;
-    WorldMouseResult currentWorldMouseResult;
+    PlayerController _player = default;
+    NavMeshAgent _playerNavMeshAgent = default;
+    WorldMouseResult currentWorldMouseResult = default;
     public void UpdateCurrentWorldMouseResult(WorldMouseResult result)
     {
         currentWorldMouseResult = result;
@@ -56,16 +60,22 @@ public class PlayerMovementsManager
     {
         currentlyAvailableActionPoints = availableActionPoints;
 
-        bool maxRangeMovement = false;
-
         GenerateDistancesPerActionPoints(currentlyAvailableActionPoints);
 
         currentUsabilityState = UsabilityState.Preparing;
 
         currentPreviewCost = 0;
 
-        Vector3 targetPosition = currentWorldMouseResult.mouseWorldPosition;
-        float movementDistance = Vector3.Distance(_player.transform.position, targetPosition);
+        List<Vector3> trueMovementTrajectory = GetClampedTrajectory(currentWorldMouseResult.mouseWorldPosition);
+        float movementDistance = 0;
+        for (int i = 1; i < trueMovementTrajectory.Count; i++)
+        {
+            movementDistance += Vector3.Distance(trueMovementTrajectory[i - 1], trueMovementTrajectory[i]);
+        }
+
+        bool maxRangeMovement = Mathf.Abs(movementDistance - GetMaxDistance()) < 0.01f;
+
+        Vector3 targetPosition = trueMovementTrajectory[trueMovementTrajectory.Count - 1];
 
         int movementCost = GetActionPointsByDistance(movementDistance);
         if (movementCost > currentlyAvailableActionPoints)
@@ -79,12 +89,11 @@ public class PlayerMovementsManager
         {
             currentPreviewCost = movementCost;
             OnPreparationAmountChanged?.Invoke(currentPreviewCost);
+            UIManager.Instance.GetActionBar.UpdatePreConsommationPointBar(availableActionPoints, movementCost);
         }
 
-        PreviewCompetencesManager.Instance.StartMovementPreview(currentDistancesByUsedActionPoints, _player.transform.position, targetPosition,
-            currentRecallCompetence, maxRangeMovement ? currentPreviewCost : currentPreviewCost - 1);
-        PreviewCompetencesManager.Instance.UpdateMovementPreview(_player.transform.position, targetPosition,
-            currentRecallCompetence, maxRangeMovement ? currentPreviewCost : currentPreviewCost - 1);
+        PreviewCompetencesManager.Instance.StartMovementPreview(currentDistancesByUsedActionPoints, trueMovementTrajectory,
+            currentRecallCompetence, maxRangeMovement ? currentPreviewCost : currentPreviewCost - 1, maxRangeMovement);
 
         UIManager.Instance.ShowActionPointsCostText();
         UIManager.Instance.UpdateActionPointCostText(movementCost, currentlyAvailableActionPoints);
@@ -92,10 +101,16 @@ public class PlayerMovementsManager
 
     public void UpdateMovementPreparation()
     {
-        bool maxRangeMovement = false;
+        List<Vector3> trueMovementTrajectory = GetClampedTrajectory(currentWorldMouseResult.mouseWorldPosition);
+        float movementDistance = 0;
+        for(int i = 1; i < trueMovementTrajectory.Count; i++)
+        {
+            movementDistance += Vector3.Distance(trueMovementTrajectory[i-1], trueMovementTrajectory[i]);
+        }
 
-        Vector3 targetPosition = currentWorldMouseResult.mouseWorldPosition;
-        float movementDistance = Vector3.Distance(_player.transform.position, targetPosition);
+        bool maxRangeMovement = Mathf.Abs(movementDistance - GetMaxDistance()) < 0.01f;
+
+        Vector3 targetPosition = trueMovementTrajectory[trueMovementTrajectory.Count - 1];
 
         int movementCost = GetActionPointsByDistance(movementDistance);
         if (movementCost > availableActionPoints)
@@ -109,10 +124,11 @@ public class PlayerMovementsManager
         {
             currentPreviewCost = movementCost;
             OnPreparationAmountChanged?.Invoke(currentPreviewCost);
+            UIManager.Instance.GetActionBar.UpdatePreConsommationPointBar(availableActionPoints, movementCost);
         }
 
-        PreviewCompetencesManager.Instance.UpdateMovementPreview(_player.transform.position, targetPosition, 
-            currentRecallCompetence, maxRangeMovement ? currentPreviewCost : currentPreviewCost - 1);
+        PreviewCompetencesManager.Instance.UpdateMovementPreview(trueMovementTrajectory, 
+            currentRecallCompetence, maxRangeMovement ? currentPreviewCost : currentPreviewCost - 1, maxRangeMovement);
 
         UIManager.Instance.UpdateActionPointCostText(movementCost, currentlyAvailableActionPoints);
     }
@@ -200,6 +216,42 @@ public class PlayerMovementsManager
 
         return trueTargetPos;
     }
+
+    public List<Vector3> GetClampedTrajectory(Vector3 baseTargetPos)
+    {
+        _playerNavMeshAgent.SetDestination(baseTargetPos);
+
+        List<Vector3> trajectory = new List<Vector3>();
+        float maxDist = GetMaxDistance();
+        float currentDistance = 0;
+        float previousDistance = 0;
+
+        trajectory.Add(_player.transform.position);
+
+        NavMeshPath _path = _playerNavMeshAgent.path;
+        Vector3 previousPos = trajectory[0];
+        foreach (Vector3 step in _path.corners)
+        {
+            Vector3 totalMovement = step - previousPos;
+
+            currentDistance += totalMovement.magnitude;
+            if(currentDistance >= maxDist)
+            {
+                currentDistance = maxDist;
+                trajectory.Add(previousPos + totalMovement.normalized * (currentDistance - previousDistance));
+                break;
+            }
+            else
+            {
+                trajectory.Add(step);
+                previousDistance = currentDistance;
+            }
+
+            previousPos = step;
+        }
+
+        return trajectory;
+    }
     #endregion
        
     /// <summary>
@@ -213,15 +265,17 @@ public class PlayerMovementsManager
         if (IsMoving)
             return -1;
 
-        float movementDistance = Vector3.Distance(_player.transform.position, currentWorldMouseResult.mouseWorldPosition);
+        List<Vector3> trajectory = GetClampedTrajectory(targetPosition);
+        targetPosition = trajectory[trajectory.Count - 1];
+
+        float movementDistance = 0;
+        for (int i = 1; i < trajectory.Count; i++)
+        {
+            movementDistance += Vector3.Distance(trajectory[i - 1], trajectory[i]);
+        }
 
         int movementCost = GetActionPointsByDistance(movementDistance);
-
-        if(movementCost > availableActionPoints)
-        {
-            targetPosition = GetClampedTargetPosition(targetPosition);
-            movementCost = availableActionPoints;
-        }
+        
 
         _player.MoveTo(targetPosition);
         currentUsabilityState = UsabilityState.Using;

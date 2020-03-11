@@ -11,11 +11,13 @@ public class CompetencesUsabilityManager
         _player = player;
     }
 
+    int currentActionPoints = 0;
     public void UpdateSystem()
     {
         if(IsPreparingCompetence)
         {
             UpdatePreparation();
+            UIManager.Instance.UpdateActionPointCostText(GetCurrentCompetenceCost(), currentActionPoints);
         }
     }
 
@@ -40,7 +42,13 @@ public class CompetencesUsabilityManager
     [SerializeField] CompetenceSpecial specialCompetence = default;
     public CompetenceSpecial GetSpecialCompetence => specialCompetence;
 
-    float maxDiscRange = 0;
+    float maxRecallRange = 0;
+    float maxThrowRange = 0;
+
+    //Action Event
+    public Action OnDiscThrownAnimEvent;
+    public Action OnDiscRecallAnimEvent;
+    public Action OnSpecialLaunch;
 
     public void UpdateSet(CompetenceThrow throwComp, CompetenceRecall recallComp, CompetenceSpecial specialComp)
     {
@@ -65,6 +73,8 @@ public class CompetencesUsabilityManager
                     return throwCompetence;
                 case ActionType.Recall:
                     return recallCompetence;
+                case ActionType.Special:
+                    return specialCompetence;
                 default:
                     return null;
             }
@@ -91,17 +101,37 @@ public class CompetencesUsabilityManager
                     trySelectResult = ActionSelectionResult.NoNearbyDisc;
                 }
             }
-
+            else if (compType == ActionType.Special)
+            {
+                CompetenceSpecialTeleportation foundTeleportationCompetence = specialCompetence as CompetenceSpecialTeleportation;
+                if(foundTeleportationCompetence != null)
+                {
+                    if(foundTeleportationCompetence.GetTeleportationMode == TeleportationMode.Exchange)
+                    {
+                        if(foundTeleportationCompetence.GetTeleportationTarget == TeleportationTarget.NewestDisc || foundTeleportationCompetence.GetTeleportationTarget == TeleportationTarget.OldestDisc)
+                        {
+                            if (DiscManager.Instance.GetInRangeDiscsCount == 0)
+                            {
+                                trySelectResult = ActionSelectionResult.NoNearbyDisc;
+                            }
+                        }
+                    }
+                }
+            }
+            currentActionPoints = totalActionPoints;
         }
 
         switch (trySelectResult)
         {
             case ActionSelectionResult.EnoughActionPoints:
                 ChangeUsabilityState(UsabilityState.Preparing, compType);
+                UIManager.Instance.GetActionBar.UpdatePreConsommationPointBar(totalActionPoints, GetCurrentCompetenceCost());
+                UIManager.Instance.ShowActionPointsCostText();
+                UIManager.Instance.UpdateActionPointCostText(GetCurrentCompetenceCost(), totalActionPoints);
                 break;
 
             case ActionSelectionResult.NotEnoughActionPoints:
-                //Debug.Log("Not enough action points for " + compType);
+                Debug.Log("Not enough action points for " + compType);
                 break;
 
             case ActionSelectionResult.NoCompetenceFound:
@@ -130,6 +160,8 @@ public class CompetencesUsabilityManager
                 return throwCompetence.GetActionPointsCost;
             case ActionType.Recall:
                 return recallCompetence.GetActionPointsCost;
+            case ActionType.Special:
+                return specialCompetence.GetActionPointsCost;
         }
         return 0;
     }
@@ -150,6 +182,9 @@ public class CompetencesUsabilityManager
             case ActionType.Recall:
                 competenceToCheck = recallCompetence;
                 break;
+            case ActionType.Special:
+                competenceToCheck = specialCompetence;
+                break;
         }
 
         if (competenceToCheck == null)
@@ -161,7 +196,10 @@ public class CompetencesUsabilityManager
     public void ChangeUsabilityState(UsabilityState usabilityState, ActionType compType)
     {
         if (usabilityState == UsabilityState.Preparing)
-            maxDiscRange = DiscManager.Instance.rangeOfPlayer;
+        {
+            maxRecallRange = DiscManager.Instance.recallRange;
+            maxThrowRange = DiscManager.Instance.throwRange;
+        }
 
         if (currentUsabilityState == UsabilityState.Preparing)
             EndPreparation();
@@ -201,6 +239,7 @@ public class CompetencesUsabilityManager
                 StartRecallPreparation();
                 break;
             case ActionType.Special:
+                StartSpecialPreparation();
                 break;
         }
     }
@@ -216,6 +255,7 @@ public class CompetencesUsabilityManager
                 UpdateRecallPreparation();
                 break;
             case ActionType.Special:
+                UpdateSpecialPreparation();
                 break;
         }
     }
@@ -231,6 +271,7 @@ public class CompetencesUsabilityManager
                 EndRecallPreparation();
                 break;
             case ActionType.Special:
+                EndSpecialPreparation();
                 break;
         }
     }
@@ -307,7 +348,116 @@ public class CompetencesUsabilityManager
     }
     #endregion
 
+    #region Special Preparation
+    CompetenceSpecialTeleportation specialCompetenceTeleportTyped = default;
+
+    public void StartSpecialPreparation()
+    {
+        specialCompetenceTeleportTyped = specialCompetence as CompetenceSpecialTeleportation;
+        if (specialCompetenceTeleportTyped != null)
+            StartTeleportationPreparation();
+    }
+
+    public void UpdateSpecialPreparation()
+    {
+        if (specialCompetenceTeleportTyped != null)
+            UpdateTeleportationPreparation();
+    }
+
+    public void EndSpecialPreparation()
+    {
+        if (specialCompetenceTeleportTyped != null)
+            EndTeleportationPreparation();
+    }
+
+    #region Teleportation Utilities
+    Vector3 currentTeleportationPosition = default;
+    GameObject teleportationExchangeObject = default;
+    bool canTeleport = false;
+
+    public void StartTeleportationPreparation()
+    {
+        canTeleport = false;
+        switch (specialCompetenceTeleportTyped.GetTeleportationMode)
+        {
+            case TeleportationMode.Exchange:
+                teleportationExchangeObject = GetTeleportationExchangeObject(specialCompetenceTeleportTyped.GetTeleportationTarget);
+                currentTeleportationPosition = teleportationExchangeObject.transform.position;
+                canTeleport = true;
+                break;
+            case TeleportationMode.TowardDirection:
+                currentTeleportationPosition = GetTowardDirectionTeleportationPosition();
+                break;
+        }
+
+        PreviewCompetencesManager.Instance.StartTeleportationPreview(_player.transform.position, currentTeleportationPosition, canTeleport, recallCompetence);
+    }
+
+    public void UpdateTeleportationPreparation()
+    {
+        switch (specialCompetenceTeleportTyped.GetTeleportationMode)
+        {
+            case TeleportationMode.TowardDirection:
+                currentTeleportationPosition = GetTowardDirectionTeleportationPosition();
+                break;
+        }
+
+        PreviewCompetencesManager.Instance.UpdateTeleportationPreview(currentTeleportationPosition, canTeleport, recallCompetence);
+    }
+
+    public void EndTeleportationPreparation()
+    {
+        PreviewCompetencesManager.Instance.EndTeleportationPreview();
+        teleportationExchangeObject = null;
+        currentTeleportationPosition = Vector3.zero;
+    }
+
+    public GameObject GetTeleportationExchangeObject(TeleportationTarget teleportationTarget)
+    {
+        DiscsOrder order = (teleportationTarget == TeleportationTarget.NewestDisc ? DiscsOrder.FromNewestToOldest :
+            teleportationTarget == TeleportationTarget.OldestDisc ? DiscsOrder.FromOldestToNewest : DiscsOrder.FromNewestToOldest);
+        List<DiscScript> discs = DiscListingFactory.GetSortedInRangeDiscs(1, order, true, DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+
+        if (discs.Count == 0)
+            return null;
+
+        return discs[0].gameObject;
+    }
+
+    public Vector3 GetTowardDirectionTeleportationPosition()
+    {
+        Vector3 movement = currentWorldMouseResult.mouseWorldPosition - _player.transform.position;
+
+        if(movement.magnitude > specialCompetenceTeleportTyped.GetTeleportationDistance)
+        {
+            movement = movement.normalized * specialCompetenceTeleportTyped.GetTeleportationDistance;
+        }
+        Vector3 targetPos = _player.transform.position + movement;
+
+        LayerMask checkMask = 1 << 10 | 1 << 11 | 1 << 12 | 1 << 14;
+        canTeleport = Physics.OverlapSphere(targetPos, 1f, checkMask).Length == 0;
+
+        return targetPos;
+    }
     #endregion
+    #endregion
+
+    #endregion
+
+    public void LaunchCompetenceForReal()
+    {
+        switch (currentCompetenceType)
+        {
+            case ActionType.Throw:
+                LaunchThrowCompetenceForReal();
+                break;
+            case ActionType.Recall:
+                LaunchRecallCompetenceForReal();
+                break;
+            case ActionType.Special:
+                break;
+        }
+    }
 
     #region Throw
     public Vector3 GetInRangeThrowTargetPosition(Vector3 baseTargetPos)
@@ -317,10 +467,10 @@ public class CompetencesUsabilityManager
         trueTargetPos.y = playerPos.y;
 
         float distance = Vector3.Distance(trueTargetPos, playerPos);
-        if(distance > maxDiscRange)
+        if(distance > maxThrowRange)
         {
             Vector3 throwDirection = (trueTargetPos - playerPos).normalized;
-            trueTargetPos = playerPos + throwDirection * maxDiscRange;
+            trueTargetPos = playerPos + throwDirection * maxThrowRange;
         }
         else if(distance < minThrowDistance)
         {
@@ -331,43 +481,106 @@ public class CompetencesUsabilityManager
         return trueTargetPos;
     }
 
+    GameObject currentObjLauncher = default;
+    Vector3 currentThrowPosition = default;
+    DiscTrajectoryParameters currentThrowTrajectoryParameters = default;
     public void LaunchThrowCompetence(GameObject objLauncher)
+    {
+        OnDiscThrownAnimEvent?.Invoke(); //Event
+        ChangeUsabilityState(UsabilityState.Using, ActionType.Throw);
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+        currentObjLauncher = objLauncher;
+        currentThrowPosition = currentWorldMouseResult.mouseWorldPosition;
+
+        Vector3 lookPos = currentThrowPosition;
+        List<DiscScript> inRangeThrowedDiscs = new List<DiscScript>();
+        List<DiscScript> inRangeDiscs = DiscManager.Instance.GetInRangeDiscs;
+        foreach (DiscScript disc in DiscManager.Instance.GetAllThrowedDiscs)
+        {
+            if (inRangeDiscs.Contains(disc))
+                inRangeThrowedDiscs.Add(disc);
+        }
+
+        if (inRangeThrowedDiscs.Count > 0)
+        {
+            foreach (TrajectoryModifier modifier in throwCompetence.GetTrajectoryModifiers)
+            {
+                TrajectoryModifierLinkedDiscs linkModifier = modifier as TrajectoryModifierLinkedDiscs;
+                if (linkModifier != null)
+                {
+                    switch (linkModifier.GetLinkedDiscTrajectoryType)
+                    {
+                        case DiscsOrder.FromOldestToNewest:
+                            lookPos = inRangeThrowedDiscs[0].transform.position;
+                            break;
+
+                        case DiscsOrder.FromNewestToOldest:
+                            lookPos = inRangeThrowedDiscs[inRangeThrowedDiscs.Count - 1].transform.position;
+                            break;
+                    }
+
+                    break;
+                }
+            }
+        }
+        _player.StartLookAt(lookPos);
+    }
+
+    public void LaunchThrowCompetenceForReal()
     {
         currentlyInUseDiscs = new List<DiscScript>();
 
         DiscScript newDisc = DiscManager.Instance.TakeFirstDiscFromPossessedDiscs();
-        if(newDisc == null)
+        if (newDisc == null)
         {
             //Debug.LogWarning("NO DISK TO THROW");
             return;
         }
 
-        DiscTrajectoryParameters trajectoryParameters = 
+        DiscTrajectoryParameters trajectoryParameters =
             DiscTrajectoryFactory.GetTrajectory(throwCompetence,
-            _player.transform.position, GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition), 
+            _player.transform.position, GetInRangeThrowTargetPosition(currentThrowPosition),
             DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, newDisc);
 
         newDisc.SetIsBeingRecalled(false);
         newDisc.SetRetreivableByPlayer(false);
-        newDisc.StartTrajectory(trajectoryParameters, objLauncher);
+        newDisc.StartTrajectory(trajectoryParameters, currentObjLauncher);
         currentlyInUseDiscs.Add(newDisc);
         newDisc.OnTrajectoryStopped += RemoveDiscFromInUse;
         newDisc.OnReachedTrajectoryEnd += RemoveDiscFromInUse;
-
-        ChangeUsabilityState(UsabilityState.Using, ActionType.Throw);
-        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
     }
     #endregion
 
     #region Recall
     public void LaunchRecallCompetence()
     {
-        List<DiscScript> discsToRecall = DiscListingFactory.GetSortedRecallableDiscs(recallCompetence, DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+        OnDiscRecallAnimEvent?.Invoke(); //Event
+        ChangeUsabilityState(UsabilityState.Using, ActionType.Recall);
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+
+        /*List<DiscScript> discsToRecall = DiscListingFactory.GetSortedRecallableDiscs(recallCompetence, DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
 
         foreach(DiscScript discToRecall in discsToRecall)
         {
             StartRecallDisc(discToRecall);
         }        
+
+        if (discsToRecall.Count > 0)
+            ChangeUsabilityState(UsabilityState.Using, ActionType.Recall);
+        else
+            ResetUsabilityState();
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();*/
+
+    }
+    public void LaunchRecallCompetenceForReal()
+    {
+        currentlyInUseDiscs = new List<DiscScript>();
+        List<DiscScript> discsToRecall = DiscListingFactory.GetSortedRecallableDiscs(recallCompetence, DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+
+        foreach (DiscScript discToRecall in discsToRecall)
+        {
+            StartRecallDisc(discToRecall);
+        }
 
         if (discsToRecall.Count > 0)
             ChangeUsabilityState(UsabilityState.Using, ActionType.Recall);
@@ -387,13 +600,45 @@ public class CompetencesUsabilityManager
         disc.StartTrajectory(trajectoryParameters, null);
         currentlyInUseDiscs.Add(disc);
         disc.OnTrajectoryStopped += RemoveDiscFromInUse;
+
+        OnSpecialLaunch?.Invoke();
+    }
+    #endregion
+
+    #region Special
+    public bool LaunchSpecialCompetence()
+    {
+        if(specialCompetenceTeleportTyped != null)
+        {
+            return LaunchTeleportation();
+        }
+        return false;
+    }
+
+    public bool LaunchTeleportation()
+    {
+        if (!canTeleport)
+            return false;
+
+        Vector3 initialPlayerPos = _player.transform.position;
+
+        _player.transform.position = currentTeleportationPosition;
+        if(teleportationExchangeObject != null)
+        {
+            teleportationExchangeObject.transform.position = initialPlayerPos;
+        }
+
+        ResetUsabilityState();
+        CameraManager.instance.GetPlayerCamera.transform.position = initialPlayerPos;
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+
+        return true;
     }
     #endregion
 
     List<DiscScript> currentlyInUseDiscs = new List<DiscScript>();
     public void RemoveDiscFromInUse(DiscScript disc)
     {
-        //disc.OnReachedTrajectoryEnd -= RemoveDiscFromInUse;
         currentlyInUseDiscs.Remove(disc);
 
         if (currentlyInUseDiscs.Count == 0)

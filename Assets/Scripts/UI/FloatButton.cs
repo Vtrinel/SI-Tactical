@@ -55,9 +55,6 @@ public class FloatButton : MonoBehaviour
 
         print("fin de tour");
 
-        GameManager.Instance.SelectAction(ActionType.None);
-        TurnManager.Instance.EndPlayerTurn();
-        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
     }
 
     public void SetClickStatement(bool value)
