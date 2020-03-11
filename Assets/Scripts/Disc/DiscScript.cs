@@ -180,6 +180,15 @@ public class DiscScript : MonoBehaviour
         InterruptTrajectory();
         DemandeFx(hit.point);
 
+        if (hit.collider.gameObject.layer == 12)
+        {
+            SoundManager.Instance.PlaySound(Sound.ShieldGetHit, hit.transform.position);
+        }
+        else if (hit.collider.gameObject.layer == 14)
+        {
+            SoundManager.Instance.PlaySound(Sound.WallGetHit, hit.transform.position);
+        }
+
         Vector3 horizontalNormal = hit.normal;
         horizontalNormal.y = 0;
         horizontalNormal.Normalize();
@@ -199,6 +208,7 @@ public class DiscScript : MonoBehaviour
             hitDamageableEntity.ReceiveDamage(damageTag, new DamagesParameters(currentDamagesAmount, numberOfStunedTurns));
 
             lastObjTouch = hitDamageableEntity.gameObject;
+            SoundManager.Instance.PlaySound(Sound.EnemyDamaged, hitDamageableEntity.transform.position);
         }
 
         if(effectZoneToInstantiateOnHit != EffectZoneType.None)

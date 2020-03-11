@@ -223,6 +223,8 @@ public class CultisteEnemy : IAEnemyVirtual
         {
             SetPreview();
         }
+
+        myShowPath.canCheck = haveDisc;
     }
 
     private void OnTriggerEnter(Collider other)
