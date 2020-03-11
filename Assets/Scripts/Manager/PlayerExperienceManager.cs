@@ -15,6 +15,10 @@ public class PlayerExperienceManager : MonoBehaviour
 
         OnSetChanged?.Invoke(equipedThrowCompetence, equipedRecallCompetence, equipedSpecialCompetence);
     }
+    private void Start()
+    {
+        OnSetChanged?.Invoke(equipedThrowCompetence, equipedRecallCompetence, equipedSpecialCompetence);
+    }
 
     // Public attributes
     public static PlayerExperienceManager _instance;

@@ -7,13 +7,20 @@ public class TooltipInterface : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] CanvasGroup tooltipGroup = default;
+    [SerializeField] GameObject tooltipParent = default;
     [SerializeField] Text tooltipName = default;
     [SerializeField] Text tooltipDescription = default;
     [SerializeField] RectTransform rectTr = default;
     [SerializeField] RectTransform backgroundRectTr = default;
 
+    [Header("References : Mini Tooltip")]
+    [SerializeField] GameObject miniTooltipParent = default;
+    [SerializeField] Text miniTooltipText = default;
+    [SerializeField] RectTransform miniTooltipBackgroundRectTr = default;
+
     [Header("Tweaking")]
     [SerializeField] float transitionDuration = 0.5f;
+    [SerializeField] float disparitionSpeed = 2;
     float currentTransitionCounter = 0;
     [SerializeField] AnimationCurve transitionCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
@@ -29,43 +36,61 @@ public class TooltipInterface : MonoBehaviour
         _visible = visible;
     }
 
+    bool isRegularSizeTooltip = true;
+    RectTransform currentTooltipBackgroundTr = default;
     public void SetTooltipInfos(TooltipInformations infos)
     {
-        tooltipName.text = infos.tooltipName;
-        tooltipDescription.text = infos.tooltipDescription;
-        switch (infos.tooltipAdditionalInformationType)
+        isRegularSizeTooltip = !infos.miniSizeTooltip;
+        currentTooltipBackgroundTr = isRegularSizeTooltip ? backgroundRectTr : miniTooltipBackgroundRectTr;
+        if (isRegularSizeTooltip)
         {
-            case TooltipAdditionalInformationType.None:
-                break;
+            tooltipParent.SetActive(true);
+            miniTooltipParent.SetActive(false);
+            tooltipName.text = infos.tooltipName;
+            tooltipDescription.text = infos.tooltipDescription;
+            switch (infos.tooltipAdditionalInformationType)
+            {
+                case TooltipAdditionalInformationType.None:
+                    break;
 
-            case TooltipAdditionalInformationType.ActionPointsCost:
-                tooltipName.text = tooltipName.text  + " - Cost : " + infos.tooltipAdditionalInformationValue + "AP";
-                break;
+                case TooltipAdditionalInformationType.ActionPointsCost:
+                    tooltipName.text = tooltipName.text + " - Cost : " + infos.tooltipAdditionalInformationValue + "AP";
+                    break;
 
-            case TooltipAdditionalInformationType.LifePoints:
-                tooltipName.text = tooltipName.text + " - State : " + infos.tooltipAdditionalInformationValue + "HP";
-                break;
+                case TooltipAdditionalInformationType.LifePoints:
+                    tooltipName.text = tooltipName.text + " - State : " + infos.tooltipAdditionalInformationValue + "HP";
+                    break;
 
-            case TooltipAdditionalInformationType.Damage:
-                tooltipName.text = tooltipName.text + " - Damage : " + infos.tooltipAdditionalInformationValue + "HP";
-                break;
+                case TooltipAdditionalInformationType.Damage:
+                    tooltipName.text = tooltipName.text + " - Damage : " + infos.tooltipAdditionalInformationValue + "HP";
+                    break;
+            }
+        }
+        else
+        {
+            tooltipParent.SetActive(false);
+            miniTooltipParent.SetActive(true);
+            miniTooltipText.text = infos.tooltipName;
         }
     }
 
     private void Update()
     {
-        Vector2 newPos = Input.mousePosition;
-        if (newPos.x < backgroundRectTr.sizeDelta.x)
-            newPos.x += backgroundRectTr.sizeDelta.x;
+        if (currentTooltipBackgroundTr == null)
+            return;
 
-        if (newPos.y < backgroundRectTr.sizeDelta.y)
-            newPos.y += backgroundRectTr.sizeDelta.y;
+        Vector2 newPos = Input.mousePosition;
+        if (newPos.x < currentTooltipBackgroundTr.sizeDelta.x)
+            newPos.x += currentTooltipBackgroundTr.sizeDelta.x;
+
+        if (newPos.y < currentTooltipBackgroundTr.sizeDelta.y)
+            newPos.y += currentTooltipBackgroundTr.sizeDelta.y;
 
         rectTr.localPosition = newPos;
 
         if ((_visible && currentTransitionCounter < transitionDuration) || (!_visible && currentTransitionCounter > 0))
         {
-            currentTransitionCounter += Time.deltaTime * (_visible ? 1 : -1);
+            currentTransitionCounter += Time.deltaTime * (_visible ? 1 : -disparitionSpeed);
             currentTransitionCounter = Mathf.Clamp(currentTransitionCounter, 0, transitionDuration);
             tooltipGroup.alpha = transitionCurve.Evaluate(currentTransitionCounter/transitionDuration);
         }     

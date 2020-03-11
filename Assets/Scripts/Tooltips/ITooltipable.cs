@@ -9,6 +9,8 @@ public interface ITooltipable
 
     Action OnStartTooltip { get; set; }
     Action OnEndTooltip { get; set; }
+
+    bool Tooltipable { get; }
 }
 
 public enum TooltipAdditionalInformationType
@@ -23,4 +25,5 @@ public struct TooltipInformations
     [TextArea] public string tooltipDescription;
     public int tooltipAdditionalInformationValue;
     public TooltipAdditionalInformationType tooltipAdditionalInformationType;
+    public bool miniSizeTooltip;
 }

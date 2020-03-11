@@ -108,7 +108,6 @@ public class PlayerAnimation : MonoBehaviour
 
     public void EndRageAnimation()
     {
-        Debug.Log("GO ON");
         TurnManager.Instance.EndPlayerRage();
     }
     #endregion

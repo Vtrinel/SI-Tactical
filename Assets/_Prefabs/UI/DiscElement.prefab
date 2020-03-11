@@ -235,6 +235,7 @@ GameObject:
   - component: {fileID: 1773628724467074932}
   - component: {fileID: 8103500882216664673}
   - component: {fileID: 6829131159646476538}
+  - component: {fileID: 7321295854499697147}
   m_Layer: 5
   m_Name: DiscElement
   m_TagString: Untagged
@@ -318,7 +319,25 @@ MonoBehaviour:
   - {fileID: 6810387374868552729}
   - {fileID: 6251288521857522343}
   textValue: {fileID: 5896507846171852049}
-  discType: 5
+  tooltipCollider: {fileID: 7321295854499697147}
+  discType: 0
+--- !u!114 &7321295854499697147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6681135064952570323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3a58aa97083f4c4491fd80c8bc3fecc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  informations:
+    tooltipName: Disc
+    tooltipDescription: This is a disc you have in stock
+    tooltipAdditionalInformationValue: 0
+    tooltipAdditionalInformationType: 0
 --- !u!1 &8156509040650118439
 GameObject:
   m_ObjectHideFlags: 0

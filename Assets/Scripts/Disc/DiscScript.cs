@@ -89,6 +89,11 @@ public class DiscScript : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        tooltipCollider.SetTooltipInformations(TooltipInformationFactory.GetDiscTypeInformations(DiscManager.Instance.GetDiscInformations(_discType)));
+    }
+
     void Update()
     {
         if (currentTrajectory.Count > 0)
@@ -423,80 +428,6 @@ public class DiscScript : MonoBehaviour
         parameters.canKnockbackDiscs = true;
 
         return parameters;
-    }
-    #endregion
-
-    #region Collisions and Interaction - OLD
-    private void OnTriggerEnter(Collider other)
-    {
-        return;
-
-        if (other.gameObject == objLaunch || !isAttacking) { return; }
-
-        switch (other.gameObject.layer)
-        {
-            //Player --> rappel géré dans le déplacement  
-            case 9:
-                if (!retreivableByPlayer)
-                {
-                    DemandeFx(other.ClosestPointOnBounds(transform.position));
-                    break;
-                }
-
-                RetreiveByPlayer();                
-
-                break;
-
-            //ennemy --> dégâts gérés dans le déplacement
-            case 10:
-                DemandeFx(other.ClosestPointOnBounds(transform.position));
-
-                DamageableEntity hitDamageableEntity = other.GetComponent<DamageableEntity>();
-                if (hitDamageableEntity != null)
-                {
-                    hitDamageableEntity.ReceiveDamage(damageTag, new DamagesParameters(currentDamagesAmount, numberOfStunedTurns));
-
-                    lastObjTouch = other.gameObject;
-                }
-                if (!blockedByShields)
-                    break;
-
-                break;
-
-            //shield --> géré dans le déplacement
-            case 12:
-                if (!blockedByShields)
-                    break;
-
-                if (lastObjTouch == other.transform.parent.GetComponent<ShieldManager>().myObjParent) { return; } else
-                {
-                    DemandeFx(other.ClosestPointOnBounds(transform.position));
-                    CollisionWithThisObj(other.transform);
-                }
-
-                break;
-
-            //obstacle --> déplacement aussi
-            case 14:
-                if (!blockedByObstacles)
-                    break;
-
-                break;
-
-            /*default:
-                CollisionWithThisObj(other.transform);
-                break;*/
-        }
-    }
-       
-    void CollisionWithThisObj(Transform impactPoint)
-    {
-        InterruptTrajectory();
-
-        myAnimator.SetTrigger("Collision");
-        Debug.DrawRay(transform.position + -transform.right * .5f, Vector3.up, Color.red, 50);
-
-        transform.position = transform.position + -transform.right * .5f;
     }
     #endregion
 

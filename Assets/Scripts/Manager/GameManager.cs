@@ -108,21 +108,6 @@ public class GameManager : MonoBehaviour
     public int maxActionPointsAmount = 10;
     [SerializeField] int currentActionPointsAmount;
     public int GetCurrentActionPointsAmount => currentActionPointsAmount;
-    /*public int GetAboutToUseActionPoints
-    {
-        get
-        {
-            if (competencesUsabilityManager.IsPreparingCompetence)
-            {
-                return competencesUsabilityManager.GetCurrentCompetenceCost();
-            }
-            else if ()
-            {
-
-            }
-            return 0;
-        }
-    }*/
 
     public System.Action<int> OnActionPointsAmountChanged;
     
@@ -237,6 +222,7 @@ public class GameManager : MonoBehaviour
         Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit[] hits = Physics.RaycastAll(cameraRay, mouseCheckMaxDistance, worldMouseLayerMask);
         ITooltipable foundTooltipable = uiRaycaster.CheckForUITooltipable();
+        //OnMouseInUI = (foundTooltipable != null);
 
         foreach (RaycastHit hit in hits)
         {
@@ -257,8 +243,7 @@ public class GameManager : MonoBehaviour
         }
 
         result.mouseIsOnUI = OnMouseInUI;
-        if (!OnMouseInUI)
-            result.currentTooltipable = foundTooltipable;
+        result.currentTooltipable = foundTooltipable;
 
         return result;
     }

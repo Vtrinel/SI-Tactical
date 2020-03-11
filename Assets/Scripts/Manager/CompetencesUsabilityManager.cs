@@ -639,7 +639,8 @@ public class CompetencesUsabilityManager
     List<DiscScript> currentlyInUseDiscs = new List<DiscScript>();
     public void RemoveDiscFromInUse(DiscScript disc)
     {
-        currentlyInUseDiscs.Remove(disc);
+        if (currentlyInUseDiscs.Contains(disc))
+            currentlyInUseDiscs.Remove(disc);
 
         if (currentlyInUseDiscs.Count == 0)
             EndCompetenceUsability();

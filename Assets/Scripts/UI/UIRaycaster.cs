@@ -23,7 +23,12 @@ public class UIRaycaster : MonoBehaviour
         {
             foundTooltipable = result.gameObject.GetComponent<ITooltipable>();
             if (foundTooltipable != null)
-                break;
+            {
+                if (!foundTooltipable.Tooltipable)
+                    foundTooltipable = null;
+                else
+                    break;
+            }
         }
 
         return foundTooltipable;

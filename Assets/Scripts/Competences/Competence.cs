@@ -7,6 +7,7 @@ public class Competence : ScriptableObject
     [Header("Display")]
     [SerializeField] string competenceName = null;
     [SerializeField, TextArea(4,8)] string competenceDescription = null;
+    [SerializeField, TextArea(4,8)] string competenceTooltip = null;
 
     [SerializeField] Sprite competenceImage = null;
 
@@ -19,8 +20,9 @@ public class Competence : ScriptableObject
 
     public int GetActionPointsCost => actionPointsCost;
     public Sprite GetCompetenceImage=> competenceImage;
-    public string GetCompetenceDescription => competenceDescription;
     public string GetCompetenceName => competenceName;
+    public string GetCompetenceDescription => competenceDescription;
+    public string GetCompetenceTooltip => competenceTooltip;
     public bool GetUnlockedState => unlocked;
     public bool CanUnlockCompetence()
     {

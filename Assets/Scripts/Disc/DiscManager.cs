@@ -259,7 +259,8 @@ public class DiscManager : MonoBehaviour
         if (possessedDiscs.Count == 0)
             return null;
 
-        DiscScript newDisc = GetDiscFromPool(possessedDiscs.Pop());
+        DiscType newDiscType = possessedDiscs.Pop();
+        DiscScript newDisc = GetDiscFromPool(newDiscType);
         if (newDisc != null)
         {
             throwedDiscs.Add(newDisc);
@@ -333,11 +334,19 @@ public class DiscManager : MonoBehaviour
         }
     }
     #endregion    
+
+    [Header("Discs Informations")]
+    [SerializeField] DiscsInformationsLibrary discsInformationsLibrary = default;
+
+    public DiscInformations GetDiscInformations(DiscType discType)
+    {
+        return discsInformationsLibrary.GetDiscInformations(discType);
+    }
 }
 
 public enum DiscType
 {
-    Piercing, Ghost, Explosive, Heavy, Shockwave, None
+     None, Piercing, Ghost, Explosive, Heavy, Shockwave
 }
 
 [System.Serializable]

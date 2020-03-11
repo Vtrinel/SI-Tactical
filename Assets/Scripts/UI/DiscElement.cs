@@ -9,7 +9,14 @@ public class DiscElement : MonoBehaviour
 
     [SerializeField] Text textValue;
 
+    [SerializeField] TooltipColliderUI tooltipCollider = default;
+
     public DiscType discType = DiscType.None;
+
+    private void Awake()
+    {
+        tooltipCollider.SetTooltipable(discType != DiscType.None);
+    }
 
     public void SetIcon(int indexSprite, int number)
     {
@@ -17,6 +24,9 @@ public class DiscElement : MonoBehaviour
         textValue.text = number.ToString();
 
         discType = (DiscType)indexSprite;
+
+        tooltipCollider.SetTooltipInformations(TooltipInformationFactory.GetDiscTypeInformations(DiscManager.Instance.GetDiscInformations(discType)));
+        tooltipCollider.SetTooltipable(discType != DiscType.None);
     }
 
     void RefreshImage(int index)
@@ -26,6 +36,7 @@ public class DiscElement : MonoBehaviour
             img.gameObject.SetActive(false);
         }
 
-        AllSprite[index].gameObject.SetActive(true);
+        if (index - 1 < AllSprite.Count && index - 1 >= 0)
+            AllSprite[index - 1].gameObject.SetActive(true);
     }
 }
