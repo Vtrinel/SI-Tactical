@@ -483,6 +483,7 @@ public class CompetencesUsabilityManager
 
     GameObject currentObjLauncher = default;
     Vector3 currentThrowPosition = default;
+    DiscTrajectoryParameters currentThrowTrajectoryParameters = default;
     public void LaunchThrowCompetence(GameObject objLauncher)
     {
         OnDiscThrownAnimEvent?.Invoke(); //Event
@@ -490,6 +491,39 @@ public class CompetencesUsabilityManager
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
         currentObjLauncher = objLauncher;
         currentThrowPosition = currentWorldMouseResult.mouseWorldPosition;
+
+        Vector3 lookPos = currentThrowPosition;
+        List<DiscScript> inRangeThrowedDiscs = new List<DiscScript>();
+        List<DiscScript> inRangeDiscs = DiscManager.Instance.GetInRangeDiscs;
+        foreach (DiscScript disc in DiscManager.Instance.GetAllThrowedDiscs)
+        {
+            if (inRangeDiscs.Contains(disc))
+                inRangeThrowedDiscs.Add(disc);
+        }
+
+        if (inRangeThrowedDiscs.Count > 0)
+        {
+            foreach (TrajectoryModifier modifier in throwCompetence.GetTrajectoryModifiers)
+            {
+                TrajectoryModifierLinkedDiscs linkModifier = modifier as TrajectoryModifierLinkedDiscs;
+                if (linkModifier != null)
+                {
+                    switch (linkModifier.GetLinkedDiscTrajectoryType)
+                    {
+                        case DiscsOrder.FromOldestToNewest:
+                            lookPos = inRangeThrowedDiscs[0].transform.position;
+                            break;
+
+                        case DiscsOrder.FromNewestToOldest:
+                            lookPos = inRangeThrowedDiscs[inRangeThrowedDiscs.Count - 1].transform.position;
+                            break;
+                    }
+
+                    break;
+                }
+            }
+        }
+        _player.StartLookAt(lookPos);
     }
 
     public void LaunchThrowCompetenceForReal()
