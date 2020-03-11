@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -176,11 +177,15 @@ public class PlayerController : MonoBehaviour
     #region Movement
     Vector3 positionStamp = Vector3.zero;
     bool moving = false;
+
+    public Action<bool> OnMoveChange;
+
     public void MoveTo(Vector3 targetPosition)
     {
         navMeshAgent.isStopped = false;
         navMeshAgent.SetDestination(targetPosition);
         moving = true;
+        OnMoveChange?.Invoke(moving);
     }
     public void CheckForDestinationReached()
     {
@@ -188,6 +193,7 @@ public class PlayerController : MonoBehaviour
         {
             navMeshAgent.isStopped = true;
             moving = false;
+            OnMoveChange?.Invoke(moving);
             OnPlayerReachedMovementDestination?.Invoke();
         }
     }
