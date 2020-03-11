@@ -46,7 +46,7 @@ public class UIManager : MonoBehaviour
             _instance = this;
         }
 
-        ShowStartPanel();
+        //ShowStartPanel();
     }
 
     public void ChangeEndTurnButtonVisibility(bool visible)
