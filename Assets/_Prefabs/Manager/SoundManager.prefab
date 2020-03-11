@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 543872525018741661}
   - component: {fileID: 543872525018741662}
   m_Layer: 0
-  m_Name: AudioManager
+  m_Name: SoundManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,6 +43,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d30387cd3e5c6e4498fe1963cb8cbe1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxDistance: 100
+  spatialBlend: 1
+  dopplerLevel: 0
+  delayWalkSound: 0.35
+  enemyMovementList:
+  - {fileID: 8300000, guid: 9013cac8f48734943bfd8b1d17031f33, type: 3}
+  - {fileID: 8300000, guid: 9ead6dc9575ce954f85e576b6c64c0fc, type: 3}
+  - {fileID: 8300000, guid: 28f8901356b128b499a0a65af35e6df3, type: 3}
+  - {fileID: 8300000, guid: 18be1aedfee63554a9bafb91fd11725a, type: 3}
   soundAudioClipList:
   - sound: 0
     audioClip: {fileID: 8300000, guid: ce3943b03c718d24c9146fbf19578820, type: 3}
@@ -68,11 +77,5 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 28f8901356b128b499a0a65af35e6df3, type: 3}
   - sound: 11
     audioClip: {fileID: 8300000, guid: 18be1aedfee63554a9bafb91fd11725a, type: 3}
-  - sound: 13
+  - sound: 12
     audioClip: {fileID: 8300000, guid: 408c35cd0d5067b44a4b656046979dd4, type: 3}
-  - sound: 15
-    audioClip: {fileID: 8300000, guid: 3d10caa9c7839b34799ee3bc48252838, type: 3}
-  - sound: 14
-    audioClip: {fileID: 8300000, guid: 8d7d53eef63d4f84389478ec10ab97ea, type: 3}
-  - sound: 2
-    audioClip: {fileID: 8300000, guid: 94faa09a9381b514aac55b8de006ea2c, type: 3}

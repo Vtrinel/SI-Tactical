@@ -19,10 +19,11 @@ public class SoundManager : MonoBehaviour
     }
 
     [Header("Parameters")]
-    [SerializeField] static float maxDistance = 100f;
-    [SerializeField] static float spatialBlend = 1f;
-    [SerializeField] static float dopplerLevel = 0;
-    [SerializeField] Dictionary<Sound, float> soundTimerDictionary;
+    public float maxDistance = 100f;
+    public float spatialBlend = 1f;
+    public float dopplerLevel = 0;
+    public float delayWalkSound = 0f;
+    Dictionary<Sound, float> soundTimerDictionary;
 
     //[Header("BGM music")]
     //[SerializeField] float BGMFadeSpead;
@@ -58,6 +59,7 @@ public class SoundManager : MonoBehaviour
 
             audioSource.Play();
 
+            Debug.Log(audioSource.clip);
             Object.Destroy(soundGameObject, audioSource.clip.length);
         }
     }
@@ -72,7 +74,7 @@ public class SoundManager : MonoBehaviour
                 if (soundTimerDictionary.ContainsKey(sound))
                 {
                     float lastTimePlayed = soundTimerDictionary[sound];
-                    float playerMoveTimerMax = 0.3f;
+                    float playerMoveTimerMax = delayWalkSound;
                     if (lastTimePlayed + playerMoveTimerMax < Time.time)
                     {
                         soundTimerDictionary[sound] = Time.time;
@@ -89,7 +91,7 @@ public class SoundManager : MonoBehaviour
                 return false;
 
             default:
-                return true;
+                return false;
         }
         return true;
     }

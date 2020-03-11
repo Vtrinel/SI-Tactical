@@ -86,6 +86,8 @@ public class TouniEnemy : IAEnemyVirtual
             }
             yield return null;
 
+            SoundManager.Instance.PlaySound(Sound.EnemyMove, gameObject.transform.position);
+
         } while (myNavAgent.remainingDistance != 0);
 
 
