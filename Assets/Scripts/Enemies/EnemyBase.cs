@@ -33,11 +33,9 @@ public class EnemyBase : MonoBehaviour
 
     public void UpdateLifeBarFill(int currentAmount, int damageDelta)
     {
-        print(currentAmount);
         int i = 1;
         foreach(Image bar in lifeBarList)
         {
-            print(i + " : " + !(currentAmount < i));
             bar.enabled = !(currentAmount < i);
             i++;
         }
