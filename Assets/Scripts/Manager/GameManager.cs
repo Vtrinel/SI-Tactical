@@ -478,12 +478,12 @@ public class GameManager : MonoBehaviour
     {
         if (!gameStarted)
         {
-            if (Input.GetKeyDown(gameManagementActionKey))
+            if (Input.anyKeyDown)
                 StartGame();
         }
         else if (gameWon || gameLost)
         {
-            if (Input.GetKeyDown(gameManagementActionKey))
+            if (Input.anyKeyDown)
                 RestartGame();
         }
     }
