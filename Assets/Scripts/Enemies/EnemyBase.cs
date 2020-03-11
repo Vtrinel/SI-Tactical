@@ -48,7 +48,7 @@ public class EnemyBase : MonoBehaviour
     {
         CheckForLootedDisc();
 
-        Debug.Log(name + " (Enemy) is dead");
+        //Debug.Log(name + " (Enemy) is dead");
         spawned = false;
         setedUpInitiative = false;
         
