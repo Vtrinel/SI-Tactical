@@ -759,6 +759,26 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7740260974055194244, guid: 87d3ebbabf62fde4d923de32ce207ad0,
+        type: 3}
+      propertyPath: m_text
+      value: Press any key to start
+      objectReference: {fileID: 0}
+    - target: {fileID: 7740260974055194244, guid: 87d3ebbabf62fde4d923de32ce207ad0,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 7740260974055194244, guid: 87d3ebbabf62fde4d923de32ce207ad0,
+        type: 3}
+      propertyPath: m_textInfo.spaceCount
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7740260974055194244, guid: 87d3ebbabf62fde4d923de32ce207ad0,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 87d3ebbabf62fde4d923de32ce207ad0, type: 3}
 --- !u!224 &425657829959952679 stripped
@@ -1007,7 +1027,7 @@ PrefabInstance:
     - target: {fileID: 236336244396311172, guid: cf94a64815051f24c9fe7f219c1761cb,
         type: 3}
       propertyPath: testDiscType
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 236336244396311173, guid: cf94a64815051f24c9fe7f219c1761cb,
         type: 3}
@@ -1169,6 +1189,11 @@ PrefabInstance:
       propertyPath: playerExperienceManager
       value: 
       objectReference: {fileID: 6538747667959666325}
+    - target: {fileID: 4519772344196463999, guid: a1283b58bc321fd4cb20fca2a384034a,
+        type: 3}
+      propertyPath: competencesUsabilityManager.minThrowDistance
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a1283b58bc321fd4cb20fca2a384034a, type: 3}
 --- !u!4 &7360405968755364707 stripped
@@ -2340,13 +2365,13 @@ PrefabInstance:
         type: 3}
       propertyPath: startThrowCompetence
       value: 
-      objectReference: {fileID: 11400000, guid: 6504fcacdb13d38479012c0ebc0b2c14,
+      objectReference: {fileID: 11400000, guid: 254e37f41fb260748b1e6ac0237f0da3,
         type: 2}
     - target: {fileID: 3051049089595102683, guid: bcb73cf9d029fb64089c754d5ebc844e,
         type: 3}
       propertyPath: startRecallCompetence
       value: 
-      objectReference: {fileID: 11400000, guid: 0175b2a280fea0f43a117e32fed4523c,
+      objectReference: {fileID: 11400000, guid: 8814397f64654294fa8cf616a6024156,
         type: 2}
     - target: {fileID: 3051049089595102683, guid: bcb73cf9d029fb64089c754d5ebc844e,
         type: 3}
