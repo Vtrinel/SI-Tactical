@@ -21,9 +21,9 @@ public class PlayerAnimation : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.OnAnimDiscThrown += Throw;
-        GameManager.Instance.OnAnimDiscCallback += Callback;
-        GameManager.Instance.OnAnimSpecialLaunch += LaunchSpecial;
+        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscThrown += Throw;
+        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscCallback += Callback;
+        GameManager.Instance.GetCompetencesUsabilityManager().OnSpecialLaunch += LaunchSpecial;
         GameManager.Instance.GetPlayer.OnMoveChange += SetMovement;
 
         if(playerAnimator == null)
@@ -35,9 +35,9 @@ public class PlayerAnimation : MonoBehaviour
 
     private void OnDisable()
     {
-        GameManager.Instance.OnAnimDiscThrown -= Throw;
-        GameManager.Instance.OnAnimDiscCallback -= Callback;
-        GameManager.Instance.OnAnimSpecialLaunch -= LaunchSpecial;
+        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscThrown -= Throw;
+        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscCallback -= Callback;
+        GameManager.Instance.GetCompetencesUsabilityManager().OnSpecialLaunch -= LaunchSpecial;
         GameManager.Instance.GetPlayer.OnMoveChange -= SetMovement;
 
     }

@@ -32,6 +32,7 @@ public class LevelProgressionManager : MonoBehaviour
 
     [Header("References")]
     [SerializeField] LevelGoalZone goalZone = default;
+    public LevelGoalZone GetGoalZone => goalZone;
 
     [Header("Parameters")]
     [SerializeField] int targetProgressValue = 5;
