@@ -4,16 +4,7 @@ using UnityEngine;
 
 public class FxManager : MonoBehaviour
 {
-    [SerializeField] List<GameObject> allExplo = new List<GameObject>();
-    [SerializeField] List<GameObject> exploUse = new List<GameObject>();
-
-    [SerializeField] List<GameObject> allHit = new List<GameObject>();
-    [SerializeField] List<GameObject> hitUse = new List<GameObject>();
-
-
-    [SerializeField] GameObject prefabExplo = default;
-    [SerializeField] GameObject prefabHit = default;
-
+    #region Singleton
     private static FxManager _instance;
     public static FxManager Instance { get { return _instance; } }
 
@@ -28,93 +19,58 @@ public class FxManager : MonoBehaviour
             _instance = this;
         }
     }
+    #endregion
 
-    public GameObject DemandeFx(fxType myTypeFx)
+    [Header("List FX gameobject")]
+    //[Tooltip("Don't forget to put the FX auto remove script on the fx game object")]
+    public FxGameObject[] FXGameObjectList;
+
+    private FxGameObject FxGameObjectStocked = default;
+
+    public void DemandeFx(FxType myTypeFx, Vector3 position)
     {
-        List<GameObject> currentList = new List<GameObject>();
-        List<GameObject> currentUseList = new List<GameObject>();
-        GameObject currentPrefab = null;
-
-        switch (myTypeFx)
+        if (CanCreateFx(myTypeFx))
         {
-            case fxType.Explosion:
-                currentList = allExplo;
-                currentUseList = exploUse;
-                currentPrefab = prefabExplo;
-                break;
-
-            case fxType.Hit:
-                currentList = allHit;
-                currentUseList = hitUse;
-                currentPrefab = prefabHit;
-                break;
+            GameObject newExplo = Instantiate(FxGameObjectStocked.fxGameObject, transform);
         }
+    }
 
-        foreach (GameObject element in currentList)
+    bool CanCreateFx(FxType hisType)
+    {
+        bool canCreateFx = false;
+
+        foreach(FxGameObject fxGameObject in FXGameObjectList)
         {
-            if (!element.gameObject.activeSelf && !currentUseList.Contains(element))
+            // Check if tag name exist
+            if (fxGameObject.fxType == hisType)
             {
-                AddFxToList(element, myTypeFx);
-                return element;
+                canCreateFx = true;
+
+                // Check if gameobject exist
+                if (fxGameObject.fxGameObject == null)
+                {
+                    Debug.LogWarning("Can't find FX object !");
+                    return false;
+                }
+                else
+                {
+                    FxGameObjectStocked = fxGameObject;
+                }
             }
         }
-
-        return CreateFx(myTypeFx);
+        return canCreateFx;
     }
+}
 
-    GameObject CreateFx(fxType hisType)
-    {
-        switch (hisType)
-        {
-            case fxType.Explosion:
-                GameObject newExplo = Instantiate(prefabExplo, transform);
-                allExplo.Add(newExplo);
-                exploUse.Add(newExplo);
-                return newExplo;
+public enum FxType
+{
+    Hit,
+    Explosion,
+}
 
-            case fxType.Hit:
-                GameObject newHit = Instantiate(prefabHit, transform);
-                allHit.Add(newHit);
-                hitUse.Add(newHit);
-                return newHit;
-        }
-
-        return null;
-    }
-
-    void AddFxToList(GameObject fx ,fxType hisType)
-    {
-        switch (hisType)
-        {
-            case fxType.Explosion:
-                exploUse.Add(fx);
-                break;
-
-            case fxType.Hit:
-                hitUse.Add(fx);
-                break;
-        }
-    }
-
-    public void RemoveThisFx(GameObject fx, fxType hisType)
-    {
-        fx.SetActive(false);
-        
-        switch (hisType)
-        {
-            case fxType.Explosion:
-                exploUse.Remove(fx);
-                break;
-
-            case fxType.Hit:
-                hitUse.Remove(fx);
-                break;
-        }
-    }
-
-    public enum fxType
-    {
-        Explosion,
-        Hit
-    }
+[System.Serializable]
+public class FxGameObject
+{
+    public FxType fxType;
+    public GameObject fxGameObject;
 }
