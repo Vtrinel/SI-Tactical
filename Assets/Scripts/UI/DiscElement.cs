@@ -9,9 +9,14 @@ public class DiscElement : MonoBehaviour
 
     [SerializeField] Text textValue;
 
+    public DiscType discType = DiscType.None;
+
     public void SetIcon(int indexSprite, int number)
     {
         RefreshImage(indexSprite);
+        textValue.text = number.ToString();
+
+        discType = (DiscType)indexSprite;
     }
 
     void RefreshImage(int index)
