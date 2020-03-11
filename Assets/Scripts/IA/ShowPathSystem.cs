@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class ShowPathSystem : MonoBehaviour
 {
@@ -12,6 +13,15 @@ public class ShowPathSystem : MonoBehaviour
 
     bool showPreview = false;
     Transform target = default;
+
+    [SerializeField] GameObject EsclamationPoint;
+
+    Transform player;
+
+    private void Start()
+    {
+        player = GameManager.Instance.GetPlayer.transform;
+    }
 
     public void SetValue(float _distance, float _attackRange)
     {
@@ -33,18 +43,33 @@ public class ShowPathSystem : MonoBehaviour
     {
         if (showPreview)
         {
-            DrawPath();
+            List<Vector3> _canPos = DrawPath(target.position);
+
+            if(_canPos != null)
+            {
+                SetLines(_canPos);
+                EsclamationPoint.SetActive(true);
+            }
+            else
+            {
+                lineDeplacement.positionCount = 0;
+                EsclamationPoint.SetActive(false);
+            }
         }
         else
         {
             lineDeplacement.positionCount = 0;
+
+            List<Vector3> _canPos = DrawPath(player.position);
+
+            EsclamationPoint.SetActive(_canPos != null);
         }
     }
 
-    public void DrawPath()
+    public List<Vector3> DrawPath(Vector3 _target)
     {
         myNavAgent.isStopped = true;
-        myNavAgent.SetDestination(target.position);
+        myNavAgent.SetDestination(_target);
 
         NavMeshPath _path = myNavAgent.path;
 
@@ -62,7 +87,7 @@ public class ShowPathSystem : MonoBehaviour
                 if(currentAttackDistance + Vector3.Distance(canPos[canPos.Count - 1], _path.corners[i]) > attackRange)
                 {
                     lineDeplacement.positionCount = 0;
-                    return;
+                    return null;
                 }
                 else
                 {
@@ -89,8 +114,7 @@ public class ShowPathSystem : MonoBehaviour
 
                     if(Vector3.Distance(targetPosition, _path.corners[i]) > attackRange)
                     {
-                        lineDeplacement.positionCount = 0;
-                        return;
+                        return null;
                     }
                     else
                     {
@@ -101,9 +125,9 @@ public class ShowPathSystem : MonoBehaviour
                     currentDistance += Vector3.Distance(_path.corners[i - 1], _path.corners[i]);
                 }
             }
-
-            SetLines(canPos);
         }
+
+        return canPos;
     }
 
     void SetLines(List<Vector3> _canPos)

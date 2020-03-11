@@ -13,7 +13,6 @@ public class EnemyBase : MonoBehaviour
     private void Start()
     {
         SpawnEnemy(transform.position, _lootedDiscType);
-        InitLifeBar(damageReceiptionSystem.GetCurrentLifeAmount);
     }
 
     [Header("References")]
@@ -99,6 +98,8 @@ public class EnemyBase : MonoBehaviour
         {
             lootDiscIndicator.SetActive(_lootedDiscType != DiscType.None);
         }
+
+        InitLifeBar(damageReceiptionSystem.GetCurrentLifeAmount);
     }
 
     public void SetUpInitiative()
