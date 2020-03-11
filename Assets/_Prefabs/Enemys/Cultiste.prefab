@@ -514,7 +514,7 @@ MonoBehaviour:
   goldGain: 10
   damageReceiptionSystem: {fileID: 3894817726808940226}
   knockbackReceiptionSystem: {fileID: -7294889758052032267}
-  lifeBarParent: {fileID: 2449897640519858741}
+  lifeBarParent: {fileID: 8081044398203650225}
   lifeBarEnemyPrefab: {fileID: 5825457385157316566, guid: 839c48820711a904e85284d88787d70d,
     type: 3}
   baseInitiative: 4
@@ -852,6 +852,11 @@ PrefabInstance:
       propertyPath: myNavAgent
       value: 
       objectReference: {fileID: 6103916517976931779}
+    - target: {fileID: 912769019658579482, guid: e4ea51d6e1638774b8f200657b9d000b,
+        type: 3}
+      propertyPath: EsclamationPoint
+      value: 
+      objectReference: {fileID: 7626413247913365439}
     - target: {fileID: 6361404181672808459, guid: e4ea51d6e1638774b8f200657b9d000b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1157,9 +1162,15 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 3480513343435543746}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &2449897640519858741 stripped
+--- !u!224 &8081044398203650225 stripped
 RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1275236252454186743, guid: 63234ee1d16265d41bfaaafaa13d74fc,
+  m_CorrespondingSourceObject: {fileID: 4641213821387363443, guid: 63234ee1d16265d41bfaaafaa13d74fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 3480513343435543746}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7626413247913365439 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6456809469422476157, guid: 63234ee1d16265d41bfaaafaa13d74fc,
     type: 3}
   m_PrefabInstance: {fileID: 3480513343435543746}
   m_PrefabAsset: {fileID: 0}
