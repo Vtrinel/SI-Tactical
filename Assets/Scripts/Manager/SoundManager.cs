@@ -59,6 +59,7 @@ public class SoundManager : MonoBehaviour
 
             audioSource.Play();
 
+            Debug.Log(audioSource.clip);
             Object.Destroy(soundGameObject, audioSource.clip.length);
         }
     }
@@ -90,7 +91,7 @@ public class SoundManager : MonoBehaviour
                 return false;
 
             default:
-                return true;
+                return false;
         }
         return true;
     }
