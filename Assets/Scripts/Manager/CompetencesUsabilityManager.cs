@@ -45,6 +45,11 @@ public class CompetencesUsabilityManager
     float maxRecallRange = 0;
     float maxThrowRange = 0;
 
+    //Action Event
+    public Action OnDiscThrown;
+    public Action OnDiscCallback;
+    public Action OnSpecialLaunch;
+
     public void UpdateSet(CompetenceThrow throwComp, CompetenceRecall recallComp, CompetenceSpecial specialComp)
     {
         throwCompetence = throwComp;
@@ -68,6 +73,8 @@ public class CompetencesUsabilityManager
                     return throwCompetence;
                 case ActionType.Recall:
                     return recallCompetence;
+                case ActionType.Special:
+                    return specialCompetence;
                 default:
                     return null;
             }
@@ -94,6 +101,23 @@ public class CompetencesUsabilityManager
                     trySelectResult = ActionSelectionResult.NoNearbyDisc;
                 }
             }
+            else if (compType == ActionType.Special)
+            {
+                CompetenceSpecialTeleportation foundTeleportationCompetence = specialCompetence as CompetenceSpecialTeleportation;
+                if(foundTeleportationCompetence != null)
+                {
+                    if(foundTeleportationCompetence.GetTeleportationMode == TeleportationMode.Exchange)
+                    {
+                        if(foundTeleportationCompetence.GetTeleportationTarget == TeleportationTarget.NewestDisc || foundTeleportationCompetence.GetTeleportationTarget == TeleportationTarget.OldestDisc)
+                        {
+                            if (DiscManager.Instance.GetInRangeDiscsCount == 0)
+                            {
+                                trySelectResult = ActionSelectionResult.NoNearbyDisc;
+                            }
+                        }
+                    }
+                }
+            }
             currentActionPoints = totalActionPoints;
         }
 
@@ -107,7 +131,7 @@ public class CompetencesUsabilityManager
                 break;
 
             case ActionSelectionResult.NotEnoughActionPoints:
-                //Debug.Log("Not enough action points for " + compType);
+                Debug.Log("Not enough action points for " + compType);
                 break;
 
             case ActionSelectionResult.NoCompetenceFound:
@@ -136,6 +160,8 @@ public class CompetencesUsabilityManager
                 return throwCompetence.GetActionPointsCost;
             case ActionType.Recall:
                 return recallCompetence.GetActionPointsCost;
+            case ActionType.Special:
+                return specialCompetence.GetActionPointsCost;
         }
         return 0;
     }
@@ -155,6 +181,9 @@ public class CompetencesUsabilityManager
                 break;
             case ActionType.Recall:
                 competenceToCheck = recallCompetence;
+                break;
+            case ActionType.Special:
+                competenceToCheck = specialCompetence;
                 break;
         }
 
@@ -210,6 +239,7 @@ public class CompetencesUsabilityManager
                 StartRecallPreparation();
                 break;
             case ActionType.Special:
+                StartSpecialPreparation();
                 break;
         }
     }
@@ -225,6 +255,7 @@ public class CompetencesUsabilityManager
                 UpdateRecallPreparation();
                 break;
             case ActionType.Special:
+                UpdateSpecialPreparation();
                 break;
         }
     }
@@ -240,6 +271,7 @@ public class CompetencesUsabilityManager
                 EndRecallPreparation();
                 break;
             case ActionType.Special:
+                EndSpecialPreparation();
                 break;
         }
     }
@@ -316,6 +348,100 @@ public class CompetencesUsabilityManager
     }
     #endregion
 
+    #region Special Preparation
+    CompetenceSpecialTeleportation specialCompetenceTeleportTyped = default;
+
+    public void StartSpecialPreparation()
+    {
+        specialCompetenceTeleportTyped = specialCompetence as CompetenceSpecialTeleportation;
+        if (specialCompetenceTeleportTyped != null)
+            StartTeleportationPreparation();
+    }
+
+    public void UpdateSpecialPreparation()
+    {
+        if (specialCompetenceTeleportTyped != null)
+            UpdateTeleportationPreparation();
+    }
+
+    public void EndSpecialPreparation()
+    {
+        if (specialCompetenceTeleportTyped != null)
+            EndTeleportationPreparation();
+    }
+
+    #region Teleportation Utilities
+    Vector3 currentTeleportationPosition = default;
+    GameObject teleportationExchangeObject = default;
+    bool canTeleport = false;
+
+    public void StartTeleportationPreparation()
+    {
+        canTeleport = false;
+        switch (specialCompetenceTeleportTyped.GetTeleportationMode)
+        {
+            case TeleportationMode.Exchange:
+                teleportationExchangeObject = GetTeleportationExchangeObject(specialCompetenceTeleportTyped.GetTeleportationTarget);
+                currentTeleportationPosition = teleportationExchangeObject.transform.position;
+                canTeleport = true;
+                break;
+            case TeleportationMode.TowardDirection:
+                currentTeleportationPosition = GetTowardDirectionTeleportationPosition();
+                break;
+        }
+
+        PreviewCompetencesManager.Instance.StartTeleportationPreview(_player.transform.position, currentTeleportationPosition, canTeleport, recallCompetence);
+    }
+
+    public void UpdateTeleportationPreparation()
+    {
+        switch (specialCompetenceTeleportTyped.GetTeleportationMode)
+        {
+            case TeleportationMode.TowardDirection:
+                currentTeleportationPosition = GetTowardDirectionTeleportationPosition();
+                break;
+        }
+
+        PreviewCompetencesManager.Instance.UpdateTeleportationPreview(currentTeleportationPosition, canTeleport, recallCompetence);
+    }
+
+    public void EndTeleportationPreparation()
+    {
+        PreviewCompetencesManager.Instance.EndTeleportationPreview();
+        teleportationExchangeObject = null;
+        currentTeleportationPosition = Vector3.zero;
+    }
+
+    public GameObject GetTeleportationExchangeObject(TeleportationTarget teleportationTarget)
+    {
+        DiscsOrder order = (teleportationTarget == TeleportationTarget.NewestDisc ? DiscsOrder.FromNewestToOldest :
+            teleportationTarget == TeleportationTarget.OldestDisc ? DiscsOrder.FromOldestToNewest : DiscsOrder.FromNewestToOldest);
+        List<DiscScript> discs = DiscListingFactory.GetSortedInRangeDiscs(1, order, true, DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+
+        if (discs.Count == 0)
+            return null;
+
+        return discs[0].gameObject;
+    }
+
+    public Vector3 GetTowardDirectionTeleportationPosition()
+    {
+        Vector3 movement = currentWorldMouseResult.mouseWorldPosition - _player.transform.position;
+
+        if(movement.magnitude > specialCompetenceTeleportTyped.GetTeleportationDistance)
+        {
+            movement = movement.normalized * specialCompetenceTeleportTyped.GetTeleportationDistance;
+        }
+        Vector3 targetPos = _player.transform.position + movement;
+
+        LayerMask checkMask = 1 << 10 | 1 << 11 | 1 << 12 | 1 << 14;
+        canTeleport = Physics.OverlapSphere(targetPos, 1f, checkMask).Length == 0;
+
+        return targetPos;
+    }
+    #endregion
+    #endregion
+
     #endregion
 
     #region Throw
@@ -365,6 +491,9 @@ public class CompetencesUsabilityManager
 
         ChangeUsabilityState(UsabilityState.Using, ActionType.Throw);
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+
+        OnDiscThrown?.Invoke(); //Event
+
     }
     #endregion
 
@@ -383,6 +512,8 @@ public class CompetencesUsabilityManager
         else
             ResetUsabilityState();
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+
+        OnDiscCallback?.Invoke(); //Event
     }
 
     public void StartRecallDisc(DiscScript disc)
@@ -396,13 +527,45 @@ public class CompetencesUsabilityManager
         disc.StartTrajectory(trajectoryParameters, null);
         currentlyInUseDiscs.Add(disc);
         disc.OnTrajectoryStopped += RemoveDiscFromInUse;
+
+        OnSpecialLaunch?.Invoke();
+    }
+    #endregion
+
+    #region Special
+    public bool LaunchSpecialCompetence()
+    {
+        if(specialCompetenceTeleportTyped != null)
+        {
+            return LaunchTeleportation();
+        }
+        return false;
+    }
+
+    public bool LaunchTeleportation()
+    {
+        if (!canTeleport)
+            return false;
+
+        Vector3 initialPlayerPos = _player.transform.position;
+
+        _player.transform.position = currentTeleportationPosition;
+        if(teleportationExchangeObject != null)
+        {
+            teleportationExchangeObject.transform.position = initialPlayerPos;
+        }
+
+        ResetUsabilityState();
+        CameraManager.instance.GetPlayerCamera.transform.position = initialPlayerPos;
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+
+        return true;
     }
     #endregion
 
     List<DiscScript> currentlyInUseDiscs = new List<DiscScript>();
     public void RemoveDiscFromInUse(DiscScript disc)
     {
-        //disc.OnReachedTrajectoryEnd -= RemoveDiscFromInUse;
         currentlyInUseDiscs.Remove(disc);
 
         if (currentlyInUseDiscs.Count == 0)

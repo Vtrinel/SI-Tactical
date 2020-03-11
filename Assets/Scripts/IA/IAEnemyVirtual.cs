@@ -87,4 +87,8 @@ public class IAEnemyVirtual : MonoBehaviour
         return _targetPos;
     }
 
+    public void LookPosition(Vector3 _pos)
+    {
+        transform.LookAt(_pos);
+    }
 }

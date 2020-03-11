@@ -6,12 +6,17 @@ public static class DiscListingFactory
 {
     public static List<DiscScript> GetSortedRecallableDiscs(CompetenceRecall competence, List<DiscScript> throwedDiscs, List<DiscScript> inRangeDiscs)
     {
+        return GetSortedInRangeDiscs(competence.GetNumberOfRecalledDiscs, competence.GetRecallingOrder, 
+            competence.GetCanRecallUnthrowedDiscs, throwedDiscs, inRangeDiscs);        
+    }
+
+    public static List<DiscScript> GetSortedInRangeDiscs(int numberOfDiscsToRecall, DiscsOrder discsRecallOrder, bool canRecallUnthrowedDiscs, List<DiscScript> throwedDiscs, List<DiscScript> inRangeDiscs)
+    {
+
         List<DiscScript> finalList = new List<DiscScript>();
 
-        int remainingNumberOfDiscsToRecall = competence.GetNumberOfRecalledDiscs;
+        int remainingNumberOfDiscsToRecall = numberOfDiscsToRecall;
         bool recallAll = remainingNumberOfDiscsToRecall == 0;
-        DiscsOrder discsRecallOrder = competence.GetRecallingOrder;
-        bool canRecallUnthrowedDiscs = competence.GetCanRecallUnthrowedDiscs;
 
         int currentDiscIndex = (discsRecallOrder == DiscsOrder.FromNewestToOldest ? throwedDiscs.Count - 1 : 0);
         while ((recallAll || remainingNumberOfDiscsToRecall > 0) && throwedDiscs.Count > 0)
@@ -54,6 +59,7 @@ public static class DiscListingFactory
 
         return finalList;
     }
+
 
     public static List<DiscTrajectoryParameters> GetDiscInRangeTrajectory(Vector3 targetPosition, CompetenceRecall recallCompetence)
     {

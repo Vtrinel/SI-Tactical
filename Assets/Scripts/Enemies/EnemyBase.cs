@@ -18,10 +18,26 @@ public class EnemyBase : MonoBehaviour
     [Header("References")]
     [SerializeField] DamageableEntity damageReceiptionSystem = default;
     [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
-    [SerializeField] Image lifeBar = default;
+    [SerializeField] Transform lifeBarParent;
+    [SerializeField] GameObject lifeBarEnemyPrefab;
+    List<Image> lifeBarList = new List<Image>();
+
+    void InitLifeBar(int lifeNumber)
+    {
+        for(int i=0; i < lifeNumber; i++)
+        {
+            lifeBarList.Add(Instantiate(lifeBarEnemyPrefab, lifeBarParent).GetComponent<Image>());
+        }
+    }
+
     public void UpdateLifeBarFill(int currentAmount, int damageDelta)
     {
-        lifeBar.fillAmount = damageReceiptionSystem.GetCurrentLifePercent;
+        int i = 1;
+        foreach(Image bar in lifeBarList)
+        {
+            bar.enabled = !(currentAmount < i);
+            i++;
+        }
     }
 
     public Action<EnemyBase> OnEnemyDeath;
@@ -29,13 +45,14 @@ public class EnemyBase : MonoBehaviour
     {
         CheckForLootedDisc();
 
-        Debug.Log(name + " (Enemy) is dead");
+        //Debug.Log(name + " (Enemy) is dead");
         spawned = false;
         setedUpInitiative = false;
         
         OnEnemyDeath?.Invoke(this);
-        Destroy(gameObject);
         PlayerExperienceManager.Instance.GainGold(goldGain);
+        Destroy(gameObject);
+        
     }   
 
     [Header("Common Values")]
@@ -81,6 +98,8 @@ public class EnemyBase : MonoBehaviour
         {
             lootDiscIndicator.SetActive(_lootedDiscType != DiscType.None);
         }
+
+        InitLifeBar(damageReceiptionSystem.GetCurrentLifeAmount);
     }
 
     public void SetUpInitiative()
