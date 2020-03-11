@@ -51,8 +51,9 @@ public class EnemyBase : MonoBehaviour
         setedUpInitiative = false;
         
         OnEnemyDeath?.Invoke(this);
-        Destroy(gameObject);
         PlayerExperienceManager.Instance.GainGold(goldGain);
+        Destroy(gameObject);
+        
     }   
 
     [Header("Common Values")]
