@@ -472,6 +472,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         turnManager.StartPlayerTurn();
+        levelManager.SetUpGoalAnimation();
     }
 
     bool restarting = false;
