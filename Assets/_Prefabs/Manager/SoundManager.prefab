@@ -43,6 +43,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d30387cd3e5c6e4498fe1963cb8cbe1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxDistance: 100
+  spatialBlend: 1
+  dopplerLevel: 0
+  delayWalkSound: 0.35
   enemyMovementList:
   - {fileID: 8300000, guid: 9013cac8f48734943bfd8b1d17031f33, type: 3}
   - {fileID: 8300000, guid: 9ead6dc9575ce954f85e576b6c64c0fc, type: 3}
