@@ -5,14 +5,14 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour
 {
 
-    public Canvas MenuCanvas;
+    public GameObject MenuCanvas;
 
     public void ContinueGame()
     {
         Debug.Log("ContinueGame");
 
         TimeManager.Instance.Resume();
-        MenuCanvas.gameObject.SetActive(false);
+        MenuCanvas.SetActive(false);
     }
 
     public void QuitGame()
