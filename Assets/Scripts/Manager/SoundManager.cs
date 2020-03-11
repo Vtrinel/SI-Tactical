@@ -41,7 +41,7 @@ public class SoundManager : MonoBehaviour
         soundTimerDictionary[Sound.EnemyMove] = 0f;
     }
 
-    // To play a sound from another class : SoundManagerScript.PlaySound("NameOfTheSound");
+    // To play a sound from another class : SoundManager.PlaySound(Sound.name, position);
     public void PlaySound(Sound sound, Vector3 position)
     {
         if (CanPlaySound(sound))
@@ -58,8 +58,6 @@ public class SoundManager : MonoBehaviour
             audioSource.dopplerLevel = dopplerLevel;
 
             audioSource.Play();
-
-            Debug.Log(audioSource.clip);
             Object.Destroy(soundGameObject, audioSource.clip.length);
         }
     }
@@ -67,9 +65,29 @@ public class SoundManager : MonoBehaviour
     // Test if a sound can be played or need some time
     private bool CanPlaySound(Sound sound)
     {
+        bool soundExist = false;
+
+        //Check if the sound exist
+        foreach (SoundAudioClip soundAudioClip in soundAudioClipList)
+        {
+            if (soundAudioClip.sound == sound)
+            {
+                soundExist = true;
+            }
+            if (soundAudioClip.audioClip != null)
+            {
+                Debug.LogWarning("AudioClip not found");
+            }
+        }
+
+        if (!soundExist)
+        {
+            return false;
+        }
+
+        // If it exist, check if that sound have a cooldown or not (and is in cooldown or not)
         switch (sound)
         {
-            //Sound that shouldn't be repeated to fast
             case Sound.EnemyMove:
                 if (soundTimerDictionary.ContainsKey(sound))
                 {
@@ -91,7 +109,7 @@ public class SoundManager : MonoBehaviour
                 return false;
 
             default:
-                return false;
+                return true;
         }
         return true;
     }
@@ -152,6 +170,9 @@ public enum Sound
     TouniATK,
     ShieldGetHit,
     WallGetHit,
+    PlayerTeleport,
+    SelectCompetence,
+    NotEnoughActionPoint,
     none
 }
 
