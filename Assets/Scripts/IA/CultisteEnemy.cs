@@ -93,6 +93,7 @@ public class CultisteEnemy : IAEnemyVirtual
         myNavAgent.SetDestination(destination);
         myNavAgent.isStopped = false;
 
+
         StartCoroutine(WaitDeplacement());
     }
 
@@ -110,6 +111,8 @@ public class CultisteEnemy : IAEnemyVirtual
                 break;
             }
             yield return null;
+
+            SoundManager.Instance.PlaySound(Sound.EnemyMove, gameObject.transform.position);
 
         } while (myNavAgent.remainingDistance != 0);
 
@@ -156,6 +159,7 @@ public class CultisteEnemy : IAEnemyVirtual
         myAnimator.SetTrigger("Attack");
         myAnimator.SetBool("Preparing", false);
         LaunchObj();
+        SoundManager.Instance.PlaySound(Sound.CultistATK, gameObject.transform.position);
     }
 
     void LaunchObj()
