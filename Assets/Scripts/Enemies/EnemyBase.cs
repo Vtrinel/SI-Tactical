@@ -13,6 +13,11 @@ public class EnemyBase : MonoBehaviour
     private void Start()
     {
         SpawnEnemy(transform.position, _lootedDiscType);
+        if(_lootedDiscType != DiscType.None)
+        {
+            TouniFourrureBasique.material = TouniFourrureAndMaskAlt;
+            TouniMaskBasique.material = TouniFourrureAndMaskAlt;
+        }
     }
 
     [Header("References")]
@@ -21,6 +26,11 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] Transform lifeBarParent;
     [SerializeField] GameObject lifeBarEnemyPrefab;
     List<Image> lifeBarList = new List<Image>();
+
+    public MeshRenderer TouniFourrureBasique;
+    public MeshRenderer TouniMaskBasique;
+    public Material TouniFourrureAndMaskAlt;
+
 
     void InitLifeBar(int lifeNumber)
     {
@@ -167,6 +177,12 @@ public class EnemyBase : MonoBehaviour
         damageReceiptionSystem.OnLifeReachedZero += Die;
         TurnManager.Instance.OnEnemyTurnInterruption += InterruptAllAction;
 
+        if (tooltipCollider != null)
+        {
+            tooltipCollider.OnStartTooltip += StartHovering;
+            tooltipCollider.OnEndTooltip += EndHovering;
+        }
+
         if (myIA == null)
             return;
         myIA.OnFinishTurn += EndTurn;
@@ -177,6 +193,12 @@ public class EnemyBase : MonoBehaviour
         damageReceiptionSystem.OnLifeAmountChanged -= UpdateLifeBarFill;
         damageReceiptionSystem.OnLifeReachedZero -= Die;
         TurnManager.Instance.OnEnemyTurnInterruption -= InterruptAllAction;
+
+        if (tooltipCollider != null)
+        {
+            tooltipCollider.OnStartTooltip -= StartHovering;
+            tooltipCollider.OnEndTooltip -= EndHovering;
+        }
 
         if (myIA == null)
             return;
@@ -194,5 +216,18 @@ public class EnemyBase : MonoBehaviour
     public void HidePreview(bool value)
     {
         myIA.myShowPath.ShowOrHide(value);
+    }
+
+    [Header("Tooltips")]
+    [SerializeField] TooltipCollider tooltipCollider = default;
+
+    public void StartHovering()
+    {
+        //Debug.Log("Start Hovering " + name);
+    }
+
+    public void EndHovering()
+    {
+        //Debug.Log("End Hovering " + name);
     }
 }

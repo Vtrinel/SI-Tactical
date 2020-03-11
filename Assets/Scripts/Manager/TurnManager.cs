@@ -132,11 +132,16 @@ public class TurnManager : MonoBehaviour
     public Action OnEnemyTurnInterruption;
     public void InterruptEnemiesTurn()
     {
-        EndEnemiesTurn();
-
+        //EndEnemiesTurn();
+        currentTurnState = TurnState.ProgressionTurn;
         OnEnemyTurnInterruption?.Invoke();
         currentEnemiesTurnCounter = orderedInGameEnemies.Count;
         currentTurnEnemy = null;
+    }
+    public void EndPlayerRage()
+    {
+        currentTurnState = TurnState.ProgressionTurn;
+        StartCoroutine("BetweenTurnsCoroutine");
     }
 
     public void EndEnemiesTurn()

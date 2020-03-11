@@ -8,7 +8,6 @@ public class ButtonUtilities : MonoBehaviour
     public bool statut = false;
 
     public Image myIcon;
-    public Image myOutline;
 
     public Color selectedColor = Color.red;
 
@@ -73,11 +72,8 @@ public class ButtonUtilities : MonoBehaviour
         statut = true;
 
         myIcon.color = selectedColor;
-        myOutline.color = selectedColor;
 
-        //myAudioSource.PlayOneShot(clickButtonSound);
-
-        myOutline.gameObject.SetActive(true);
+        myAudioSource.PlayOneShot(clickButtonSound);
     }
 
     public void Disable()
@@ -85,15 +81,11 @@ public class ButtonUtilities : MonoBehaviour
         statut = false;
 
         myIcon.color = Color.white;
-        myOutline.color = Color.white;
-
-        myOutline.gameObject.SetActive(false);
     }
 
     public void OnClickButton()
     {
         GameManager.Instance.SelectAction(myActionType);
-        //ActiveOrDisable(!statut);
     }
 
     void ActiveOrDisable(bool value)

@@ -46,8 +46,8 @@ public class CompetencesUsabilityManager
     float maxThrowRange = 0;
 
     //Action Event
-    public Action OnDiscThrown;
-    public Action OnDiscCallback;
+    public Action OnDiscThrownAnimEvent;
+    public Action OnDiscRecallAnimEvent;
     public Action OnSpecialLaunch;
 
     public void UpdateSet(CompetenceThrow throwComp, CompetenceRecall recallComp, CompetenceSpecial specialComp)
@@ -444,6 +444,21 @@ public class CompetencesUsabilityManager
 
     #endregion
 
+    public void LaunchCompetenceForReal()
+    {
+        switch (currentCompetenceType)
+        {
+            case ActionType.Throw:
+                LaunchThrowCompetenceForReal();
+                break;
+            case ActionType.Recall:
+                LaunchRecallCompetenceForReal();
+                break;
+            case ActionType.Special:
+                break;
+        }
+    }
+
     #region Throw
     public Vector3 GetInRangeThrowTargetPosition(Vector3 baseTargetPos)
     {
@@ -466,41 +481,84 @@ public class CompetencesUsabilityManager
         return trueTargetPos;
     }
 
+    GameObject currentObjLauncher = default;
+    Vector3 currentThrowPosition = default;
+    DiscTrajectoryParameters currentThrowTrajectoryParameters = default;
     public void LaunchThrowCompetence(GameObject objLauncher)
+    {
+        OnDiscThrownAnimEvent?.Invoke(); //Event
+        ChangeUsabilityState(UsabilityState.Using, ActionType.Throw);
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+        currentObjLauncher = objLauncher;
+        currentThrowPosition = currentWorldMouseResult.mouseWorldPosition;
+
+        Vector3 lookPos = currentThrowPosition;
+        List<DiscScript> inRangeThrowedDiscs = new List<DiscScript>();
+        List<DiscScript> inRangeDiscs = DiscManager.Instance.GetInRangeDiscs;
+        foreach (DiscScript disc in DiscManager.Instance.GetAllThrowedDiscs)
+        {
+            if (inRangeDiscs.Contains(disc))
+                inRangeThrowedDiscs.Add(disc);
+        }
+
+        if (inRangeThrowedDiscs.Count > 0)
+        {
+            foreach (TrajectoryModifier modifier in throwCompetence.GetTrajectoryModifiers)
+            {
+                TrajectoryModifierLinkedDiscs linkModifier = modifier as TrajectoryModifierLinkedDiscs;
+                if (linkModifier != null)
+                {
+                    switch (linkModifier.GetLinkedDiscTrajectoryType)
+                    {
+                        case DiscsOrder.FromOldestToNewest:
+                            lookPos = inRangeThrowedDiscs[0].transform.position;
+                            break;
+
+                        case DiscsOrder.FromNewestToOldest:
+                            lookPos = inRangeThrowedDiscs[inRangeThrowedDiscs.Count - 1].transform.position;
+                            break;
+                    }
+
+                    break;
+                }
+            }
+        }
+        _player.StartLookAt(lookPos);
+    }
+
+    public void LaunchThrowCompetenceForReal()
     {
         currentlyInUseDiscs = new List<DiscScript>();
 
         DiscScript newDisc = DiscManager.Instance.TakeFirstDiscFromPossessedDiscs();
-        if(newDisc == null)
+        if (newDisc == null)
         {
             //Debug.LogWarning("NO DISK TO THROW");
             return;
         }
 
-        DiscTrajectoryParameters trajectoryParameters = 
+        DiscTrajectoryParameters trajectoryParameters =
             DiscTrajectoryFactory.GetTrajectory(throwCompetence,
-            _player.transform.position, GetInRangeThrowTargetPosition(currentWorldMouseResult.mouseWorldPosition), 
+            _player.transform.position, GetInRangeThrowTargetPosition(currentThrowPosition),
             DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, newDisc);
 
         newDisc.SetIsBeingRecalled(false);
         newDisc.SetRetreivableByPlayer(false);
-        newDisc.StartTrajectory(trajectoryParameters, objLauncher);
+        newDisc.StartTrajectory(trajectoryParameters, currentObjLauncher);
         currentlyInUseDiscs.Add(newDisc);
         newDisc.OnTrajectoryStopped += RemoveDiscFromInUse;
         newDisc.OnReachedTrajectoryEnd += RemoveDiscFromInUse;
-
-        ChangeUsabilityState(UsabilityState.Using, ActionType.Throw);
-        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
-
-        OnDiscThrown?.Invoke(); //Event
-
     }
     #endregion
 
     #region Recall
     public void LaunchRecallCompetence()
     {
-        List<DiscScript> discsToRecall = DiscListingFactory.GetSortedRecallableDiscs(recallCompetence, DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+        OnDiscRecallAnimEvent?.Invoke(); //Event
+        ChangeUsabilityState(UsabilityState.Using, ActionType.Recall);
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+
+        /*List<DiscScript> discsToRecall = DiscListingFactory.GetSortedRecallableDiscs(recallCompetence, DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
 
         foreach(DiscScript discToRecall in discsToRecall)
         {
@@ -511,9 +569,24 @@ public class CompetencesUsabilityManager
             ChangeUsabilityState(UsabilityState.Using, ActionType.Recall);
         else
             ResetUsabilityState();
-        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();*/
 
-        OnDiscCallback?.Invoke(); //Event
+    }
+    public void LaunchRecallCompetenceForReal()
+    {
+        currentlyInUseDiscs = new List<DiscScript>();
+        List<DiscScript> discsToRecall = DiscListingFactory.GetSortedRecallableDiscs(recallCompetence, DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs);
+
+        foreach (DiscScript discToRecall in discsToRecall)
+        {
+            StartRecallDisc(discToRecall);
+        }
+
+        if (discsToRecall.Count > 0)
+            ChangeUsabilityState(UsabilityState.Using, ActionType.Recall);
+        else
+            ResetUsabilityState();
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
     }
 
     public void StartRecallDisc(DiscScript disc)
