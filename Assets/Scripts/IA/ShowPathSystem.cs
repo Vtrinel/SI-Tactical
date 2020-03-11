@@ -45,7 +45,7 @@ public class ShowPathSystem : MonoBehaviour
         {
             List<Vector3> _canPos = DrawPath(target.position);
 
-            if(_canPos != null)
+            if (_canPos != null)
             {
                 SetLines(_canPos);
                 EsclamationPoint.SetActive(true);
@@ -60,9 +60,9 @@ public class ShowPathSystem : MonoBehaviour
         {
             lineDeplacement.positionCount = 0;
 
-            List<Vector3> _canPos = DrawPath(player.position);
+            //List<Vector3> _canPos = DrawPath(player.position);
 
-            EsclamationPoint.SetActive(_canPos != null);
+            //EsclamationPoint.SetActive(_canPos != null);
         }
     }
 
@@ -84,7 +84,7 @@ public class ShowPathSystem : MonoBehaviour
         {
             if (currentDistance > distance)
             {
-                if(currentAttackDistance + Vector3.Distance(canPos[canPos.Count - 1], _path.corners[i]) > attackRange)
+                if (currentAttackDistance + Vector3.Distance(canPos[canPos.Count - 1], _path.corners[i]) > attackRange)
                 {
                     lineDeplacement.positionCount = 0;
                     return null;
@@ -112,7 +112,7 @@ public class ShowPathSystem : MonoBehaviour
 
                     canPos.Add(targetPosition);
 
-                    if(Vector3.Distance(targetPosition, _path.corners[i]) > attackRange)
+                    if (Vector3.Distance(targetPosition, _path.corners[i]) > attackRange)
                     {
                         return null;
                     }
