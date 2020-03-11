@@ -14,13 +14,38 @@ public class ShowPathSystem : MonoBehaviour
     bool showPreview = false;
     Transform target = default;
 
+    bool playerTurn = false;
+    public bool canCheck = true;
+
     [SerializeField] GameObject EsclamationPoint;
 
     Transform player;
 
+    private void OnEnable()
+    {
+        TurnManager.Instance.OnStartPlayerTurn += SetPlayerTurn;
+        TurnManager.Instance.OnEndPlayerTurn += UnSetPlayerTurn;
+    }
+
+    private void OnDisable()
+    {
+        TurnManager.Instance.OnStartPlayerTurn -= SetPlayerTurn;
+        TurnManager.Instance.OnEndPlayerTurn -= UnSetPlayerTurn;
+    }
+
     private void Start()
     {
         player = GameManager.Instance.GetPlayer.transform;
+    }
+
+    void SetPlayerTurn()
+    {
+        playerTurn = true;
+    }
+
+    void UnSetPlayerTurn()
+    {
+        playerTurn = false;
     }
 
     public void SetValue(float _distance, float _attackRange)
@@ -41,28 +66,34 @@ public class ShowPathSystem : MonoBehaviour
 
     private void Update()
     {
-        if (showPreview)
+        if (playerTurn && canCheck)
         {
-            List<Vector3> _canPos = DrawPath(target.position);
-
-            if (_canPos != null)
+            if (showPreview)
             {
-                SetLines(_canPos);
-                EsclamationPoint.SetActive(true);
+                List<Vector3> _canPos = DrawPath(target.position);
+
+                if (_canPos != null)
+                {
+                    SetLines(_canPos);
+                    EsclamationPoint.SetActive(true);
+                }
+                else
+                {
+                    lineDeplacement.positionCount = 0;
+                    EsclamationPoint.SetActive(false);
+                }
             }
             else
             {
                 lineDeplacement.positionCount = 0;
-                EsclamationPoint.SetActive(false);
+
+                List<Vector3> _canPos = DrawPath(player.position);
+                EsclamationPoint.SetActive(_canPos != null);
             }
         }
         else
         {
-            lineDeplacement.positionCount = 0;
-
-            //List<Vector3> _canPos = DrawPath(player.position);
-
-            //EsclamationPoint.SetActive(_canPos != null);
+            EsclamationPoint.SetActive(false);
         }
     }
 
