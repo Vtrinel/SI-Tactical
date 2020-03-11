@@ -46,7 +46,7 @@ public class UIManager : MonoBehaviour
             _instance = this;
         }
 
-        ShowStartPanel();
+        //ShowStartPanel();
     }
 
     public void ChangeEndTurnButtonVisibility(bool visible)
@@ -75,7 +75,7 @@ public class UIManager : MonoBehaviour
     #region AP Costs
     [Header("Action poins cost")]
     [SerializeField] Text actionPointsCostText = default;
-    [SerializeField] Transform actionPointsCostTextParent = default;
+    [SerializeField] RectTransform actionPointsCostTextParent = default;
     [SerializeField] PointActionBar actionBar = default;
     public PointActionBar GetActionBar => actionBar;
 
@@ -87,7 +87,14 @@ public class UIManager : MonoBehaviour
     public void UpdateActionPointCostText(int cost, int total)
     {
         actionPointsCostText.text = cost + "/" + total + "AP";
-        actionPointsCostTextParent.localPosition = Input.mousePosition;
+        Vector2 newPos = Input.mousePosition;
+        if (newPos.x > Screen.width - actionPointsCostTextParent.sizeDelta.x)
+            newPos.x -= actionPointsCostTextParent.sizeDelta.x;
+
+        if (newPos.y < actionPointsCostTextParent.sizeDelta.y)
+            newPos.y += actionPointsCostTextParent.sizeDelta.y;
+
+        actionPointsCostTextParent.localPosition = newPos;
     }
 
     public void HideActionPointText()
@@ -161,6 +168,43 @@ public class UIManager : MonoBehaviour
 
             usedTextsCounter++;
         }
+    }
+    #endregion
+
+    #region Goal Management
+    [Header("Goal Management")]
+    [SerializeField] Animator goalPanelAnimator = default;
+    [SerializeField] Text turnGoalText = default;
+    [SerializeField] Text turnGoalValueText = default;
+    int totalNumberOfTurnsToWait = 0;
+    int remainingNumberOfTurnsToWait = 0;
+
+    public void SetUpGoalPanel(int numberOfTurnsToWait)
+    {
+        totalNumberOfTurnsToWait = numberOfTurnsToWait;
+        remainingNumberOfTurnsToWait = numberOfTurnsToWait;
+        turnGoalText.text = "Stay near the god's statue for " + totalNumberOfTurnsToWait + " turns";
+        turnGoalValueText.text = remainingNumberOfTurnsToWait.ToString();
+
+        goalPanelAnimator.SetTrigger("showGoalPanel");
+    }
+
+    public void OnGoalZoneReached()
+    {
+        goalPanelAnimator.SetTrigger("reachedGoalZone");
+    }
+
+    public void UpdateRemainingNumberOfTurns(int remaining)
+    {
+        remainingNumberOfTurnsToWait = remaining;
+        //turnGoalText.text = "Stay near the god's statue for " + remainingNumberOfTurnsToWait + " more turns";
+        turnGoalValueText.text = remainingNumberOfTurnsToWait.ToString();
+        goalPanelAnimator.SetTrigger("updateGoal");
+    }
+
+    public void OnGoalTurnAmountReached()
+    {
+        goalPanelAnimator.SetTrigger("reachedGoalTurn");
     }
     #endregion
 }

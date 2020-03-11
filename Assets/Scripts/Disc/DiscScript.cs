@@ -27,6 +27,7 @@ public class DiscScript : MonoBehaviour
     [SerializeField] float accelerationDuration = 0.2f;
     [SerializeField] AnimationCurve accelerationCurve = AnimationCurve.Linear(0, 0, 1, 1);
     TimerSystem accelerationDurationSystem = new TimerSystem();
+    [SerializeField] EffectZoneType zoneType = EffectZoneType.DiscTrajectoryEndZone;
 
     float currentSpeed = 0f;
     List<Vector3> currentTrajectory = new List<Vector3>();
@@ -88,6 +89,11 @@ public class DiscScript : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        tooltipCollider.SetTooltipInformations(TooltipInformationFactory.GetDiscTypeInformations(DiscManager.Instance.GetDiscInformations(_discType)));
+    }
+
     void Update()
     {
         if (currentTrajectory.Count > 0)
@@ -100,11 +106,25 @@ public class DiscScript : MonoBehaviour
     private void OnEnable()
     {
         knockbackSystem.OnKnockbackUpdate += MoveKnockback;
+        knockbackSystem.OnKnockbackEnded += GenerateKnockbackZoneOnEndTrajectory;
+
+        if (tooltipCollider != null)
+        {
+            tooltipCollider.OnStartTooltip += StartHovering;
+            tooltipCollider.OnEndTooltip += EndHovering;
+        }
     }
 
     private void OnDisable()
     {
         knockbackSystem.OnKnockbackUpdate -= MoveKnockback;
+        knockbackSystem.OnKnockbackEnded -= GenerateKnockbackZoneOnEndTrajectory;
+
+        if (tooltipCollider != null)
+        {
+            tooltipCollider.OnStartTooltip -= StartHovering;
+            tooltipCollider.OnEndTooltip -= EndHovering;
+        }
     }
 
     #region Movement Check
@@ -129,15 +149,19 @@ public class DiscScript : MonoBehaviour
             if (hit.collider.gameObject.layer != 10 || blockedByEnemies)
             {
                 // test bouclier
-                if(hit.collider.gameObject.layer == 12)
+                if (hit.collider.gameObject.layer == 12)
                 {
-                    ShieldManager objShielManager = hit.transform.parent.GetComponent<ShieldManager>();
-
-                    if (objShielManager != null)
+                    Transform hitParent = hit.transform.parent;
+                    if (hitParent != null)
                     {
-                        if(objShielManager.myObjParent == lastObjTouch)
+                        ShieldManager objShielManager = hit.transform.parent.GetComponent<ShieldManager>();
+
+                        if (objShielManager != null)
                         {
-                            return false;
+                            if (objShielManager.myObjParent == lastObjTouch)
+                            {
+                                return false;
+                            }
                         }
                     }
                 }
@@ -173,6 +197,15 @@ public class DiscScript : MonoBehaviour
         InterruptTrajectory();
         DemandeFx(hit.point);
 
+        if (hit.collider.gameObject.layer == 12)
+        {
+            SoundManager.Instance.PlaySound(Sound.ShieldGetHit, hit.transform.position);
+        }
+        else if (hit.collider.gameObject.layer == 14)
+        {
+            SoundManager.Instance.PlaySound(Sound.WallGetHit, hit.transform.position);
+        }
+
         Vector3 horizontalNormal = hit.normal;
         horizontalNormal.y = 0;
         horizontalNormal.Normalize();
@@ -192,6 +225,7 @@ public class DiscScript : MonoBehaviour
             hitDamageableEntity.ReceiveDamage(damageTag, new DamagesParameters(currentDamagesAmount, numberOfStunedTurns));
 
             lastObjTouch = hitDamageableEntity.gameObject;
+            SoundManager.Instance.PlaySound(Sound.EnemyDamaged, hitDamageableEntity.transform.position);
         }
 
         if(effectZoneToInstantiateOnHit != EffectZoneType.None)
@@ -204,6 +238,12 @@ public class DiscScript : MonoBehaviour
                 DiscManager.Instance.DestroyDisc(this);
             }
         }
+    }
+
+    public void GenerateKnockbackZoneOnEndTrajectory()
+    {
+        EffectZone newZone = EffectZonesManager.Instance.GetEffectZoneFromPool(zoneType);
+        newZone.StartZone(GetColliderCenter);
     }
     #endregion
 
@@ -356,6 +396,8 @@ public class DiscScript : MonoBehaviour
         isAttacking = false;
         SetRetreivableByPlayer(true);
 
+        GenerateKnockbackZoneOnEndTrajectory();
+
         if (isBeingRecalled && checkIfRetreive)
             RetreiveByPlayer();
 
@@ -389,88 +431,27 @@ public class DiscScript : MonoBehaviour
     }
     #endregion
 
-    #region Collisions and Interaction - OLD
-    private void OnTriggerEnter(Collider other)
-    {
-        return;
-
-        if (other.gameObject == objLaunch || !isAttacking) { return; }
-
-        switch (other.gameObject.layer)
-        {
-            //Player --> rappel géré dans le déplacement  
-            case 9:
-                if (!retreivableByPlayer)
-                {
-                    DemandeFx(other.ClosestPointOnBounds(transform.position));
-                    break;
-                }
-
-                RetreiveByPlayer();                
-
-                break;
-
-            //ennemy --> dégâts gérés dans le déplacement
-            case 10:
-                DemandeFx(other.ClosestPointOnBounds(transform.position));
-
-                DamageableEntity hitDamageableEntity = other.GetComponent<DamageableEntity>();
-                if (hitDamageableEntity != null)
-                {
-                    hitDamageableEntity.ReceiveDamage(damageTag, new DamagesParameters(currentDamagesAmount, numberOfStunedTurns));
-
-                    lastObjTouch = other.gameObject;
-                }
-                if (!blockedByShields)
-                    break;
-
-                break;
-
-            //shield --> géré dans le déplacement
-            case 12:
-                if (!blockedByShields)
-                    break;
-
-                if (lastObjTouch == other.transform.parent.GetComponent<ShieldManager>().myObjParent) { return; } else
-                {
-                    DemandeFx(other.ClosestPointOnBounds(transform.position));
-                    CollisionWithThisObj(other.transform);
-                }
-
-                break;
-
-            //obstacle --> déplacement aussi
-            case 14:
-                if (!blockedByObstacles)
-                    break;
-
-                break;
-
-            /*default:
-                CollisionWithThisObj(other.transform);
-                break;*/
-        }
-    }
-       
-    void CollisionWithThisObj(Transform impactPoint)
-    {
-        InterruptTrajectory();
-
-        myAnimator.SetTrigger("Collision");
-        Debug.DrawRay(transform.position + -transform.right * .5f, Vector3.up, Color.red, 50);
-
-        transform.position = transform.position + -transform.right * .5f;
-    }
-    #endregion
-
     #region Feedbacks
     void DemandeFx(Vector3 collision)
     {
-        GameObject newFx = FxManager.Instance.DemandeFx(FxManager.fxType.Hit);
+        FxManager.Instance.DemandeFx(FxType.Hit, collision);
 
-        newFx.transform.position = collision;
-        newFx.transform.rotation = Random.rotation;
+        //newFx.transform.position = collision;
+        //newFx.transform.rotation = Random.rotation;
     }
     #endregion
+
+    [Header("Tooltips")]
+    [SerializeField] TooltipCollider tooltipCollider = default;
+
+    public void StartHovering()
+    {
+        //Debug.Log("Start Hovering " + name);
+    }
+
+    public void EndHovering()
+    {
+        //Debug.Log("End Hovering " + name);
+    }
 }
 

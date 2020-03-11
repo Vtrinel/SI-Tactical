@@ -48,13 +48,22 @@ public class EnemySpawnPoint : MonoBehaviour
 
     public void SpawnEnemyOnSpawnPoint(EnemyType enemyTypeToSpawn, bool autoDetectPlayer, DiscType lootedDiscType)
     {
-        EnemyBase enemyBase = EnemiesManager.Instance.SpawnEnemyAtPosition(enemyTypeToSpawn, transform.position, lootedDiscType);
+        EnemyBase enemyBase = EnemiesManager.Instance.SpawnEnemyAtPosition(enemyTypeToSpawn, transform.position + Vector3.up * 0.05f, lootedDiscType);
         if(enemyBase != null)
         {
             enemyBase.SetPlayerDetected(autoDetectPlayer);
+            enemyBase.myIA.myNavAgent.Warp(enemyBase.transform.position);
+            //enemyBase.myIA.myNavAgent.enabled = false;
         }
 
         spawnZoneDebugObject.SetActive(false);
+        //StartCoroutine(DebugCoroutine(enemyBase));
+    }
+
+    IEnumerator DebugCoroutine(EnemyBase enemy)
+    {
+        yield return new WaitForSeconds(0.01f);
+        enemy.myIA.myNavAgent.enabled = true;
     }
 
     private void OnDrawGizmos()

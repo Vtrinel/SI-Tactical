@@ -8,12 +8,16 @@ public class EnemyBase : MonoBehaviour
 {
     [SerializeField] EnemyType enemyType = EnemyType.TouniBase;
     public EnemyType GetEnemyType => enemyType;
-    public int goldGain = 10;
+    [SerializeField] int goldGain = 10;
 
     private void Start()
     {
         SpawnEnemy(transform.position, _lootedDiscType);
-        InitLifeBar(damageReceiptionSystem.GetCurrentLifeAmount);
+        if(_lootedDiscType != DiscType.None)
+        {
+            TouniFourrureBasique.material = TouniFourrureAndMaskAlt;
+            TouniMaskBasique.material = TouniFourrureAndMaskAlt;
+        }
     }
 
     [Header("References")]
@@ -22,6 +26,11 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] Transform lifeBarParent;
     [SerializeField] GameObject lifeBarEnemyPrefab;
     List<Image> lifeBarList = new List<Image>();
+
+    public MeshRenderer TouniFourrureBasique;
+    public MeshRenderer TouniMaskBasique;
+    public Material TouniFourrureAndMaskAlt;
+
 
     void InitLifeBar(int lifeNumber)
     {
@@ -33,12 +42,11 @@ public class EnemyBase : MonoBehaviour
 
     public void UpdateLifeBarFill(int currentAmount, int damageDelta)
     {
-        print(currentAmount);
         int i = 1;
         foreach(Image bar in lifeBarList)
         {
-            print(i + " : " + !(currentAmount < i));
-            bar.enabled = !(currentAmount < i);
+            bar.GetComponentInChildren<Animator>().SetBool("IsAlive", !(currentAmount < i));
+            //bar.enabled = !(currentAmount < i);
             i++;
         }
     }
@@ -48,13 +56,15 @@ public class EnemyBase : MonoBehaviour
     {
         CheckForLootedDisc();
 
-        Debug.Log(name + " (Enemy) is dead");
+        //Debug.Log(name + " (Enemy) is dead");
         spawned = false;
         setedUpInitiative = false;
         
         OnEnemyDeath?.Invoke(this);
-        Destroy(gameObject);
         PlayerExperienceManager.Instance.GainGold(goldGain);
+        SoundManager.Instance.PlaySound(Sound.EnemyDeath, gameObject.transform.position);
+        Destroy(gameObject);
+        
     }   
 
     [Header("Common Values")]
@@ -100,6 +110,8 @@ public class EnemyBase : MonoBehaviour
         {
             lootDiscIndicator.SetActive(_lootedDiscType != DiscType.None);
         }
+
+        InitLifeBar(damageReceiptionSystem.GetCurrentLifeAmount);
     }
 
     public void SetUpInitiative()
@@ -166,6 +178,12 @@ public class EnemyBase : MonoBehaviour
         damageReceiptionSystem.OnLifeReachedZero += Die;
         TurnManager.Instance.OnEnemyTurnInterruption += InterruptAllAction;
 
+        if (tooltipCollider != null)
+        {
+            tooltipCollider.OnStartTooltip += StartHovering;
+            tooltipCollider.OnEndTooltip += EndHovering;
+        }
+
         if (myIA == null)
             return;
         myIA.OnFinishTurn += EndTurn;
@@ -176,6 +194,12 @@ public class EnemyBase : MonoBehaviour
         damageReceiptionSystem.OnLifeAmountChanged -= UpdateLifeBarFill;
         damageReceiptionSystem.OnLifeReachedZero -= Die;
         TurnManager.Instance.OnEnemyTurnInterruption -= InterruptAllAction;
+
+        if (tooltipCollider != null)
+        {
+            tooltipCollider.OnStartTooltip -= StartHovering;
+            tooltipCollider.OnEndTooltip -= EndHovering;
+        }
 
         if (myIA == null)
             return;
@@ -193,5 +217,18 @@ public class EnemyBase : MonoBehaviour
     public void HidePreview(bool value)
     {
         myIA.myShowPath.ShowOrHide(value);
+    }
+
+    [Header("Tooltips")]
+    [SerializeField] TooltipCollider tooltipCollider = default;
+
+    public void StartHovering()
+    {
+        //Debug.Log("Start Hovering " + name);
+    }
+
+    public void EndHovering()
+    {
+        //Debug.Log("End Hovering " + name);
     }
 }

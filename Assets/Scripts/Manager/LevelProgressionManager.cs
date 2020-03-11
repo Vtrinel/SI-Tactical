@@ -32,6 +32,7 @@ public class LevelProgressionManager : MonoBehaviour
 
     [Header("References")]
     [SerializeField] LevelGoalZone goalZone = default;
+    public LevelGoalZone GetGoalZone => goalZone;
 
     [Header("Parameters")]
     [SerializeField] int targetProgressValue = 5;
@@ -73,14 +74,21 @@ public class LevelProgressionManager : MonoBehaviour
         currentProgressValue = Mathf.Clamp(currentProgressValue, 0, targetProgressValue);
 
         OnProgressValueChanged?.Invoke(currentProgressValue, thisTurnProgress, targetProgressValue);
+        UIManager.Instance.UpdateRemainingNumberOfTurns(targetProgressValue - currentProgressValue);
         if (currentProgressValue == targetProgressValue)
         {
             currentProgressValue = targetProgressValue;
             OnGoalReached?.Invoke();
+            UIManager.Instance.OnGoalTurnAmountReached();
         }
 
         yield return new WaitForSeconds(1f);
 
         TurnManager.Instance.EndProgressionTurn();
+    }
+
+    public void SetUpGoalAnimation()
+    {
+        UIManager.Instance.SetUpGoalPanel(targetProgressValue);
     }
 }

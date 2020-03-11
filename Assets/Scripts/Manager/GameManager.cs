@@ -36,8 +36,6 @@ public class GameManager : MonoBehaviour
         turnManager.OnStartPlayerTurn += StartPlayerTurn;
         turnManager.OnEndPlayerTurn += EndPlayerTurn;
 
-        //turnManager.StartPlayerTurn();
-
         enemiesManager.OnInGameEnemiesChanged += turnManager.RefreshEnemyList;
         enemiesManager.GetAllAlreadyPlacedEnemies();
 
@@ -47,7 +45,12 @@ public class GameManager : MonoBehaviour
 
         playerExperienceManager.OnSetChanged += competencesUsabilityManager.UpdateSet;
         playerExperienceManager.OnMenuOpenedOrClosed += UpdatePlayerActability;
-        playerExperienceManager.SetUp();
+        playerExperienceManager.SetUp();        
+    }
+
+    private void Start()
+    {
+        SetUpGame();
     }
 
     private void Update()
@@ -59,6 +62,8 @@ public class GameManager : MonoBehaviour
         competencesUsabilityManager.UpdateSystem();
 
         UpdateGameManagement();
+
+        tooltipsManagementSystem.UpdateSystem(currentWorldMouseResult.currentTooltipable);
     }
 
     private void LateUpdate()
@@ -103,21 +108,6 @@ public class GameManager : MonoBehaviour
     public int maxActionPointsAmount = 10;
     [SerializeField] int currentActionPointsAmount;
     public int GetCurrentActionPointsAmount => currentActionPointsAmount;
-    /*public int GetAboutToUseActionPoints
-    {
-        get
-        {
-            if (competencesUsabilityManager.IsPreparingCompetence)
-            {
-                return competencesUsabilityManager.GetCurrentCompetenceCost();
-            }
-            else if ()
-            {
-
-            }
-            return 0;
-        }
-    }*/
 
     public System.Action<int> OnActionPointsAmountChanged;
     
@@ -212,6 +202,7 @@ public class GameManager : MonoBehaviour
     [Header("Mouse World Result")]
     [SerializeField] LayerMask worldMouseLayerMask = default;
     [SerializeField] float mouseCheckMaxDistance = 50.0f;
+    [SerializeField] UIRaycaster uiRaycaster = default;
     bool calculatedCurrentWorldMouseResult = false;
     WorldMouseResult currentWorldMouseResult = default;
     public WorldMouseResult GetCurrentWorldMouseResult
@@ -230,16 +221,29 @@ public class GameManager : MonoBehaviour
 
         Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit[] hits = Physics.RaycastAll(cameraRay, mouseCheckMaxDistance, worldMouseLayerMask);
+        ITooltipable foundTooltipable = uiRaycaster.CheckForUITooltipable();
+        //OnMouseInUI = (foundTooltipable != null);
 
         foreach (RaycastHit hit in hits)
         {
-            if(hit.collider.gameObject.layer == 8)
+            if (hit.collider.gameObject.layer == 8)
             {
                 result.mouseWorldPosition = hit.point;
+            }
+            else
+            {
+                if (!OnMouseInUI)
+                {
+                    if (foundTooltipable == null && hit.collider.gameObject.layer == 15)
+                    {
+                        foundTooltipable = hit.collider.GetComponent<ITooltipable>();
+                    }
+                }
             }
         }
 
         result.mouseIsOnUI = OnMouseInUI;
+        result.currentTooltipable = foundTooltipable;
 
         return result;
     }
@@ -344,6 +348,7 @@ public class GameManager : MonoBehaviour
                 CallUnselectActionEvent(ActionType.Move);
                 SetActionPointsDebugTextVisibility(false);
                 ConsumeActionPoints(cost);
+                SoundManager.Instance.PlaySound(Sound.PlayerMovement, player.transform.position);
             }
         }
         else if(competencesUsabilityManager.IsPreparingCompetence)
@@ -361,6 +366,7 @@ public class GameManager : MonoBehaviour
 
                 case ActionType.Special:
                     validatedAction = competencesUsabilityManager.LaunchSpecialCompetence();
+                    SoundManager.Instance.PlaySound(Sound.PlayerTeleport, player.transform.position);
                     break;
             }
             if (validatedAction)
@@ -438,6 +444,11 @@ public class GameManager : MonoBehaviour
         player.SetAbleToAct(canAct);
         SetActionPointsDebugTextVisibility(playerMovementsManager.IsWillingToMove || competencesUsabilityManager.IsPreparingCompetence);
     }
+
+    public void LaunchCompetenceForReal()
+    {
+        competencesUsabilityManager.LaunchCompetenceForReal();
+    }
     #endregion
 
     #region Game Management
@@ -446,15 +457,34 @@ public class GameManager : MonoBehaviour
     bool gameLost = false;
     [Header("Game Management")]
     [SerializeField] KeyCode gameManagementActionKey = KeyCode.Return;
+    [SerializeField] bool playIntroCutscene = false;
+    [SerializeField] float cutsceneStayOnObjectiveDuration = 2f;
+    [SerializeField] float cutsceneObjectiveToPlayerDuration = 4f;
+    [SerializeField] AnimationCurve cutsceneCameraMovementCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
+    private void SetUpGame()
+    {
+        if (playIntroCutscene)
+        {
+            CameraManager.instance.GetPlayerCamera.InstantPlaceCameraOnTransform(levelManager.GetGoalZone.transform);
+            StartCoroutine(IntroCutscene());
+        }
+        else
+        {
+            CameraManager.instance.GetPlayerCamera.InstantPlaceCameraOnTransform(player.transform);
+            StartGame();
+        }
+    }
+    IEnumerator IntroCutscene()
+    {
+        yield return new WaitForSeconds(cutsceneStayOnObjectiveDuration);
+        CameraManager.instance.GetPlayerCamera.StartMovementToward(player.transform, cutsceneObjectiveToPlayerDuration, cutsceneCameraMovementCurve);
+        CameraManager.instance.GetPlayerCamera.SetUpEndMovementEvent(StartGame);
+    }
 
     public void UpdateGameManagement()
     {
-        if (!gameStarted)
-        {
-            if (Input.GetKeyDown(gameManagementActionKey))
-                StartGame();
-        }
-        else if (gameWon || gameLost)
+        if (gameWon || gameLost)
         {
             if (Input.GetKeyDown(gameManagementActionKey))
                 RestartGame();
@@ -472,6 +502,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         turnManager.StartPlayerTurn();
+        levelManager.SetUpGoalAnimation();
     }
 
     bool restarting = false;
@@ -484,7 +515,7 @@ public class GameManager : MonoBehaviour
 
     public void WinGame()
     {
-        Debug.Log("YOU WIN");
+        //Debug.Log("YOU WIN");
         gameWon = true;
         turnManager.WonGame();
         UIManager.Instance.ShowWinPanel();
@@ -492,13 +523,16 @@ public class GameManager : MonoBehaviour
 
     public void LoseGame()
     {
-        Debug.Log("YOU LOSE");
+        //Debug.Log("YOU LOSE");
         gameLost = true;
         turnManager.InterruptEnemiesTurn();
         turnManager.LostGame();
         UIManager.Instance.ShowLosePanel();
     }
     #endregion
+
+    [Header("Tooltips management")]
+    [SerializeField] TooltipsManagementSystem tooltipsManagementSystem = default; 
 }
 
 public enum ActionType
@@ -515,6 +549,7 @@ public struct WorldMouseResult
 {
     public Vector3 mouseWorldPosition;
     public bool mouseIsOnUI;
+    public ITooltipable currentTooltipable;
 }
 
 public enum ActionSelectionResult

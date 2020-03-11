@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
@@ -14,7 +15,6 @@ public class PlayerCamera : VirtualCamera
     {
         base.OnEnable();
         player = GameManager.Instance.GetPlayer;
-        //SetCameraTarget(player.transform);
         ResetPlayerCamera();
         followTransform.transform.SetParent(player.transform);
         followTransform.transform.position = player.transform.position;
@@ -22,8 +22,6 @@ public class PlayerCamera : VirtualCamera
         SetCameraActive();
         
     }
-
-
 
     #region Free Cam
     [Header("Free Cam System")]
@@ -85,14 +83,34 @@ public class PlayerCamera : VirtualCamera
     public void AttachFollowTransformTo(Transform newTrToFollow)
     {
         StartMovementToward(newTrToFollow);
-        //followTransform.parent = newTrToFollow;
-        //followTransform.position = newTrToFollow.position;
+    }
+
+    public void AttachFollowTransformTo(Transform newTrToFollow, float forcedDuration, AnimationCurve forcedCurve)
+    {
+        StartMovementToward(newTrToFollow, forcedDuration, forcedCurve);
+    }
+
+    public void InstantPlaceCameraOnTransform(Transform newTrToFollow)
+    {
+        followTransform.InstantPlace(newTrToFollow);
+        SetCameraDamping(Vector3.zero);
+        transform.position = followTransform.transform.position - transform.forward * cinemachineFraming.m_CameraDistance;
+        SetCameraDamping(iniDamping);
     }
     #endregion
 
     public void StartMovementToward(Transform tr)
     {
-        followTransform.transform.SetParent(tr);
-        followTransform.StartMovement();
+        followTransform.StartMovement(tr);
+    }
+
+    public void StartMovementToward(Transform tr, float forcedDuration, AnimationCurve forcedCurve)
+    {
+        followTransform.StartMovement(tr, forcedDuration, forcedCurve);
+    }
+
+    public void SetUpEndMovementEvent(Action endAction)
+    {
+        followTransform.SetActionToPlayOnEndedMovement(endAction);
     }
 }

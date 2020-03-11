@@ -8,7 +8,7 @@ public class ButtonUtilities : MonoBehaviour
     public bool statut = false;
 
     public Image myIcon;
-    public Image myOutline;
+    public Text costText = default;
 
     public Color selectedColor = Color.red;
 
@@ -16,6 +16,15 @@ public class ButtonUtilities : MonoBehaviour
 
     public AudioSource myAudioSource;
     public AudioClip clickButtonSound;
+
+    Competence linkedCompetence = default;
+    [SerializeField] TooltipColliderUI tooltipCollider = default;
+
+    private void Awake()
+    {
+        if(myActionType == ActionType.Move)
+            costText.text = "X";
+    }
 
     private void OnEnable()
     {
@@ -39,6 +48,11 @@ public class ButtonUtilities : MonoBehaviour
             case ActionType.Special:
                 GameManager.Instance.OnSpecialCompetenceSelectionStateChanged += ActiveOrDisable;
                 break;
+        }
+
+        if (myActionType == ActionType.Recall || myActionType == ActionType.Throw || myActionType == ActionType.Special)
+        {
+            PlayerExperienceManager.Instance.OnSetChanged += UpdateLinkedCompetence;
         }
     }
 
@@ -65,6 +79,11 @@ public class ButtonUtilities : MonoBehaviour
                 GameManager.Instance.OnSpecialCompetenceSelectionStateChanged -= ActiveOrDisable;
                 break;
         }
+
+        if (myActionType == ActionType.Recall || myActionType == ActionType.Throw || myActionType == ActionType.Special)
+        {
+            PlayerExperienceManager.Instance.OnSetChanged -= UpdateLinkedCompetence;
+        }
     }
 
 
@@ -73,11 +92,8 @@ public class ButtonUtilities : MonoBehaviour
         statut = true;
 
         myIcon.color = selectedColor;
-        myOutline.color = selectedColor;
 
-        //myAudioSource.PlayOneShot(clickButtonSound);
-
-        myOutline.gameObject.SetActive(true);
+        myAudioSource.PlayOneShot(clickButtonSound);
     }
 
     public void Disable()
@@ -85,15 +101,11 @@ public class ButtonUtilities : MonoBehaviour
         statut = false;
 
         myIcon.color = Color.white;
-        myOutline.color = Color.white;
-
-        myOutline.gameObject.SetActive(false);
     }
 
     public void OnClickButton()
     {
         GameManager.Instance.SelectAction(myActionType);
-        //ActiveOrDisable(!statut);
     }
 
     void ActiveOrDisable(bool value)
@@ -106,5 +118,27 @@ public class ButtonUtilities : MonoBehaviour
         {
             Disable();
         }
+    }
+
+
+    public void UpdateLinkedCompetence(CompetenceThrow throwComp, CompetenceRecall recallComp, CompetenceSpecial specialCompetence)
+    {
+        switch (myActionType)
+        {
+            case ActionType.Throw:
+                linkedCompetence = throwComp;
+                break;
+            case ActionType.Recall:
+                linkedCompetence = recallComp;
+                break;
+            case ActionType.Special:
+                linkedCompetence = specialCompetence;
+                break;
+        }
+
+        tooltipCollider.SetTooltipInformations(TooltipInformationFactory.GetUsableCompetenceTooltip(linkedCompetence));
+        costText.text = linkedCompetence.GetActionPointsCost.ToString();
+        if (linkedCompetence.GetCompetenceImage != null)
+            myIcon.sprite = linkedCompetence.GetCompetenceImage;
     }
 }

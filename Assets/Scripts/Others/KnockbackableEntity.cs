@@ -17,6 +17,7 @@ public class KnockbackableEntity : MonoBehaviour
     TimerSystem knockbackAttenuationDurationSystem = new TimerSystem();
 
     public Action<Vector3> OnKnockbackUpdate = default;
+    public Action OnKnockbackEnded = default;
 
     Vector3 currentKnockbackDirection = Vector3.forward;
     public void ReceiveKnockback(DamageTag knockbackTag, KnockbackParameters knockbackParams, Vector3 dir)
@@ -37,6 +38,7 @@ public class KnockbackableEntity : MonoBehaviour
         knockbackDurationSystem.StartTimer();
         knockbackAttenuationDurationSystem.ChangeTimerValue(knockbackParams.knockbackAttenuationDuration);
         knockbackAttenuationDurationSystem.StartTimer();
+        knockbackAttenuationDurationSystem.SetUp(EndKnockback);
 
         currentKnockbackDirection = dir;
     }
@@ -65,6 +67,11 @@ public class KnockbackableEntity : MonoBehaviour
             transformToMove.position += knockbackMovement;
         else
             OnKnockbackUpdate.Invoke(knockbackMovement);
+    }
+
+    public void EndKnockback()
+    {
+        OnKnockbackEnded?.Invoke();
     }
 }
 

@@ -166,6 +166,7 @@ public class DiscManager : MonoBehaviour
     [SerializeField] int currentPossessedDiscs = 3;
     Stack<DiscType> possessedDiscs = new Stack<DiscType>();
     public int GetPossessedDiscsCount => possessedDiscs.Count;
+    public Stack<DiscType> GetPossessedDiscs => possessedDiscs;
 
     public Action OnAddOneMaxDisc;
     public void AddOneMaxNumberOfPossessedDiscs() 
@@ -178,6 +179,7 @@ public class DiscManager : MonoBehaviour
 
     public Action<Stack<DiscType>> OnDiscUpdate;
 
+    //int total, combien, type
     public Action<int, int, DiscType> OnDiscFilled;
     public void FillPossessedDiscsWithBasicDiscs()
     {
@@ -192,6 +194,8 @@ public class DiscManager : MonoBehaviour
     public Action<DiscScript> OnDiscAdded;
     public void PlayerRetreiveDisc(DiscScript retreivedDisc)
     {
+        SoundManager.Instance.PlaySound(Sound.RecallDisc, player.position);
+
         throwedDiscs.Remove(retreivedDisc);
         ReturnDiscInPool(retreivedDisc);
         if (possessedDiscs.Count < maxNumberOfPossessedDiscs)
@@ -255,12 +259,15 @@ public class DiscManager : MonoBehaviour
         if (possessedDiscs.Count == 0)
             return null;
 
-        DiscScript newDisc = GetDiscFromPool(possessedDiscs.Pop());
+        DiscType newDiscType = possessedDiscs.Pop();
+        DiscScript newDisc = GetDiscFromPool(newDiscType);
         if (newDisc != null)
         {
             throwedDiscs.Add(newDisc);
             OnDiscConsommed?.Invoke();
             OnDiscUpdate?.Invoke(possessedDiscs);
+
+            SoundManager.Instance.PlaySound(Sound.ThrowDisc, newDisc.transform.position);
         }
         return newDisc;
     }
@@ -327,11 +334,19 @@ public class DiscManager : MonoBehaviour
         }
     }
     #endregion    
+
+    [Header("Discs Informations")]
+    [SerializeField] DiscsInformationsLibrary discsInformationsLibrary = default;
+
+    public DiscInformations GetDiscInformations(DiscType discType)
+    {
+        return discsInformationsLibrary.GetDiscInformations(discType);
+    }
 }
 
 public enum DiscType
 {
-    None, Piercing, Ghost, Explosive, Heavy, Shockwave
+     None, Piercing, Ghost, Explosive, Heavy, Shockwave
 }
 
 [System.Serializable]

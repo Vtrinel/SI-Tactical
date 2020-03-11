@@ -88,8 +88,11 @@ public class CultisteEnemy : IAEnemyVirtual
             destination = CalculDestination(player.transform.position);
         }
 
+        LookPosition(destination);
+
         myNavAgent.SetDestination(destination);
         myNavAgent.isStopped = false;
+
 
         StartCoroutine(WaitDeplacement());
     }
@@ -108,6 +111,8 @@ public class CultisteEnemy : IAEnemyVirtual
                 break;
             }
             yield return null;
+
+            SoundManager.Instance.PlaySound(Sound.EnemyMove, gameObject.transform.position);
 
         } while (myNavAgent.remainingDistance != 0);
 
@@ -154,6 +159,7 @@ public class CultisteEnemy : IAEnemyVirtual
         myAnimator.SetTrigger("Attack");
         myAnimator.SetBool("Preparing", false);
         LaunchObj();
+        SoundManager.Instance.PlaySound(Sound.CultistATK, gameObject.transform.position);
     }
 
     void LaunchObj()
@@ -221,6 +227,8 @@ public class CultisteEnemy : IAEnemyVirtual
         {
             SetPreview();
         }
+
+        myShowPath.canCheck = haveDisc;
     }
 
     private void OnTriggerEnter(Collider other)

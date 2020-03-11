@@ -6,46 +6,27 @@ using UnityEngine;
 public class PointActionBar : MonoBehaviour
 {
     private int maxPoint = 6;
-
     private int currentPoint;
-
     public GameObject pointAction;
-
-    CompetencesUsabilityManager competencesUsabilityManager = default;
-    List<GameObject> allPointBarElement = new List<GameObject>();
+    [SerializeField] List<PAElement> allPointBarElement = new List<PAElement>();
 
 
     private void OnEnable()
     {
-        competencesUsabilityManager = GameManager.Instance.GetCompetencesUsabilityManager();
-
         GameManager.Instance.OnActionPointsAmountChanged += UpdatePointBar;
-        //competencesUsabilityManager.OnCompetenceStateChanged += UpdatePreConsommationPointBar;
-        TurnManager.Instance.OnStartPlayerTurn += ResetStateBar;
+        //TurnManager.Instance.OnStartPlayerTurn += ResetStateBar;
     }
 
     private void OnDisable()
     {
         GameManager.Instance.OnActionPointsAmountChanged -= UpdatePointBar;
-        //competencesUsabilityManager.OnCompetenceStateChanged -= UpdatePreConsommationPointBar;
-        TurnManager.Instance.OnStartPlayerTurn -= ResetStateBar;
+        //TurnManager.Instance.OnStartPlayerTurn -= ResetStateBar;
     }
 
     void Start()
     {
         maxPoint = GameManager.Instance.maxActionPointsAmount;
         currentPoint = GameManager.Instance.GetCurrentActionPointsAmount;
-
-        CreateHealthBar();
-    }
-
-    void CreateHealthBar()
-    {
-        for (int i = 0; i < maxPoint; i++)
-        {
-            GameObject newPointBarElement = Instantiate(pointAction, gameObject.transform);
-            allPointBarElement.Add(newPointBarElement);
-        }
     }
 
     void UpdatePointBar(int value)
@@ -53,18 +34,9 @@ public class PointActionBar : MonoBehaviour
         currentPoint = value;
         int i = 0;
 
-        foreach(GameObject _pointBar in allPointBarElement)
+        foreach(PAElement _pointBar in allPointBarElement)
         {
-            if(i < currentPoint)
-            {
-                //Oui
-                _pointBar.GetComponent<Animator>().SetBool("Statut", true);
-            }
-            else
-            {
-                //Non
-                _pointBar.GetComponent<Animator>().SetBool("Statut", false);
-            }
+            _pointBar.SetValue(i < currentPoint);
             i++;
         }
     }
@@ -72,28 +44,6 @@ public class PointActionBar : MonoBehaviour
     // Update the action point bar to show the previsualisation of the action poin bar
     public void UpdatePreConsommationPointBar(int possessedActionPoints, int aboutToUseActionPoints)
     {
-        int currentConsommationPoint = possessedActionPoints - aboutToUseActionPoints;
-        int i = 0;
-
-        foreach (GameObject _pointBar in allPointBarElement)
-        {
-            if (i < currentConsommationPoint)
-            {
-                _pointBar.GetComponent<Animator>().SetBool("Preview", false);
-            }
-            else
-            {
-                _pointBar.GetComponent<Animator>().SetBool("Preview", true);
-            }
-            i++;
-        }
-    }
-
-    void ResetStateBar()
-    {
-        foreach (GameObject _pointBar in allPointBarElement)
-        {
-            _pointBar.GetComponent<Animator>().SetBool("Preview", false);
-        }
+        //A REFAIRE
     }
 }
