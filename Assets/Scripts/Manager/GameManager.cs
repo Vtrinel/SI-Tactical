@@ -362,6 +362,7 @@ public class GameManager : MonoBehaviour
                 CallUnselectActionEvent(ActionType.Move);
                 SetActionPointsDebugTextVisibility(false);
                 ConsumeActionPoints(cost);
+                SoundManager.Instance.PlaySound(Sound.PlayerMovement, player.transform.position);
             }
         }
         else if(competencesUsabilityManager.IsPreparingCompetence)
@@ -379,6 +380,7 @@ public class GameManager : MonoBehaviour
 
                 case ActionType.Special:
                     validatedAction = competencesUsabilityManager.LaunchSpecialCompetence();
+                    SoundManager.Instance.PlaySound(Sound.PlayerTeleport, player.transform.position);
                     break;
             }
             if (validatedAction)

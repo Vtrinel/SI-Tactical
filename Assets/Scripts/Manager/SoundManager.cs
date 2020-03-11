@@ -170,6 +170,9 @@ public enum Sound
     TouniATK,
     ShieldGetHit,
     WallGetHit,
+    PlayerTeleport,
+    SelectCompetence,
+    NotEnoughActionPoint,
     none
 }
 
