@@ -198,5 +198,19 @@ public class PlayerController : MonoBehaviour
         }
     }
     public Action OnPlayerReachedMovementDestination;
-    #endregion    
+    #endregion
+
+    #region Others
+    TimerSystem lookRotationTimer = new TimerSystem();
+
+    /*public void StartLookAt()
+    {
+
+    }
+
+    IEnumerator LookAtPosition()
+    {
+
+    }*/
+    #endregion
 }

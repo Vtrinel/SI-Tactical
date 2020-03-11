@@ -21,8 +21,8 @@ public class PlayerAnimation : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscThrown += Throw;
-        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscCallback += Callback;
+        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscThrownAnimEvent += Throw;
+        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscRecallAnimEvent += Callback;
         GameManager.Instance.GetCompetencesUsabilityManager().OnSpecialLaunch += LaunchSpecial;
         GameManager.Instance.GetPlayer.OnMoveChange += SetMovement;
 
@@ -35,8 +35,8 @@ public class PlayerAnimation : MonoBehaviour
 
     private void OnDisable()
     {
-        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscThrown -= Throw;
-        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscCallback -= Callback;
+        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscThrownAnimEvent -= Throw;
+        GameManager.Instance.GetCompetencesUsabilityManager().OnDiscRecallAnimEvent -= Callback;
         GameManager.Instance.GetCompetencesUsabilityManager().OnSpecialLaunch -= LaunchSpecial;
         GameManager.Instance.GetPlayer.OnMoveChange -= SetMovement;
 
@@ -77,5 +77,10 @@ public class PlayerAnimation : MonoBehaviour
     public void Damaged()
     {
         playerAnimator.SetTrigger(damagedTriggerParameter);
+    }
+
+    public void LaunchCompetenceForReal()
+    {
+        GameManager.Instance.LaunchCompetenceForReal();
     }
 }

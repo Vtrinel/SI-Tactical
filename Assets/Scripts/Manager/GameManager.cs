@@ -441,6 +441,11 @@ public class GameManager : MonoBehaviour
         player.SetAbleToAct(canAct);
         SetActionPointsDebugTextVisibility(playerMovementsManager.IsWillingToMove || competencesUsabilityManager.IsPreparingCompetence);
     }
+
+    public void LaunchCompetenceForReal()
+    {
+        competencesUsabilityManager.LaunchCompetenceForReal();
+    }
     #endregion
 
     #region Game Management
@@ -507,7 +512,7 @@ public class GameManager : MonoBehaviour
 
     public void WinGame()
     {
-        Debug.Log("YOU WIN");
+        //Debug.Log("YOU WIN");
         gameWon = true;
         turnManager.WonGame();
         UIManager.Instance.ShowWinPanel();
@@ -515,7 +520,7 @@ public class GameManager : MonoBehaviour
 
     public void LoseGame()
     {
-        Debug.Log("YOU LOSE");
+        //Debug.Log("YOU LOSE");
         gameLost = true;
         turnManager.InterruptEnemiesTurn();
         turnManager.LostGame();
