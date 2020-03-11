@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LifeElement : MonoBehaviour
+public class PAElement : MonoBehaviour
 {
     [SerializeField] GameObject imageLife;
-    [SerializeField] Animator animator;
 
     public void SetValue(bool value)
     {
-        //imageLife.SetActive(value);
-        animator?.SetBool("IsAlive", value);
+        imageLife.SetActive(value);
     }
 }
