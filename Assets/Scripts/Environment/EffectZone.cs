@@ -35,6 +35,9 @@ public class EffectZone : MonoBehaviour
     [Header("Effects : Stun")]
     [SerializeField] int numberOfStunedTurns = 0;
 
+    [Header("Feedbacks")]
+    [SerializeField] Sound soundToPlayOnStart = Sound.ExplosionDisc;
+
     [Header("Debug")]
     [SerializeField] MeshRenderer debugZoneRenderer = default;
 
@@ -50,6 +53,9 @@ public class EffectZone : MonoBehaviour
         persistanceDurationSystem.ChangeTimerValue(persistanceDuration);
         persistanceDurationSystem.SetUp(EndZone);
         persistanceDurationSystem.StartTimer();
+
+        SoundManager.Instance.PlaySound(soundToPlayOnStart, transform.position);
+        Debug.Log("Zone déclenché");
 
         UpdateRadius();
     }
