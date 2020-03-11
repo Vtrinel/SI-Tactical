@@ -326,6 +326,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //Action Event
+    public Action OnAnimDiscThrown;
+    public Action OnAnimDiscCallback;
+    public Action OnAnimSpecialLaunch;
+
     public void OnPlayerClickAction()
     {
         if (OnMouseInUI)
@@ -352,11 +357,11 @@ public class GameManager : MonoBehaviour
             switch (competencesUsabilityManager.GetCurrentCompetenceType)
             {
                 case ActionType.Throw:
-                    competencesUsabilityManager.LaunchThrowCompetence(player.gameObject);
+                    StartCoroutine(LaunchThrow());
                     break;
 
                 case ActionType.Recall:
-                    competencesUsabilityManager.LaunchRecallCompetence();
+                    StartCoroutine(LaunchRecall());
                     break;
 
                 case ActionType.Special:
@@ -372,6 +377,28 @@ public class GameManager : MonoBehaviour
 
         if(validatedAction)
             UpdatePlayerActability();
+    }
+
+    [SerializeField] float timerAnimThrow = 1;
+    [SerializeField] float timerAnimRecall = 1;
+    [SerializeField] float timerAnimSpecial = 1;
+
+    IEnumerator LaunchThrow()
+    {
+        yield return new WaitForSeconds(timerAnimThrow);
+        competencesUsabilityManager.LaunchThrowCompetence(player.gameObject);
+    }
+
+    IEnumerator LaunchRecall()
+    {
+        yield return new WaitForSeconds(timerAnimRecall);
+        competencesUsabilityManager.LaunchRecallCompetence();
+    }
+
+    IEnumerator LaunchSpecial(bool value)
+    {
+        yield return new WaitForSeconds(timerAnimSpecial);
+        //validatedAction = competencesUsabilityManager.LaunchSpecialCompetence();
     }
 
     public void CallSelectActionEvent(ActionType actionType)

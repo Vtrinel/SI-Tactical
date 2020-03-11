@@ -45,11 +45,6 @@ public class CompetencesUsabilityManager
     float maxRecallRange = 0;
     float maxThrowRange = 0;
 
-    //Action Event
-    public Action OnDiscThrown;
-    public Action OnDiscCallback;
-    public Action OnSpecialLaunch;
-
     public void UpdateSet(CompetenceThrow throwComp, CompetenceRecall recallComp, CompetenceSpecial specialComp)
     {
         throwCompetence = throwComp;
@@ -492,8 +487,6 @@ public class CompetencesUsabilityManager
         ChangeUsabilityState(UsabilityState.Using, ActionType.Throw);
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
 
-        OnDiscThrown?.Invoke(); //Event
-
     }
     #endregion
 
@@ -512,8 +505,6 @@ public class CompetencesUsabilityManager
         else
             ResetUsabilityState();
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
-
-        OnDiscCallback?.Invoke(); //Event
     }
 
     public void StartRecallDisc(DiscScript disc)
@@ -527,8 +518,6 @@ public class CompetencesUsabilityManager
         disc.StartTrajectory(trajectoryParameters, null);
         currentlyInUseDiscs.Add(disc);
         disc.OnTrajectoryStopped += RemoveDiscFromInUse;
-
-        OnSpecialLaunch?.Invoke();
     }
     #endregion
 
