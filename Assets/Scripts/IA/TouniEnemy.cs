@@ -62,6 +62,8 @@ public class TouniEnemy : IAEnemyVirtual
     {
         destination = CalculDestination(player.transform.position);
 
+        LookPosition(destination);
+
         myNavAgent.isStopped = false;
         myNavAgent.SetDestination(destination);
 
