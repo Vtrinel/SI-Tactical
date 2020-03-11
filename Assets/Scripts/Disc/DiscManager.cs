@@ -166,6 +166,7 @@ public class DiscManager : MonoBehaviour
     [SerializeField] int currentPossessedDiscs = 3;
     Stack<DiscType> possessedDiscs = new Stack<DiscType>();
     public int GetPossessedDiscsCount => possessedDiscs.Count;
+    public Stack<DiscType> GetPossessedDiscs => possessedDiscs;
 
     public Action OnAddOneMaxDisc;
     public void AddOneMaxNumberOfPossessedDiscs() 
@@ -178,6 +179,7 @@ public class DiscManager : MonoBehaviour
 
     public Action<Stack<DiscType>> OnDiscUpdate;
 
+    //int total, combien, type
     public Action<int, int, DiscType> OnDiscFilled;
     public void FillPossessedDiscsWithBasicDiscs()
     {
@@ -335,7 +337,7 @@ public class DiscManager : MonoBehaviour
 
 public enum DiscType
 {
-    None, Piercing, Ghost, Explosive, Heavy, Shockwave
+    Piercing, Ghost, Explosive, Heavy, Shockwave, None
 }
 
 [System.Serializable]
