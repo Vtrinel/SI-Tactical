@@ -19,23 +19,26 @@ public class SoundManager : MonoBehaviour
     }
 
     [Header("Parameters")]
-    [SerializeField] static float maxDistance = 100f;
-    [SerializeField] static float spatialBlend = 1f;
-    [SerializeField] static float dopplerLevel = 0;
-    [SerializeField] Dictionary<Sound, float> soundTimerDictionary;
+    public float maxDistance = 100f;
+    public float spatialBlend = 1f;
+    public float dopplerLevel = 0;
+    public float delayWalkSound = 0f;
+    Dictionary<Sound, float> soundTimerDictionary;
 
     //[Header("BGM music")]
     //[SerializeField] float BGMFadeSpead;
     //[SerializeField] AudioClip BGM;
 
+    [Header("audios enemy movements")]
+    public AudioClip[] enemyMovementList;
+
     [Header("Audioclip list")]
     public SoundAudioClip[] soundAudioClipList;
 
-
-    public void Initialized()
+    public void Start()
     {
         soundTimerDictionary = new Dictionary<Sound, float>();
-        //soundTimerDictionary[Sound.PlayerMove] = 0f;
+        soundTimerDictionary[Sound.EnemyMove] = 0f;
     }
 
     // To play a sound from another class : SoundManagerScript.PlaySound("NameOfTheSound");
@@ -56,6 +59,7 @@ public class SoundManager : MonoBehaviour
 
             audioSource.Play();
 
+            Debug.Log(audioSource.clip);
             Object.Destroy(soundGameObject, audioSource.clip.length);
         }
     }
@@ -65,29 +69,29 @@ public class SoundManager : MonoBehaviour
     {
         switch (sound)
         {
-            // Sound that shouldn't be repeated to fast
-            //case Sound.PlayerMove:
-            //    if (soundTimerDictionary.ContainsKey(sound))
-            //    {
-            //        float lastTimePlayed = soundTimerDictionary[sound];
-            //        float playerMoveTimerMax = 0.05f;
-            //        if (lastTimePlayed + playerMoveTimerMax < Time.time)
-            //        {
-            //            soundTimerDictionary[sound] = Time.time;
-            //            return true;
-            //        }
-            //        else
-            //        {
-            //            return false;
-            //        }
-            //    }
-            //    break;
+            //Sound that shouldn't be repeated to fast
+            case Sound.EnemyMove:
+                if (soundTimerDictionary.ContainsKey(sound))
+                {
+                    float lastTimePlayed = soundTimerDictionary[sound];
+                    float playerMoveTimerMax = delayWalkSound;
+                    if (lastTimePlayed + playerMoveTimerMax < Time.time)
+                    {
+                        soundTimerDictionary[sound] = Time.time;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                break;
 
             case Sound.none:
                 return false;
 
             default:
-                return true;
+                return false;
         }
         return true;
     }
@@ -99,6 +103,29 @@ public class SoundManager : MonoBehaviour
         {
             if (soundAudioClip.sound == sound)
             {
+                // Random sound for the enemy movement
+                if (sound == Sound.EnemyMove)
+                {
+                    var random = Random.value;
+
+                    if (random >= 0.75)
+                    {
+                        return enemyMovementList[0];
+                    }
+                    if (random >= 0.50 && random < 0.75)
+                    {
+                        return enemyMovementList[1];
+                    }
+                    if (random >= 0.25 && random < 0.50)
+                    {
+                        return enemyMovementList[2];
+                    }
+                    if (random < 0.25)
+                    {
+                        return enemyMovementList[3];
+                    }
+                }
+                
                 return soundAudioClip.audioClip;
             }
         }
@@ -106,7 +133,7 @@ public class SoundManager : MonoBehaviour
     }
 
 
-   
+
 }
 
 // List of all the sounds
@@ -121,9 +148,6 @@ public enum Sound
     EnemyDamaged,
     EnemyDeath,
     EnemyMove,
-    EnemyMove2,
-    EnemyMove3,
-    EnemyMove4,
     CultistATK,
     TouniATK,
     ShieldGetHit,

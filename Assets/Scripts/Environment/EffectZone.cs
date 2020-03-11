@@ -55,7 +55,6 @@ public class EffectZone : MonoBehaviour
         persistanceDurationSystem.StartTimer();
 
         SoundManager.Instance.PlaySound(soundToPlayOnStart, transform.position);
-        Debug.Log("Zone déclenché");
 
         UpdateRadius();
     }
