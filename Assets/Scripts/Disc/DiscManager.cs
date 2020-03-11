@@ -166,6 +166,7 @@ public class DiscManager : MonoBehaviour
     [SerializeField] int currentPossessedDiscs = 3;
     Stack<DiscType> possessedDiscs = new Stack<DiscType>();
     public int GetPossessedDiscsCount => possessedDiscs.Count;
+    public Stack<DiscType> GetPossessedDiscs => possessedDiscs;
 
     public Action OnAddOneMaxDisc;
     public void AddOneMaxNumberOfPossessedDiscs() 

@@ -3,139 +3,67 @@ using UnityEngine;
 
 public class DiscBar : MonoBehaviour
 {
-    private int maxDisc;
-
-    [SerializeField] int currentDisc = 3;
-
     [Header("Disc types")]
-    public GameObject discPiercing;
-    public GameObject discGhost;
-    public GameObject discExplosive;
-    public GameObject discHeavy;
-    public GameObject discShockwave;
+    [SerializeField] Transform discIconHolder;
 
-    [Header("Disc types")]
-    [SerializeField] GameObject discIconHolder;
+    [SerializeField] List<DiscElement> AllDiscElement = new List<DiscElement>();
 
-    [SerializeField] List<GameObject> allDiscBarElement = new List<GameObject>();
+    [SerializeField] List<Vector2> AllPos = new List<Vector2>();
 
     private void OnEnable()
     {
-        DiscManager.Instance.OnDiscFilled += CreateDiscBar;
+        //DiscManager.Instance.OnDiscFilled += CreateDiscBar;
         DiscManager.Instance.OnDiscConsommed += RemoveDiscFromBar;
         DiscManager.Instance.OnDiscAdded += AddNewDisc;
-        DiscManager.Instance.OnAddOneMaxDisc += UpdateMaxDiscBar;
-
-        if (discIconHolder == null)
-        {
-            Debug.LogWarning("DISC ICON HOLDER NOT SET", this);
-            discIconHolder = gameObject;
-        }
+        //DiscManager.Instance.OnAddOneMaxDisc += UpdateMaxDiscBar;
     }
 
     private void OnDisable()
     {
-        DiscManager.Instance.OnDiscFilled -= CreateDiscBar;
+        //DiscManager.Instance.OnDiscFilled -= CreateDiscBar;
         DiscManager.Instance.OnDiscAdded -= AddNewDisc;
-        DiscManager.Instance.OnAddOneMaxDisc -= UpdateMaxDiscBar;
+        //DiscManager.Instance.OnAddOneMaxDisc -= UpdateMaxDiscBar;
         DiscManager.Instance.OnDiscConsommed -= RemoveDiscFromBar;
     }
 
-    void CreateDiscBar(int maxDiscs, int currentDiscs, DiscType discType)
+
+    void AddNewDisc(DiscScript newDisc)
     {
-        maxDisc = maxDiscs;
-        currentDisc = currentDiscs;
+        Stack<DiscType> allDisc = DiscManager.Instance.GetPossessedDiscs;
 
-        GameObject newDiscType;
-
-        switch (discType)
-        {
-            case DiscType.Piercing:
-                newDiscType = discPiercing;
-                break;
-
-            case DiscType.Ghost:
-                newDiscType = discGhost;
-                break;
-
-            case DiscType.Explosive:
-                newDiscType = discExplosive;
-                break;
-
-            case DiscType.Heavy:
-                newDiscType = discHeavy;
-                break;
-
-            case DiscType.Shockwave:
-                newDiscType = discShockwave;
-                break;
-
-            default:
-                newDiscType = discPiercing;
-                break;
-        }
-
-        for (int i = 0; i < currentDisc; i++)
-        {
-            GameObject newDisc = Instantiate(newDiscType, discIconHolder.transform);
-            allDiscBarElement.Add(newDisc);
-        }
-
-        currentDisc--;
+        Refresh(allDisc);
     }
 
     void RemoveDiscFromBar()
     {
-        Destroy(allDiscBarElement[currentDisc]);
+        Stack<DiscType> allDisc = DiscManager.Instance.GetPossessedDiscs;
 
-        allDiscBarElement.RemoveAt(currentDisc);
-
-        currentDisc--;
+        Refresh(allDisc);
     }
 
-    void AddNewDisc(DiscScript newDisc)
+    void Refresh(Stack<DiscType> _allDisc)
     {
-        GameObject newDiscBarElement;
+        DiscType oldType = DiscType.None;
+        int numBerOfSame = 0;
+        int i = 0;
 
-        switch (newDisc.GetDiscType)
+        foreach (DiscType discType in _allDisc)
         {
-            case DiscType.Piercing:
-                newDiscBarElement = Instantiate(discPiercing, discIconHolder.transform);
-                break;
+            if(discType == oldType)
+            {
+                numBerOfSame++;
+                oldType = discType;
 
-            case DiscType.Ghost:
-                newDiscBarElement = Instantiate(discGhost, discIconHolder.transform);
-                break;
+                DiscElement de = AllDiscElement[i];
+                de.SetIcon((int)discType, numBerOfSame);
+            }
+            else{
+                i++;
+            }
 
-            case DiscType.Explosive:
-                newDiscBarElement = Instantiate(discExplosive, discIconHolder.transform);
-                break;
-
-            case DiscType.Heavy:
-                newDiscBarElement = Instantiate(discHeavy, discIconHolder.transform);
-                break;
-
-            case DiscType.Shockwave:
-                newDiscBarElement = Instantiate(discShockwave, discIconHolder.transform);
-                break;
-
-            default:
-                newDiscBarElement = Instantiate(discPiercing, discIconHolder.transform);
-                break;
+            numBerOfSame = 0;
         }
 
-        allDiscBarElement.Add(newDiscBarElement);
-
-        currentDisc++;
-    }
-
-    void UpdateMaxDiscBar()
-    {
-        //GameObject newDiscBarElement = Instantiate(discPiercing, gameObject.transform);
-        //allDiscBarElement.Add(newDiscBarElement);
-
-        maxDisc++;
-        currentDisc++;
-
+        discIconHolder.position = AllPos[i];
     }
 }
