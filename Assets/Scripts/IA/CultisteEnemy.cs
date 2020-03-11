@@ -88,6 +88,8 @@ public class CultisteEnemy : IAEnemyVirtual
             destination = CalculDestination(player.transform.position);
         }
 
+        LookPosition(destination);
+
         myNavAgent.SetDestination(destination);
         myNavAgent.isStopped = false;
 
@@ -221,6 +223,8 @@ public class CultisteEnemy : IAEnemyVirtual
         {
             SetPreview();
         }
+
+        myShowPath.canCheck = haveDisc;
     }
 
     private void OnTriggerEnter(Collider other)

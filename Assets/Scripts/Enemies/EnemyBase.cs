@@ -13,7 +13,6 @@ public class EnemyBase : MonoBehaviour
     private void Start()
     {
         SpawnEnemy(transform.position, _lootedDiscType);
-        InitLifeBar(damageReceiptionSystem.GetCurrentLifeAmount);
     }
 
     [Header("References")]
@@ -33,11 +32,9 @@ public class EnemyBase : MonoBehaviour
 
     public void UpdateLifeBarFill(int currentAmount, int damageDelta)
     {
-        print(currentAmount);
         int i = 1;
         foreach(Image bar in lifeBarList)
         {
-            print(i + " : " + !(currentAmount < i));
             bar.enabled = !(currentAmount < i);
             i++;
         }
@@ -48,13 +45,14 @@ public class EnemyBase : MonoBehaviour
     {
         CheckForLootedDisc();
 
-        Debug.Log(name + " (Enemy) is dead");
+        //Debug.Log(name + " (Enemy) is dead");
         spawned = false;
         setedUpInitiative = false;
         
         OnEnemyDeath?.Invoke(this);
-        Destroy(gameObject);
         PlayerExperienceManager.Instance.GainGold(goldGain);
+        Destroy(gameObject);
+        
     }   
 
     [Header("Common Values")]
@@ -100,6 +98,8 @@ public class EnemyBase : MonoBehaviour
         {
             lootDiscIndicator.SetActive(_lootedDiscType != DiscType.None);
         }
+
+        InitLifeBar(damageReceiptionSystem.GetCurrentLifeAmount);
     }
 
     public void SetUpInitiative()

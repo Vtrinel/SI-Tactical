@@ -33,8 +33,6 @@ public class IAEnemyVirtual : MonoBehaviour
 
     public ShowPathSystem myShowPath;
 
-    public LineRenderer lineTest;
-
     public virtual void PlayerTurn() { }
 
     public bool CheckDetectionWithPlayer()
@@ -87,4 +85,8 @@ public class IAEnemyVirtual : MonoBehaviour
         return _targetPos;
     }
 
+    public void LookPosition(Vector3 _pos)
+    {
+        transform.LookAt(_pos);
+    }
 }

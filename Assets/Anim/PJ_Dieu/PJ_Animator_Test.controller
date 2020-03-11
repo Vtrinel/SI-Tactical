@@ -10,8 +10,11 @@ AnimatorStateMachine:
   m_Name: Base Layer
   m_ChildStates:
   - serializedVersion: 1
-    m_State: {fileID: 5437174744681992116}
-    m_Position: {x: 120.1315, y: 587.5744, z: 0}
+    m_State: {fileID: 6020878649126992588}
+    m_Position: {x: 205.3919, y: 525.5388, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -4034152788189570231}
+    m_Position: {x: 147.05963, y: 655.4607, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -21,7 +24,34 @@ AnimatorStateMachine:
   m_EntryPosition: {x: 50, y: 120, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
-  m_DefaultState: {fileID: 5437174744681992116}
+  m_DefaultState: {fileID: 6020878649126992588}
+--- !u!1102 &-4034152788189570231
+AnimatorState:
+  serializedVersion: 5
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PJ_Shockwave
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 2900948027515835799, guid: a25feedfad22e66429480296a864f1d7,
+    type: 3}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!91 &9100000
 AnimatorController:
   m_ObjectHideFlags: 0
@@ -44,14 +74,14 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
---- !u!1102 &5437174744681992116
+--- !u!1102 &6020878649126992588
 AnimatorState:
   serializedVersion: 5
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PJ_CallbackDisc
+  m_Name: PJ_Hit
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -64,7 +94,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 1827226128182048838, guid: c290897b10870d64fa90e0a4c087b4fe,
+  m_Motion: {fileID: 1827226128182048838, guid: a25feedfad22e66429480296a864f1d7,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 

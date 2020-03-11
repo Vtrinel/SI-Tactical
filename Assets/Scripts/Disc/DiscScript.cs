@@ -27,6 +27,7 @@ public class DiscScript : MonoBehaviour
     [SerializeField] float accelerationDuration = 0.2f;
     [SerializeField] AnimationCurve accelerationCurve = AnimationCurve.Linear(0, 0, 1, 1);
     TimerSystem accelerationDurationSystem = new TimerSystem();
+    [SerializeField] EffectZoneType zoneType = EffectZoneType.DiscTrajectoryEndZone;
 
     float currentSpeed = 0f;
     List<Vector3> currentTrajectory = new List<Vector3>();
@@ -100,11 +101,13 @@ public class DiscScript : MonoBehaviour
     private void OnEnable()
     {
         knockbackSystem.OnKnockbackUpdate += MoveKnockback;
+        knockbackSystem.OnKnockbackEnded += GenerateKnockbackZoneOnEndTrajectory;
     }
 
     private void OnDisable()
     {
         knockbackSystem.OnKnockbackUpdate -= MoveKnockback;
+        knockbackSystem.OnKnockbackEnded -= GenerateKnockbackZoneOnEndTrajectory;
     }
 
     #region Movement Check
@@ -129,15 +132,19 @@ public class DiscScript : MonoBehaviour
             if (hit.collider.gameObject.layer != 10 || blockedByEnemies)
             {
                 // test bouclier
-                if(hit.collider.gameObject.layer == 12)
+                if (hit.collider.gameObject.layer == 12)
                 {
-                    ShieldManager objShielManager = hit.transform.parent.GetComponent<ShieldManager>();
-
-                    if (objShielManager != null)
+                    Transform hitParent = hit.transform.parent;
+                    if (hitParent != null)
                     {
-                        if(objShielManager.myObjParent == lastObjTouch)
+                        ShieldManager objShielManager = hit.transform.parent.GetComponent<ShieldManager>();
+
+                        if (objShielManager != null)
                         {
-                            return false;
+                            if (objShielManager.myObjParent == lastObjTouch)
+                            {
+                                return false;
+                            }
                         }
                     }
                 }
@@ -173,6 +180,15 @@ public class DiscScript : MonoBehaviour
         InterruptTrajectory();
         DemandeFx(hit.point);
 
+        if (hit.collider.gameObject.layer == 12)
+        {
+            SoundManager.Instance.PlaySound(Sound.ShieldGetHit, hit.transform.position);
+        }
+        else if (hit.collider.gameObject.layer == 14)
+        {
+            SoundManager.Instance.PlaySound(Sound.WallGetHit, hit.transform.position);
+        }
+
         Vector3 horizontalNormal = hit.normal;
         horizontalNormal.y = 0;
         horizontalNormal.Normalize();
@@ -192,6 +208,7 @@ public class DiscScript : MonoBehaviour
             hitDamageableEntity.ReceiveDamage(damageTag, new DamagesParameters(currentDamagesAmount, numberOfStunedTurns));
 
             lastObjTouch = hitDamageableEntity.gameObject;
+            SoundManager.Instance.PlaySound(Sound.EnemyDamaged, hitDamageableEntity.transform.position);
         }
 
         if(effectZoneToInstantiateOnHit != EffectZoneType.None)
@@ -204,6 +221,12 @@ public class DiscScript : MonoBehaviour
                 DiscManager.Instance.DestroyDisc(this);
             }
         }
+    }
+
+    public void GenerateKnockbackZoneOnEndTrajectory()
+    {
+        EffectZone newZone = EffectZonesManager.Instance.GetEffectZoneFromPool(zoneType);
+        newZone.StartZone(GetColliderCenter);
     }
     #endregion
 
@@ -355,6 +378,8 @@ public class DiscScript : MonoBehaviour
 
         isAttacking = false;
         SetRetreivableByPlayer(true);
+
+        GenerateKnockbackZoneOnEndTrajectory();
 
         if (isBeingRecalled && checkIfRetreive)
             RetreiveByPlayer();
