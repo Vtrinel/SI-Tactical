@@ -45,7 +45,8 @@ public class EnemyBase : MonoBehaviour
         int i = 1;
         foreach(Image bar in lifeBarList)
         {
-            bar.enabled = !(currentAmount < i);
+            bar.GetComponentInChildren<Animator>().SetBool("IsAlive", currentAmount < i);
+            //bar.enabled = !(currentAmount < i);
             i++;
         }
     }
