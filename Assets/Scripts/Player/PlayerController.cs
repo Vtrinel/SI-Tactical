@@ -197,8 +197,6 @@ public class PlayerController : MonoBehaviour
             OnPlayerReachedMovementDestination?.Invoke();
         }
     }
-    public System.Action OnPlayerReachedMovementDestination;
+    public Action OnPlayerReachedMovementDestination;
     #endregion    
-
-    public CircularDiscRoation circularDisc;
 }

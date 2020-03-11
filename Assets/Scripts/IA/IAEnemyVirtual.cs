@@ -33,8 +33,6 @@ public class IAEnemyVirtual : MonoBehaviour
 
     public ShowPathSystem myShowPath;
 
-    public LineRenderer lineTest;
-
     public virtual void PlayerTurn() { }
 
     public bool CheckDetectionWithPlayer()
