@@ -16,14 +16,22 @@ public class CameraTarget : MonoBehaviour
     [SerializeField] float maxDurationDistance = 30;
 
     TimerSystem movementDurationSystem = new TimerSystem();
-    Vector3 movementStartPos = Vector3.zero;
+    Vector3 movementStartFakePos = Vector3.zero;
 
+    Vector3 fakedLocalPosition = default;
     Transform trToFollow = default;
 
-    public void StartMovement()
+    bool isUsingPlayerMovement = default;
+    public void SetIsUsingPlayerMovement(bool usingPlayerMovement)
     {
-        movementStartPos = transform.localPosition;
-        float distance = movementStartPos.magnitude;
+        isUsingPlayerMovement = usingPlayerMovement;
+    }
+
+    public void StartMovement(Transform newTrToFollow)
+    {
+        trToFollow = newTrToFollow;
+        movementStartFakePos = transform.position - trToFollow.position;
+        float distance = movementStartFakePos.magnitude;
 
         float duration = Mathf.Lerp(minDuration, maxDuration, Mathf.Clamp((maxDurationDistance - distance)/ (maxDurationDistance - minDurationDistance), 0, 1));
 
@@ -36,7 +44,21 @@ public class CameraTarget : MonoBehaviour
         if (!movementDurationSystem.TimerOver)
         {
             movementDurationSystem.UpdateTimer();
-            transform.localPosition = Vector3.Lerp(movementStartPos, Vector3.zero, movementCurve.Evaluate(movementDurationSystem.GetTimerCoefficient));
+            if (trToFollow == null)
+                return;
+
+            fakedLocalPosition = Vector3.Lerp(movementStartFakePos, Vector3.zero, movementCurve.Evaluate(movementDurationSystem.GetTimerCoefficient));
+            transform.position = trToFollow.position + fakedLocalPosition;
+        }
+        else
+        {
+            SetIsUsingPlayerMovement(trToFollow == GameManager.Instance.GetPlayer.transform && GameManager.Instance.GetPlayerCanAct);
+            if (!isUsingPlayerMovement)
+            {
+                if (trToFollow == null)
+                    return;
+                transform.position = trToFollow.position;
+            }
         }
     }
 }

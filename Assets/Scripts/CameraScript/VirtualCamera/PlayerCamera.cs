@@ -9,13 +9,11 @@ public class PlayerCamera : VirtualCamera
     [Header("Player Cam values")]
     [SerializeField] PlayerController player = default;
     [SerializeField] CameraTarget followTransform = default;
-    Transform trToFollow = default;
 
     protected override void OnEnable()
     {
         base.OnEnable();
         player = GameManager.Instance.GetPlayer;
-        //SetCameraTarget(player.transform);
         ResetPlayerCamera();
         followTransform.transform.SetParent(player.transform);
         followTransform.transform.position = player.transform.position;
@@ -93,8 +91,6 @@ public class PlayerCamera : VirtualCamera
 
     public void StartMovementToward(Transform tr)
     {
-        //trToFollow
-        followTransform.transform.SetParent(tr);
-        followTransform.StartMovement();
+        followTransform.StartMovement(tr);
     }
 }
