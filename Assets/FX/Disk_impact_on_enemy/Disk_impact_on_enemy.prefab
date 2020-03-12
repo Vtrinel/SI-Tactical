@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4593995591856311199}
   - component: {fileID: 6111799064599733211}
   - component: {fileID: 3335692235696141967}
+  - component: {fileID: 7230865257622368159}
   m_Layer: 0
   m_Name: Disk_impact_on_enemy
   m_TagString: Untagged
@@ -4756,6 +4757,18 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &7230865257622368159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1804442874708171867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19ab9c5621003d2448bd23e4e7e89992, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3322428861100406797
 GameObject:
   m_ObjectHideFlags: 0

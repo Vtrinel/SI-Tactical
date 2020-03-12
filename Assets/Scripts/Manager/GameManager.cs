@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
         else
         {
             _instance = this;
+            _instance = this;
         }
 
         playerMovementsManager.SetUp(player);

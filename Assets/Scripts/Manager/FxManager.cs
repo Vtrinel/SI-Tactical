@@ -77,23 +77,25 @@ public enum FxType
     // Enemy
     enemyDamage,    //8
     enemySpawn,
+    enemySpawnPreparation,
+    enemyDeath,
     enemyProjectileFire,
     enemyProjectileTrail,
-    enemyImpactShield,  //12
+    enemyImpactShield,  //14
 
     // Player
-    playerMove,     // 13
+    playerMove,     // 15
     playerShockwave,
     playerTeleport,
     playerDeath,
-    playerGhost,    // 17
+    playerGhost,    // 19
 
     // Competence
-    competenceExplosion,    //18
+    competenceExplosion,    //20
 
     // Environmenent
-    statusExplosion,    //19
-    totemUsable,    //20
+    statusExplosion,    //21
+    totemUsable,    //22
 
     none
 }
