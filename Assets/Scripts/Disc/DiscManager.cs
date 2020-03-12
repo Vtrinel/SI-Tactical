@@ -248,6 +248,8 @@ public class DiscManager : MonoBehaviour
             DiscOverload(retreivedDiscType);
             //Debug.Log("TOO MUCH DISCS, NOT ADDED BUT SUPPOSED TO BE SOMETHING");
         }
+
+        GameManager.Instance.CheckForCompetencesUsability();
     }
 
     [Header("Overlaod Effects")]

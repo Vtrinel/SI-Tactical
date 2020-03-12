@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     public GoldBar myGoldBar;
 
     public GameObject buttonEndTurn;
+    public GameObject cancelButton;
     #endregion
 
     private static UIManager _instance;
@@ -52,6 +53,11 @@ public class UIManager : MonoBehaviour
     public void ChangeEndTurnButtonVisibility(bool visible)
     {
         buttonEndTurn.SetActive(visible);
+    }
+
+    public void ChangeCancelButtonVisibility(bool visible)
+    {
+        cancelButton.SetActive(visible);
     }
 
     public void AddExperience(int experience)

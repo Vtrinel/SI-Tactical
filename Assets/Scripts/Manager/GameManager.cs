@@ -399,6 +399,8 @@ public class GameManager : MonoBehaviour
 
     public void CallSelectActionEvent(ActionType actionType)
     {
+        UIManager.Instance.ChangeCancelButtonVisibility(true);
+        UIManager.Instance.ChangeEndTurnButtonVisibility(false);
         switch (actionType)
         {
             case ActionType.Move:
@@ -420,6 +422,7 @@ public class GameManager : MonoBehaviour
     {
         UIManager.Instance.GetActionBar.UpdatePreConsommationPointBar(currentActionPointsAmount, 0);
         UIManager.Instance.HideActionPointText();
+        UIManager.Instance.ChangeCancelButtonVisibility(false);
         switch (actionType)
         {
             case ActionType.Move:
