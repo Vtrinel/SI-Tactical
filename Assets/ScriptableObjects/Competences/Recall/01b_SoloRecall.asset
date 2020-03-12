@@ -12,14 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14b8f0f55c9d3424eb0e3449e185571b, type: 3}
   m_Name: 01b_SoloRecall
   m_EditorClassIdentifier: 
-  competenceName: SoloRecall
+  competenceName: Precision Recall
   competenceDescription: "Rappelle le dernier disque lanc\xE9 et \xE0 sa port\xE9e,
     vers le joeuur en ligne droite.\nappuyer sur le joueur pour valider"
-  competenceImage: {fileID: 21300000, guid: b4b81cadbfd16c445962122b4d2d0e20, type: 3}
+  competenceTooltip: Koura calls back the last thrown disc still in range (clic anywhere
+    to confirm)
+  competenceImage: {fileID: 21300000, guid: 7cfad66ba2fe8f94a8cae70c2308fbb2, type: 3}
   actionPointsCost: 1
   unlocked: 0
   competencesUnlockedNeeded:
-  - {fileID: 11400000, guid: 23c61e99f565491499f03494d0b17213, type: 2}
+  - {fileID: 0}
   trajectoryModifiers: []
   numberOfRecalledDiscs: 1
   recallingOrder: 1

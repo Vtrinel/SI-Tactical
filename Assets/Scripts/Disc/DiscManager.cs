@@ -139,6 +139,39 @@ public class DiscManager : MonoBehaviour
         return null;
     }
 
+    public DiscScript PeekNextThrowDisc()
+    {
+        if (possessedDiscs.Count > 0)
+            return PeekDiscFromPool(possessedDiscs.Peek());
+        else
+            return null;
+    }
+
+    public DiscScript PeekDiscFromPool(DiscType discType)
+    {
+        if (allDiscPools.ContainsKey(discType))
+        {
+            DiscScript peekedDisc = null;
+
+            if (allDiscPools[discType].Count > 0)
+            {
+                peekedDisc = allDiscPools[discType].Peek();
+            }
+            else
+            {
+                peekedDisc = Instantiate(discTypeToPrefab[discType], discTypeToPoolParent[discType]);
+                peekedDisc.SetUpModifiers();
+                peekedDisc.SetDiscType(discType);
+                peekedDisc.gameObject.SetActive(false);
+                allDiscPools[discType].Enqueue(peekedDisc);
+            }
+
+            return peekedDisc;
+        }
+
+        return null;
+    }
+
     public void ReturnDiscInPool(DiscScript disc)
     {
         DiscType discType = disc.GetDiscType;
@@ -166,6 +199,7 @@ public class DiscManager : MonoBehaviour
     [SerializeField] int currentPossessedDiscs = 3;
     Stack<DiscType> possessedDiscs = new Stack<DiscType>();
     public int GetPossessedDiscsCount => possessedDiscs.Count;
+    public Stack<DiscType> GetPossessedDiscs => possessedDiscs;
 
     public Action OnAddOneMaxDisc;
     public void AddOneMaxNumberOfPossessedDiscs() 
@@ -178,6 +212,7 @@ public class DiscManager : MonoBehaviour
 
     public Action<Stack<DiscType>> OnDiscUpdate;
 
+    //int total, combien, type
     public Action<int, int, DiscType> OnDiscFilled;
     public void FillPossessedDiscsWithBasicDiscs()
     {
@@ -257,7 +292,8 @@ public class DiscManager : MonoBehaviour
         if (possessedDiscs.Count == 0)
             return null;
 
-        DiscScript newDisc = GetDiscFromPool(possessedDiscs.Pop());
+        DiscType newDiscType = possessedDiscs.Pop();
+        DiscScript newDisc = GetDiscFromPool(newDiscType);
         if (newDisc != null)
         {
             throwedDiscs.Add(newDisc);
@@ -331,11 +367,19 @@ public class DiscManager : MonoBehaviour
         }
     }
     #endregion    
+
+    [Header("Discs Informations")]
+    [SerializeField] DiscsInformationsLibrary discsInformationsLibrary = default;
+
+    public DiscInformations GetDiscInformations(DiscType discType)
+    {
+        return discsInformationsLibrary.GetDiscInformations(discType);
+    }
 }
 
 public enum DiscType
 {
-    None, Piercing, Ghost, Explosive, Heavy, Shockwave
+     None, Piercing, Ghost, Explosive, Heavy, Shockwave
 }
 
 [System.Serializable]

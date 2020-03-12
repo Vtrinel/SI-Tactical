@@ -73,10 +73,11 @@ public class SoundManager : MonoBehaviour
             if (soundAudioClip.sound == sound)
             {
                 soundExist = true;
-            }
-            if (soundAudioClip.audioClip != null)
-            {
-                Debug.LogWarning("AudioClip not found");
+                if (soundAudioClip.audioClip == null)
+                {
+                    Debug.LogWarning("AudioClip not found");
+                    return false;
+                }
             }
         }
 
@@ -149,9 +150,6 @@ public class SoundManager : MonoBehaviour
         }
         return null;
     }
-
-
-
 }
 
 // List of all the sounds

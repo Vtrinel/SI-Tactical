@@ -61,19 +61,20 @@ public static class DiscListingFactory
     }
 
 
-    public static List<DiscTrajectoryParameters> GetDiscInRangeTrajectory(Vector3 targetPosition, CompetenceRecall recallCompetence)
+    public static Dictionary<DiscScript, DiscTrajectoryParameters> GetDiscInRangeTrajectory(Vector3 targetPosition, CompetenceRecall recallCompetence)
     {
         List<DiscScript> recallableFromPosition =
             DiscListingFactory.GetSortedRecallableDiscs(recallCompetence,
             DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetAllInRangeDiscsFromPosition(targetPosition));
 
-        List<DiscTrajectoryParameters> allTrajParams = new List<DiscTrajectoryParameters>();
+        Dictionary<DiscScript, DiscTrajectoryParameters> allTrajParams = new Dictionary<DiscScript, DiscTrajectoryParameters>();
         foreach (DiscScript disc in recallableFromPosition)
         {
             DiscTrajectoryParameters newTrajParams =
                 DiscTrajectoryFactory.GetTrajectory(recallCompetence, disc.transform.position, targetPosition,
                 DiscManager.Instance.GetAllThrowedDiscs, DiscManager.Instance.GetInRangeDiscs, disc);
-            allTrajParams.Add(newTrajParams);
+
+            allTrajParams.Add(disc, newTrajParams);
         }
         return allTrajParams;
     }
