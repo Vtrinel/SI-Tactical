@@ -211,10 +211,12 @@ public class DiscScript : MonoBehaviour
         if (hit.collider.gameObject.layer == 12)
         {
             SoundManager.Instance.PlaySound(Sound.ShieldGetHit, hit.transform.position);
+            FxManager.Instance.DemandeFx(FxType.genericImpact, hit.transform.position);
         }
         else if (hit.collider.gameObject.layer == 14)
         {
             SoundManager.Instance.PlaySound(Sound.WallGetHit, hit.transform.position);
+            FxManager.Instance.DemandeFx(FxType.genericImpact, hit.transform.position);
         }
 
         Vector3 horizontalNormal = hit.normal;
