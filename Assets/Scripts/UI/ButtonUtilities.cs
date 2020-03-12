@@ -18,9 +18,6 @@ public class ButtonUtilities : MonoBehaviour
 
     public ActionType myActionType;
 
-    public AudioSource myAudioSource;
-    public AudioClip clickButtonSound;
-
     Competence linkedCompetence = default;
     [SerializeField] TooltipColliderUI tooltipCollider = default;
     [SerializeField] Animator competenceButtonAnimator = default;
@@ -114,7 +111,7 @@ public class ButtonUtilities : MonoBehaviour
 
         UpdateColor();
 
-        myAudioSource.PlayOneShot(clickButtonSound);
+        SoundManager.Instance.PlaySound(Sound.SelectCompetence, Camera.main.transform.position);
         competenceButtonAnimator.SetBool("Selected", true);
     }
 
