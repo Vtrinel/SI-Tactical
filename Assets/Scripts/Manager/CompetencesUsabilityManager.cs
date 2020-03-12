@@ -19,6 +19,13 @@ public class CompetencesUsabilityManager
             UpdatePreparation();
             UIManager.Instance.UpdateActionPointCostText(GetCurrentCompetenceCost(), currentActionPoints);
         }
+        else if (IsUsingCompetence)
+        {
+            if (!teleportationDurationSystem.TimerOver)
+            {
+                teleportationDurationSystem.UpdateTimer();
+            }
+        }
     }
 
     PlayerController _player = default;
@@ -372,6 +379,9 @@ public class CompetencesUsabilityManager
     }
 
     #region Teleportation Utilities
+    [Header("Teleportation")]
+    [SerializeField] float teleportationDuration = 1.5f;
+    TimerSystem teleportationDurationSystem = new TimerSystem();
     Vector3 currentTeleportationPosition = default;
     GameObject teleportationExchangeObject = default;
     bool canTeleport = false;
@@ -409,8 +419,6 @@ public class CompetencesUsabilityManager
     public void EndTeleportationPreparation()
     {
         PreviewCompetencesManager.Instance.EndTeleportationPreview();
-        teleportationExchangeObject = null;
-        currentTeleportationPosition = Vector3.zero;
     }
 
     public GameObject GetTeleportationExchangeObject(TeleportationTarget teleportationTarget)
@@ -604,22 +612,30 @@ public class CompetencesUsabilityManager
 
     public bool LaunchTeleportation()
     {
+        teleportationDurationSystem = new TimerSystem(teleportationDuration, EndTeleportation);
+        teleportationDurationSystem.StartTimer();
+
         if (!canTeleport)
             return false;
 
-        Vector3 initialPlayerPos = _player.transform.position;
+        ChangeUsabilityState(UsabilityState.Using, ActionType.Special);
 
+        return true;
+    }
+
+    public void EndTeleportation()
+    {
+        Vector3 initialPlayerPos = _player.transform.position;
         _player.transform.position = currentTeleportationPosition;
-        if(teleportationExchangeObject != null)
+        if (teleportationExchangeObject != null)
         {
             teleportationExchangeObject.transform.position = initialPlayerPos;
         }
-
-        ResetUsabilityState();
         CameraManager.instance.GetPlayerCamera.transform.position = initialPlayerPos;
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
-
-        return true;
+        ResetUsabilityState();
+        teleportationExchangeObject = null;
+        currentTeleportationPosition = Vector3.zero;
     }
     #endregion
 
