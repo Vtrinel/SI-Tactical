@@ -96,6 +96,8 @@ MonoBehaviour:
     tooltipAdditionalInformationValue: 0
     tooltipAdditionalInformationType: 0
     miniSizeTooltip: 0
+    forcedTooltipLPosition: {fileID: 0}
+    tooltipForcedPositionType: 0
 --- !u!1 &3869715040816499829
 GameObject:
   m_ObjectHideFlags: 0
@@ -974,6 +976,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3894817726808940225}
     m_Modifications:
+    - target: {fileID: 2541241942041627738, guid: 63234ee1d16265d41bfaaafaa13d74fc,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3616159053421681047, guid: 63234ee1d16265d41bfaaafaa13d74fc,
         type: 3}
       propertyPath: m_Name

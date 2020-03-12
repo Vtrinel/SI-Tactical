@@ -137,6 +137,8 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning("WARNING : Too much action points consumed, count got negative.");
         }
         OnActionPointsAmountChanged?.Invoke(currentActionPointsAmount);
+
+        CheckForCompetencesUsability();
     }
 
     public void GainActionPoints(int amount)
@@ -148,6 +150,7 @@ public class GameManager : MonoBehaviour
         }
 
         OnActionPointsAmountChanged?.Invoke(currentActionPointsAmount);
+        CheckForCompetencesUsability();
     }
 
     [SerializeField] UnityEngine.UI.Text actionPointsUseDebugText = default;
@@ -548,7 +551,7 @@ public class GameManager : MonoBehaviour
     {
         List<bool> usabilities = new List<bool>();
 
-        if (currentActionPointsAmount == 0)
+        if (currentActionPointsAmount == 0 || !GetPlayerCanAct)
         {
             for (int i = 0; i < 4; i++)
             {

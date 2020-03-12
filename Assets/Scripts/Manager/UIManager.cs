@@ -197,7 +197,7 @@ public class UIManager : MonoBehaviour
     public void UpdateRemainingNumberOfTurns(int remaining)
     {
         remainingNumberOfTurnsToWait = remaining;
-        //turnGoalText.text = "Stay near the god's statue for " + remainingNumberOfTurnsToWait + " more turns";
+        turnGoalText.text = "Stay near the god's statue for " + remainingNumberOfTurnsToWait + " more turns";
         turnGoalValueText.text = remainingNumberOfTurnsToWait.ToString();
         goalPanelAnimator.SetTrigger("updateGoal");
     }

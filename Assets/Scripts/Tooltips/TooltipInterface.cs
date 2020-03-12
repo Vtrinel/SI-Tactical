@@ -57,15 +57,15 @@ public class TooltipInterface : MonoBehaviour
                     break;
 
                 case TooltipAdditionalInformationType.ActionPointsCost:
-                    tooltipName.text = tooltipName.text + " - Cost : " + infos.tooltipAdditionalInformationValue + "AP";
+                    tooltipName.text = tooltipName.text + " - Cost : " + infos.tooltipAdditionalInformationValue + " AP";
                     break;
 
                 case TooltipAdditionalInformationType.LifePoints:
-                    tooltipName.text = tooltipName.text + " - State : " + infos.tooltipAdditionalInformationValue + "HP";
+                    tooltipName.text = tooltipName.text + " - State : " + infos.tooltipAdditionalInformationValue + " HP";
                     break;
 
                 case TooltipAdditionalInformationType.Damage:
-                    tooltipName.text = tooltipName.text + " - Damage : " + infos.tooltipAdditionalInformationValue + "HP";
+                    tooltipName.text = tooltipName.text + " - Damage : " + infos.tooltipAdditionalInformationValue + " DMG";
                     break;
             }
         }
