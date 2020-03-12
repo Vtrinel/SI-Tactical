@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -332,6 +333,8 @@ public class GameManager : MonoBehaviour
                 UpdateActionPointsDebugTextAmount(competencesUsabilityManager.GetCurrentCompetenceCost());
             }
         }
+
+        CheckForCompetencesUsability();
     }
 
     public void OnPlayerClickAction()
@@ -383,6 +386,8 @@ public class GameManager : MonoBehaviour
 
         if(validatedAction)
             UpdatePlayerActability();
+
+        CheckForCompetencesUsability();
     }
 
     public void CallSelectActionEvent(ActionType actionType)
@@ -448,11 +453,13 @@ public class GameManager : MonoBehaviour
 
         player.SetAbleToAct(canAct);
         SetActionPointsDebugTextVisibility(playerMovementsManager.IsWillingToMove || competencesUsabilityManager.IsPreparingCompetence);
+        CheckForCompetencesUsability();
     }
 
     public void LaunchCompetenceForReal()
     {
         competencesUsabilityManager.LaunchCompetenceForReal();
+        CheckForCompetencesUsability();
     }
     #endregion
 
@@ -535,6 +542,26 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.ShowLosePanel();
     }
     #endregion
+
+    public Action<List<bool>> OnCompetencesUsableChanged;
+    public void CheckForCompetencesUsability()
+    {
+        List<bool> usabilities = new List<bool>();
+
+        if (currentActionPointsAmount == 0)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                usabilities.Add(false);
+            }
+        }
+        else
+        {
+            usabilities = competencesUsabilityManager.GetCompetencesUsability(true, currentActionPointsAmount);
+        }
+
+        OnCompetencesUsableChanged?.Invoke(usabilities);
+    }
 
     [Header("Tooltips management")]
     [SerializeField] TooltipsManagementSystem tooltipsManagementSystem = default; 
