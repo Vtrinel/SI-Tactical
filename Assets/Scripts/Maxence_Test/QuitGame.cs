@@ -13,8 +13,11 @@ public class QuitGame : MonoBehaviour
     {
         if(ModeReturn == false)
         {
+#if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
+#else
             Application.Quit();
+#endif
         }
         else
         {
