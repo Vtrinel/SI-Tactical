@@ -55,7 +55,8 @@ public class CultisteEnemy : IAEnemyVirtual
     {
         if (isPreparing)
         {
-            Attack();
+            //Attack();
+            StartAttack();
             isPreparing = false;
             yield return new WaitForSeconds(1);
         }
@@ -128,7 +129,6 @@ public class CultisteEnemy : IAEnemyVirtual
 
         if (CanAttack() && !isPreparing)
         {
-            yield return new WaitForSeconds(0.4f);
             PrepareAttack();
             yield return new WaitForSeconds(0.4f);
         }
@@ -136,7 +136,6 @@ public class CultisteEnemy : IAEnemyVirtual
         myAnimator.SetBool("Walking", false);
         isPlaying = false;
         myNavAgent.isStopped = true;
-        Debug.Log("END");
         OnFinishTurn?.Invoke();
     }
 
@@ -151,6 +150,8 @@ public class CultisteEnemy : IAEnemyVirtual
         isPreparing = true;
         previewShoot.SetActive(true);
         myAnimator.SetBool("PreparingAttack", true);
+        animationEventContainer.SetEvent2(Attack);
+        animationEventContainer.SetEvent(null);
     }
 
     void SetPreview()
@@ -167,21 +168,30 @@ public class CultisteEnemy : IAEnemyVirtual
         //myLine.gameObject.SetActive(true);
     }
 
+    void StartAttack()
+    {
+        myAnimator.SetBool("Preparing", false);
+        myAnimator.SetTrigger("Attack");
+    }
+
     void Attack()
     {
-        myAnimator.SetTrigger("Attack");
-        myAnimator.SetBool("Preparing", false);
-        previewShoot.SetActive(true);
+        previewShoot.SetActive(false);
+        myAnimator.SetBool("PreparingAttack", false);
 
         LaunchObj();
         SoundManager.Instance.PlaySound(Sound.CultistATK, gameObject.transform.position);
-        SoundManager.Instance.PlaySound(Sound.PlayerGetHit, gameObject.transform.position);
+        //SoundManager.Instance.PlaySound(Sound.PlayerGetHit, gameObject.transform.position);
+        animationEventContainer.SetEvent(CheckForIdleBreak);
+        animationEventContainer.SetEvent2(null);
     }
 
     void LaunchObj()
     {
         GameObject newProjectile = Instantiate(projectilePrefab);
-        newProjectile.transform.position = transform.position;
+        newProjectile.transform.position = transform.position + transform.forward * 1f;
+
+        CameraManager.instance.GetPlayerCamera.AttachFollowTransformTo(newProjectile.transform);
 
         newProjectile.GetComponent<ProjectileScript>().SetDestination(myArrow.transform.position, gameObject);
     }
@@ -239,8 +249,6 @@ public class CultisteEnemy : IAEnemyVirtual
 
     private void Update()
     {
-        Debug.Log("Destroying : " + playingDiscDestroyAnimation);
-
         if (isPreparing)
         {
             SetPreview();
