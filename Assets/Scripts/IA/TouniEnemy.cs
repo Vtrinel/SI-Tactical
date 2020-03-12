@@ -112,6 +112,7 @@ public class TouniEnemy : IAEnemyVirtual
 
         GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, new DamagesParameters(damage));
         SoundManager.Instance.PlaySound(Sound.TouniATK, GameManager.Instance.GetPlayer.transform.position);
+        SoundManager.Instance.PlaySound(Sound.PlayerGetHit, gameObject.transform.position);
     }
 
     void CollisionAttack()

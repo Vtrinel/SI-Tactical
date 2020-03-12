@@ -9586,6 +9586,7 @@ GameObject:
   - component: {fileID: 7420551720290185686}
   - component: {fileID: 6047788312260740915}
   - component: {fileID: 6019450386350241885}
+  - component: {fileID: 4526056567458300352}
   m_Layer: 0
   m_Name: TP
   m_TagString: Untagged
@@ -9601,7 +9602,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8285946402747497966}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.4690052, y: 0.08333337, z: -6.565343}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5289250478495527656}
@@ -14332,6 +14333,19 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &4526056567458300352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8285946402747497966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19ab9c5621003d2448bd23e4e7e89992, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  particles: []
 --- !u!1 &8549584346458087913
 GameObject:
   m_ObjectHideFlags: 0

@@ -31,7 +31,8 @@ public class FxManager : MonoBehaviour
     {
         if (CanCreateFx(myTypeFx))
         {
-            GameObject newExplo = Instantiate(FxGameObjectStocked.fxGameObject, transform);
+            GameObject newExplo = Instantiate(FxGameObjectStocked.fxGameObject);
+            newExplo.transform.position = position;
         }
     }
 
@@ -64,8 +65,37 @@ public class FxManager : MonoBehaviour
 
 public enum FxType
 {
-    Hit,
-    Explosion,
+    // Disc
+    discThrow,  //1
+    discRecall,
+    discTrail,
+    genericImpact,
+    enterRecallZone,
+    leaveRecallZone,
+    discDestroyed,  //7
+
+    // Enemy
+    enemyDamage,    //8
+    enemySpawn,
+    enemyProjectileFire,
+    enemyProjectileTrail,
+    enemyImpactShield,  //12
+
+    // Player
+    playerMove,     // 13
+    playerShockwave,
+    playerTeleport,
+    playerDeath,
+    playerGhost,    // 17
+
+    // Competence
+    competenceExplosion,    //18
+
+    // Environmenent
+    statusExplosion,    //19
+    totemUsable,    //20
+
+    none
 }
 
 [System.Serializable]
