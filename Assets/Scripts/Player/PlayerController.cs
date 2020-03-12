@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour
     {
         EffectZone newRageEffectZone = Instantiate(rageEffectZonePrefab);
         newRageEffectZone.StartZone(transform.position + Vector3.up * rageEffectZoneVerticalOffset);
-        FxManager.Instance.DemandeFx(FxType.playerShockwave, gameObject.transform.position);
+        FxManager.Instance.CreateFx(FxType.playerShockwave, gameObject.transform.position);
     }
 
     public void LifeReachedZero()
