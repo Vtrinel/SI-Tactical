@@ -9,8 +9,6 @@ public class DiscBar : MonoBehaviour
 
     [SerializeField] List<DiscElement> AllDiscElement = new List<DiscElement>();
 
-    [SerializeField] List<Vector2> AllPos = new List<Vector2>();
-
     [SerializeField] Image imgFirst;
 
     private void OnEnable()
@@ -18,7 +16,6 @@ public class DiscBar : MonoBehaviour
         DiscManager.Instance.OnDiscFilled += InitDisc;
         DiscManager.Instance.OnDiscConsommed += RemoveDiscFromBar;
         DiscManager.Instance.OnDiscAdded += AddNewDisc;
-        //DiscManager.Instance.OnAddOneMaxDisc += UpdateMaxDiscBar;
         GameManager.Instance.OnThrowCompetenceSelectionStateChanged += SetColor;
     }
 
@@ -26,15 +23,15 @@ public class DiscBar : MonoBehaviour
     {
         DiscManager.Instance.OnDiscFilled -= InitDisc;
         DiscManager.Instance.OnDiscAdded -= AddNewDisc;
-        //DiscManager.Instance.OnAddOneMaxDisc -= UpdateMaxDiscBar;
         DiscManager.Instance.OnDiscConsommed -= RemoveDiscFromBar;
+        GameManager.Instance.OnThrowCompetenceSelectionStateChanged -= SetColor;
     }
 
     void SetColor(bool value)
     {
         if (value)
         {
-            imgFirst.color = new Color(255, 45, 0);
+            imgFirst.color = new Color(1, 0.3119379f, 0);
         }
         else
         {
@@ -65,11 +62,6 @@ public class DiscBar : MonoBehaviour
 
     void Refresh(Stack<DiscType> _allDisc)
     {
-        /*foreach (DiscType discType in _allDisc)
-        {
-            print(discType);
-        }*/
-
         if(_allDisc.Count == 0)
         {
             discIconHolder.gameObject.SetActive(false);
@@ -80,35 +72,21 @@ public class DiscBar : MonoBehaviour
             discIconHolder.gameObject.SetActive(true);
         }
 
-
-        DiscType oldType = DiscType.None;
-        int numBerOfSame = 0;
-        int i = 0;
-
-        foreach (DiscType discType in _allDisc)
+        foreach(DiscElement discElement in AllDiscElement)
         {
-            if(oldType == DiscType.None)
-            {
-                oldType = discType;
-            }
-
-            if(discType != oldType)
-            {
-                i++;
-                DiscElement de = AllDiscElement[i];
-                de.SetIcon((int)discType, numBerOfSame);
-
-                numBerOfSame = 0;
-            }
-            else
-            {
-                numBerOfSame++;
-                DiscElement de = AllDiscElement[i];
-                de.SetIcon((int)discType, numBerOfSame);
-            }
-            oldType = discType;
+            discElement.gameObject.SetActive(false);
         }
 
-        //discIconHolder.position = AllPos[i];
+        int i = 0;
+        foreach (DiscType discType in _allDisc)
+        {
+            DiscScript peekedDisc = DiscManager.Instance.PeekDiscFromPool(discType);
+
+            DiscElement de = AllDiscElement[i];
+            de.SetIcon((int)discType, peekedDisc.GetCurrentDamage);
+
+            AllDiscElement[i].gameObject.SetActive(true);
+            i++;
+        }
     }
 }
