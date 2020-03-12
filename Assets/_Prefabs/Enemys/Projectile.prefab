@@ -125,7 +125,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 8079147113118854853}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.15
   m_Height: 0.72
   m_Direction: 0
@@ -146,6 +146,7 @@ MonoBehaviour:
   speed: 6
   damage: 1
   ObjLauncher: {fileID: 0}
+  myCollider: {fileID: 1937903546}
 --- !u!95 &6463890638903266841
 Animator:
   serializedVersion: 3

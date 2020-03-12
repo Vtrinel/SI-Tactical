@@ -96,26 +96,20 @@ public class CompetencesUsabilityManager
             }
             else if (compType == ActionType.Recall)
             {
-                if (DiscManager.Instance.GetInRangeDiscsCount == 0)
+                List<DiscScript> inRange = DiscManager.Instance.GetInRangeDiscs;
+                List<DiscScript> throwed = DiscManager.Instance.GetAllThrowedDiscs;
+                List<DiscScript> recallable = DiscListingFactory.GetSortedRecallableDiscs(recallCompetence, throwed, inRange);
+                if (recallable.Count == 0)
                 {
                     trySelectResult = ActionSelectionResult.NoNearbyDisc;
                 }
             }
             else if (compType == ActionType.Special)
             {
-                CompetenceSpecialTeleportation foundTeleportationCompetence = specialCompetence as CompetenceSpecialTeleportation;
-                if(foundTeleportationCompetence != null)
+                bool usable = GetSpecialCompetenceUsable(totalActionPoints);
+                if (!usable)
                 {
-                    if(foundTeleportationCompetence.GetTeleportationMode == TeleportationMode.Exchange)
-                    {
-                        if(foundTeleportationCompetence.GetTeleportationTarget == TeleportationTarget.NewestDisc || foundTeleportationCompetence.GetTeleportationTarget == TeleportationTarget.OldestDisc)
-                        {
-                            if (DiscManager.Instance.GetInRangeDiscsCount == 0)
-                            {
-                                trySelectResult = ActionSelectionResult.NoNearbyDisc;
-                            }
-                        }
-                    }
+                    trySelectResult = ActionSelectionResult.NoNearbyDisc;
                 }
             }
             currentActionPoints = totalActionPoints;
@@ -216,6 +210,7 @@ public class CompetencesUsabilityManager
     public void ResetUsabilityState()
     {
         ChangeUsabilityState(UsabilityState.None, ActionType.None);
+        GameManager.Instance.CheckForCompetencesUsability();
     }
 
     public bool IsUsingCompetenceSystem => currentUsabilityState != UsabilityState.None;
@@ -641,5 +636,71 @@ public class CompetencesUsabilityManager
     public void EndCompetenceUsability()
     {
         ResetUsabilityState();
+    }
+
+    public List<bool> GetCompetencesUsability(bool movementValue, int currentActionPoints)
+    {
+        List<bool> values = new List<bool>();
+        values.Add(movementValue);
+        values.Add(GetThrowCompetenceUsable(currentActionPoints));
+        values.Add(GetRecallCompetenceUsable(currentActionPoints));
+        values.Add(GetSpecialCompetenceUsable(currentActionPoints));
+
+        return values;
+    }
+
+    public bool GetThrowCompetenceUsable(int currentActionPoints)
+    {
+        bool usable = true;
+
+        if (throwCompetence.GetActionPointsCost > currentActionPoints)
+            return false;
+        else if(DiscManager.Instance.GetPossessedDiscsCount == 0)
+            return false;
+
+        return usable;
+    }
+
+    public bool GetRecallCompetenceUsable(int currentActionPoints)
+    {
+        bool usable = true;
+
+        List<DiscScript> inRange = DiscManager.Instance.GetInRangeDiscs;
+        List<DiscScript> throwed = DiscManager.Instance.GetAllThrowedDiscs;
+        List<DiscScript> recallable = DiscListingFactory.GetSortedRecallableDiscs(recallCompetence, throwed, inRange);
+
+        if (recallCompetence.GetActionPointsCost > currentActionPoints)
+            return false;
+        else if (recallable.Count == 0)
+            return false;
+
+        return usable;
+    }
+
+    public bool GetSpecialCompetenceUsable(int currentActionPoints)
+    {
+        bool usable = true;
+
+        if (specialCompetence.GetActionPointsCost > currentActionPoints)
+            return false;
+        else
+        {
+            CompetenceSpecialTeleportation foundTeleportationCompetence = specialCompetence as CompetenceSpecialTeleportation;
+            if (foundTeleportationCompetence != null)
+            {
+                if (foundTeleportationCompetence.GetTeleportationMode == TeleportationMode.Exchange)
+                {
+                    if (foundTeleportationCompetence.GetTeleportationTarget == TeleportationTarget.NewestDisc || foundTeleportationCompetence.GetTeleportationTarget == TeleportationTarget.OldestDisc)
+                    {
+                        if (DiscManager.Instance.GetInRangeDiscsCount == 0)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return usable;
     }
 }

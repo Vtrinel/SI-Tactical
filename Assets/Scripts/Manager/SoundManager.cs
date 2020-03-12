@@ -47,8 +47,6 @@ public class SoundManager : MonoBehaviour
     {
         if (CanPlaySound(sound))
         {
-            Debug.Log(sound);
-            
             GameObject soundGameObject = new GameObject("Sound : " + currentCreatedClip.sound.ToString());
             soundGameObject.transform.position = position;
 
@@ -69,42 +67,61 @@ public class SoundManager : MonoBehaviour
     // Test if a sound can be played or need some time and store it if it exist
     private bool CanPlaySound(Sound sound)
     {
-        bool soundExist = false;
-
         //Check if the sound exist
         foreach (SoundAudioClip soundAudioClip in soundAudioClipList)
         {
-
             if (soundAudioClip.sound == sound)
             {
-                soundExist = true;
-                Debug.Log(sound);
-
                 if (soundAudioClip.audioClip != null)
                 {
                     currentCreatedClip = soundAudioClip;
 
-                    // Random sound for the enemy movement
-                    if (sound == Sound.EnemyMove)
+                    // If it exist, check if that sound have a cooldown or not (and is in cooldown or not)
+                    switch (sound)
                     {
-                        var random = Random.value;
+                        case Sound.EnemyMove:
+                            if (soundTimerDictionary.ContainsKey(sound))
+                            {
+                                float lastTimePlayed = soundTimerDictionary[sound];
+                                float playerMoveTimerMax = delayWalkSound;
+                                if (lastTimePlayed + playerMoveTimerMax < Time.time)
+                                {
+                                    soundTimerDictionary[sound] = Time.time;
 
-                        if (random >= 0.75)
-                        {
-                            currentCreatedClip.audioClip = enemyMovementList[0];
-                        }
-                        if (random >= 0.50 && random < 0.75)
-                        {
-                            currentCreatedClip.audioClip = enemyMovementList[1];
-                        }
-                        if (random >= 0.25 && random < 0.50)
-                        {
-                            currentCreatedClip.audioClip = enemyMovementList[2];
-                        }
-                        if (random < 0.25)
-                        {
-                            currentCreatedClip.audioClip = enemyMovementList[3];
-                        }
+                                    // Randomize the sound of walk
+                                    var random = Random.value;
+
+                                    if (random >= 0.75)
+                                    {
+                                        currentCreatedClip.audioClip = enemyMovementList[0];
+                                    }
+                                    if (random >= 0.50 && random < 0.75)
+                                    {
+                                        currentCreatedClip.audioClip = enemyMovementList[1];
+                                    }
+                                    if (random >= 0.25 && random < 0.50)
+                                    {
+                                        currentCreatedClip.audioClip = enemyMovementList[2];
+                                    }
+                                    if (random < 0.25)
+                                    {
+                                        currentCreatedClip.audioClip = enemyMovementList[3];
+                                    }
+
+                                    return true;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+                            }
+                            break;
+
+                        case Sound.none:
+                            return false;
+
+                        default:
+                            return true;
                     }
                 }
                 else
@@ -114,40 +131,7 @@ public class SoundManager : MonoBehaviour
                 }
             }
         }
-
-        if (!soundExist)
-        {
-            Debug.LogWarning("Didn't found soundAudioClip");
-            return false;
-        }
-
-        // If it exist, check if that sound have a cooldown or not (and is in cooldown or not)
-        switch (sound)
-        {
-            case Sound.EnemyMove:
-                if (soundTimerDictionary.ContainsKey(sound))
-                {
-                    float lastTimePlayed = soundTimerDictionary[sound];
-                    float playerMoveTimerMax = delayWalkSound;
-                    if (lastTimePlayed + playerMoveTimerMax < Time.time)
-                    {
-                        soundTimerDictionary[sound] = Time.time;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                break;
-
-            case Sound.none:
-                return false;
-
-            default:
-                return true;
-        }
-        return true;
+        return false;
     }
 }
 
