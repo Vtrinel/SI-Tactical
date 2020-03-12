@@ -79,7 +79,7 @@ public class TooltipInterface : MonoBehaviour
         forcedTooltipPosition = infos.forcedTooltipLPosition;
         forceTooltipPosition = (forcedTooltipPosition != null);
         tooltipForcedPositionType = infos.tooltipForcedPositionType;
-        Debug.Log(tooltipForcedPositionType);
+        //Debug.Log(tooltipForcedPositionType);
     }
 
     private void Update()

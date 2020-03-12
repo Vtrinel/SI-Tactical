@@ -47,7 +47,7 @@ public class SoundManager : MonoBehaviour
     {
         if (CanPlaySound(sound))
         {
-            Debug.Log(sound);
+            //Debug.Log(sound);
             
             GameObject soundGameObject = new GameObject("Sound : " + currentCreatedClip.sound.ToString());
             soundGameObject.transform.position = position;
@@ -78,7 +78,7 @@ public class SoundManager : MonoBehaviour
             if (soundAudioClip.sound == sound)
             {
                 soundExist = true;
-                Debug.Log(sound);
+                //Debug.Log(sound);
 
                 if (soundAudioClip.audioClip != null)
                 {
