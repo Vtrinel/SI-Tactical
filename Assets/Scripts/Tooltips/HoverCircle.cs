@@ -16,6 +16,7 @@ public class HoverCircle : MonoBehaviour
 
     public void SetColor(Color hoverColor)
     {
-        spriteRenderer.color = hoverColor;
+        if (spriteRenderer != null)
+            spriteRenderer.color = hoverColor;
     }
 }

@@ -102,6 +102,7 @@ public class DiscScript : MonoBehaviour
     {
         tooltipCollider.SetTooltipInformations(TooltipInformationFactory.GetDiscTypeInformations(DiscManager.Instance.GetDiscInformations(_discType)));
         SetUpModifiers();
+        discHoverCirle.SetHovered(false);
     }
 
     void Update()
@@ -453,15 +454,16 @@ public class DiscScript : MonoBehaviour
 
     [Header("Tooltips")]
     [SerializeField] TooltipCollider tooltipCollider = default;
+    [SerializeField] HoverCircle discHoverCirle = default;
 
     public void StartHovering()
     {
-        //Debug.Log("Start Hovering " + name);
+        discHoverCirle.SetHovered(true);
     }
 
     public void EndHovering()
     {
-        //Debug.Log("End Hovering " + name);
+        discHoverCirle.SetHovered(false);
     }
 }
 
