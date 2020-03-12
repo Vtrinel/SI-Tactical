@@ -22,11 +22,6 @@ public class FxAutoRemove : MonoBehaviour
 
         foreach (ParticleSystem part in particlesToRemove)
             particles.Remove(part);
-
-        if (particles.Count == 0)
-        {
-            Destroy(gameObject);
-        }
     }
 
     [ContextMenu("GetParticles")]

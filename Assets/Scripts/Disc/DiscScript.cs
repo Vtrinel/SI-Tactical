@@ -297,8 +297,6 @@ public class DiscScript : MonoBehaviour
             return;
         }
 
-        FxManager.Instance.DemandeFx(FxType.discTrail, gameObject.transform.position);
-
         bool canMove = true;
         Vector3 currentStartPosition = transform.position;
         Vector3 currentEndPosition = transform.position;
