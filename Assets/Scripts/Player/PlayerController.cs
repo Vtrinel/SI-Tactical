@@ -63,13 +63,15 @@ public class PlayerController : MonoBehaviour
         TurnManager.Instance.InterruptEnemiesTurn();
         OnPlayerReceivedDamages?.Invoke(currentLife == 0);
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
-        FxManager.Instance.DemandeFx(FxType.playerShockwave, gameObject.transform.position);
+
+        
     }
 
     public void PlayRage()
     {
         EffectZone newRageEffectZone = Instantiate(rageEffectZonePrefab);
         newRageEffectZone.StartZone(transform.position + Vector3.up * rageEffectZoneVerticalOffset);
+        FxManager.Instance.DemandeFx(FxType.playerShockwave, gameObject.transform.position);
     }
 
     public void LifeReachedZero()
