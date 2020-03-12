@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddf737301a2580249beca8c89bcc9675, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugPosition: {fileID: 0}
   player: {fileID: 0}
   turnManager: {fileID: 0}
   enemiesManager: {fileID: 0}
@@ -57,11 +58,6 @@ MonoBehaviour:
     distanceReductionCoeffPerActionPoint: 1.18
     distanceReductionModificationCoeffPerActionPoint: 1
     minimumDistance: 0.5
-    movementPlayerPreviewPrefab: {fileID: 18290356018844839, guid: 2df3e8208d37d0644af915b9e5ac701e,
-      type: 3}
-    movementLinePreview: {fileID: 0}
-    debugCirclePrefab: {fileID: 5422921156114304414, guid: bf4c7124ec8e3514b9fd34f77ad1dcd8,
-      type: 3}
   competencesUsabilityManager:
     throwCompetence: {fileID: 0}
     minThrowDistance: 1.5
@@ -71,5 +67,36 @@ MonoBehaviour:
   currentPlayerLifeAmount: 0
   worldMouseLayerMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 33024
   mouseCheckMaxDistance: 50
+  uiRaycaster: {fileID: 0}
+  gameManagementActionKey: 13
+  playIntroCutscene: 0
+  cutsceneStayOnObjectiveDuration: 2
+  cutsceneObjectiveToPlayerDuration: 4
+  cutsceneCameraMovementCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  tooltipsManagementSystem:
+    tooltipInterface: {fileID: 0}

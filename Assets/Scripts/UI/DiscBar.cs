@@ -83,6 +83,7 @@ public class DiscBar : MonoBehaviour
             DiscScript peekedDisc = DiscManager.Instance.PeekDiscFromPool(discType);
 
             DiscElement de = AllDiscElement[i];
+
             de.SetIcon((int)discType, peekedDisc.GetCurrentDamage);
 
             AllDiscElement[i].gameObject.SetActive(true);
