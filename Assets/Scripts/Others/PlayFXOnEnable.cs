@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayFXOnEnable : MonoBehaviour
 {
-    [SerializeField] FxType fxToPlayType = FxType.Explosion;
+    [SerializeField] FxType fxToPlayType = FxType.playerShockwave;
     private void OnEnable()
     {
         PlayFxAtPosition(transform.position);

@@ -26,7 +26,7 @@ public class SoundManager : MonoBehaviour
     Dictionary<Sound, float> soundTimerDictionary;
 
     [Header("BGM musics")]
-    public BGMAudioClip[] listBGMMusic;
+    public MusicAudioClip[] MusicBGMList;
 
     [Header("audios enemy movements")]
     public AudioClip[] enemyMovementList;
@@ -35,13 +35,17 @@ public class SoundManager : MonoBehaviour
     public SoundAudioClip[] soundAudioClipList;
 
     private SoundAudioClip currentCreatedClip;
+    private AudioSource audioSource;
 
     public void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+
         soundTimerDictionary = new Dictionary<Sound, float>();
         soundTimerDictionary[Sound.EnemyMove] = 0f;
     }
 
+    #region Sounds
     // To play a sound from another class : SoundManager.PlaySound(Sound.name, position);
     public void PlaySound(Sound sound, Vector3 position)
     {
@@ -133,6 +137,23 @@ public class SoundManager : MonoBehaviour
         }
         return false;
     }
+    #endregion
+
+    #region Musics
+
+    public void PlayMusic(Music music)
+    {
+        foreach( MusicAudioClip musicAudioClip in MusicBGMList)
+        {
+            if (musicAudioClip.music == music && musicAudioClip.audioClip != null)
+            {
+                audioSource.clip = musicAudioClip.audioClip;
+                audioSource.Play();
+            }
+        }
+    }
+
+    #endregion
 }
 
 // List of all the sounds
@@ -169,7 +190,7 @@ public class SoundAudioClip
     public float volume;
 }
 
-public enum BGM
+public enum Music
 {
     Menu,
     InGame,
@@ -178,9 +199,9 @@ public enum BGM
 
 // Group a name and an audioclip
 [System.Serializable]
-public class BGMAudioClip
+public class MusicAudioClip
 {
-    public BGM bgm;
+    public Music music;
     public AudioClip audioClip;
     [Range(0, 1)]
     public float volume;
