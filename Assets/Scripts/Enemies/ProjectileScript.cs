@@ -8,6 +8,7 @@ public class ProjectileScript : MonoBehaviour
     [SerializeField] float speed = 3;
     [SerializeField] int damage = 1;
     [SerializeField] GameObject ObjLauncher;
+    [SerializeField] Collider myCollider;
 
     bool canMove = false;
 
@@ -18,6 +19,7 @@ public class ProjectileScript : MonoBehaviour
         canMove = true;
 
         transform.LookAt(destination);
+        myCollider.enabled = true;
     }
 
     

@@ -158,6 +158,7 @@ public class CultisteEnemy : IAEnemyVirtual
     {
         myAnimator.SetTrigger("Attack");
         myAnimator.SetBool("Preparing", false);
+
         LaunchObj();
         SoundManager.Instance.PlaySound(Sound.CultistATK, gameObject.transform.position);
     }
@@ -192,7 +193,7 @@ public class CultisteEnemy : IAEnemyVirtual
             Debug.DrawRay(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, Color.green, 20);
 
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, out hit, attackRange))
+            if (Physics.Raycast(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, out hit, attackRange, detectionMaskRaycast))
             {
                 if (hit.transform.gameObject == player)
                 {
