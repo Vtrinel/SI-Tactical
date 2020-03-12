@@ -53,6 +53,17 @@ public class DiscElement : MonoBehaviour
         buttonAnimator.SetBool("Tooltiped", false);
     }
 
+    public void Select()
+    {
+        buttonAnimator.SetBool("Selected", true);
+
+    }
+
+    public void Unselect()
+    {
+        buttonAnimator.SetBool("Selected", false);
+    }
+
     private void OnEnable()
     {
         tooltipCollider.OnStartTooltip += StartTooltiped;

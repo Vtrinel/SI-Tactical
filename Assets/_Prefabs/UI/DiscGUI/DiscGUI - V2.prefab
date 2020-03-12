@@ -140,7 +140,7 @@ MonoBehaviour:
   - {fileID: 4027321222646559626}
   - {fileID: 7489331602979397829}
   - {fileID: 2412621149493174740}
-  imgFirst: {fileID: 0}
+  imgFirst: {fileID: 8724963058980009518}
 --- !u!1 &7262332155272020413
 GameObject:
   m_ObjectHideFlags: 0
@@ -905,6 +905,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3253844728841397676}
     m_Modifications:
+    - target: {fileID: 1033762631598252841, guid: 3a3832b444d75af47a54fd7e361cece0,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 096eaf014bb16ac4b803b5fe821d3b3b,
+        type: 3}
     - target: {fileID: 2841976738706119810, guid: 3a3832b444d75af47a54fd7e361cece0,
         type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1024,12 +1030,12 @@ PrefabInstance:
     - target: {fileID: 8979150377816395726, guid: 3a3832b444d75af47a54fd7e361cece0,
         type: 3}
       propertyPath: m_Pivot.x
-      value: -0.13559365
+      value: -0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8979150377816395726, guid: 3a3832b444d75af47a54fd7e361cece0,
         type: 3}
       propertyPath: m_Pivot.y
-      value: 0.07986197
+      value: -0.1
       objectReference: {fileID: 0}
     - target: {fileID: 8979150377816395726, guid: 3a3832b444d75af47a54fd7e361cece0,
         type: 3}
@@ -1054,6 +1060,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 8596775813587932423}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8724963058980009518 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1033762631598252841, guid: 3a3832b444d75af47a54fd7e361cece0,
+    type: 3}
+  m_PrefabInstance: {fileID: 8596775813587932423}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5263656646245044032 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4486044665499048519, guid: 3a3832b444d75af47a54fd7e361cece0,
