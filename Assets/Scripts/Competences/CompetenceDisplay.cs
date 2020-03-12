@@ -13,7 +13,7 @@ public class CompetenceDisplay : MonoBehaviour
         if (competence)
         {
             var image = gameObject.GetComponent<Image>();
-            image.sprite = competence.GetCompetenceImage;
+            image.sprite = competence.GetCompetenceTreeImage;
         }
     }
 
