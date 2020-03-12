@@ -111,7 +111,6 @@ public class ButtonUtilities : MonoBehaviour
 
         UpdateColor();
 
-        SoundManager.Instance.PlaySound(Sound.SelectCompetence, Camera.main.transform.position);
         competenceButtonAnimator.SetBool("Selected", true);
     }
 

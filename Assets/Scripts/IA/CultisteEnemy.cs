@@ -167,6 +167,7 @@ public class CultisteEnemy : IAEnemyVirtual
 
         LaunchObj();
         SoundManager.Instance.PlaySound(Sound.CultistATK, gameObject.transform.position);
+        SoundManager.Instance.PlaySound(Sound.PlayerGetHit, gameObject.transform.position);
     }
 
     void LaunchObj()

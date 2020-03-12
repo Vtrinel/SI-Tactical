@@ -71,7 +71,7 @@ public class DiscBar : MonoBehaviour
         }
         else
         {
-            discIconHolder.gameObject.SetActive(true);
+            discIconHolder.transform.parent.gameObject.SetActive(true);
         }
 
         foreach(DiscElement discElement in AllDiscElement)
