@@ -75,7 +75,7 @@ public class UIManager : MonoBehaviour
     #region AP Costs
     [Header("Action poins cost")]
     [SerializeField] Text actionPointsCostText = default;
-    [SerializeField] Transform actionPointsCostTextParent = default;
+    [SerializeField] RectTransform actionPointsCostTextParent = default;
     [SerializeField] PointActionBar actionBar = default;
     public PointActionBar GetActionBar => actionBar;
 
@@ -87,7 +87,14 @@ public class UIManager : MonoBehaviour
     public void UpdateActionPointCostText(int cost, int total)
     {
         actionPointsCostText.text = cost + "/" + total + "AP";
-        actionPointsCostTextParent.localPosition = Input.mousePosition;
+        Vector2 newPos = Input.mousePosition;
+        if (newPos.x > Screen.width - actionPointsCostTextParent.sizeDelta.x)
+            newPos.x -= actionPointsCostTextParent.sizeDelta.x;
+
+        if (newPos.y < actionPointsCostTextParent.sizeDelta.y)
+            newPos.y += actionPointsCostTextParent.sizeDelta.y;
+
+        actionPointsCostTextParent.localPosition = newPos;
     }
 
     public void HideActionPointText()

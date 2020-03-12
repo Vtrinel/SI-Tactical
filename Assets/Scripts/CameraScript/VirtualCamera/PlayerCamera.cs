@@ -16,7 +16,6 @@ public class PlayerCamera : VirtualCamera
         base.OnEnable();
         player = GameManager.Instance.GetPlayer;
         ResetPlayerCamera();
-        followTransform.transform.SetParent(player.transform);
         followTransform.transform.position = player.transform.position;
         SetCameraTarget(followTransform.transform);
         SetCameraActive();

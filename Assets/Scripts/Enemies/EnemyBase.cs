@@ -45,7 +45,8 @@ public class EnemyBase : MonoBehaviour
         int i = 1;
         foreach(Image bar in lifeBarList)
         {
-            bar.enabled = !(currentAmount < i);
+            bar.GetComponentInChildren<Animator>().SetBool("IsAlive", !(currentAmount < i));
+            //bar.enabled = !(currentAmount < i);
             i++;
         }
     }
@@ -229,5 +230,18 @@ public class EnemyBase : MonoBehaviour
     public void EndHovering()
     {
         //Debug.Log("End Hovering " + name);
+    }
+
+    [Header("Other feedbacks")]
+    [SerializeField] GameObject willBeHitIndicator = default;
+
+    public void ShowWillBeHitIndicator()
+    {
+        willBeHitIndicator.gameObject.SetActive(true);
+    }
+
+    public void HideWillBeHitIndicator()
+    {
+        willBeHitIndicator.gameObject.SetActive(false);
     }
 }
