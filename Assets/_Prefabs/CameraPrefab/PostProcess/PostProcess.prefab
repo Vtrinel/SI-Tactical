@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 9165982336634677364}
   - component: {fileID: 3593795261428618688}
   - component: {fileID: 4568474552119294518}
+  - component: {fileID: 902778497128215079}
   m_Layer: 16
   m_Name: PostProcess_PlayerShockwave
   m_TagString: Untagged
@@ -68,6 +69,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &902778497128215079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216314221344289615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c6c29db48746124088ec08805e6d9a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  postProcessAnimator: {fileID: 4568474552119294518}
+  animTriggerName: Shockwave
+  startDelay: 3
 --- !u!1 &2519572118980208953
 GameObject:
   m_ObjectHideFlags: 0
@@ -79,6 +95,7 @@ GameObject:
   - component: {fileID: 3411144998470289562}
   - component: {fileID: 1137378397650068865}
   - component: {fileID: 809564299876968740}
+  - component: {fileID: 9159212806468776399}
   m_Layer: 16
   m_Name: PostProcess_DamagedEnemy
   m_TagString: Untagged
@@ -136,6 +153,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &9159212806468776399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2519572118980208953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e269bfb74d10f484d9aa2d83602496c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  postProcessAnimator: {fileID: 809564299876968740}
+  animTriggerName: EnemyDamaged
 --- !u!1 &4955289573087558582
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,6 +229,7 @@ GameObject:
   - component: {fileID: 5559437917978611929}
   - component: {fileID: 6858711231407897288}
   - component: {fileID: 5828929548208894807}
+  - component: {fileID: 7617520194014239531}
   m_Layer: 16
   m_Name: PostProcess_PlayerDamaged
   m_TagString: Untagged
@@ -255,3 +287,17 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &7617520194014239531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8812911879045722570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0d7672cff3c86a43b4a354e95005222, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  postProcessAnimator: {fileID: 5828929548208894807}
+  animTriggerName: PlayerDamaged

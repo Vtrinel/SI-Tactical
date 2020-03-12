@@ -43,6 +43,16 @@ public class LevelGoalZone : MonoBehaviour
         playerIsInRange = inRange;
 
         debugZone.color = playerIsInRange ? playerIsInRangeColor : normalColor;
+
+        if (playerIsInRange)
+        {
+            FxManager.Instance.DemandeFx(FxType.enterRecallZone, GameManager.Instance.GetPlayer.transform.position);
+        }
+        else
+        {
+            FxManager.Instance.DemandeFx(FxType.leaveRecallZone, GameManager.Instance.GetPlayer.transform.position);
+        }
+
         if (!playerEnteredOnce)
         {
             playerEnteredOnce = true;
