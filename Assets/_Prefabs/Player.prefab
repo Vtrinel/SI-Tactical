@@ -355,7 +355,6 @@ MonoBehaviour:
   cursorMaxCameraHorizontalMovementCoeff: 0.95
   cursorMinCameraVerticalMovementCoeff: 0.92
   cursorMaxCameraVerticalMovementCoeff: 1
-  circularDisc: {fileID: 1744930115648469389}
 --- !u!195 &2022475993876897125
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -493,10 +492,8 @@ MonoBehaviour:
   miniDiscPrefab:
   - {fileID: 0}
   - {fileID: 6817484857811702715, guid: 6e75a1107860659429bcf3b6f7fb474d, type: 3}
-  - {fileID: 6817484857811702715, guid: d9dc86e592e3e04468a4cc5f3dfc46ee, type: 3}
-  - {fileID: 6817484857811702715, guid: 913c46160fabc384280a0d679a11a47e, type: 3}
-  - {fileID: 6817484857811702715, guid: fde4e7587bfd04749a6aa82be0b18c79, type: 3}
-  - {fileID: 6817484857811702715, guid: 15a4703ce13e32b4983004c4ff8ce0a8, type: 3}
+  - {fileID: 6817484857811702715, guid: 715a885ef4b8ace40a4d54f14fad296f, type: 3}
+  - {fileID: 6817484857811702715, guid: e30f960c5a67c1e41bcd379cc879ca09, type: 3}
 --- !u!95 &7727146811358858372
 Animator:
   serializedVersion: 3
@@ -553,6 +550,8 @@ MonoBehaviour:
   specialTriggerParameter: Special
   isMovingBoolParameter: IsMoving
   damagedTriggerParameter: Damaged
+  rageTriggerParameter: Rage
+  deathTriggerParameter: Dead
   debugMode: 0
   isMovingDebug: 0
 --- !u!1 &7198781468782072723
@@ -903,6 +902,12 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 7d5734c304f50b949a6ffb8f4bf18cc0, type: 2}
+    - target: {fileID: -1639307475411505509, guid: c51d5ea87c8c9a94a89671978b689937,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 818686492030448216, guid: c290897b10870d64fa90e0a4c087b4fe,
+        type: 3}
     - target: {fileID: -927199367670048503, guid: c51d5ea87c8c9a94a89671978b689937,
         type: 3}
       propertyPath: m_Name
