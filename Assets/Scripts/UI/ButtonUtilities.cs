@@ -19,6 +19,7 @@ public class ButtonUtilities : MonoBehaviour
 
     Competence linkedCompetence = default;
     [SerializeField] TooltipColliderUI tooltipCollider = default;
+    [SerializeField] Animator competenceButtonAnimator = default;
 
     private void Awake()
     {
@@ -54,6 +55,12 @@ public class ButtonUtilities : MonoBehaviour
         {
             PlayerExperienceManager.Instance.OnSetChanged += UpdateLinkedCompetence;
         }
+
+        if(tooltipCollider != null)
+        {
+            tooltipCollider.OnStartTooltip += StartTooltiped;
+            tooltipCollider.OnEndTooltip += EndTooltip;
+        }
     }
 
     private void OnDisable()
@@ -84,6 +91,12 @@ public class ButtonUtilities : MonoBehaviour
         {
             PlayerExperienceManager.Instance.OnSetChanged -= UpdateLinkedCompetence;
         }
+
+        if (tooltipCollider != null)
+        {
+            tooltipCollider.OnStartTooltip -= StartTooltiped;
+            tooltipCollider.OnEndTooltip -= EndTooltip;
+        }
     }
 
 
@@ -94,6 +107,7 @@ public class ButtonUtilities : MonoBehaviour
         myIcon.color = selectedColor;
 
         myAudioSource.PlayOneShot(clickButtonSound);
+        competenceButtonAnimator.SetBool("Selected", true);
     }
 
     public void Disable()
@@ -101,6 +115,7 @@ public class ButtonUtilities : MonoBehaviour
         statut = false;
 
         myIcon.color = Color.white;
+        competenceButtonAnimator.SetBool("Selected", false);
     }
 
     public void OnClickButton()
@@ -136,9 +151,21 @@ public class ButtonUtilities : MonoBehaviour
                 break;
         }
 
-        tooltipCollider.SetTooltipInformations(TooltipInformationFactory.GetUsableCompetenceTooltip(linkedCompetence));
+        tooltipCollider.SetTooltipInformations(TooltipInformationFactory.GetUsableCompetenceTooltip(linkedCompetence, tooltipCollider.GetTooltipInformations.forcedTooltipLPosition, 
+            tooltipCollider.GetTooltipInformations.tooltipForcedPositionType));
         costText.text = linkedCompetence.GetActionPointsCost.ToString();
         if (linkedCompetence.GetCompetenceImage != null)
             myIcon.sprite = linkedCompetence.GetCompetenceImage;
+    }
+
+    public void StartTooltiped()
+    {
+        competenceButtonAnimator.SetBool("Tooltiped", true);
+
+    }
+
+    public void EndTooltip()
+    {
+        competenceButtonAnimator.SetBool("Tooltiped", false);
     }
 }

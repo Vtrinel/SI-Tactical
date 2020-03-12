@@ -100,7 +100,7 @@ public class DiscScript : MonoBehaviour
 
     private void Start()
     {
-        tooltipCollider.SetTooltipInformations(TooltipInformationFactory.GetDiscTypeInformations(DiscManager.Instance.GetDiscInformations(_discType)));
+        tooltipCollider.SetTooltipInformations(TooltipInformationFactory.GetDiscTypeInformations(DiscManager.Instance.GetDiscInformations(_discType), null, TooltipForcedPositionType.None));
         SetUpModifiers();
         discHoverCirle.SetHovered(false);
     }
