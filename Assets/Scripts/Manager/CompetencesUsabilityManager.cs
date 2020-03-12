@@ -129,22 +129,11 @@ public class CompetencesUsabilityManager
                 UIManager.Instance.GetActionBar.UpdatePreConsommationPointBar(totalActionPoints, GetCurrentCompetenceCost());
                 UIManager.Instance.ShowActionPointsCostText();
                 UIManager.Instance.UpdateActionPointCostText(GetCurrentCompetenceCost(), totalActionPoints);
+                SoundManager.Instance.PlaySound(Sound.SelectCompetence, Camera.main.transform.position);
                 break;
 
-            case ActionSelectionResult.NotEnoughActionPoints:
-                Debug.Log("Not enough action points for " + compType);
-                break;
-
-            case ActionSelectionResult.NoCompetenceFound:
-                //Debug.LogWarning("WARNING : " + compType + " not found.");
-                break;
-
-            case ActionSelectionResult.NotEnoughDiscs:
-                //Debug.Log("Not enough possessed discs for " + compType);
-                break;
-
-            case ActionSelectionResult.NoNearbyDisc:
-                //Debug.Log("Not nearby discs for " + compType);
+            default:
+                SoundManager.Instance.PlaySound(Sound.NotEnoughActionPoint, Camera.main.transform.position);
                 break;
         }
 
