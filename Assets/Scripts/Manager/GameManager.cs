@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
         else
         {
             _instance = this;
+            _instance = this;
         }
 
         playerMovementsManager.SetUp(player);
@@ -293,9 +294,11 @@ public class GameManager : MonoBehaviour
                 if(currentActionPointsAmount == 0)
                 {
                     Debug.Log("Not enough AP to move");
+                    SoundManager.Instance.PlaySound(Sound.NotEnoughActionPoint, Camera.main.transform.position);
                     return;
                 }
 
+                SoundManager.Instance.PlaySound(Sound.SelectCompetence, Camera.main.transform.position);
                 CallSelectActionEvent(ActionType.Move);
                 playerMovementsManager.StartMovementPreparation(currentActionPointsAmount);
                 SetActionPointsDebugTextVisibility(true);
@@ -378,6 +381,7 @@ public class GameManager : MonoBehaviour
                 case ActionType.Special:
                     validatedAction = competencesUsabilityManager.LaunchSpecialCompetence();
                     SoundManager.Instance.PlaySound(Sound.PlayerTeleport, player.transform.position);
+                    FxManager.Instance.DemandeFx(FxType.playerTeleport, player.transform.position);
                     break;
             }
             if (validatedAction)
