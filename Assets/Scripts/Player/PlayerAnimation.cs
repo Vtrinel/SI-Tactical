@@ -83,7 +83,6 @@ public class PlayerAnimation : MonoBehaviour
         playerAnimator.SetTrigger(specialTriggerParameter);
     }
 
-    [Button]
     public void Damaged(bool dead)
     {
         playerAnimator.SetTrigger(damagedTriggerParameter);
