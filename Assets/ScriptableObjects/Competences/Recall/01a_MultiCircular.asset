@@ -13,15 +13,17 @@ MonoBehaviour:
   m_Name: 01a_MultiCircular
   m_EditorClassIdentifier: 
   competenceName: Curved Recall
-  competenceDescription: "Rappelle tous les disques \xE0 port\xE9e du joueur, en
-    prenant une trajectoire courb\xE9e.\nappuyer sur le joueur pour valider"
+  competenceDescription: Koura calls back every disc in range, making them rush toward
+    him in a curved trajectory
   competenceTooltip: Koura calls back every disc in range in a curved trajectory
     (clic anywhere to confirm)
   competenceImage: {fileID: 21300000, guid: 7edc4d581084e9a42abb5a43d4dc13cd, type: 3}
+  competenceTreeImage: {fileID: 21300000, guid: f4eb1e4f34199f24585da678230acf63,
+    type: 3}
   actionPointsCost: 1
   unlocked: 0
   competencesUnlockedNeeded:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 77cc318e6885ae54e91cea965e594bd4, type: 2}
   trajectoryModifiers:
   - {fileID: 11400000, guid: 2b73d4445bca341478e158d641507d10, type: 2}
   numberOfRecalledDiscs: 0
