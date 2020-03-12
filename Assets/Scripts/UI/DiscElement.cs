@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class DiscElement : MonoBehaviour
 {
     [SerializeField] List<Image> AllSprite = new List<Image>();
+    [SerializeField] List<Image> AllImages = new List<Image>();
+    [SerializeField] List<Text> AllTexts = new List<Text>();
 
     [SerializeField] Text textValue;
 
@@ -17,6 +19,11 @@ public class DiscElement : MonoBehaviour
     private void Awake()
     {
         tooltipCollider.SetTooltipable(discType != DiscType.None);
+    }
+
+    private void Start()
+    {
+        buttonAnimator.SetBool("Usable", true);
     }
 
     public void SetIcon(int indexSprite, int number)
@@ -33,7 +40,7 @@ public class DiscElement : MonoBehaviour
 
     void RefreshImage(int index)
     {
-        foreach(Image img in AllSprite)
+        foreach (Image img in AllSprite)
         {
             img.gameObject.SetActive(false);
         }
@@ -45,7 +52,6 @@ public class DiscElement : MonoBehaviour
     public void StartTooltiped()
     {
         buttonAnimator.SetBool("Tooltiped", true);
-
     }
 
     public void EndTooltip()
@@ -53,15 +59,33 @@ public class DiscElement : MonoBehaviour
         buttonAnimator.SetBool("Tooltiped", false);
     }
 
-    public void Select()
+    public void Select(Color selectionColor)
     {
         buttonAnimator.SetBool("Selected", true);
+
+        foreach (Image im in AllImages)
+        {
+            im.color = selectionColor;
+        }
+        foreach (Text tx in AllTexts)
+        {
+            tx.color = selectionColor;
+        }
 
     }
 
     public void Unselect()
     {
         buttonAnimator.SetBool("Selected", false);
+
+        foreach (Image im in AllImages)
+        {
+            im.color = Color.white;
+        }
+        foreach (Text tx in AllTexts)
+        {
+            tx.color = Color.white;
+        }
     }
 
     private void OnEnable()
