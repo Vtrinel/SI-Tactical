@@ -85,6 +85,7 @@ public class PlayerController : MonoBehaviour
     #region Inputs
     [Header("Inputs")]
     [SerializeField] KeyCode clickActionKey = KeyCode.Mouse0;
+    [SerializeField] KeyCode unselectActionKey = KeyCode.Mouse1;
     [SerializeField] KeyCode selectMoveInput = KeyCode.A;
     [SerializeField] KeyCode throwCompetenceInput = KeyCode.Z;
     [SerializeField] KeyCode recallCompetenceInput = KeyCode.E;
@@ -129,6 +130,8 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(clickActionKey))
             GameManager.Instance.OnPlayerClickAction();
+        else if (Input.GetKeyDown(unselectActionKey))
+            GameManager.Instance.SelectAction(ActionType.None);
 
         if (Input.GetKeyDown(passTurnInput))
         {

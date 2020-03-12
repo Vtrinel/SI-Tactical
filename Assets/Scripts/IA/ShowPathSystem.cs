@@ -36,6 +36,7 @@ public class ShowPathSystem : MonoBehaviour
     private void Start()
     {
         player = GameManager.Instance.GetPlayer.transform;
+        SetTargetPosition(player);
     }
 
     void SetPlayerTurn()
@@ -64,10 +65,13 @@ public class ShowPathSystem : MonoBehaviour
         target = targ;
     }
 
+    bool madefirstCheck = false;
+
     private void Update()
     {
         if (playerTurn && canCheck)
         {
+
             if (showPreview)
             {
                 List<Vector3> _canPos = DrawPath(target.position);
@@ -88,6 +92,11 @@ public class ShowPathSystem : MonoBehaviour
                 lineDeplacement.positionCount = 0;
 
                 List<Vector3> _canPos = DrawPath(player.position);
+                if (!madefirstCheck)
+                {
+                    madefirstCheck = true;
+                    return;
+                }
                 EsclamationPoint.SetActive(_canPos != null);
             }
         }
