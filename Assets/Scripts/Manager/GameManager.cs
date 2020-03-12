@@ -344,6 +344,7 @@ public class GameManager : MonoBehaviour
 
         bool validatedAction = true;
 
+        ActionType unselectedActionType = competencesUsabilityManager.GetCurrentCompetenceType;
         if (playerMovementsManager.IsWillingToMove)
         {
             int cost = playerMovementsManager.TryStartMovement(GetCurrentWorldMouseResult.mouseWorldPosition);
@@ -376,7 +377,7 @@ public class GameManager : MonoBehaviour
             if (validatedAction)
             {
                 ConsumeActionPoints(cost);
-                CallUnselectActionEvent(competencesUsabilityManager.GetCurrentCompetenceType);
+                CallUnselectActionEvent(unselectedActionType);
             }
         }
 

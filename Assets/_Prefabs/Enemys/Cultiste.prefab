@@ -160,7 +160,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 97b8d4f0d8c377640b3f3e66c8f44c39, type: 2}
+  - {fileID: 2100000, guid: 7aa03927c9e812d4e93eca1fbe31f893, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -329,7 +329,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 97b8d4f0d8c377640b3f3e66c8f44c39, type: 2}
+  - {fileID: 2100000, guid: 7aa03927c9e812d4e93eca1fbe31f893, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -791,6 +791,8 @@ MonoBehaviour:
     tooltipAdditionalInformationValue: 0
     tooltipAdditionalInformationType: 0
     miniSizeTooltip: 0
+    forcedTooltipLPosition: {fileID: 0}
+    tooltipForcedPositionType: 0
 --- !u!1 &8228210363981870650
 GameObject:
   m_ObjectHideFlags: 0
