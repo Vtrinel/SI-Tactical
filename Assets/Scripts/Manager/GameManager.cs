@@ -551,7 +551,7 @@ public class GameManager : MonoBehaviour
     {
         List<bool> usabilities = new List<bool>();
 
-        if (currentActionPointsAmount == 0)
+        if (currentActionPointsAmount == 0 || !GetPlayerCanAct)
         {
             for (int i = 0; i < 4; i++)
             {
