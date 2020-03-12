@@ -293,9 +293,11 @@ public class GameManager : MonoBehaviour
                 if(currentActionPointsAmount == 0)
                 {
                     Debug.Log("Not enough AP to move");
+                    SoundManager.Instance.PlaySound(Sound.NotEnoughActionPoint, Camera.main.transform.position);
                     return;
                 }
 
+                SoundManager.Instance.PlaySound(Sound.SelectCompetence, Camera.main.transform.position);
                 CallSelectActionEvent(ActionType.Move);
                 playerMovementsManager.StartMovementPreparation(currentActionPointsAmount);
                 SetActionPointsDebugTextVisibility(true);
