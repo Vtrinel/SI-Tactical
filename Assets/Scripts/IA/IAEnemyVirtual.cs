@@ -35,12 +35,19 @@ public class IAEnemyVirtual : MonoBehaviour
 
     public virtual void PlayerTurn() { }
 
+    protected Animator enemyAnymator = default;
+    protected AnimationEventsContainer animationEventContainer = default;
+    public void SetAnimator(Animator animator, AnimationEventsContainer eventsContainer)
+    {
+        enemyAnymator = animator;
+        animationEventContainer = eventsContainer;
+        animationEventContainer.SetEvent(CheckForIdleBreak);
+    }
+
     public bool CheckDetectionWithPlayer()
     {
         if (Vector3.Distance(transform.position, player.transform.position) < detectionPlayerRange)
         {
-            //Debug.DrawRay(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, Color.magenta, 20);
-
             RaycastHit hit;
             if (Physics.Raycast(transform.position, (player.transform.position - transform.position) + Vector3.up * 1, out hit, detectionPlayerRange, detectionMaskRaycast))
             {
@@ -88,5 +95,11 @@ public class IAEnemyVirtual : MonoBehaviour
     public void LookPosition(Vector3 _pos)
     {
         transform.LookAt(_pos);
+    }
+
+    public void CheckForIdleBreak()
+    {
+        if (Random.Range(1, 16) == 1)
+            enemyAnymator.SetTrigger("IdleBreak");
     }
 }
