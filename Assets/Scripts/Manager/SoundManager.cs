@@ -25,15 +25,16 @@ public class SoundManager : MonoBehaviour
     public float delayWalkSound = 0f;
     Dictionary<Sound, float> soundTimerDictionary;
 
-    //[Header("BGM music")]
-    //[SerializeField] float BGMFadeSpead;
-    //[SerializeField] AudioClip BGM;
+    [Header("BGM musics")]
+    public BGMAudioClip[] listBGMMusic;
 
     [Header("audios enemy movements")]
     public AudioClip[] enemyMovementList;
 
     [Header("Audioclip list")]
     public SoundAudioClip[] soundAudioClipList;
+
+    private SoundAudioClip currentCreatedClip;
 
     public void Start()
     {
@@ -46,23 +47,26 @@ public class SoundManager : MonoBehaviour
     {
         if (CanPlaySound(sound))
         {
-            GameObject soundGameObject = new GameObject("sound");
+            Debug.Log(sound);
+            
+            GameObject soundGameObject = new GameObject("Sound : " + currentCreatedClip.sound.ToString());
             soundGameObject.transform.position = position;
 
             AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
-            audioSource.clip = GetAudioClip(sound);
+            audioSource.clip = currentCreatedClip.audioClip;
 
             audioSource.maxDistance = maxDistance;
             audioSource.spatialBlend = spatialBlend;
             audioSource.rolloffMode = AudioRolloffMode.Linear;
             audioSource.dopplerLevel = dopplerLevel;
+            audioSource.volume = currentCreatedClip.volume;
 
             audioSource.Play();
             Object.Destroy(soundGameObject, audioSource.clip.length);
         }
     }
 
-    // Test if a sound can be played or need some time
+    // Test if a sound can be played or need some time and store it if it exist
     private bool CanPlaySound(Sound sound)
     {
         bool soundExist = false;
@@ -70,10 +74,40 @@ public class SoundManager : MonoBehaviour
         //Check if the sound exist
         foreach (SoundAudioClip soundAudioClip in soundAudioClipList)
         {
+
             if (soundAudioClip.sound == sound)
             {
                 soundExist = true;
-                if (soundAudioClip.audioClip == null)
+                Debug.Log(sound);
+
+                if (soundAudioClip.audioClip != null)
+                {
+                    currentCreatedClip = soundAudioClip;
+
+                    // Random sound for the enemy movement
+                    if (sound == Sound.EnemyMove)
+                    {
+                        var random = Random.value;
+
+                        if (random >= 0.75)
+                        {
+                            currentCreatedClip.audioClip = enemyMovementList[0];
+                        }
+                        if (random >= 0.50 && random < 0.75)
+                        {
+                            currentCreatedClip.audioClip = enemyMovementList[1];
+                        }
+                        if (random >= 0.25 && random < 0.50)
+                        {
+                            currentCreatedClip.audioClip = enemyMovementList[2];
+                        }
+                        if (random < 0.25)
+                        {
+                            currentCreatedClip.audioClip = enemyMovementList[3];
+                        }
+                    }
+                }
+                else
                 {
                     Debug.LogWarning("AudioClip not found");
                     return false;
@@ -83,6 +117,7 @@ public class SoundManager : MonoBehaviour
 
         if (!soundExist)
         {
+            Debug.LogWarning("Didn't found soundAudioClip");
             return false;
         }
 
@@ -114,42 +149,6 @@ public class SoundManager : MonoBehaviour
         }
         return true;
     }
-
-    // Get the sound given from the list of stored sound
-    private AudioClip GetAudioClip(Sound sound)
-    {
-        foreach (SoundAudioClip soundAudioClip in soundAudioClipList)
-        {
-            if (soundAudioClip.sound == sound)
-            {
-                // Random sound for the enemy movement
-                if (sound == Sound.EnemyMove)
-                {
-                    var random = Random.value;
-
-                    if (random >= 0.75)
-                    {
-                        return enemyMovementList[0];
-                    }
-                    if (random >= 0.50 && random < 0.75)
-                    {
-                        return enemyMovementList[1];
-                    }
-                    if (random >= 0.25 && random < 0.50)
-                    {
-                        return enemyMovementList[2];
-                    }
-                    if (random < 0.25)
-                    {
-                        return enemyMovementList[3];
-                    }
-                }
-                
-                return soundAudioClip.audioClip;
-            }
-        }
-        return null;
-    }
 }
 
 // List of all the sounds
@@ -174,10 +173,31 @@ public enum Sound
     none
 }
 
+
+
 // Group a name and an audioclip
 [System.Serializable]
 public class SoundAudioClip
 {
     public Sound sound;
     public AudioClip audioClip;
+    [Range(0,1)]
+    public float volume;
+}
+
+public enum BGM
+{
+    Menu,
+    InGame,
+    InBoss
+}
+
+// Group a name and an audioclip
+[System.Serializable]
+public class BGMAudioClip
+{
+    public BGM bgm;
+    public AudioClip audioClip;
+    [Range(0, 1)]
+    public float volume;
 }
