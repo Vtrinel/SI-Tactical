@@ -31,7 +31,7 @@ public class DiscBar : MonoBehaviour
     {
         if (value)
         {
-            imgFirst.color = new Color(1, 0.3119379f, 0);
+            imgFirst.color = new Color(1, 0.8313726f, 0);
             AllDiscElement[0].Select();
         }
         else
