@@ -15,6 +15,8 @@ public class DiscScript : MonoBehaviour
     [SerializeField] Rigidbody myRigidBody = default;
     [SerializeField] CapsuleCollider myCollider = default;
     public Vector3 GetColliderCenter => transform.position + myCollider.center;
+    public Vector3 GetColliderLocalCenter => myCollider.center;
+    public float GetColliderRadius => myCollider.radius;
     [SerializeField] Animator myAnimator = default;
     [SerializeField] KnockbackableEntity knockbackSystem = default;
 
@@ -52,6 +54,7 @@ public class DiscScript : MonoBehaviour
 
     [Header("Modifiers")]
     [SerializeField] bool blockedByEnemies = false;
+    public bool GetBlockedByEnemies => blockedByEnemies;
     [SerializeField] bool blockedByShields = true;
     [SerializeField] bool blockedByObstacles = true;
     public LayerMask GetTrajectoryCheckLayerMask => 1 << 10 | ((blockedByShields ? 1 : 0) << 12) | ((blockedByObstacles ? 1 : 0) << 14);
@@ -62,8 +65,13 @@ public class DiscScript : MonoBehaviour
     EffectZoneType effectZoneToInstantiateOnHit = EffectZoneType.None;
     bool destroyOnHit = false;
 
+    bool modifiersSetUp = false;
     public void SetUpModifiers()
     {
+        if (modifiersSetUp)
+            return;
+        modifiersSetUp = true;
+
         numberOfStunedTurns = 0;
         effectZoneToInstantiateOnHit = EffectZoneType.None;
         destroyOnHit = false;
@@ -92,6 +100,7 @@ public class DiscScript : MonoBehaviour
     private void Start()
     {
         tooltipCollider.SetTooltipInformations(TooltipInformationFactory.GetDiscTypeInformations(DiscManager.Instance.GetDiscInformations(_discType)));
+        SetUpModifiers();
     }
 
     void Update()

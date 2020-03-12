@@ -39,6 +39,11 @@ public class CameraTarget : MonoBehaviour
 
     public void StartMovement(Transform newTrToFollow)
     {
+        Debug.DrawRay(transform.position, Vector3.up * 5f, Color.red, 5f);
+        Debug.DrawRay(newTrToFollow.position, Vector3.up * 5f, Color.blue, 5f);
+        trToFollow = newTrToFollow;
+        movementStartFakePos = transform.position - trToFollow.position;
+
         float distance = movementStartFakePos.magnitude;
         float duration = Mathf.Lerp(minDuration, maxDuration, Mathf.Clamp((maxDurationDistance - distance) / (maxDurationDistance - minDurationDistance), 0, 1));
         StartMovement(newTrToFollow, duration, initialMovementCurve);

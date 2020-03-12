@@ -231,4 +231,17 @@ public class EnemyBase : MonoBehaviour
     {
         //Debug.Log("End Hovering " + name);
     }
+
+    [Header("Other feedbacks")]
+    [SerializeField] GameObject willBeHitIndicator = default;
+
+    public void ShowWillBeHitIndicator()
+    {
+        willBeHitIndicator.gameObject.SetActive(true);
+    }
+
+    public void HideWillBeHitIndicator()
+    {
+        willBeHitIndicator.gameObject.SetActive(false);
+    }
 }

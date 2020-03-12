@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [Header(" Debug")]
+    [SerializeField] Transform debugPosition = default;
+    public Vector3 GetDebugPos => debugPosition.position;
+
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
 
