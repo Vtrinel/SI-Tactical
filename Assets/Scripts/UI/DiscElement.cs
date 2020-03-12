@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,7 @@ public class DiscElement : MonoBehaviour
     [SerializeField] List<Image> AllImages = new List<Image>();
     [SerializeField] List<Text> AllTexts = new List<Text>();
 
-    [SerializeField] Text textValue;
+    [SerializeField] TextMeshProUGUI textValue;
 
     [SerializeField] TooltipColliderUI tooltipCollider = default;
     [SerializeField] Animator buttonAnimator = default;
