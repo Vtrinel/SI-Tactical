@@ -73,6 +73,8 @@ public class KnockbackableEntity : MonoBehaviour
     {
         OnKnockbackEnded?.Invoke();
     }
+
+    public bool IsBeingKnockbacked => !knockbackDurationSystem.TimerOver || !knockbackAttenuationDurationSystem.TimerOver;
 }
 
 

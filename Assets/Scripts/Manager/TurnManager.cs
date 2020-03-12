@@ -266,7 +266,6 @@ public class TurnManager : MonoBehaviour
                 waitDuration = 0.5f;
                 break;
             case TurnState.EnemyTurn:
-                Debug.Log("Wait enemy turn");
                 waitDuration = (currentEnemiesTurnCounter == 0 ? 0.5f : 0.1f);
                 break;
             case TurnState.ProgressionTurn:

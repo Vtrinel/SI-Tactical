@@ -188,11 +188,13 @@ public class PlayerMovementsManager
 
         foreach (float dist in currentDistancesByUsedActionPoints)
         {
-            if (targetDistance > dist)
+            if (targetDistance > dist + 0.01f)
                 cost++;
             else
                 break;
         }
+
+        cost = Mathf.Clamp(cost, 0, availableActionPoints);
 
         return cost;
     }
@@ -275,7 +277,6 @@ public class PlayerMovementsManager
         }
 
         int movementCost = GetActionPointsByDistance(movementDistance);
-        
 
         _player.MoveTo(targetPosition);
         currentUsabilityState = UsabilityState.Using;
