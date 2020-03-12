@@ -23,6 +23,7 @@ public class DiscScript : MonoBehaviour
     [Header("Damages")]
     [SerializeField] DamageTag damageTag = DamageTag.Player;
     [SerializeField] int currentDamagesAmount = 1;
+    public int GetCurrentDamage => currentDamagesAmount;
 
     [Header("Movement")]
     [SerializeField] float maxSpeed = 10f;
