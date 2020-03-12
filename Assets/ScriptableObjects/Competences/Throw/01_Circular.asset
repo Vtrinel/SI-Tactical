@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: 01_Circular
   m_EditorClassIdentifier: 
   competenceName: Circular Throw
-  competenceDescription: "Envoie le disque vers la position cibl\xE9e, en suivant
-    une trajectoire courb\xE9e."
+  competenceDescription: Koura throws a disc in a curved trajectory toward the pointed
+    position
   competenceTooltip: Koura throws a disc in a curved trajectory toward the pointed
     position
   competenceImage: {fileID: 21300000, guid: 8d6af76189df23446a464f5a1d3dea91, type: 3}
+  competenceTreeImage: {fileID: 21300000, guid: 872faf2c7e9a9054c920fd130fc8f59f,
+    type: 3}
   actionPointsCost: 2
   unlocked: 0
   competencesUnlockedNeeded:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 6ee96d84d1eae354aadd4a9825c48b4f, type: 2}
   trajectoryModifiers:
   - {fileID: 11400000, guid: a4fddf885e677c84e874e176ecc3767a, type: 2}
