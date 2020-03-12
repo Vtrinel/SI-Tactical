@@ -28,7 +28,7 @@ public class ButtonUtilities : MonoBehaviour
     private void Awake()
     {
         if(myActionType == ActionType.Move)
-            costText.text = "X";
+            costText.text = "";
     }
 
     private void OnEnable()

@@ -10,6 +10,7 @@ public class Competence : ScriptableObject
     [SerializeField, TextArea(4,8)] string competenceTooltip = null;
 
     [SerializeField] Sprite competenceImage = null;
+    [SerializeField] Sprite competenceTreeImage = null;
 
     [Header("Common Parameters")]
     [SerializeField] int actionPointsCost = 1;
@@ -20,6 +21,7 @@ public class Competence : ScriptableObject
 
     public int GetActionPointsCost => actionPointsCost;
     public Sprite GetCompetenceImage=> competenceImage;
+    public Sprite GetCompetenceTreeImage=> competenceTreeImage;
     public string GetCompetenceName => competenceName;
     public string GetCompetenceDescription => competenceDescription;
     public string GetCompetenceTooltip => competenceTooltip;
