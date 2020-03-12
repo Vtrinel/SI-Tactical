@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
         {
             positionStamp = currentPos;
             GameManager.Instance.OnPlayerPositionChanged?.Invoke(currentPos);
+            GameManager.Instance.CheckForCompetencesUsability();
             DiscManager.Instance.CheckAllDiscsProximity(transform.position);
         }
     }
