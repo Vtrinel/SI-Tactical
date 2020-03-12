@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2107271652310472110}
   - component: {fileID: 9163878348310875377}
   - component: {fileID: 3226341438197719348}
+  - component: {fileID: 801715990331787024}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: Untagged
@@ -113,6 +114,25 @@ MonoBehaviour:
   shakeTime: 0
   currentShakeSettings: {fileID: 0}
   debugShakeSetting: {fileID: 0}
+--- !u!114 &801715990331787024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2107271652310472109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7453c90cb7d5b7149ba7f24e120e1e6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CameraShakeScript: {fileID: 3226341438197719348}
+  currentShakeSettingsList:
+  - {fileID: 11400000, guid: 61046039887331f40bc13180dfe55414, type: 2}
+  - {fileID: 11400000, guid: d18d9d27d32782349aba888c4ff52620, type: 2}
+  - {fileID: 11400000, guid: 0ceed8e1b20b77244a68c30667663025, type: 2}
+  - {fileID: 11400000, guid: 0d245ed43bf84bc4c85e06cc9f5f830c, type: 2}
+  - {fileID: 11400000, guid: 8d09c352b712f624093a0537463c0457, type: 2}
 --- !u!1 &2107271653757156776
 GameObject:
   m_ObjectHideFlags: 0
