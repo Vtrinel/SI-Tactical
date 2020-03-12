@@ -38,6 +38,9 @@ public class TooltipInterface : MonoBehaviour
 
     bool isRegularSizeTooltip = true;
     RectTransform currentTooltipBackgroundTr = default;
+    bool forceTooltipPosition = false;
+    RectTransform forcedTooltipPosition = null;
+    TooltipForcedPositionType tooltipForcedPositionType = TooltipForcedPositionType.None;
     public void SetTooltipInfos(TooltipInformations infos)
     {
         isRegularSizeTooltip = !infos.miniSizeTooltip;
@@ -72,6 +75,11 @@ public class TooltipInterface : MonoBehaviour
             miniTooltipParent.SetActive(true);
             miniTooltipText.text = infos.tooltipName;
         }
+
+        forcedTooltipPosition = infos.forcedTooltipLPosition;
+        forceTooltipPosition = (forcedTooltipPosition != null);
+        tooltipForcedPositionType = infos.tooltipForcedPositionType;
+        Debug.Log(tooltipForcedPositionType);
     }
 
     private void Update()
@@ -79,14 +87,39 @@ public class TooltipInterface : MonoBehaviour
         if (currentTooltipBackgroundTr == null)
             return;
 
-        Vector2 newPos = Input.mousePosition;
-        if (newPos.x < currentTooltipBackgroundTr.sizeDelta.x)
-            newPos.x += currentTooltipBackgroundTr.sizeDelta.x;
+        if (!forceTooltipPosition)
+        {
+            Vector2 newPos = Input.mousePosition;
+            if (newPos.x < currentTooltipBackgroundTr.sizeDelta.x)
+                newPos.x += currentTooltipBackgroundTr.sizeDelta.x;
 
-        if (newPos.y < currentTooltipBackgroundTr.sizeDelta.y)
-            newPos.y += currentTooltipBackgroundTr.sizeDelta.y;
+            if (newPos.y < currentTooltipBackgroundTr.sizeDelta.y)
+                newPos.y += currentTooltipBackgroundTr.sizeDelta.y;
 
-        rectTr.localPosition = newPos;
+            rectTr.localPosition = newPos;
+        }
+        else
+        {
+            Vector2 newPos = forcedTooltipPosition.position;
+            if (tooltipForcedPositionType == TooltipForcedPositionType.None)
+            {
+                if (newPos.x < currentTooltipBackgroundTr.sizeDelta.x)
+                    newPos.x += currentTooltipBackgroundTr.sizeDelta.x;
+
+                if (newPos.y < currentTooltipBackgroundTr.sizeDelta.y)
+                    newPos.y += currentTooltipBackgroundTr.sizeDelta.y;
+            }
+            else
+            {
+                if (tooltipForcedPositionType == TooltipForcedPositionType.BottomRight || tooltipForcedPositionType == TooltipForcedPositionType.UpRight)
+                    newPos.x += currentTooltipBackgroundTr.sizeDelta.x;
+
+                if (tooltipForcedPositionType == TooltipForcedPositionType.UpLeft || tooltipForcedPositionType == TooltipForcedPositionType.UpRight)
+                    newPos.y += currentTooltipBackgroundTr.sizeDelta.y;
+            }
+
+            rectTr.localPosition = newPos;
+        }
 
         if ((_visible && currentTransitionCounter < transitionDuration) || (!_visible && currentTransitionCounter > 0))
         {

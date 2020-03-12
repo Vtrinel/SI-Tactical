@@ -1788,18 +1788,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ef40f4a7347c7f4e8ce88eceed61347, type: 3}
---- !u!114 &1311296256 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2022475992324080919, guid: 7ef40f4a7347c7f4e8ce88eceed61347,
-    type: 3}
-  m_PrefabInstance: {fileID: 1311296255}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1311296257 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2022475993876897126, guid: 7ef40f4a7347c7f4e8ce88eceed61347,
@@ -2390,6 +2378,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5174580652172835813, guid: 681b8a790dedb3047b833ff671178d59,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -9.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 5174580652172835813, guid: 681b8a790dedb3047b833ff671178d59,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 12.26
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 681b8a790dedb3047b833ff671178d59, type: 3}
@@ -3148,7 +3146,7 @@ PrefabInstance:
         type: 3}
       propertyPath: actionPointsUseDebugText
       value: 
-      objectReference: {fileID: 1311296256}
+      objectReference: {fileID: 0}
     - target: {fileID: 7360405968755364706, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
         type: 3}
       propertyPath: playIntroCutscene

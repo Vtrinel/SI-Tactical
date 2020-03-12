@@ -26,4 +26,11 @@ public struct TooltipInformations
     public int tooltipAdditionalInformationValue;
     public TooltipAdditionalInformationType tooltipAdditionalInformationType;
     public bool miniSizeTooltip;
+    public RectTransform forcedTooltipLPosition;
+    public TooltipForcedPositionType tooltipForcedPositionType;
+}
+
+public enum TooltipForcedPositionType
+{
+    None, UpLeft, UpRight, BottomLeft, BottomRight
 }
