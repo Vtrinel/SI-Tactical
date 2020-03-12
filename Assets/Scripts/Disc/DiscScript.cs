@@ -445,10 +445,7 @@ public class DiscScript : MonoBehaviour
     #region Feedbacks
     void DemandeFx(Vector3 collision)
     {
-        FxManager.Instance.DemandeFx(FxType.Hit, collision);
-
-        //newFx.transform.position = collision;
-        //newFx.transform.rotation = Random.rotation;
+        FxManager.Instance.DemandeFx(FxType.discThrow, collision);
     }
     #endregion
 
