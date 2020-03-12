@@ -63,8 +63,10 @@ public class PlayerController : MonoBehaviour
         TurnManager.Instance.InterruptEnemiesTurn();
         OnPlayerReceivedDamages?.Invoke(currentLife == 0);
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+        CameraManager.instance.GetPlayerCamera.Zoom(10,1);
+        TimeManager.Instance.StartSlowMotion();
+        ShakeScriptableObjectManager.instance.LoadShake("ShakeSetting_player damage");
 
-        
     }
 
     public void PlayRage()

@@ -63,6 +63,8 @@ public class EnemyBase : MonoBehaviour
         enemyAnimator.SetTrigger("Hit");
         enemyAnimator.SetInteger("RandomHit", UnityEngine.Random.Range(0, 2));
         PostProcessAnimEnemyDamaged.instance.PlayPostProcessAnim();
+        //FxManager.Instance.CreateFx(FxType.enemyDamage)
+        ShakeScriptableObjectManager.instance.LoadShake("ShakeSetting_EnnemyDamage");
     }
 
     public Action<EnemyBase> OnEnemyDeath;
@@ -77,8 +79,8 @@ public class EnemyBase : MonoBehaviour
         OnEnemyDeath?.Invoke(this);
         PlayerExperienceManager.Instance.GainGold(goldGain);
         SoundManager.Instance.PlaySound(Sound.EnemyDeath, gameObject.transform.position);
+        FxManager.Instance.CreateFx(FxType.enemyDeath, gameObject.transform.position);
         Destroy(gameObject);
-        
     }   
 
     [Header("Common Values")]

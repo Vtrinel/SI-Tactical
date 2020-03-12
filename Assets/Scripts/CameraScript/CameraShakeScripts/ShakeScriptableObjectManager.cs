@@ -7,14 +7,14 @@ using NaughtyAttributes;
 public class ShakeScriptableObjectManager : MonoBehaviour
 {
     public CameraShake CameraShakeScript;
-    public static ShakeScriptableObjectManager ShakeScriptableObjectManagerStatic;
+    public static ShakeScriptableObjectManager instance;
     [Header("ShakeScriptableObjectManager")]
     public List<ShakeSettings> currentShakeSettingsList = new List<ShakeSettings>();
     List<string> NamecurrentShakeSettingsList = new List<string>();
 
     private void Start()
     {
-        ShakeScriptableObjectManagerStatic = this;
+        instance = this;
         NamecurrentShakeSettingsList = new List<string>(new string[currentShakeSettingsList.Count]);
 
     }
