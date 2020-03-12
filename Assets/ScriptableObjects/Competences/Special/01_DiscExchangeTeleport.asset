@@ -13,10 +13,13 @@ MonoBehaviour:
   m_Name: 01_DiscExchangeTeleport
   m_EditorClassIdentifier: 
   competenceName: Swap
-  competenceDescription: 
+  competenceDescription: Koura switches his position with the last thrown disc still
+    in range, without considering the objects on the way
   competenceTooltip: Koura switches his position with the last disc still in range
     (clic anywhere to confirm)
   competenceImage: {fileID: 21300000, guid: c40925c115fee9241afa8df3b45a04bb, type: 3}
+  competenceTreeImage: {fileID: 21300000, guid: 48fe25067c1ba5444ab2b9737c280452,
+    type: 3}
   actionPointsCost: 1
   unlocked: 0
   competencesUnlockedNeeded: []
