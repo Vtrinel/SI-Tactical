@@ -10,7 +10,11 @@ public class ButtonUtilities : MonoBehaviour
     public Image myIcon;
     public Text costText = default;
 
+    public Image[] allIcons = new Image[0];
+    public Text[] allTexts = new Text[0];
+
     public Color selectedColor = Color.red;
+    public Color unusableColor = Color.grey;
 
     public ActionType myActionType;
 
@@ -29,6 +33,8 @@ public class ButtonUtilities : MonoBehaviour
 
     private void OnEnable()
     {
+        GameManager.Instance.OnCompetencesUsableChanged += CheckUsability;
+
         switch (myActionType)
         {
             case ActionType.None:
@@ -65,6 +71,8 @@ public class ButtonUtilities : MonoBehaviour
 
     private void OnDisable()
     {
+        GameManager.Instance.OnCompetencesUsableChanged -= CheckUsability;
+
         switch (myActionType)
         {
             case ActionType.None:
@@ -104,7 +112,7 @@ public class ButtonUtilities : MonoBehaviour
     {
         statut = true;
 
-        myIcon.color = selectedColor;
+        UpdateColor();
 
         myAudioSource.PlayOneShot(clickButtonSound);
         competenceButtonAnimator.SetBool("Selected", true);
@@ -114,7 +122,7 @@ public class ButtonUtilities : MonoBehaviour
     {
         statut = false;
 
-        myIcon.color = Color.white;
+        UpdateColor();
         competenceButtonAnimator.SetBool("Selected", false);
     }
 
@@ -167,5 +175,41 @@ public class ButtonUtilities : MonoBehaviour
     public void EndTooltip()
     {
         competenceButtonAnimator.SetBool("Tooltiped", false);
+    }
+
+    bool usable = false;
+    public void CheckUsability(List<bool> usables)
+    {
+        switch (myActionType)
+        {
+            case ActionType.Move:
+                usable = usables[0];
+                break;
+            case ActionType.Throw:
+                usable = usables[1];
+                break;
+            case ActionType.Recall:
+                usable = usables[2];
+                break;
+            case ActionType.Special:
+                usable = usables[3];
+                break;
+        }
+        competenceButtonAnimator.SetBool("Usable", usable);
+        UpdateColor();
+    }
+
+    public Color GetCurrentColor => !usable ? unusableColor : statut? selectedColor : Color.white;
+
+    public void UpdateColor()
+    {
+        foreach (Image im in allIcons)
+        {
+            im.color = GetCurrentColor;
+        }
+        foreach (Text tx in allTexts)
+        {
+            tx.color = GetCurrentColor;
+        }
     }
 }

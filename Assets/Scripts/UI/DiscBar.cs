@@ -31,12 +31,12 @@ public class DiscBar : MonoBehaviour
     {
         if (value)
         {
-            imgFirst.color = new Color(1, 0.8313726f, 0);
-            AllDiscElement[0].Select();
+            //imgFirst.color = new Color(1, 0.8313726f, 0);
+            AllDiscElement[0].Select(new Color(1, 0.8313726f, 0));
         }
         else
         {
-            imgFirst.color = Color.white;
+            //imgFirst.color = Color.white;
             AllDiscElement[0].Unselect();
         }
     }
@@ -66,7 +66,7 @@ public class DiscBar : MonoBehaviour
     {
         if(_allDisc.Count == 0)
         {
-            discIconHolder.gameObject.SetActive(false);
+            discIconHolder.transform.parent.gameObject.SetActive(false);
             return;
         }
         else
@@ -76,7 +76,7 @@ public class DiscBar : MonoBehaviour
 
         foreach(DiscElement discElement in AllDiscElement)
         {
-            discElement.gameObject.SetActive(false);
+            discElement.transform.parent.gameObject.SetActive(false);
         }
 
         int i = 0;
@@ -91,7 +91,7 @@ public class DiscBar : MonoBehaviour
 
             de.SetIcon((int)discType, peekedDisc.GetCurrentDamage);
 
-            AllDiscElement[i].gameObject.SetActive(true);
+            AllDiscElement[i].transform.parent.gameObject.SetActive(true);
             i++;
         }
     }

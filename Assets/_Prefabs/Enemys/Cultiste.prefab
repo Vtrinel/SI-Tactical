@@ -160,7 +160,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 97b8d4f0d8c377640b3f3e66c8f44c39, type: 2}
+  - {fileID: 2100000, guid: 7aa03927c9e812d4e93eca1fbe31f893, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -193,15 +193,15 @@ LineRenderer:
       - serializedVersion: 3
         time: 0.07167117
         value: 0.11904012
-        inSlope: 0.75421464
-        outSlope: 0.75421464
+        inSlope: 0.35553792
+        outSlope: 0.35553792
         tangentMode: 34
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.82932997
-        value: 0.6904775
+        time: 0.8408046
+        value: 0.39249623
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -305,7 +305,7 @@ Transform:
   m_GameObject: {fileID: 3592136065542728020}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0.7071068, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.15, y: 0.5, z: 0.3}
+  m_LocalScale: {x: 0.1161075, y: 0.406635, z: 0.3}
   m_Children:
   - {fileID: 3837501947098542269}
   m_Father: {fileID: 2769746950965064212}
@@ -329,7 +329,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 97b8d4f0d8c377640b3f3e66c8f44c39, type: 2}
+  - {fileID: 2100000, guid: 7aa03927c9e812d4e93eca1fbe31f893, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -351,7 +351,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 88e08e56f9506fa429be442bbfb8890f, type: 3}
-  m_Color: {r: 0.8679245, g: 0, b: 0.20394707, a: 1}
+  m_Color: {r: 0.7294118, g: 0.07450981, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -791,6 +791,8 @@ MonoBehaviour:
     tooltipAdditionalInformationValue: 0
     tooltipAdditionalInformationType: 0
     miniSizeTooltip: 0
+    forcedTooltipLPosition: {fileID: 0}
+    tooltipForcedPositionType: 0
 --- !u!1 &8228210363981870650
 GameObject:
   m_ObjectHideFlags: 0
