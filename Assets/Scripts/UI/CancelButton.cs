@@ -9,4 +9,9 @@ public class CancelButton : MonoBehaviour
         GameManager.Instance.SelectAction(ActionType.None);
     }
 
+    [SerializeField] Animator animController = default;
+    public void SetHover(bool hover)
+    {
+        animController.SetBool("Hover", hover);
+    }
 }

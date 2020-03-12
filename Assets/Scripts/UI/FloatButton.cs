@@ -7,13 +7,11 @@ using UnityEngine.UI;
 public class FloatButton : MonoBehaviour
 {
     public UnityEvent OnButtonFilled;
+    [SerializeField] Animator buttonAnimator = default;
 
     bool isClicking = false;
     bool isKeyInputing = false;
-    public void ChangeIsKeyInputing(bool keyInputing)
-    {
-        isKeyInputing = keyInputing;
-    }
+
 
     [SerializeField] List<Image> imagesToFill = new List<Image>();
     [SerializeField] float timerToFill;
@@ -22,6 +20,15 @@ public class FloatButton : MonoBehaviour
     [SerializeField] Color fillColor = Color.yellow;
 
     bool canFill = false;
+
+    private void Start()
+    {
+        foreach(Image im in imagesToFill)
+        {
+            im.color = fillColor;
+            im.fillAmount = 0;
+        }
+    }
 
     // Update is called once per frame
     void Update()
@@ -57,12 +64,13 @@ public class FloatButton : MonoBehaviour
         }
     }
 
-    void Restart() 
+    public void Restart() 
     {
         canFill = false;
         foreach (Image myImage in imagesToFill)
             myImage.fillAmount = 0;
         timer = 0.0f;
+        isKeyInputing = false;
 
     }
 
@@ -74,5 +82,24 @@ public class FloatButton : MonoBehaviour
         }
 
         isClicking = value;
+    }
+
+    public void PassTurn()
+    {
+        TurnManager.Instance.EndPlayerTurn();
+    }
+
+    bool _hover;
+    public void SetHover(bool hover)
+    {
+        _hover = hover;
+        buttonAnimator.SetBool("Hover", _hover || isKeyInputing);
+    }
+
+    public void ChangeIsKeyInputing(bool keyInputing)
+    {
+        isKeyInputing = keyInputing;
+        canFill = true;
+        buttonAnimator.SetBool("Hover", _hover || isKeyInputing);
     }
 }

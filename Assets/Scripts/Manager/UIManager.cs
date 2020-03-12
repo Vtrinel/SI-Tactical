@@ -14,8 +14,13 @@ public class UIManager : MonoBehaviour
     public GameObject ButtonRecall;
     public GoldBar myGoldBar;
 
-    public GameObject buttonEndTurn;
+    public FloatButton buttonEndTurn;
     public GameObject cancelButton;
+
+    public void SetButtonEndTurnKeyInput(bool inputing)
+    {
+        buttonEndTurn.ChangeIsKeyInputing(inputing);
+    }
     #endregion
 
     private static UIManager _instance;
@@ -52,7 +57,11 @@ public class UIManager : MonoBehaviour
 
     public void ChangeEndTurnButtonVisibility(bool visible)
     {
-        buttonEndTurn.SetActive(visible);
+        buttonEndTurn.gameObject.SetActive(visible);
+    }
+    public void RestartEndTurnButton()
+    {
+        buttonEndTurn.Restart();
     }
 
     public void ChangeCancelButtonVisibility(bool visible)

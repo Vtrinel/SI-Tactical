@@ -140,14 +140,19 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(passTurnInput))
         {
-            GameManager.Instance.SelectAction(ActionType.None);
+            /*GameManager.Instance.SelectAction(ActionType.None);
             TurnManager.Instance.EndPlayerTurn();
-            CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+            CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();*/
+            UIManager.Instance.SetButtonEndTurnKeyInput(true);
+        }
+        else if (Input.GetKeyUp(passTurnInput))
+        {
+            UIManager.Instance.SetButtonEndTurnKeyInput(false);
         }
 
 
 
-            Vector2 camKeyboardInputs = GetCameraMoveKeyboardInput;
+        Vector2 camKeyboardInputs = GetCameraMoveKeyboardInput;
         if (camKeyboardInputs != Vector2.zero)
         {
             CameraManager.instance.GetPlayerCamera.MovePlayerCamera(camKeyboardInputs, true);
