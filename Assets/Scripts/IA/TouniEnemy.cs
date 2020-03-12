@@ -111,15 +111,21 @@ public class TouniEnemy : IAEnemyVirtual
 
         transform.LookAt(player.transform);
 
+        animationEventContainer.SetEvent(PlayAttackSound);
+    }
+
+    public void PlayAttackSound()
+    {
+        SoundManager.Instance.PlaySound(Sound.TouniATK, GameManager.Instance.GetPlayer.transform.position);
         animationEventContainer.SetEvent(Attack);
     }
 
     void Attack()
     {
         CollisionAttack();
+        isPreparing = false;
 
         GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, new DamagesParameters(damage));
-        SoundManager.Instance.PlaySound(Sound.TouniATK, GameManager.Instance.GetPlayer.transform.position);
         animationEventContainer.SetEvent(CheckForIdleBreak);
         SoundManager.Instance.PlaySound(Sound.PlayerGetHit, gameObject.transform.position);
     }

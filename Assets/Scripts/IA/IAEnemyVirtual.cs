@@ -99,7 +99,7 @@ public class IAEnemyVirtual : MonoBehaviour
 
     public void CheckForIdleBreak()
     {
-        if (Random.Range(1, 21) == 1)
+        if (Random.Range(1, 16) == 1)
             enemyAnymator.SetTrigger("IdleBreak");
     }
 }
