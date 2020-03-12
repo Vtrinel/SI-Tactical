@@ -21,6 +21,8 @@ public class EnemyBase : MonoBehaviour
 
         enemyHoverCirle.SetColor(new Color(enemyHoverCircleColor.r, enemyHoverCircleColor.g, enemyHoverCircleColor.b, enemyUnhoveredCircleAlpha));
         enemyHoverCirle.SetHovered(false);
+
+        myIA.SetAnimator(enemyAnimator, animationEventContainer);
     }
 
     [Header("References")]
@@ -28,6 +30,8 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
     [SerializeField] Transform lifeBarParent;
     [SerializeField] GameObject lifeBarEnemyPrefab;
+    [SerializeField] Animator enemyAnimator = default;
+    [SerializeField] AnimationEventsContainer animationEventContainer = default;
     List<Image> lifeBarList = new List<Image>();
 
     public MeshRenderer TouniFourrureBasique;
@@ -54,6 +58,15 @@ public class EnemyBase : MonoBehaviour
         }
     }
 
+    public void ReceivedDamages(int currentAmount, int damageDelta)
+    {
+        enemyAnimator.SetTrigger("Hit");
+        enemyAnimator.SetInteger("RandomHit", UnityEngine.Random.Range(0, 2));
+        PostProcessAnimEnemyDamaged.instance.PlayPostProcessAnim();
+        //FxManager.Instance.CreateFx(FxType.enemyDamage)
+        ShakeScriptableObjectManager.instance.LoadShake("ShakeSetting_EnnemyDamage");
+    }
+
     public Action<EnemyBase> OnEnemyDeath;
     public void Die()
     {
@@ -66,8 +79,8 @@ public class EnemyBase : MonoBehaviour
         OnEnemyDeath?.Invoke(this);
         PlayerExperienceManager.Instance.GainGold(goldGain);
         SoundManager.Instance.PlaySound(Sound.EnemyDeath, gameObject.transform.position);
+        FxManager.Instance.CreateFx(FxType.enemyDeath, gameObject.transform.position);
         Destroy(gameObject);
-        
     }   
 
     [Header("Common Values")]
@@ -178,6 +191,7 @@ public class EnemyBase : MonoBehaviour
     private void OnEnable()
     {
         damageReceiptionSystem.OnLifeAmountChanged += UpdateLifeBarFill;
+        damageReceiptionSystem.OnReceivedDamages += ReceivedDamages;
         damageReceiptionSystem.OnLifeReachedZero += Die;
         TurnManager.Instance.OnEnemyTurnInterruption += InterruptAllAction;
 
@@ -195,6 +209,7 @@ public class EnemyBase : MonoBehaviour
     private void OnDisable()
     {
         damageReceiptionSystem.OnLifeAmountChanged -= UpdateLifeBarFill;
+        damageReceiptionSystem.OnReceivedDamages -= ReceivedDamages;
         damageReceiptionSystem.OnLifeReachedZero -= Die;
         TurnManager.Instance.OnEnemyTurnInterruption -= InterruptAllAction;
 

@@ -5,10 +5,20 @@ using static FxManager;
 
 public class FxAutoRemove : MonoBehaviour
 {
-    private float timeToDisable;
-    [SerializeField] List<ParticleSystem> particles = default;
-    
+    List<ParticleSystem> particles = default;
 
+    [SerializeField] int timeBeforeDelete = 5;
+
+    public void Start()
+    {
+        particles = new List<ParticleSystem>();
+        ParticleSystem[] foundParticles = GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem part in foundParticles)
+        {
+            particles.Add(part);
+        }
+    }
 
     private void Update()
     {
@@ -17,22 +27,28 @@ public class FxAutoRemove : MonoBehaviour
         foreach (ParticleSystem part in particles)
         {
             if (!part.isPlaying)
+            {
                 particlesToRemove.Add(part);
+            }
         }
 
         foreach (ParticleSystem part in particlesToRemove)
+        {
             particles.Remove(part);
+        }
+
+        if (particles.Count == 0)
+        {
+            Destroy(gameObject);
+        }
+
+        StartCoroutine(DestroyInCase());
     }
 
-    [ContextMenu("GetParticles")]
-    public void GetParticles()
+    // Somes FX have problems to delete themself
+    IEnumerator DestroyInCase()
     {
-        particles = new List<ParticleSystem>();
-        ParticleSystem[] foundParticles = GetComponentsInChildren<ParticleSystem>();
-
-        foreach(ParticleSystem part in foundParticles)
-        {
-            particles.Add(part);
-        }
+        yield return new WaitForSeconds(timeBeforeDelete);
+        Destroy(gameObject);
     }
 }

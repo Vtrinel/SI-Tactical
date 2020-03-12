@@ -46,11 +46,15 @@ public class TouniEnemy : IAEnemyVirtual
         if (CanAttack())
         {
             PrepareAttack();
-            yield return new WaitForSeconds(0.4f);
+            while (isPreparing)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+            /*yield return new WaitForSeconds(0.4f);
             Attack();
             isPreparing = false;
             yield return new WaitForSeconds(0.4f);
-            OnFinishTurn?.Invoke();
+            OnFinishTurn?.Invoke();*/
         }
         else
         {
@@ -60,6 +64,7 @@ public class TouniEnemy : IAEnemyVirtual
 
     void Move()
     {
+        myAnimator.SetBool("Walking", true);
         destination = CalculDestination(player.transform.position);
 
         LookPosition(destination);
@@ -76,11 +81,13 @@ public class TouniEnemy : IAEnemyVirtual
         {
             if (CanAttack())
             {
+                myAnimator.SetBool("Walking", false);
                 myNavAgent.isStopped = true;
                 PrepareAttack();
-                yield return new WaitForSeconds(0.4f);
-                Attack();
-                isPreparing = false;
+                while (isPreparing)
+                {
+                    yield return new WaitForEndOfFrame();
+                }
                 yield return new WaitForSeconds(0.4f);
                 break;
             }
@@ -91,6 +98,7 @@ public class TouniEnemy : IAEnemyVirtual
         } while (myNavAgent.remainingDistance != 0);
 
 
+        myAnimator.SetBool("Walking", false);
         isPlaying = false;
         myNavAgent.isStopped = true;
         OnFinishTurn?.Invoke();
@@ -98,20 +106,27 @@ public class TouniEnemy : IAEnemyVirtual
 
     void PrepareAttack()
     {
-        myAnimator.SetBool("Preparing", true);
+        myAnimator.SetTrigger("Attack");
         isPreparing = true;
 
         transform.LookAt(player.transform);
+
+        animationEventContainer.SetEvent(PlayAttackSound);
+    }
+
+    public void PlayAttackSound()
+    {
+        SoundManager.Instance.PlaySound(Sound.TouniATK, GameManager.Instance.GetPlayer.transform.position);
+        animationEventContainer.SetEvent(Attack);
     }
 
     void Attack()
     {
-        myAnimator.SetTrigger("Attack");
-        myAnimator.SetBool("Preparing", false);
         CollisionAttack();
+        isPreparing = false;
 
         GameManager.Instance.GetPlayer.damageReceiptionSystem.ReceiveDamage(DamageTag.Enemy, new DamagesParameters(damage));
-        SoundManager.Instance.PlaySound(Sound.TouniATK, GameManager.Instance.GetPlayer.transform.position);
+        animationEventContainer.SetEvent(CheckForIdleBreak);
         SoundManager.Instance.PlaySound(Sound.PlayerGetHit, gameObject.transform.position);
     }
 

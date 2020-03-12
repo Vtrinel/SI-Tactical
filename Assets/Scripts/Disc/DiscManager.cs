@@ -187,7 +187,10 @@ public class DiscManager : MonoBehaviour
     public void DestroyDisc(DiscScript disc)
     {
         if (throwedDiscs.Contains(disc))
+        {
+            FxManager.Instance.CreateFx(FxType.discDestroyed, disc.transform.position);
             throwedDiscs.Remove(disc);
+        }
 
         ReturnDiscInPool(disc);
     }
@@ -228,6 +231,8 @@ public class DiscManager : MonoBehaviour
     public void PlayerRetreiveDisc(DiscScript retreivedDisc)
     {
         SoundManager.Instance.PlaySound(Sound.RecallDisc, player.position);
+        FxManager.Instance.CreateFx(FxType.discRecall, retreivedDisc.transform.position);
+
 
         throwedDiscs.Remove(retreivedDisc);
         ReturnDiscInPool(retreivedDisc);
@@ -301,6 +306,8 @@ public class DiscManager : MonoBehaviour
             OnDiscUpdate?.Invoke(possessedDiscs);
 
             SoundManager.Instance.PlaySound(Sound.ThrowDisc, newDisc.transform.position);
+
+            FxManager.Instance.CreateFx(FxType.discThrow, GameManager.Instance.GetPlayer.transform.position);
         }
         return newDisc;
     }

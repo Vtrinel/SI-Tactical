@@ -211,7 +211,6 @@ GameObject:
   - component: {fileID: 7637455810567060435}
   - component: {fileID: 461039953867060487}
   - component: {fileID: 3600402909352910736}
-  - component: {fileID: -28096518271041854}
   m_Layer: 0
   m_Name: Trail_Cultiste
   m_TagString: Untagged
@@ -4957,19 +4956,6 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
---- !u!114 &-28096518271041854
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5837481857126887470}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19ab9c5621003d2448bd23e4e7e89992, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeToDisable: 0.1
 --- !u!1 &8452686206120060597
 GameObject:
   m_ObjectHideFlags: 0
@@ -4987,7 +4973,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1159750805205071524
 Transform:
   m_ObjectHideFlags: 0

@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
         else
         {
             _instance = this;
+            _instance = this;
         }
 
         playerMovementsManager.SetUp(player);
@@ -380,7 +381,7 @@ public class GameManager : MonoBehaviour
                 case ActionType.Special:
                     validatedAction = competencesUsabilityManager.LaunchSpecialCompetence();
                     SoundManager.Instance.PlaySound(Sound.PlayerTeleport, player.transform.position);
-                    FxManager.Instance.DemandeFx(FxType.playerTeleport, player.transform.position);
+                    FxManager.Instance.CreateFx(FxType.playerTeleport, player.transform.position);
                     break;
             }
             if (validatedAction)

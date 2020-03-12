@@ -44,6 +44,22 @@ public class PointActionBar : MonoBehaviour
     // Update the action point bar to show the previsualisation of the action poin bar
     public void UpdatePreConsommationPointBar(int possessedActionPoints, int aboutToUseActionPoints)
     {
-        //A REFAIRE
+        int currentConsommationPoint = possessedActionPoints - aboutToUseActionPoints;
+
+        int i = 0;
+
+        foreach (PAElement _pointBar in allPointBarElement)
+        {
+            if (i < currentConsommationPoint)
+            {
+                _pointBar.PA_Animator.SetBool("InPreview", false);
+            }
+            else
+            {
+                _pointBar.PA_Animator.Rebind();
+                _pointBar.PA_Animator.SetBool("InPreview", true);
+            }
+            i++;
+        }
     }
 }

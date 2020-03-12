@@ -14,6 +14,7 @@ public class CultisteEnemy : IAEnemyVirtual
     [SerializeField] GameObject posEndLine;
     [SerializeField] GameObject projectileObj;
     [SerializeField] GameObject projectilePrefab;
+    [SerializeField] GameObject previewShoot = default;
 
     private void OnEnable()
     {
@@ -54,7 +55,8 @@ public class CultisteEnemy : IAEnemyVirtual
     {
         if (isPreparing)
         {
-            Attack();
+            //Attack();
+            StartAttack();
             isPreparing = false;
             yield return new WaitForSeconds(1);
         }
@@ -73,6 +75,7 @@ public class CultisteEnemy : IAEnemyVirtual
 
     void Move()
     {
+        myAnimator.SetBool("Walking", true);
         if (!haveDisc)
         {
             Transform newObjDestination = ResershDisc();
@@ -105,9 +108,11 @@ public class CultisteEnemy : IAEnemyVirtual
         {
             if (CanAttack())
             {
+                myAnimator.SetBool("Walking", false);
                 myNavAgent.isStopped = true;
+                myNavAgent.velocity = Vector3.zero;
 
-                PrepareAttack();
+                //PrepareAttack();
                 break;
             }
             yield return null;
@@ -116,15 +121,19 @@ public class CultisteEnemy : IAEnemyVirtual
 
         } while (myNavAgent.remainingDistance != 0);
 
-        yield return new WaitForSeconds(0.4f);
-
         //si il a chopé un disc sur la route
+        while (playingDiscDestroyAnimation)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
         if (CanAttack() && !isPreparing)
         {
             PrepareAttack();
             yield return new WaitForSeconds(0.4f);
         }
 
+        myAnimator.SetBool("Walking", false);
         isPlaying = false;
         myNavAgent.isStopped = true;
         OnFinishTurn?.Invoke();
@@ -132,12 +141,17 @@ public class CultisteEnemy : IAEnemyVirtual
 
     void PrepareAttack()
     {
+        StartLookAt(player.transform.position);
+
         myNavAgent.isStopped = true;
-        myAnimator.SetBool("Preparing", true);
-        transform.LookAt(player.transform);
+        //transform.LookAt(player.transform);
 
         shootPos = player.transform.position;
         isPreparing = true;
+        previewShoot.SetActive(true);
+        myAnimator.SetBool("PreparingAttack", true);
+        animationEventContainer.SetEvent2(Attack);
+        animationEventContainer.SetEvent(null);
     }
 
     void SetPreview()
@@ -154,20 +168,30 @@ public class CultisteEnemy : IAEnemyVirtual
         //myLine.gameObject.SetActive(true);
     }
 
+    void StartAttack()
+    {
+        myAnimator.SetBool("Preparing", false);
+        myAnimator.SetTrigger("Attack");
+    }
+
     void Attack()
     {
-        myAnimator.SetTrigger("Attack");
-        myAnimator.SetBool("Preparing", false);
+        previewShoot.SetActive(false);
+        myAnimator.SetBool("PreparingAttack", false);
 
         LaunchObj();
         SoundManager.Instance.PlaySound(Sound.CultistATK, gameObject.transform.position);
-        SoundManager.Instance.PlaySound(Sound.PlayerGetHit, gameObject.transform.position);
+        //SoundManager.Instance.PlaySound(Sound.PlayerGetHit, gameObject.transform.position);
+        animationEventContainer.SetEvent(CheckForIdleBreak);
+        animationEventContainer.SetEvent2(null);
     }
 
     void LaunchObj()
     {
         GameObject newProjectile = Instantiate(projectilePrefab);
-        newProjectile.transform.position = transform.position;
+        newProjectile.transform.position = transform.position + transform.forward * 1f;
+
+        CameraManager.instance.GetPlayerCamera.AttachFollowTransformTo(newProjectile.transform);
 
         newProjectile.GetComponent<ProjectileScript>().SetDestination(myArrow.transform.position, gameObject);
     }
@@ -242,10 +266,52 @@ public class CultisteEnemy : IAEnemyVirtual
             {
                 if (!touchedDisc.isAttacking)
                 {
+                    myAnimator.SetBool("Walking", false);
+                    myAnimator.SetBool("DestroyingDisc", true);
+                    animationEventContainer.SetEvent2(EndDestroyDisc);
                     DiscManager.Instance.DestroyDisc(touchedDisc);
+                    playingDiscDestroyAnimation = true;
                     haveDisc = true;
                 }
             }
+        }
+    }
+
+    bool playingDiscDestroyAnimation = false;
+    public void EndDestroyDisc()
+    {
+        animationEventContainer.SetEvent2(null);
+        playingDiscDestroyAnimation = false;
+        myAnimator.SetBool("DestroyingDisc", false);
+    }
+
+    TimerSystem lookRotationTimer = new TimerSystem();
+    AnimationCurve rotationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    Vector3 startLookDirection = Vector3.zero;
+    Vector3 targetLookDirection = Vector3.zero;
+
+    public void StartLookAt(Vector3 position)
+    {
+        lookRotationTimer.ChangeTimerValue(0.3f);
+        startLookDirection = transform.forward;
+        targetLookDirection = position - transform.position;
+        targetLookDirection.y = 0;
+        targetLookDirection.Normalize();
+
+        StartCoroutine(LookAtPosition());
+    }
+
+    IEnumerator LookAtPosition()
+    {
+        lookRotationTimer.StartTimer();
+
+        while (!lookRotationTimer.TimerOver)
+        {
+            lookRotationTimer.UpdateTimer();
+            Vector3 currentLookDir = Vector3.Slerp(startLookDirection, targetLookDirection, lookRotationTimer.GetTimerCoefficient);
+            float rotY = Mathf.Atan2(currentLookDir.x, currentLookDir.z) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, rotY, 0);
+            yield return new WaitForEndOfFrame();
         }
     }
 }

@@ -27,12 +27,20 @@ public class FxManager : MonoBehaviour
 
     private FxGameObject FxGameObjectStocked = default;
 
-    public void DemandeFx(FxType myTypeFx, Vector3 position)
+    public void CreateFx(FxType myTypeFx, Vector3 position)
     {
-        if (CanCreateFx(myTypeFx))
+        FxGameObject fxGameObject = GetFxGameObject(myTypeFx);
+        if (fxGameObject != null)
         {
-            GameObject newExplo = Instantiate(FxGameObjectStocked.fxGameObject);
-            newExplo.transform.position = position;
+            GameObject newFx = Instantiate(fxGameObject.fxGameObject);
+            newFx.transform.position = position + fxGameObject.offset;
+
+            if (myTypeFx == FxType.discThrow)
+            {
+                Debug.Log("DiscThrow");
+                newFx.transform.position = position + fxGameObject.offset;
+                newFx.transform.Rotate(fxGameObject.eulerAngle);
+            }
         }
     }
 
@@ -40,7 +48,7 @@ public class FxManager : MonoBehaviour
     {
         bool canCreateFx = false;
 
-        foreach(FxGameObject fxGameObject in FXGameObjectList)
+        foreach (FxGameObject fxGameObject in FXGameObjectList)
         {
             // Check if tag name exist
             if (fxGameObject.fxType == hisType)
@@ -61,6 +69,22 @@ public class FxManager : MonoBehaviour
         }
         return canCreateFx;
     }
+
+    FxGameObject GetFxGameObject(FxType type)
+    {
+        FxGameObject fxGameObject = null;
+
+        for (int i = 0; i < FXGameObjectList.Length; i++)
+        {
+            if(FXGameObjectList[i].fxType == type)
+            {
+                fxGameObject = FXGameObjectList[i];
+                return fxGameObject;
+            }
+        }
+
+        return fxGameObject;
+    }
 }
 
 public enum FxType
@@ -77,23 +101,25 @@ public enum FxType
     // Enemy
     enemyDamage,    //8
     enemySpawn,
+    enemySpawnPreparation,
+    enemyDeath,
     enemyProjectileFire,
     enemyProjectileTrail,
-    enemyImpactShield,  //12
+    enemyImpactShield,  //14
 
     // Player
-    playerMove,     // 13
+    playerMove,     // 15
     playerShockwave,
     playerTeleport,
     playerDeath,
-    playerGhost,    // 17
+    playerGhost,    // 19
 
     // Competence
-    competenceExplosion,    //18
+    competenceExplosion,    //20
 
     // Environmenent
-    statusExplosion,    //19
-    totemUsable,    //20
+    statusExplosion,    //21
+    totemUsable,    //22
 
     none
 }
@@ -103,4 +129,6 @@ public class FxGameObject
 {
     public FxType fxType;
     public GameObject fxGameObject;
+    public Vector3 offset;
+    public Vector3 eulerAngle;
 }
