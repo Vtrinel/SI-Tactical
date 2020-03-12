@@ -21,6 +21,8 @@ public class EnemyBase : MonoBehaviour
 
         enemyHoverCirle.SetColor(new Color(enemyHoverCircleColor.r, enemyHoverCircleColor.g, enemyHoverCircleColor.b, enemyUnhoveredCircleAlpha));
         enemyHoverCirle.SetHovered(false);
+
+        myIA.SetAnimator(enemyAnimator, animationEventContainer);
     }
 
     [Header("References")]
@@ -28,6 +30,8 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
     [SerializeField] Transform lifeBarParent;
     [SerializeField] GameObject lifeBarEnemyPrefab;
+    [SerializeField] Animator enemyAnimator = default;
+    [SerializeField] AnimationEventsContainer animationEventContainer = default;
     List<Image> lifeBarList = new List<Image>();
 
     public MeshRenderer TouniFourrureBasique;
@@ -52,6 +56,12 @@ public class EnemyBase : MonoBehaviour
             //bar.enabled = !(currentAmount < i);
             i++;
         }
+    }
+
+    public void ReceivedDamages(int currentAmount, int damageDelta)
+    {
+        enemyAnimator.SetTrigger("Hit");
+        enemyAnimator.SetInteger("RandomHit", UnityEngine.Random.Range(0, 2));
     }
 
     public Action<EnemyBase> OnEnemyDeath;
@@ -178,6 +188,7 @@ public class EnemyBase : MonoBehaviour
     private void OnEnable()
     {
         damageReceiptionSystem.OnLifeAmountChanged += UpdateLifeBarFill;
+        damageReceiptionSystem.OnReceivedDamages += ReceivedDamages;
         damageReceiptionSystem.OnLifeReachedZero += Die;
         TurnManager.Instance.OnEnemyTurnInterruption += InterruptAllAction;
 
@@ -195,6 +206,7 @@ public class EnemyBase : MonoBehaviour
     private void OnDisable()
     {
         damageReceiptionSystem.OnLifeAmountChanged -= UpdateLifeBarFill;
+        damageReceiptionSystem.OnReceivedDamages -= ReceivedDamages;
         damageReceiptionSystem.OnLifeReachedZero -= Die;
         TurnManager.Instance.OnEnemyTurnInterruption -= InterruptAllAction;
 

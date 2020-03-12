@@ -14,6 +14,7 @@ public class CultisteEnemy : IAEnemyVirtual
     [SerializeField] GameObject posEndLine;
     [SerializeField] GameObject projectileObj;
     [SerializeField] GameObject projectilePrefab;
+    [SerializeField] GameObject previewShoot = default;
 
     private void OnEnable()
     {
@@ -73,6 +74,7 @@ public class CultisteEnemy : IAEnemyVirtual
 
     void Move()
     {
+        myAnimator.SetBool("Walking", true);
         if (!haveDisc)
         {
             Transform newObjDestination = ResershDisc();
@@ -105,6 +107,7 @@ public class CultisteEnemy : IAEnemyVirtual
         {
             if (CanAttack())
             {
+                myAnimator.SetBool("Walking", false);
                 myNavAgent.isStopped = true;
 
                 PrepareAttack();
@@ -125,6 +128,7 @@ public class CultisteEnemy : IAEnemyVirtual
             yield return new WaitForSeconds(0.4f);
         }
 
+        myAnimator.SetBool("Walking", false);
         isPlaying = false;
         myNavAgent.isStopped = true;
         OnFinishTurn?.Invoke();
@@ -133,11 +137,12 @@ public class CultisteEnemy : IAEnemyVirtual
     void PrepareAttack()
     {
         myNavAgent.isStopped = true;
-        myAnimator.SetBool("Preparing", true);
         transform.LookAt(player.transform);
 
         shootPos = player.transform.position;
         isPreparing = true;
+        previewShoot.SetActive(true);
+        myAnimator.SetBool("Preparing", true);
     }
 
     void SetPreview()
@@ -158,6 +163,7 @@ public class CultisteEnemy : IAEnemyVirtual
     {
         myAnimator.SetTrigger("Attack");
         myAnimator.SetBool("Preparing", false);
+        previewShoot.SetActive(true);
 
         LaunchObj();
         SoundManager.Instance.PlaySound(Sound.CultistATK, gameObject.transform.position);
@@ -241,6 +247,7 @@ public class CultisteEnemy : IAEnemyVirtual
             {
                 if (!touchedDisc.isAttacking)
                 {
+                    myAnimator.SetBool("Walking", false);
                     DiscManager.Instance.DestroyDisc(touchedDisc);
                     haveDisc = true;
                 }
