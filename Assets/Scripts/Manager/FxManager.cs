@@ -29,7 +29,8 @@ public class FxManager : MonoBehaviour
 
     public void DemandeFx(FxType myTypeFx, Vector3 position)
     {
-        if (CanCreateFx(myTypeFx))
+        FxGameObject fxGameObject = GetFxGameObject(myTypeFx);
+        if (fxGameObject != null)
         {
             GameObject newExplo = Instantiate(FxGameObjectStocked.fxGameObject);
             newExplo.transform.position = position;
@@ -40,7 +41,7 @@ public class FxManager : MonoBehaviour
     {
         bool canCreateFx = false;
 
-        foreach(FxGameObject fxGameObject in FXGameObjectList)
+        foreach (FxGameObject fxGameObject in FXGameObjectList)
         {
             // Check if tag name exist
             if (fxGameObject.fxType == hisType)
@@ -60,6 +61,22 @@ public class FxManager : MonoBehaviour
             }
         }
         return canCreateFx;
+    }
+
+    FxGameObject GetFxGameObject(FxType type)
+    {
+        FxGameObject fxGameObject = null;
+
+        for (int i = 0; i < FXGameObjectList.Length; i++)
+        {
+            if(FXGameObjectList[i].fxType == type)
+            {
+                fxGameObject = FXGameObjectList[i];
+                return fxGameObject;
+            }
+        }
+
+        return fxGameObject;
     }
 }
 
@@ -105,4 +122,6 @@ public class FxGameObject
 {
     public FxType fxType;
     public GameObject fxGameObject;
+    public Vector3 offset;
+    public Vector3 eulerAngle;
 }
