@@ -173,6 +173,39 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &5106880650665484992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5315190327178332117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca9bb3d8a20aa1e479eadfda403540f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animController: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+--- !u!95 &419698113512685535
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5315190327178332117}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 55b0b2010df825c498c7826fee41d627, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6817484857811702715
 GameObject:
   m_ObjectHideFlags: 0
@@ -413,6 +446,7 @@ MonoBehaviour:
     tooltipDescription: This is a disc
     tooltipAdditionalInformationValue: 0
     tooltipAdditionalInformationType: 3
+    miniSizeTooltip: 0
 --- !u!1001 &2880536627148159804
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -498,6 +532,12 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 278836287245634610, guid: 9d91cef7a9567d348843ec9f1c806fb7, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9d91cef7a9567d348843ec9f1c806fb7, type: 3}
+--- !u!1 &5315190327178332117 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7942909098757225705, guid: 9d91cef7a9567d348843ec9f1c806fb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 2880536627148159804}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6354000994929214808 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9211069539420667492, guid: 9d91cef7a9567d348843ec9f1c806fb7,

@@ -18,6 +18,9 @@ public class EnemyBase : MonoBehaviour
             TouniFourrureBasique.material = TouniFourrureAndMaskAlt;
             TouniMaskBasique.material = TouniFourrureAndMaskAlt;
         }
+
+        enemyHoverCirle.SetColor(new Color(enemyHoverCircleColor.r, enemyHoverCircleColor.g, enemyHoverCircleColor.b, enemyUnhoveredCircleAlpha));
+        enemyHoverCirle.SetHovered(false);
     }
 
     [Header("References")]
@@ -221,15 +224,21 @@ public class EnemyBase : MonoBehaviour
 
     [Header("Tooltips")]
     [SerializeField] TooltipCollider tooltipCollider = default;
+    [SerializeField] HoverCircle enemyHoverCirle = default;
+    [SerializeField] Color enemyHoverCircleColor = Color.red;
+    [SerializeField] float enemyUnhoveredCircleAlpha = 0.2f;
+    [SerializeField] float enemyHoveredCircleAlpha = 0.8f;
 
     public void StartHovering()
     {
-        //Debug.Log("Start Hovering " + name);
+        enemyHoverCirle.SetColor(new Color(enemyHoverCircleColor.r, enemyHoverCircleColor.g, enemyHoverCircleColor.b, enemyHoveredCircleAlpha));
+        enemyHoverCirle.SetHovered(true);
     }
 
     public void EndHovering()
     {
-        //Debug.Log("End Hovering " + name);
+        enemyHoverCirle.SetColor(new Color(enemyHoverCircleColor.r, enemyHoverCircleColor.g, enemyHoverCircleColor.b, enemyUnhoveredCircleAlpha));
+        enemyHoverCirle.SetHovered(false);
     }
 
     [Header("Other feedbacks")]
