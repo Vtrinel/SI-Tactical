@@ -55,9 +55,10 @@ public class DamageableEntity : MonoBehaviour
             TimeManager.Instance.StartFreezeFrame();
         }
 
+        OnReceivedDamages?.Invoke(currentLifeAmount, -Mathf.Abs(damagesParameters._damages));
+
         LoseLife(damagesParameters._damages);
 
-        OnReceivedDamages?.Invoke(currentLifeAmount, -Mathf.Abs(damagesParameters._damages));
 
         if (damagesParameters._numberOfStunedTurns > 0)
         {

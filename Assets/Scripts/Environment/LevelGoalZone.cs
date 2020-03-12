@@ -46,11 +46,11 @@ public class LevelGoalZone : MonoBehaviour
 
         if (playerIsInRange)
         {
-            FxManager.Instance.DemandeFx(FxType.enterRecallZone, GameManager.Instance.GetPlayer.transform.position);
+            FxManager.Instance.CreateFx(FxType.enterRecallZone, GameManager.Instance.GetPlayer.transform.position);
         }
         else
         {
-            FxManager.Instance.DemandeFx(FxType.leaveRecallZone, GameManager.Instance.GetPlayer.transform.position);
+            FxManager.Instance.CreateFx(FxType.leaveRecallZone, GameManager.Instance.GetPlayer.transform.position);
         }
 
         if (!playerEnteredOnce)
