@@ -18,6 +18,7 @@ public class PAElement : MonoBehaviour
             if (value)
             {
                 PA_Animator.SetTrigger("Heal");
+                PA_Animator.SetBool("InPreview", false);
             }
             else
             {
@@ -33,6 +34,7 @@ public class PAElement : MonoBehaviour
         if(PA_Animator != null)
         {
             PA_Animator.SetInteger("PaBarStep", 0);
+
         }
     }
 }
