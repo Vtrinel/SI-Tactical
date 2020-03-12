@@ -233,4 +233,19 @@ public class PlayerController : MonoBehaviour
         }
     }
     #endregion
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (knockbackReceiptionSystem.IsBeingKnockbacked || moving)
+        {
+            if (other.gameObject.layer == 11)
+            {
+                DiscScript hitDisc = other.GetComponent<DiscScript>();
+                if (hitDisc != null)
+                {
+                    hitDisc.RetreiveByPlayer();
+                }
+            }
+        }
+    }
 }

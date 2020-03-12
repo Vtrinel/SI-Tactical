@@ -27,6 +27,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: be7c3481a4f88464f8744d78c725f2b7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _T_MaskShadow2_M:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _T_MaskShadow_M:
         m_Texture: {fileID: 2800000, guid: 7bcc85eb883818e449900b4d3b6eb8ae, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -45,9 +49,10 @@ Material:
     - _ShadowOpacity: 0
     - _ShadowStep: 0
     - _Tilling: 0.08
+    - _ToggleSwitch0: 1
     - __dirty: 0
     m_Colors:
     - _ASEOutlineColor: {r: 1, g: 1, b: 1, a: 0}
-    - _Color: {r: 0.4056604, g: 0.380785, b: 0.38216496, a: 0}
+    - _Color: {r: 0.30686405, g: 0.31132078, b: 0.30397832, a: 0}
     - _Emlissive: {r: 0, g: 0, b: 0, a: 0}
     - _Shadow_Color: {r: 0.32075462, g: 0.03782484, b: 0.03782484, a: 0}
