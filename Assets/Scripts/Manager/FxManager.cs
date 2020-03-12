@@ -27,13 +27,20 @@ public class FxManager : MonoBehaviour
 
     private FxGameObject FxGameObjectStocked = default;
 
-    public void DemandeFx(FxType myTypeFx, Vector3 position)
+    public void CreateFx(FxType myTypeFx, Vector3 position)
     {
         FxGameObject fxGameObject = GetFxGameObject(myTypeFx);
         if (fxGameObject != null)
         {
-            GameObject newExplo = Instantiate(fxGameObject.fxGameObject);
-            newExplo.transform.position = position;
+            GameObject newFx = Instantiate(fxGameObject.fxGameObject);
+            newFx.transform.position = position + fxGameObject.offset;
+
+            if (myTypeFx == FxType.discThrow)
+            {
+                Debug.Log("DiscThrow");
+                newFx.transform.position = position + fxGameObject.offset;
+                newFx.transform.Rotate(fxGameObject.eulerAngle);
+            }
         }
     }
 

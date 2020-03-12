@@ -8,7 +8,7 @@ public class PostProcessAnimTrigger : MonoBehaviour
     [SerializeField] protected Animator postProcessAnimator;
     [SerializeField] protected string animTriggerName = "PlayerDamaged";
 
-    protected void PlayPostProcessAnim()
+    public void PlayPostProcessAnim()
     {
         postProcessAnimator.SetTrigger(animTriggerName);
     }
