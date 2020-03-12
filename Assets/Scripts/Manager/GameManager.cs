@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [Header(" Debug")]
+    [SerializeField] Transform debugPosition = default;
+    public Vector3 GetDebugPos => debugPosition.position;
+
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
 
@@ -108,21 +112,6 @@ public class GameManager : MonoBehaviour
     public int maxActionPointsAmount = 10;
     [SerializeField] int currentActionPointsAmount;
     public int GetCurrentActionPointsAmount => currentActionPointsAmount;
-    /*public int GetAboutToUseActionPoints
-    {
-        get
-        {
-            if (competencesUsabilityManager.IsPreparingCompetence)
-            {
-                return competencesUsabilityManager.GetCurrentCompetenceCost();
-            }
-            else if ()
-            {
-
-            }
-            return 0;
-        }
-    }*/
 
     public System.Action<int> OnActionPointsAmountChanged;
     
@@ -217,6 +206,7 @@ public class GameManager : MonoBehaviour
     [Header("Mouse World Result")]
     [SerializeField] LayerMask worldMouseLayerMask = default;
     [SerializeField] float mouseCheckMaxDistance = 50.0f;
+    [SerializeField] UIRaycaster uiRaycaster = default;
     bool calculatedCurrentWorldMouseResult = false;
     WorldMouseResult currentWorldMouseResult = default;
     public WorldMouseResult GetCurrentWorldMouseResult
@@ -235,7 +225,8 @@ public class GameManager : MonoBehaviour
 
         Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit[] hits = Physics.RaycastAll(cameraRay, mouseCheckMaxDistance, worldMouseLayerMask);
-        ITooltipable foundTooltipable = null;
+        ITooltipable foundTooltipable = uiRaycaster.CheckForUITooltipable();
+        //OnMouseInUI = (foundTooltipable != null);
 
         foreach (RaycastHit hit in hits)
         {
@@ -256,8 +247,7 @@ public class GameManager : MonoBehaviour
         }
 
         result.mouseIsOnUI = OnMouseInUI;
-        if (!OnMouseInUI)
-            result.currentTooltipable = foundTooltipable;
+        result.currentTooltipable = foundTooltipable;
 
         return result;
     }

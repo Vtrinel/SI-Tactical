@@ -45,7 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   testDiscType: 1
-  rangeOfPlayer: 9
+  recallRange: 12
+  throwRange: 9
   showDebugGizmo: 0
   allDiscPoolParameters:
   - discType: 1
@@ -70,6 +71,14 @@ MonoBehaviour:
     baseNumberOfElements: 3
   poolsParent: {fileID: 776263865927001006}
   maxNumberOfPossessedDiscs: 3
+  currentPossessedDiscs: 3
+  discOverloadPiercingGainedExperience: 2
+  discOverloadGhostGainedActionPoints: 2
+  discOverloadExplosiveEffectZoneType: 3
+  discOverloadHeavyGainedHP: 2
+  discOverloadShockwaveEffectZoneType: 5
+  discsInformationsLibrary: {fileID: 11400000, guid: 20bc8fe63a9d50345bf4c54770c80985,
+    type: 2}
 --- !u!1 &1291441904894891289
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e905165617145545a1a441460961ffd, type: 3}
   m_Name: 02_Link
   m_EditorClassIdentifier: 
-  competenceName: Link
+  competenceName: Programmed Throw
   competenceDescription: "Envoie le disque \xE0 la position cibl\xE9e, en passant
     par les autres disque sur le terrain (du plus ancien au plus r\xE9cent)."
-  competenceImage: {fileID: 21300000, guid: 43e2d7faf13041145829b828fbd0636d, type: 3}
+  competenceTooltip: 'Koura throws a disc passing through every other throw discs
+    in range '
+  competenceImage: {fileID: 21300000, guid: aaae1f8c31433ad4da21a2f17fbe759e, type: 3}
   actionPointsCost: 3
   unlocked: 0
   competencesUnlockedNeeded:

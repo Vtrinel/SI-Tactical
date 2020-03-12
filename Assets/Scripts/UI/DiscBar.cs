@@ -65,10 +65,10 @@ public class DiscBar : MonoBehaviour
 
     void Refresh(Stack<DiscType> _allDisc)
     {
-        foreach (DiscType discType in _allDisc)
+        /*foreach (DiscType discType in _allDisc)
         {
             print(discType);
-        }
+        }*/
 
         if(_allDisc.Count == 0)
         {

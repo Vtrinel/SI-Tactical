@@ -15,6 +15,8 @@ public class DiscScript : MonoBehaviour
     [SerializeField] Rigidbody myRigidBody = default;
     [SerializeField] CapsuleCollider myCollider = default;
     public Vector3 GetColliderCenter => transform.position + myCollider.center;
+    public Vector3 GetColliderLocalCenter => myCollider.center;
+    public float GetColliderRadius => myCollider.radius;
     [SerializeField] Animator myAnimator = default;
     [SerializeField] KnockbackableEntity knockbackSystem = default;
 
@@ -52,6 +54,7 @@ public class DiscScript : MonoBehaviour
 
     [Header("Modifiers")]
     [SerializeField] bool blockedByEnemies = false;
+    public bool GetBlockedByEnemies => blockedByEnemies;
     [SerializeField] bool blockedByShields = true;
     [SerializeField] bool blockedByObstacles = true;
     public LayerMask GetTrajectoryCheckLayerMask => 1 << 10 | ((blockedByShields ? 1 : 0) << 12) | ((blockedByObstacles ? 1 : 0) << 14);
@@ -62,8 +65,13 @@ public class DiscScript : MonoBehaviour
     EffectZoneType effectZoneToInstantiateOnHit = EffectZoneType.None;
     bool destroyOnHit = false;
 
+    bool modifiersSetUp = false;
     public void SetUpModifiers()
     {
+        if (modifiersSetUp)
+            return;
+        modifiersSetUp = true;
+
         numberOfStunedTurns = 0;
         effectZoneToInstantiateOnHit = EffectZoneType.None;
         destroyOnHit = false;
@@ -87,6 +95,12 @@ public class DiscScript : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void Start()
+    {
+        tooltipCollider.SetTooltipInformations(TooltipInformationFactory.GetDiscTypeInformations(DiscManager.Instance.GetDiscInformations(_discType)));
+        SetUpModifiers();
     }
 
     void Update()
@@ -423,80 +437,6 @@ public class DiscScript : MonoBehaviour
         parameters.canKnockbackDiscs = true;
 
         return parameters;
-    }
-    #endregion
-
-    #region Collisions and Interaction - OLD
-    private void OnTriggerEnter(Collider other)
-    {
-        return;
-
-        if (other.gameObject == objLaunch || !isAttacking) { return; }
-
-        switch (other.gameObject.layer)
-        {
-            //Player --> rappel géré dans le déplacement  
-            case 9:
-                if (!retreivableByPlayer)
-                {
-                    DemandeFx(other.ClosestPointOnBounds(transform.position));
-                    break;
-                }
-
-                RetreiveByPlayer();                
-
-                break;
-
-            //ennemy --> dégâts gérés dans le déplacement
-            case 10:
-                DemandeFx(other.ClosestPointOnBounds(transform.position));
-
-                DamageableEntity hitDamageableEntity = other.GetComponent<DamageableEntity>();
-                if (hitDamageableEntity != null)
-                {
-                    hitDamageableEntity.ReceiveDamage(damageTag, new DamagesParameters(currentDamagesAmount, numberOfStunedTurns));
-
-                    lastObjTouch = other.gameObject;
-                }
-                if (!blockedByShields)
-                    break;
-
-                break;
-
-            //shield --> géré dans le déplacement
-            case 12:
-                if (!blockedByShields)
-                    break;
-
-                if (lastObjTouch == other.transform.parent.GetComponent<ShieldManager>().myObjParent) { return; } else
-                {
-                    DemandeFx(other.ClosestPointOnBounds(transform.position));
-                    CollisionWithThisObj(other.transform);
-                }
-
-                break;
-
-            //obstacle --> déplacement aussi
-            case 14:
-                if (!blockedByObstacles)
-                    break;
-
-                break;
-
-            /*default:
-                CollisionWithThisObj(other.transform);
-                break;*/
-        }
-    }
-       
-    void CollisionWithThisObj(Transform impactPoint)
-    {
-        InterruptTrajectory();
-
-        myAnimator.SetTrigger("Collision");
-        Debug.DrawRay(transform.position + -transform.right * .5f, Vector3.up, Color.red, 50);
-
-        transform.position = transform.position + -transform.right * .5f;
     }
     #endregion
 

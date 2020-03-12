@@ -7,6 +7,7 @@ public static class DiscTrajectoryFactory
     public static DiscTrajectoryParameters GetTrajectory(CompetenceDisc competence, Vector3 startPosition, Vector3 targetPosition, List<DiscScript> throwedDiscs, List<DiscScript> inRangeDiscs, DiscScript currentDisc)
     {
         DiscTrajectoryParameters discTrajectoryParameters = new DiscTrajectoryParameters();
+        discTrajectoryParameters.disc = currentDisc;
         List<Vector3> trajectoryPositions = new List<Vector3>();
         Vector3 totalDirection = (targetPosition - startPosition).normalized;
 
@@ -124,5 +125,6 @@ public static class DiscTrajectoryFactory
 
 public struct DiscTrajectoryParameters
 {
+    public DiscScript disc;
     public List<Vector3> trajectoryPositions;
 }

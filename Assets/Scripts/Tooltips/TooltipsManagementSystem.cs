@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 [System.Serializable]
 public class TooltipsManagementSystem 
 {
+    [SerializeField] TooltipInterface tooltipInterface = default;
     ITooltipable currentTooltipable;
 
     public void UpdateSystem(ITooltipable newTooltipable)
@@ -16,8 +19,7 @@ public class TooltipsManagementSystem
         {
             if(currentTooltipable != null)
             {
-                //DebugLogTooltipInfos(currentTooltipable.GetTooltipInformations);
-                //Here, update UI tooltip position
+                
             }
         }
         else
@@ -28,19 +30,18 @@ public class TooltipsManagementSystem
             }
             else
             {
-                //Here, start UI tooltip apparition
+                tooltipInterface.SetTooltipVisibility(true);
             }
 
             if (currentTooltipable != null)
             {
-                //Here, change the UI tooltip content
                 currentTooltipable.OnStartTooltip?.Invoke();
-                DebugLogTooltipInfos(currentTooltipable.GetTooltipInformations);
+                tooltipInterface.SetTooltipInfos(currentTooltipable.GetTooltipInformations);
             }
             else
             {
-                //Here, start the UI tooltip disparition
-            }
+                tooltipInterface.SetTooltipVisibility(false);
+  }
         }
     }
 

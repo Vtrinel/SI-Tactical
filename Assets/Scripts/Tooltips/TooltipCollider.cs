@@ -15,4 +15,5 @@ public class TooltipCollider : MonoBehaviour, ITooltipable
 
     public Action OnStartTooltip { get; set; }
     public Action OnEndTooltip { get; set; }
+    public bool Tooltipable => true;
 }
