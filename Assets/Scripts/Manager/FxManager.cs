@@ -32,7 +32,7 @@ public class FxManager : MonoBehaviour
         FxGameObject fxGameObject = GetFxGameObject(myTypeFx);
         if (fxGameObject != null)
         {
-            GameObject newExplo = Instantiate(FxGameObjectStocked.fxGameObject);
+            GameObject newExplo = Instantiate(fxGameObject.fxGameObject);
             newExplo.transform.position = position;
         }
     }
