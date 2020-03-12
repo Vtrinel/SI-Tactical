@@ -63,6 +63,7 @@ public class EnemyBase : MonoBehaviour
         enemyAnimator.SetTrigger("Hit");
         enemyAnimator.SetInteger("RandomHit", UnityEngine.Random.Range(0, 2));
         PostProcessAnimEnemyDamaged.instance.PlayPostProcessAnim();
+        ShakeScriptableObjectManager.instance.LoadShake("ShakeSetting_EnnemyDamage");
     }
 
     public Action<EnemyBase> OnEnemyDeath;
