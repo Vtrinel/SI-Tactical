@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour
     public GameObject ButtonMove;
     public GameObject ButtonLaunch;
     public GameObject ButtonRecall;
-    public Image goldSlider;
+    public GoldBar myGoldBar;
 
     public GameObject buttonEndTurn;
     #endregion
@@ -56,19 +56,19 @@ public class UIManager : MonoBehaviour
 
     public void AddExperience(int experience)
     {
-        goldSlider.fillAmount += PlayerExperienceManager.Instance.GetGoldQuantity / 100.0f;
+        myGoldBar.SetGoldValue(PlayerExperienceManager.Instance.GetGoldQuantity / 100.0f);
     }
 
     public void LossExperience(int experience)
     {
         if (PlayerExperienceManager.Instance.GetGoldQuantity > 0)
         {
-            goldSlider.fillAmount += PlayerExperienceManager.Instance.GetGoldQuantity / 100.0f;
+            myGoldBar.SetGoldValue(PlayerExperienceManager.Instance.GetGoldQuantity / 100.0f);
 
         }
         else
         {
-            goldSlider.fillAmount = 0;
+            myGoldBar.ForceSetValue(0);
         }
     }
 
