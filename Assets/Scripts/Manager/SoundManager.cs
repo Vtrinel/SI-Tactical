@@ -25,9 +25,8 @@ public class SoundManager : MonoBehaviour
     public float delayWalkSound = 0f;
     Dictionary<Sound, float> soundTimerDictionary;
 
-    //[Header("BGM music")]
-    //[SerializeField] float BGMFadeSpead;
-    //[SerializeField] AudioClip BGM;
+    [Header("BGM musics")]
+    public BGMAudioClip[] listBGMMusic;
 
     [Header("audios enemy movements")]
     public AudioClip[] enemyMovementList;
@@ -48,6 +47,8 @@ public class SoundManager : MonoBehaviour
     {
         if (CanPlaySound(sound))
         {
+            Debug.Log(sound);
+            
             GameObject soundGameObject = new GameObject("Sound : " + currentCreatedClip.sound.ToString());
             soundGameObject.transform.position = position;
 
@@ -73,10 +74,6 @@ public class SoundManager : MonoBehaviour
         //Check if the sound exist
         foreach (SoundAudioClip soundAudioClip in soundAudioClipList)
         {
-            if (soundAudioClip.sound == Sound.PlayerTeleport)
-            {
-                return false;
-            }
 
             if (soundAudioClip.sound == sound)
             {
@@ -176,6 +173,8 @@ public enum Sound
     none
 }
 
+
+
 // Group a name and an audioclip
 [System.Serializable]
 public class SoundAudioClip
@@ -183,5 +182,22 @@ public class SoundAudioClip
     public Sound sound;
     public AudioClip audioClip;
     [Range(0,1)]
+    public float volume;
+}
+
+public enum BGM
+{
+    Menu,
+    InGame,
+    InBoss
+}
+
+// Group a name and an audioclip
+[System.Serializable]
+public class BGMAudioClip
+{
+    public BGM bgm;
+    public AudioClip audioClip;
+    [Range(0, 1)]
     public float volume;
 }
