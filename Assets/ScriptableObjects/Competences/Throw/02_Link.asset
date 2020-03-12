@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: 02_Link
   m_EditorClassIdentifier: 
   competenceName: Programmed Throw
-  competenceDescription: "Envoie le disque \xE0 la position cibl\xE9e, en passant
-    par les autres disque sur le terrain (du plus ancien au plus r\xE9cent)."
+  competenceDescription: Koura throws a disc passing through every other throw discs
+    in range, starting from the most ancient one
   competenceTooltip: 'Koura throws a disc passing through every other throw discs
     in range '
   competenceImage: {fileID: 21300000, guid: aaae1f8c31433ad4da21a2f17fbe759e, type: 3}
+  competenceTreeImage: {fileID: 21300000, guid: f45dbed3a6e989a4da3e4c0fda81da2c,
+    type: 3}
   actionPointsCost: 3
   unlocked: 0
   competencesUnlockedNeeded:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: a5c7209861a8a8043bdf7f7d46b04be2, type: 2}
   trajectoryModifiers:
   - {fileID: 11400000, guid: 17f7a0df3985a6a4293d98059dadc32f, type: 2}
