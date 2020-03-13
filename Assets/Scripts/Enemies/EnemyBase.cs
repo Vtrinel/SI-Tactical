@@ -33,6 +33,14 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] GameObject lifeBarEnemyPrefab;
     [SerializeField] Animator enemyAnimator = default;
     [SerializeField] AnimationEventsContainer animationEventContainer = default;
+    [SerializeField] Transform deathParticlePosition = default;
+    [SerializeField] List<MeshRenderer> meshesToDisolveOnDeath = default;
+    [SerializeField] List<SkinnedMeshRenderer> skinnedMeshesToDisolveOnDeath = default;
+    [SerializeField] AnimationCurve disolveAnimationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    [SerializeField] float deathDisolveAnimationDuration = 0.5f;
+    [SerializeField] float deathDisolveAnimationDelay = 0.2f;
+    [SerializeField] float deathDisolveMaxValue = 0.2f;
+    TimerSystem deathDissolveTimer = default;
     List<Image> lifeBarList = new List<Image>();
 
     public MeshRenderer TouniFourrureBasique;
@@ -82,9 +90,46 @@ public class EnemyBase : MonoBehaviour
         OnEnemyDeath?.Invoke(this);
         PlayerExperienceManager.Instance.GainGold(goldGain);
         SoundManager.Instance.PlaySound(Sound.EnemyDeath, gameObject.transform.position);
-        FxManager.Instance.CreateFx(FxType.enemyDeath, gameObject.transform.position);
-        Destroy(gameObject);
+        //FxManager.Instance.CreateFx(FxType.enemyDeath, gameObject.transform.position);
+        //Destroy(gameObject);
+        enemyHoverCirle.gameObject.SetActive(false);
+        animationEventContainer.SetEvent2(DestroyEnemy);
+        enemyAnimator.SetBool("Dead", true);
+
+        StartCoroutine(DeathDissolve());
     }   
+
+    IEnumerator DeathDissolve()
+    {
+        yield return new WaitForSeconds(deathDisolveAnimationDelay);
+        deathDissolveTimer = new TimerSystem(deathDisolveAnimationDuration, null);
+        deathDissolveTimer.StartTimer();
+        while (!deathDissolveTimer.TimerOver)
+        {
+            deathDissolveTimer.UpdateTimer();
+            foreach (MeshRenderer mesh in meshesToDisolveOnDeath)
+            {
+                mesh.material.SetFloat("_DissolveAmount", Mathf.Lerp(0, deathDisolveMaxValue, disolveAnimationCurve.Evaluate(deathDissolveTimer.GetTimerCoefficient)));
+            }
+
+            foreach (SkinnedMeshRenderer mesh in skinnedMeshesToDisolveOnDeath)
+            {
+                mesh.material.SetFloat("_DissolveAmount", Mathf.Lerp(0, deathDisolveMaxValue, disolveAnimationCurve.Evaluate(deathDissolveTimer.GetTimerCoefficient)));
+            }
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    public void DestroyEnemy()
+    {
+        Vector3 fxPos = transform.position;
+        if (deathParticlePosition != null)
+            fxPos = deathParticlePosition.position;
+
+        //FxManager.Instance.CreateFx(FxType.enemyDeath, fxPos);
+
+        Destroy(gameObject);
+    }
 
     [Header("Common Values")]
     [SerializeField] int baseInitiative = 1;
@@ -132,6 +177,7 @@ public class EnemyBase : MonoBehaviour
 
         InitLifeBar(damageReceiptionSystem.GetCurrentLifeAmount);
         tooltipCollider.SetValueInInfos(damageReceiptionSystem.GetCurrentLifeAmount);
+        enemyAnimator.SetBool("Dead", false);
     }
 
     public void SetUpInitiative()

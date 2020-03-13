@@ -5,7 +5,7 @@ using UnityEngine;
 public class ProjectileScript : MonoBehaviour
 {
     [SerializeField] Vector3 destination;
-    [SerializeField] float speed = 3;
+    [SerializeField] float speed = 30;
     [SerializeField] int damage = 1;
     [SerializeField] GameObject ObjLauncher;
     [SerializeField] Collider myCollider;
