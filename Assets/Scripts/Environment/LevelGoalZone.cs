@@ -56,6 +56,7 @@ public class LevelGoalZone : MonoBehaviour
             playerEnteredOnce = true;
             UIManager.Instance.OnGoalZoneReached();
             UpdateDescription(LevelProgressionManager.Instance.GetRemainingNumberOfTurn);
+            SoundManager.Instance.PlayMusic(Music.InBoss);
         }
     }
 
