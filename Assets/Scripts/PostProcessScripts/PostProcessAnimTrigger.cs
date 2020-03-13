@@ -5,11 +5,10 @@ using UnityEngine;
 public class PostProcessAnimTrigger : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] protected Animator postProcessAnimator;
-    [SerializeField] protected string animTriggerName = "PlayerDamaged";
+    [SerializeField] protected PostProcessAnimator postProcessAnimator;
 
     public void PlayPostProcessAnim()
     {
-        postProcessAnimator.SetTrigger(animTriggerName);
+        postProcessAnimator.StartAnim();
     }
 }

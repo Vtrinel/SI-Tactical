@@ -71,19 +71,19 @@ public class UIManager : MonoBehaviour
 
     public void AddExperience(int experience)
     {
-        myGoldBar.SetGoldValue(PlayerExperienceManager.Instance.GetGoldQuantity / 100.0f);
+        myGoldBar.SetGoldValue(PlayerExperienceManager.Instance.GetGoldQuantity, PlayerExperienceManager.Instance.GetGoldMaxQuantity);
     }
 
     public void LossExperience(int experience)
     {
         if (PlayerExperienceManager.Instance.GetGoldQuantity > 0)
         {
-            myGoldBar.SetGoldValue(PlayerExperienceManager.Instance.GetGoldQuantity / 100.0f);
+            myGoldBar.SetGoldValue(PlayerExperienceManager.Instance.GetGoldQuantity, PlayerExperienceManager.Instance.GetGoldMaxQuantity);
 
         }
         else
         {
-            myGoldBar.ForceSetValue(0);
+            myGoldBar.ForceSetValue(0, PlayerExperienceManager.Instance.GetGoldMaxQuantity);
         }
     }
 

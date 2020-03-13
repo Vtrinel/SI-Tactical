@@ -1,6 +1,4 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-Shader "Custom/UIOverall" {
+﻿Shader "Custom/UIOverall" {
 	Properties{
 		_MainTex("Font Texture", 2D) = "white" {}
 		_Color("Text Color", Color) = (1,1,1,1)

@@ -1,89 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1216314221344289615
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 9165982336634677364}
-  - component: {fileID: 3593795261428618688}
-  - component: {fileID: 4568474552119294518}
-  - component: {fileID: 902778497128215079}
-  m_Layer: 16
-  m_Name: PostProcess_PlayerShockwave
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &9165982336634677364
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1216314221344289615}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4955289573087558576}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3593795261428618688
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1216314221344289615}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 85db7232ee8acac47bc8c3c532fbfa03, type: 2}
-  isGlobal: 1
-  blendDistance: 0
-  weight: 0
-  priority: 1
---- !u!95 &4568474552119294518
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1216314221344289615}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 49027360f9b456a47b8f25073fdeee90, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &902778497128215079
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1216314221344289615}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c6c29db48746124088ec08805e6d9a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  postProcessAnimator: {fileID: 4568474552119294518}
-  animTriggerName: Shockwave
-  startDelay: 3
 --- !u!1 &2519572118980208953
 GameObject:
   m_ObjectHideFlags: 0
@@ -96,6 +12,7 @@ GameObject:
   - component: {fileID: 1137378397650068865}
   - component: {fileID: 809564299876968740}
   - component: {fileID: 9159212806468776399}
+  - component: {fileID: 9033226881497183891}
   m_Layer: 16
   m_Name: PostProcess_DamagedEnemy
   m_TagString: Untagged
@@ -129,11 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 0d4a3307f02a90d4f88f64b7985f77a0, type: 2}
+  sharedProfile: {fileID: 11400000, guid: da6f755657468bd4aa306231d6ee0cd8, type: 2}
   isGlobal: 1
   blendDistance: 0
   weight: 0
-  priority: 0
+  priority: 2
 --- !u!95 &809564299876968740
 Animator:
   serializedVersion: 3
@@ -142,7 +59,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2519572118980208953}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: f050f50b52c48a8489b6817bfd881aac, type: 2}
   m_CullingMode: 0
@@ -165,8 +82,182 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e269bfb74d10f484d9aa2d83602496c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  postProcessAnimator: {fileID: 809564299876968740}
-  animTriggerName: EnemyDamaged
+  postProcessAnimator: {fileID: 9033226881497183891}
+--- !u!114 &9033226881497183891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2519572118980208953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8641c829ca29844a94f99609dda453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: {fileID: 1137378397650068865}
+  animDuration: 1
+  animCount: 1.1302271
+  isAnimating: 0
+  bloom: {fileID: 0}
+  bloomAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.11470753
+      value: 0.96875083
+      inSlope: 0.048554897
+      outSlope: 0.048554897
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.2527422
+      value: 0.97249454
+      inSlope: -0.28663585
+      outSlope: -0.28663585
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.11628416
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5010437
+      value: 0.25775093
+      inSlope: -1.8168449
+      outSlope: -1.8168449
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.0023584962
+      inSlope: -0.07186452
+      outSlope: -0.07186452
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.13154869
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minBloomIntensity: 0.42
+  maxBloomIntensity: 3.11
+  chromaticAberration: {fileID: 0}
+  chromaticAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.018373653
+      value: 0.99676645
+      inSlope: 0.027745415
+      outSlope: 0.027745415
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.06992704
+    - serializedVersion: 3
+      time: 0.99487305
+      value: -0.0070762634
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minChromaticIntensity: 0.071
+  maxChromaticIntensity: 0.28
+  colorGrading: {fileID: 0}
+  postExposureAnimation:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minPostExposure: 0.87
+  maxPostExposure: 0
+  contrastAnimation:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minContrast: 71.7
+  maxContrast: 0
+  saturationAnimation:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minSaturation: -6.2
+  maxSaturation: 0
+  colorFilterAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.056110512
+      value: 0.963019
+      inSlope: 0.5804808
+      outSlope: 0.5804808
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.039404728
+    - serializedVersion: 3
+      time: 0.9935545
+      value: -0.0047261715
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  startColorFilter: {r: 1, g: 1, b: 1, a: 1}
+  endColorFilter: {r: 0.8798555, g: 0.8798555, b: 0.8798555, a: 1}
+  vignette: {fileID: 0}
+  vignetteAnimation:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minVignetteIntensity: 0.237
+  maxVignetteIntensity: 0
 --- !u!1 &4955289573087558582
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,7 +288,6 @@ Transform:
   m_Children:
   - {fileID: 3411144998470289562}
   - {fileID: 5559437917978611929}
-  - {fileID: 9165982336634677364}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -230,6 +320,7 @@ GameObject:
   - component: {fileID: 6858711231407897288}
   - component: {fileID: 5828929548208894807}
   - component: {fileID: 7617520194014239531}
+  - component: {fileID: 9018265394074964236}
   m_Layer: 16
   m_Name: PostProcess_PlayerDamaged
   m_TagString: Untagged
@@ -263,11 +354,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 6e74ee7d8c598334dbe9a697d54c100b, type: 2}
+  sharedProfile: {fileID: 11400000, guid: b396824a560930f45bfd50a0637228ca, type: 2}
   isGlobal: 1
   blendDistance: 0
   weight: 0
-  priority: 1
+  priority: 2
 --- !u!95 &5828929548208894807
 Animator:
   serializedVersion: 3
@@ -276,7 +367,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8812911879045722570}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 5ab754cf1afbe7d4b86b05e09c883609, type: 2}
   m_CullingMode: 0
@@ -299,5 +390,359 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0d7672cff3c86a43b4a354e95005222, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  postProcessAnimator: {fileID: 5828929548208894807}
-  animTriggerName: PlayerDamaged
+  postProcessAnimator: {fileID: 9018265394074964236}
+--- !u!114 &9018265394074964236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8812911879045722570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8641c829ca29844a94f99609dda453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: {fileID: 6858711231407897288}
+  animDuration: 5
+  animCount: 5.0033035
+  isAnimating: 0
+  bloom: {fileID: 0}
+  bloomAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.041419953
+      value: 0.31193784
+      inSlope: 0.027745415
+      outSlope: 0.027745415
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.06992704
+    - serializedVersion: 3
+      time: 0.29239544
+      value: 0.242733
+      inSlope: 0.1728242
+      outSlope: 0.1728242
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.13214971
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.31240988
+      value: 0.8880348
+      inSlope: 12.1435
+      outSlope: 0.3661802
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.81076545
+      outWeight: 0.11058473
+    - serializedVersion: 3
+      time: 0.99487305
+      value: -0.0070762634
+      inSlope: -0.11378841
+      outSlope: -0.11378841
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.32018375
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minBloomIntensity: 0.42
+  maxBloomIntensity: 2
+  chromaticAberration: {fileID: 0}
+  chromaticAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.011920899
+      value: 0.10341123
+      inSlope: 0.027745415
+      outSlope: 0.027745415
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.06992704
+    - serializedVersion: 3
+      time: 0.29879218
+      value: 0.012035876
+      inSlope: -0.022938361
+      outSlope: -0.022938361
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.15673254
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.32265946
+      value: 0.90733767
+      inSlope: 12.1435
+      outSlope: 0.047500543
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.81076545
+      outWeight: 0.12077631
+    - serializedVersion: 3
+      time: 0.7617651
+      value: 0.05919505
+      inSlope: -1.2957271
+      outSlope: -0.9438416
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.18513927
+      outWeight: 0.20355125
+    - serializedVersion: 3
+      time: 0.99487305
+      value: -0.0070762634
+      inSlope: -0.11378841
+      outSlope: -0.11378841
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.32018375
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minChromaticIntensity: 0.071
+  maxChromaticIntensity: 2
+  colorGrading: {fileID: 0}
+  postExposureAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.041419953
+      value: 0.31193784
+      inSlope: 0.027745415
+      outSlope: 0.027745415
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.06992704
+    - serializedVersion: 3
+      time: 0.30008152
+      value: 0.21263826
+      inSlope: 0.1728242
+      outSlope: 0.1728242
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.13214971
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.32009596
+      value: 0.8579401
+      inSlope: 12.1435
+      outSlope: 0.3661802
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.81076545
+      outWeight: 0.11058473
+    - serializedVersion: 3
+      time: 0.99487305
+      value: -0.0070762634
+      inSlope: -0.11378841
+      outSlope: -0.11378841
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.32018375
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minPostExposure: 0.87
+  maxPostExposure: 1.2
+  contrastAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.033737153
+      value: 0.047655612
+      inSlope: 0.027745415
+      outSlope: 0.027745415
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.06992704
+    - serializedVersion: 3
+      time: 0.3000935
+      value: 0.019252777
+      inSlope: 0.1728242
+      outSlope: 0.1728242
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.13214971
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.32779074
+      value: 0.89661026
+      inSlope: 12.1435
+      outSlope: 0.3661802
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.81076545
+      outWeight: 0.11058473
+    - serializedVersion: 3
+      time: 0.99487305
+      value: -0.0070762634
+      inSlope: -0.11378841
+      outSlope: -0.11378841
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.32018375
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minContrast: 71.7
+  maxContrast: 500
+  saturationAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.033737153
+      value: 0.047655612
+      inSlope: 0.027745415
+      outSlope: 0.027745415
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.06992704
+    - serializedVersion: 3
+      time: 0.3000935
+      value: 0.019252777
+      inSlope: 0.1728242
+      outSlope: 0.1728242
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.13214971
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.32779074
+      value: 0.89661026
+      inSlope: 12.1435
+      outSlope: 0.3661802
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.81076545
+      outWeight: 0.11058473
+    - serializedVersion: 3
+      time: 0.99487305
+      value: -0.0070762634
+      inSlope: -0.11378841
+      outSlope: -0.11378841
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.32018375
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minSaturation: -6.2
+  maxSaturation: 20
+  colorFilterAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.033737153
+      value: 0.047655612
+      inSlope: 0.027745415
+      outSlope: 0.027745415
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.06992704
+    - serializedVersion: 3
+      time: 0.3000935
+      value: 0.019252777
+      inSlope: 0.1728242
+      outSlope: 0.1728242
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.13214971
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.32779074
+      value: 0.89661026
+      inSlope: 12.1435
+      outSlope: 0.3661802
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.81076545
+      outWeight: 0.11058473
+    - serializedVersion: 3
+      time: 0.99487305
+      value: -0.0070762634
+      inSlope: -0.11378841
+      outSlope: -0.11378841
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.32018375
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  startColorFilter: {r: 1, g: 1, b: 1, a: 1}
+  endColorFilter: {r: 5.096277, g: 2.894221, b: 1.1779132, a: 1}
+  vignette: {fileID: 0}
+  vignetteAnimation:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minVignetteIntensity: 0.237
+  maxVignetteIntensity: 0

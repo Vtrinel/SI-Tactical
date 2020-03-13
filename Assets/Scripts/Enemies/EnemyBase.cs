@@ -33,6 +33,7 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] GameObject lifeBarEnemyPrefab;
     [SerializeField] Animator enemyAnimator = default;
     [SerializeField] AnimationEventsContainer animationEventContainer = default;
+    [SerializeField] Transform deathParticlePosition = default;
     List<Image> lifeBarList = new List<Image>();
 
     public MeshRenderer TouniFourrureBasique;
@@ -82,9 +83,22 @@ public class EnemyBase : MonoBehaviour
         OnEnemyDeath?.Invoke(this);
         PlayerExperienceManager.Instance.GainGold(goldGain);
         SoundManager.Instance.PlaySound(Sound.EnemyDeath, gameObject.transform.position);
-        FxManager.Instance.CreateFx(FxType.enemyDeath, gameObject.transform.position);
-        Destroy(gameObject);
+        //FxManager.Instance.CreateFx(FxType.enemyDeath, gameObject.transform.position);
+        //Destroy(gameObject);
+        animationEventContainer.SetEvent2(DestroyEnemy);
+        enemyAnimator.SetBool("Dead", true);
     }   
+
+    public void DestroyEnemy()
+    {
+        Vector3 fxPos = transform.position;
+        if (deathParticlePosition != null)
+            fxPos = deathParticlePosition.position;
+
+        FxManager.Instance.CreateFx(FxType.enemyDeath, fxPos);
+
+        Destroy(gameObject);
+    }
 
     [Header("Common Values")]
     [SerializeField] int baseInitiative = 1;
@@ -132,6 +146,7 @@ public class EnemyBase : MonoBehaviour
 
         InitLifeBar(damageReceiptionSystem.GetCurrentLifeAmount);
         tooltipCollider.SetValueInInfos(damageReceiptionSystem.GetCurrentLifeAmount);
+        enemyAnimator.SetBool("Dead", false);
     }
 
     public void SetUpInitiative()
