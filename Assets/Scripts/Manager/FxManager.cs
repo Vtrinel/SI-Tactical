@@ -44,6 +44,19 @@ public class FxManager : MonoBehaviour
         }
     }
 
+    public GameObject SendFx(FxType myTypeFx, Vector3 position)
+    {
+        FxGameObject fxGameObject = GetFxGameObject(myTypeFx);
+        if (fxGameObject != null)
+        {
+            GameObject newFx = Instantiate(fxGameObject.fxGameObject);
+            newFx.transform.position = position + fxGameObject.offset;
+
+            return newFx;
+        }
+        return null;
+    }
+
     bool CanCreateFx(FxType hisType)
     {
         bool canCreateFx = false;

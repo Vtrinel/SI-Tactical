@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class EnemySpawnPoint : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class EnemySpawnPoint : MonoBehaviour
     [SerializeField] bool definedEnemyWillAutoDetectPlayer = true;
     [SerializeField] DiscType definedLootedDisc = DiscType.None;
     [SerializeField] GameObject spawnZoneDebugObject = default;
+    private GameObject fxGameObject;
 
     private void Start()
     {
@@ -39,11 +41,14 @@ public class EnemySpawnPoint : MonoBehaviour
         /// For now, just spawn instant
         TurnManager.Instance.AddPendingSpawnPoint(this);
         spawnZoneDebugObject.SetActive(true);
+        fxGameObject = FxManager.Instance.SendFx(FxType.enemySpawnPreparation, gameObject.transform.position);
     }
 
     public void SpawnPendingEnemy()
     {
         SpawnEnemyOnSpawnPoint(spawnPendingEnemyType, spawnPendingWillAutoDetectPlayer, spawnPendingLootedDiscType);
+        Destroy(fxGameObject);
+        FxManager.Instance.CreateFx(FxType.enemySpawn, gameObject.transform.position);
     }
 
     public void SpawnEnemyOnSpawnPoint(EnemyType enemyTypeToSpawn, bool autoDetectPlayer, DiscType lootedDiscType)
@@ -57,7 +62,6 @@ public class EnemySpawnPoint : MonoBehaviour
         }
 
         spawnZoneDebugObject.SetActive(false);
-        //StartCoroutine(DebugCoroutine(enemyBase));
     }
 
     IEnumerator DebugCoroutine(EnemyBase enemy)

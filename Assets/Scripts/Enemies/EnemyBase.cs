@@ -63,7 +63,7 @@ public class EnemyBase : MonoBehaviour
         enemyAnimator.SetTrigger("Hit");
         enemyAnimator.SetInteger("RandomHit", UnityEngine.Random.Range(0, 2));
         PostProcessAnimEnemyDamaged.instance.PlayPostProcessAnim();
-        //FxManager.Instance.CreateFx(FxType.enemyDamage)
+        FxManager.Instance.CreateFx(FxType.enemyDamage, gameObject.transform.position);
         ShakeScriptableObjectManager.instance.LoadShake("ShakeSetting_EnnemyDamage");
     }
 
