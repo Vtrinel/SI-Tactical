@@ -32,6 +32,9 @@ public class FxManager : MonoBehaviour
         FxGameObject fxGameObject = GetFxGameObject(myTypeFx);
         if (fxGameObject != null)
         {
+            if (fxGameObject.fxGameObject == null)
+                return;
+
             GameObject newFx = Instantiate(fxGameObject.fxGameObject);
             newFx.transform.position = position + fxGameObject.offset;
         }
