@@ -231,7 +231,7 @@ public class DiscManager : MonoBehaviour
     public void PlayerRetreiveDisc(DiscScript retreivedDisc)
     {
         SoundManager.Instance.PlaySound(Sound.RecallDisc, player.position);
-        FxManager.Instance.CreateFx(FxType.discRecall, retreivedDisc.transform.position);
+        //FxManager.Instance.CreateFx(FxType.discRecall, retreivedDisc.transform.position);
 
 
         throwedDiscs.Remove(retreivedDisc);
