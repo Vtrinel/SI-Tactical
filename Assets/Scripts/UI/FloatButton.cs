@@ -84,11 +84,6 @@ public class FloatButton : MonoBehaviour
         isClicking = value;
     }
 
-    public void PassTurn()
-    {
-        TurnManager.Instance.EndPlayerTurn();
-    }
-
     bool _hover;
     public void SetHover(bool hover)
     {

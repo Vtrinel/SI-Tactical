@@ -9,6 +9,8 @@ public class EndTurnButton : MonoBehaviour
         GameManager.Instance.SelectAction(ActionType.None);
         TurnManager.Instance.EndPlayerTurn();
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+
+        GameManager.Instance.SetOnMouseInUI(false);
     }
 
 }
