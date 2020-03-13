@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
         GameManager.Instance.OnPlayerLifeAmountChanged += DebugLifeAmount;
         damageReceiptionSystem.OnLifeReachedZero += LifeReachedZero;
         damageReceiptionSystem.OnReceivedDamages += OnReceivedDamages;
+        tooltipCollider.OnStartTooltip += ShowTooltip;
+        tooltipCollider.OnEndTooltip += HideTooltip;
     }
 
     private void OnDisable()
@@ -18,6 +20,8 @@ public class PlayerController : MonoBehaviour
         GameManager.Instance.OnPlayerLifeAmountChanged -= DebugLifeAmount;
         damageReceiptionSystem.OnLifeReachedZero -= LifeReachedZero;
         damageReceiptionSystem.OnReceivedDamages -= OnReceivedDamages;
+        tooltipCollider.OnStartTooltip -= ShowTooltip;
+        tooltipCollider.OnEndTooltip -= HideTooltip;
     }
 
     private void Start()
@@ -25,6 +29,7 @@ public class PlayerController : MonoBehaviour
         damageReceiptionSystem.SetUpSystem(true);
         navMeshAgent.isStopped = true;
         positionStamp = transform.position;
+        tooltipCollider.SetTooltipInformations(TooltipInformationFactory.GetPlayerInfos(damageReceiptionSystem.GetCurrentLifeAmount));
     }
 
     private void Update()
@@ -67,6 +72,7 @@ public class PlayerController : MonoBehaviour
         TimeManager.Instance.StartSlowMotion();
         ShakeScriptableObjectManager.instance.LoadShake("ShakeSetting_player damage");
 
+        tooltipCollider.SetTooltipInformations(TooltipInformationFactory.GetPlayerInfos(damageReceiptionSystem.GetCurrentLifeAmount));
     }
 
     public void PlayRage()
@@ -261,5 +267,18 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
+
+    [Header("Feedbacks")]
+    [SerializeField] TooltipCollider tooltipCollider = default;
+    [SerializeField] Animator hoverAnimator = default;
+    public void ShowTooltip()
+    {
+        hoverAnimator.SetBool("Hovered", true);
+    }
+
+    public void HideTooltip()
+    {
+        hoverAnimator.SetBool("Hovered", false);
     }
 }

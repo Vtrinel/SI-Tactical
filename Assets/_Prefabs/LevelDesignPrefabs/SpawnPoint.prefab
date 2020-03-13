@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2286510262415613620
 Transform:
   m_ObjectHideFlags: 0
@@ -126,6 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   definedEnemyToSpawn: 1
-  definedEnemyWillAutoDetectPlayer: 1
+  definedEnemyWillAutoDetectPlayer: 0
   definedLootedDisc: 0
-  spawnZoneDebugObject: {fileID: 659197000398024635}
+  spawnZoneDebugObject: {fileID: 2238862261093880485, guid: 2729b6f5ae26af346a6832c0cd64a5f9,
+    type: 3}

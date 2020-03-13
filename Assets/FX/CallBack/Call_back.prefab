@@ -55,7 +55,7 @@ ParticleSystem:
   startDelay:
     serializedVersion: 2
     minMaxState: 0
-    scalar: 0
+    scalar: 0.15
     minScalar: 0
     maxCurve:
       serializedVersion: 2
@@ -1033,7 +1033,7 @@ ParticleSystem:
     curve:
       serializedVersion: 2
       minMaxState: 1
-      scalar: 2.5
+      scalar: 4.4
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -1066,8 +1066,8 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.58881193
-          value: 0.97087145
+          time: 0.37924773
+          value: 0.94889116
           inSlope: -1.4794751
           outSlope: -1.4794751
           tangentMode: 0
@@ -1075,8 +1075,8 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.996521
-          value: 0.19815063
+          time: 1
+          value: 0
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -4816,7 +4816,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_RenderMode: 0
+  m_RenderMode: 2
   m_SortMode: 0
   m_MinParticleSize: 0
   m_MaxParticleSize: 0.5
@@ -4894,7 +4894,7 @@ ParticleSystem:
   startDelay:
     serializedVersion: 2
     minMaxState: 0
-    scalar: 0
+    scalar: 0.15
     minScalar: 0
     maxCurve:
       serializedVersion: 2
@@ -5007,7 +5007,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: -5
+      scalar: -10.7
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -5872,7 +5872,7 @@ ParticleSystem:
     curve:
       serializedVersion: 2
       minMaxState: 1
-      scalar: 1.8
+      scalar: 2.8
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -5888,7 +5888,7 @@ ParticleSystem:
           outWeight: 0
         - serializedVersion: 3
           time: 1
-          value: 0.16589355
+          value: 0
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -14421,7 +14421,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19ab9c5621003d2448bd23e4e7e89992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particles: []
+  timeBeforeDelete: 5
 --- !u!1 &7986710282181733801
 GameObject:
   m_ObjectHideFlags: 0
