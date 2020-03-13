@@ -2,27 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class ChangeColorButton2 : MonoBehaviour
 {
     public Color32 ColorOutlineAndTest;
-    public GameObject Outline;
-    public GameObject Text;
+    public GameObject Cross;
 
     public void SetColortoSelection()
     {
-       
-        Outline.GetComponent<Image>().color = ColorOutlineAndTest;
-        Text.GetComponent<TextMeshPro>().color = ColorOutlineAndTest;
 
+        transform.localScale = new Vector3(1, 1, 1);
+        Cross.GetComponent<Image>().color = ColorOutlineAndTest;
     }
 
     public void SetColortoExitSelection()
     {
-      
-        Outline.GetComponent<Image>().color = Color.white;
-        Text.GetComponent<TextMeshPro>().color = Color.white;
-
+        transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
+        Cross.GetComponent<Image>().color = Color.white;
     }
 }

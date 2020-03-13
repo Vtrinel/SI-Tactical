@@ -147,8 +147,24 @@ public class SoundManager : MonoBehaviour
         {
             if (musicAudioClip.music == music && musicAudioClip.audioClip != null)
             {
+
+                if (musicAudioClip.music == Music.defeat || musicAudioClip.music == Music.Win)
+                {
+                    audioSource.loop = false;
+                }
+
                 audioSource.clip = musicAudioClip.audioClip;
                 audioSource.Play();
+
+                if (musicAudioClip.music == Music.fireLightUp || musicAudioClip.music == Music.Win)
+                {
+                    GameObject soundGameObject = new GameObject("Sound : " + currentCreatedClip.sound.ToString());
+                    AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
+
+                    audioSource.clip = musicAudioClip.audioClip;
+                    audioSource.loop = true;
+                    audioSource.Play();
+                }
             }
         }
     }
@@ -175,10 +191,7 @@ public enum Sound
     PlayerTeleport,
     SelectCompetence,
     NotEnoughActionPoint,
-    Win,
-    defeat,
     none,
-
 }
 
 
@@ -197,7 +210,10 @@ public enum Music
 {
     Menu,
     InGame,
-    InBoss
+    Win,
+    defeat,
+    InBoss,
+    fireLightUp,
 }
 
 // Group a name and an audioclip

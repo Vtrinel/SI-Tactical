@@ -34,6 +34,26 @@ public class LevelProgressionManager : MonoBehaviour
     [SerializeField] LevelGoalZone goalZone = default;
     public LevelGoalZone GetGoalZone => goalZone;
 
+    [Header("Progression Feedbacks")]
+    [SerializeField] ParticleSystem[] particlesToPlayOnProgress = new ParticleSystem[0];
+    public Transform GetNewFocusPoint
+    {
+        get
+        {
+            if(currentProgressValue + 1 == targetProgressValue)
+            {
+                return goalZone.GetTransformToLookAt;
+            }
+
+            if (currentProgressValue < particlesToPlayOnProgress.Length)
+            {
+                return particlesToPlayOnProgress[currentProgressValue].transform;
+            }
+
+            return goalZone.GetTransformToLookAt;
+        }
+    }
+
     [Header("Parameters")]
     [SerializeField] int targetProgressValue = 5;
     public int GetRemainingNumberOfTurn => targetProgressValue - currentProgressValue;
@@ -67,25 +87,44 @@ public class LevelProgressionManager : MonoBehaviour
 
     public IEnumerator LookAtGoal(int thisTurnProgress)
     {
-        CameraManager.instance.GetPlayerCamera.AttachFollowTransformTo(goalZone.transform);
+        ParticleSystem particlesToPlay = null;
+        if (currentProgressValue < particlesToPlayOnProgress.Length && particlesToPlayOnProgress.Length > 0)
+        {
+            particlesToPlay = particlesToPlayOnProgress[currentProgressValue];
+        }
+
+        CameraManager.instance.GetPlayerCamera.AttachFollowTransformTo(GetNewFocusPoint);
 
         yield return new WaitForSeconds(1f);
 
         currentProgressValue += thisTurnProgress;
         currentProgressValue = Mathf.Clamp(currentProgressValue, 0, targetProgressValue);
 
+        if (particlesToPlay != null)
+            particlesToPlay.gameObject.SetActive(true);
+
         OnProgressValueChanged?.Invoke(currentProgressValue, thisTurnProgress, targetProgressValue);
         UIManager.Instance.UpdateRemainingNumberOfTurns(targetProgressValue - currentProgressValue);
         if (currentProgressValue == targetProgressValue)
         {
             currentProgressValue = targetProgressValue;
-            OnGoalReached?.Invoke();
-            UIManager.Instance.OnGoalTurnAmountReached();
+            StartCoroutine(WinCoroutine());
         }
+        else
+        {
+            yield return new WaitForSeconds(1f);
 
-        yield return new WaitForSeconds(1f);
+            TurnManager.Instance.EndProgressionTurn();
+        }
+    }
 
-        TurnManager.Instance.EndProgressionTurn();
+    public IEnumerator WinCoroutine()
+    {
+        Debug.Log("Ouai c'est la cinématique de victoire");
+        yield return new WaitForSeconds(3f);
+
+        OnGoalReached?.Invoke();
+        UIManager.Instance.OnGoalTurnAmountReached();
     }
 
     public void SetUpGoalAnimation()
