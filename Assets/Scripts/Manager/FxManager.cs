@@ -134,7 +134,8 @@ public enum FxType
     statusExplosion,    //21
     totemUsable,    //22
 
-    none
+    none,
+    discExplosion
 }
 
 [System.Serializable]
