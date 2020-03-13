@@ -66,7 +66,6 @@ public class EnemyBase : MonoBehaviour
         PostProcessAnimEnemyDamaged.instance.PlayPostProcessAnim();
         FxManager.Instance.CreateFx(FxType.enemyDamage, gameObject.transform.position);
         ShakeScriptableObjectManager.instance.LoadShake("ShakeSetting_EnnemyDamage");
-        tooltipCollider.SetValueInInfos(currentAmount);
     }
 
     public Action<EnemyBase> OnEnemyDeath;
@@ -130,7 +129,6 @@ public class EnemyBase : MonoBehaviour
         }
 
         InitLifeBar(damageReceiptionSystem.GetCurrentLifeAmount);
-        tooltipCollider.SetValueInInfos(damageReceiptionSystem.GetCurrentLifeAmount);
     }
 
     public void SetUpInitiative()
