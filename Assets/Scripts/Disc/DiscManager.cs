@@ -17,7 +17,7 @@ public class DiscManager : MonoBehaviour
         throwRange++;
     }
 
-    Transform player;
+    PlayerController player;
 
     [SerializeField] bool showDebugGizmo = false;
 
@@ -48,7 +48,7 @@ public class DiscManager : MonoBehaviour
 
     private void Start()
     {
-        player = GameManager.Instance.GetPlayer.transform;
+        player = GameManager.Instance.GetPlayer;
         FillPossessedDiscsWithBasicDiscs();
     }
 
@@ -230,9 +230,7 @@ public class DiscManager : MonoBehaviour
     public Action<DiscScript> OnDiscAdded;
     public void PlayerRetreiveDisc(DiscScript retreivedDisc)
     {
-        SoundManager.Instance.PlaySound(Sound.RecallDisc, player.position);
-        //FxManager.Instance.CreateFx(FxType.discRecall, retreivedDisc.transform.position);
-
+        SoundManager.Instance.PlaySound(Sound.RecallDisc, player.transform.position);
 
         throwedDiscs.Remove(retreivedDisc);
         ReturnDiscInPool(retreivedDisc);
@@ -309,7 +307,7 @@ public class DiscManager : MonoBehaviour
 
             SoundManager.Instance.PlaySound(Sound.ThrowDisc, newDisc.transform.position);
 
-            FxManager.Instance.CreateFxThrow(FxType.discThrow, player.transform.position, player.transform.rotation);
+            FxManager.Instance.CreateFxThrow(FxType.discThrow, player.GetThrowSocket, player.transform.rotation);
         }
         return newDisc;
     }
