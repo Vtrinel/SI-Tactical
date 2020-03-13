@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2610538317989537978}
   m_LocalRotation: {x: 1, y: -0, z: -0, w: 0}
-  m_LocalPosition: {x: -3.085176, y: -2.714614, z: -1.3939767}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5888101472760748981}
@@ -55,7 +55,7 @@ ParticleSystem:
   startDelay:
     serializedVersion: 2
     minMaxState: 0
-    scalar: 0
+    scalar: 1.45
     minScalar: 0
     maxCurve:
       serializedVersion: 2
@@ -4731,7 +4731,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5063100734779105029}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 3.085176, y: 1.3939764, z: -2.714614}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2635262806641266472}
@@ -9472,3 +9472,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19ab9c5621003d2448bd23e4e7e89992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeBeforeDelete: 5

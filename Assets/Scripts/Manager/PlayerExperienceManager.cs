@@ -24,7 +24,7 @@ public class PlayerExperienceManager : MonoBehaviour
     public static PlayerExperienceManager _instance;
 
     [Header("Interface modifications")]
-    public Canvas competenceCanvas;
+    public GameObject competenceCanvas;
     public TextMeshProUGUI competenceInfoText;
 
     [Header("Menus Competences")]
@@ -141,7 +141,7 @@ public class PlayerExperienceManager : MonoBehaviour
     public void IsCompetenceInterfaceShowing()
     {
         isCanvasCompetenceShowed = !isCanvasCompetenceShowed;
-        competenceCanvas.gameObject.SetActive(isCanvasCompetenceShowed);
+        competenceCanvas.SetActive(isCanvasCompetenceShowed);
         OnMenuOpenedOrClosed?.Invoke();
     }
 
@@ -260,7 +260,7 @@ public class PlayerExperienceManager : MonoBehaviour
     public void CloseCompetenceInterface()
     {
         isCanvasCompetenceShowed = !isCanvasCompetenceShowed;
-        competenceCanvas.gameObject.SetActive(isCanvasCompetenceShowed);
+        competenceCanvas.SetActive(isCanvasCompetenceShowed);
         OnMenuOpenedOrClosed?.Invoke();
     }
 
