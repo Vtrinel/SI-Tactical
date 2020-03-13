@@ -21,6 +21,9 @@ public class LevelGoalZone : MonoBehaviour
     [SerializeField] Color playerIsInRangeColor = Color.yellow;
     [SerializeField] Image progressBar = default;
 
+    [Header("Tooltips")]
+    [SerializeField] TooltipCollider tooltipCollider = default;
+
     bool playerEnteredOnce = false;
     bool playerIsInRange = false;
     public void CheckIfPlayerIsInRange(Vector3 playerPos)
@@ -67,10 +70,25 @@ public class LevelGoalZone : MonoBehaviour
     private void OnEnable()
     {
         GameManager.Instance.OnPlayerPositionChanged += CheckIfPlayerIsInRange;
+        tooltipCollider.OnStartTooltip += StartTooltip;
+        tooltipCollider.OnEndTooltip += EndTootlip;
     }
 
     private void OnDisable()
     {
         GameManager.Instance.OnPlayerPositionChanged -= CheckIfPlayerIsInRange;
+        tooltipCollider.OnStartTooltip -= StartTooltip;
+        tooltipCollider.OnEndTooltip -= EndTootlip;
     }
+
+    public void StartTooltip()
+    {
+
+    }
+
+    public void EndTootlip()
+    {
+
+    }
+
 }
