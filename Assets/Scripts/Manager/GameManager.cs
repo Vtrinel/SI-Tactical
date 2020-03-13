@@ -70,6 +70,9 @@ public class GameManager : MonoBehaviour
         UpdateGameManagement();
 
         tooltipsManagementSystem.UpdateSystem(currentWorldMouseResult.currentTooltipable);
+
+        if (Input.GetKeyDown(KeyCode.KeypadPlus))
+            playerExperienceManager.GainGold(20);
     }
 
     private void LateUpdate()

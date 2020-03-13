@@ -9,10 +9,16 @@ public class HealthBar : MonoBehaviour
     private int maxHealth;
 
     [SerializeField] int currentHealth;
+    [SerializeField] TooltipColliderUI tooltipCollider = default;
 
     public GameObject healthPoint;
 
     [SerializeField] List<LifeElement> allLifeBarElement = new List<LifeElement>();
+
+    private void Start()
+    {
+        tooltipCollider.SetName("Health Points : " + 3);
+    }
 
     private void OnEnable()
     {
@@ -27,6 +33,8 @@ public class HealthBar : MonoBehaviour
     void UpdateLifeBar(int _numberLives)
     {
         currentHealth = _numberLives;
+
+        tooltipCollider.SetName("Health Points : " + currentHealth);
 
         int i = 0;
 
