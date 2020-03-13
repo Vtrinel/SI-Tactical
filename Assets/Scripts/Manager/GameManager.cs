@@ -462,7 +462,6 @@ public class GameManager : MonoBehaviour
     public void UpdatePlayerActability()
     {
         bool canAct = GetPlayerCanAct;
-
         UIManager.Instance.ChangeEndTurnButtonVisibility(canAct);
 
         player.SetAbleToAct(canAct);
