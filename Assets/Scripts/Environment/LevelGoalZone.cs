@@ -21,6 +21,9 @@ public class LevelGoalZone : MonoBehaviour
     [SerializeField] Color playerIsInRangeColor = Color.yellow;
     [SerializeField] Image progressBar = default;
 
+    [Header("Tooltips")]
+    [SerializeField] TooltipCollider tooltipCollider = default;
+
     bool playerEnteredOnce = false;
     bool playerIsInRange = false;
     public void CheckIfPlayerIsInRange(Vector3 playerPos)
@@ -48,6 +51,7 @@ public class LevelGoalZone : MonoBehaviour
         {
             playerEnteredOnce = true;
             UIManager.Instance.OnGoalZoneReached();
+            UpdateDescription(LevelProgressionManager.Instance.GetRemainingNumberOfTurn);
         }
     }
 
@@ -58,19 +62,65 @@ public class LevelGoalZone : MonoBehaviour
 
     public void UpdateProgressionBar(int currentProgress, int deltaProgress, int targetProgress)
     {
+        UpdateDescription(LevelProgressionManager.Instance.GetRemainingNumberOfTurn);
         if (progressBar != null)
         {
             progressBar.fillAmount = (float)currentProgress / targetProgress;
         }
     }
 
+    private void Start()
+    {
+        SetStartDescription();
+    }
+
     private void OnEnable()
     {
         GameManager.Instance.OnPlayerPositionChanged += CheckIfPlayerIsInRange;
+        if (tooltipCollider != null)
+        {
+            tooltipCollider.OnStartTooltip += StartTooltip;
+            tooltipCollider.OnEndTooltip += EndTootlip;
+        }
     }
 
     private void OnDisable()
     {
         GameManager.Instance.OnPlayerPositionChanged -= CheckIfPlayerIsInRange;
+        if (tooltipCollider != null)
+        {
+            tooltipCollider.OnStartTooltip -= StartTooltip;
+            tooltipCollider.OnEndTooltip -= EndTootlip;
+        }
+    }
+
+    public void StartTooltip()
+    {
+
+    }
+
+    public void EndTootlip()
+    {
+
+    }
+
+    public void SetStartDescription()
+    {
+        if (tooltipCollider != null)
+        {
+            tooltipCollider.SetDescription("Enter the area to start the corruption of the God's Statue");
+        }
+        else
+            Debug.Log("Enter the area to start the corruption of the God's Statue");
+    }
+
+    public void UpdateDescription(int turnValue)
+    {
+        if (tooltipCollider != null)
+        {
+            tooltipCollider.SetDescription("Stay near the statue for " + turnValue + " more turns to complete corruption");
+        }
+        else
+            Debug.Log("Stay near the statue for " + turnValue + " more turns to complete corruption");
     }
 }
