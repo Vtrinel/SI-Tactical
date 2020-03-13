@@ -61,11 +61,12 @@ public class GoldBar : MonoBehaviour
     {
         goldBar.fillAmount = Mathf.Lerp(goldBar.fillAmount, currentGold, Time.deltaTime * timeToFill);
 
-        if((maxGold && maxGoldAnimationCounter < maxGoldTextApparitionDuration) || (!maxGold && maxGoldAnimationCounter == maxGoldTextApparitionDuration))
+        if((maxGold && maxGoldAnimationCounter < maxGoldTextApparitionDuration) || (!maxGold && maxGoldAnimationCounter > 0))
         {
+            Debug.Log(maxGoldAnimationCounter);
             maxGoldAnimationCounter += Time.deltaTime * (maxGold ? 1 : -1);
             maxGoldAnimationCounter = Mathf.Clamp(maxGoldAnimationCounter, 0, maxGoldTextApparitionDuration);
-            Color newColor = Color.Lerp(maxGoldReachedHiddenColor, maxGoldReachedShownColor, maxGoldTextApparitionCurve.Evaluate(maxGoldAnimationCounter));
+            Color newColor = Color.Lerp(maxGoldReachedHiddenColor, maxGoldReachedShownColor, maxGoldTextApparitionCurve.Evaluate(maxGoldAnimationCounter/ maxGoldTextApparitionDuration));
             maxGoldReachedText.color = newColor;
             maxGoldReachedImage.color = newColor;
         }
