@@ -41,8 +41,11 @@ public class TooltipInterface : MonoBehaviour
     bool forceTooltipPosition = false;
     RectTransform forcedTooltipPosition = null;
     TooltipForcedPositionType tooltipForcedPositionType = TooltipForcedPositionType.None;
+    TooltipInformations currentTootipInfos = default;
     public void SetTooltipInfos(TooltipInformations infos)
     {
+        currentTootipInfos = infos; 
+
         isRegularSizeTooltip = !infos.miniSizeTooltip;
         currentTooltipBackgroundTr = isRegularSizeTooltip ? backgroundRectTr : miniTooltipBackgroundRectTr;
         if (isRegularSizeTooltip)
@@ -61,7 +64,7 @@ public class TooltipInterface : MonoBehaviour
                     break;
 
                 case TooltipAdditionalInformationType.LifePoints:
-                    tooltipName.text = tooltipName.text + " - State : " + infos.tooltipAdditionalInformationValue + " HP";
+                    tooltipName.text = tooltipName.text + " - " + infos.tooltipAdditionalInformationValue + " HP";
                     break;
 
                 case TooltipAdditionalInformationType.Damage:
@@ -74,6 +77,10 @@ public class TooltipInterface : MonoBehaviour
             tooltipParent.SetActive(false);
             miniTooltipParent.SetActive(true);
             miniTooltipText.text = infos.tooltipName;
+            if (infos.tooltipAdditionalInformationType == TooltipAdditionalInformationType.LifePoints)
+            {
+                miniTooltipText.text = miniTooltipText.text + " - " + infos.tooltipAdditionalInformationValue + " HP";
+            }
         }
 
         forcedTooltipPosition = infos.forcedTooltipLPosition;
