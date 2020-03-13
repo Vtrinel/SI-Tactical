@@ -15,6 +15,9 @@ public class LevelGoalZone : MonoBehaviour
         if (progressBar) progressBar.fillAmount = 0;
     }
 
+    [SerializeField] Transform transformToLookAt = default;
+    public Transform GetTransformToLookAt { get { if (transformToLookAt != null) return transformToLookAt; else return transform; } }
+
     [Header("Main Parameters")]
     [SerializeField] float zoneRadius = 8f;
 

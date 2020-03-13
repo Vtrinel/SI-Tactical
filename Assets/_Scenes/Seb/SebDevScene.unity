@@ -857,6 +857,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a04264c83e61354185d55c19bdd2dac, type: 3}
+--- !u!198 &374806972 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 302849622301781759, guid: 0a04264c83e61354185d55c19bdd2dac,
+    type: 3}
+  m_PrefabInstance: {fileID: 374806971}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &475537994
 GameObject:
   m_ObjectHideFlags: 0
@@ -1334,6 +1340,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a04264c83e61354185d55c19bdd2dac, type: 3}
+--- !u!198 &549512872 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 302849622301781759, guid: 0a04264c83e61354185d55c19bdd2dac,
+    type: 3}
+  m_PrefabInstance: {fileID: 549512871}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &619608558
 GameObject:
   m_ObjectHideFlags: 0
@@ -1793,6 +1805,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a04264c83e61354185d55c19bdd2dac, type: 3}
+--- !u!198 &822901104 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 302849622301781759, guid: 0a04264c83e61354185d55c19bdd2dac,
+    type: 3}
+  m_PrefabInstance: {fileID: 822901103}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &963409445
 GameObject:
   m_ObjectHideFlags: 0
@@ -2670,6 +2688,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fa8513ef99fd6645a2d4ed5ae3944d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transformToLookAt: {fileID: 0}
   zoneRadius: 8
   debugZone: {fileID: 500751735}
   normalColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -3301,6 +3320,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a04264c83e61354185d55c19bdd2dac, type: 3}
+--- !u!198 &1961390579 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 302849622301781759, guid: 0a04264c83e61354185d55c19bdd2dac,
+    type: 3}
+  m_PrefabInstance: {fileID: 1961390578}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1963079721
 GameObject:
   m_ObjectHideFlags: 0
@@ -4463,9 +4488,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8039230802851835635, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
         type: 3}
+      propertyPath: particlesToPlayOnProgress.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8039230802851835635, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
       propertyPath: goalZone
       value: 
       objectReference: {fileID: 503019097}
+    - target: {fileID: 8039230802851835635, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: targetProgressValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8039230802851835635, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: particlesToPlayOnProgress.Array.data[0]
+      value: 
+      objectReference: {fileID: 822901104}
+    - target: {fileID: 8039230802851835635, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: particlesToPlayOnProgress.Array.data[1]
+      value: 
+      objectReference: {fileID: 549512872}
+    - target: {fileID: 8039230802851835635, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: particlesToPlayOnProgress.Array.data[2]
+      value: 
+      objectReference: {fileID: 1961390579}
+    - target: {fileID: 8039230802851835635, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: particlesToPlayOnProgress.Array.data[3]
+      value: 
+      objectReference: {fileID: 374806972}
     - target: {fileID: 8174174555497167309, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
         type: 3}
       propertyPath: m_AnchorMin.y
