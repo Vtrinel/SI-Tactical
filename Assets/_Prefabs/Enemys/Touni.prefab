@@ -349,7 +349,7 @@ MonoBehaviour:
   isPreparing: 0
   myShieldManager: {fileID: 8771358726133287938}
   haveDetectPlayer: 0
-  detectionPlayerRange: 10
+  detectionPlayerRange: 14
   detectionMaskRaycast:
     serializedVersion: 2
     m_Bits: 16896
@@ -558,6 +558,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TooltipDisc
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133559819239897629, guid: b400a778ee8cfca43a78b0a2e9c03194,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8302416757090523159, guid: b400a778ee8cfca43a78b0a2e9c03194,
         type: 3}
@@ -1653,6 +1658,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeplacementPreview
       objectReference: {fileID: 0}
+    - target: {fileID: 331215054797682108, guid: e4ea51d6e1638774b8f200657b9d000b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 912769019658579482, guid: e4ea51d6e1638774b8f200657b9d000b,
         type: 3}
       propertyPath: myNavAgent
@@ -1745,6 +1755,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3894817726808940225}
     m_Modifications:
+    - target: {fileID: 2145000198524606237, guid: 63234ee1d16265d41bfaaafaa13d74fc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2541241942041627738, guid: 63234ee1d16265d41bfaaafaa13d74fc,
         type: 3}
       propertyPath: m_Enabled
@@ -1754,6 +1769,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EnemyLifeBarParent
+      objectReference: {fileID: 0}
+    - target: {fileID: 3616159053421681047, guid: 63234ee1d16265d41bfaaafaa13d74fc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7204792348180179377, guid: 63234ee1d16265d41bfaaafaa13d74fc,
         type: 3}
