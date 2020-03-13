@@ -126,6 +126,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject startPanel = default;
     [SerializeField] GameObject winPanel = default;
     [SerializeField] GameObject losePanel = default;
+    [SerializeField] AppelEnding endingScreen = default;
+
     public void ShowStartPanel()
     {
         startPanel.SetActive(true);
@@ -138,12 +140,14 @@ public class UIManager : MonoBehaviour
 
     public void ShowWinPanel()
     {
-        winPanel.SetActive(true);
+        //winPanel.SetActive(true);
+        endingScreen.LoadYouWin();
     }
 
     public void ShowLosePanel()
     {
-        losePanel.SetActive(true);
+        //losePanel.SetActive(true);
+        endingScreen.LoadYouLose();
     }
     #endregion
 
@@ -226,7 +230,6 @@ public class UIManager : MonoBehaviour
         goalPanelAnimator.SetTrigger("reachedGoalTurn");
     }
     #endregion
-
 
     private void Update()
     {

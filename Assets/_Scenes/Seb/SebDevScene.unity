@@ -2688,6 +2688,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fa8513ef99fd6645a2d4ed5ae3944d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  particlesToPlayOnWin: {fileID: 0}
   transformToLookAt: {fileID: 0}
   zoneRadius: 8
   debugZone: {fileID: 500751735}
@@ -2900,7 +2901,7 @@ PrefabInstance:
     - target: {fileID: 5174580651033077494, guid: 681b8a790dedb3047b833ff671178d59,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.75
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5174580651033077494, guid: 681b8a790dedb3047b833ff671178d59,
         type: 3}
@@ -2910,7 +2911,7 @@ PrefabInstance:
     - target: {fileID: 5174580651033077494, guid: 681b8a790dedb3047b833ff671178d59,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6.78
+      value: -10.92
       objectReference: {fileID: 0}
     - target: {fileID: 5174580651033077494, guid: 681b8a790dedb3047b833ff671178d59,
         type: 3}
@@ -3563,6 +3564,11 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1370978921024690701, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -9.825195
+      objectReference: {fileID: 0}
     - target: {fileID: 1571123449250480352, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -3692,6 +3698,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1988203453925216359, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -42.5
       objectReference: {fileID: 0}
     - target: {fileID: 2062849130188360222, guid: 1a48dc2ea1153cf40a87f45b9b5db6a6,
         type: 3}

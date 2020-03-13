@@ -4,15 +4,8 @@ using UnityEngine;
 
 public class GoBackToMenuButton : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public void GoToMenu()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        GameManager.Instance.GoBackToMenu();
     }
 }

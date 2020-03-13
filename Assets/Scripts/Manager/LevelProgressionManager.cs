@@ -121,8 +121,10 @@ public class LevelProgressionManager : MonoBehaviour
     public IEnumerator WinCoroutine()
     {
         goalZone.PlayWinParticles();
+        TurnManager.Instance.WonGame();
+        SoundManager.Instance.PlayMusic(Music.Win);
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2f);
 
         OnGoalReached?.Invoke();
         UIManager.Instance.OnGoalTurnAmountReached();

@@ -4,15 +4,8 @@ using UnityEngine;
 
 public class RestartLevelButton : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public void Restart()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        GameManager.Instance.RestartGame();
     }
 }

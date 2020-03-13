@@ -550,9 +550,7 @@ public class GameManager : MonoBehaviour
     {
         //Debug.Log("YOU WIN");
         gameWon = true;
-        turnManager.WonGame();
         UIManager.Instance.ShowWinPanel();
-        SoundManager.Instance.PlayMusic(Music.Win);
     }
 
     public void LoseGame()
