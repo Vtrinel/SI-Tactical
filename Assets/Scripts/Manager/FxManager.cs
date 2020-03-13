@@ -147,7 +147,7 @@ public enum FxType
     competenceExplosion,    //20
 
     // Environmenent
-    statusExplosion,    //21
+    statueExplosion,    //21
     totemUsable,    //22
 
     none,

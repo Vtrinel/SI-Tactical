@@ -16,8 +16,12 @@ public class TotemZone : MonoBehaviour
     [SerializeField] SpriteRenderer debugZone = default;
     [SerializeField] Color normalColor = Color.grey;
     [SerializeField] Color playerIsInRangeColor = Color.blue;
-    [SerializeField] Text competenceMenuShortcut = default;
-    [SerializeField] PlayerController playerController = default;
+    PlayerController playerController = default;
+
+    private void Start()
+    {
+        playerController = GameManager.Instance.GetPlayer;
+    }
 
     bool playerIsInRange = false;
     public void CheckIfPlayerIsInRange(Vector3 playerPos)
@@ -37,12 +41,13 @@ public class TotemZone : MonoBehaviour
         if (inRange == playerIsInRange)
             return;
 
+        print("test");
+
         playerIsInRange = inRange;
 
         debugZone.color = playerIsInRange ? playerIsInRangeColor : normalColor;
 
-        competenceMenuShortcut.text = playerController.GetCompetenceMenuInput.ToString();
-        competenceMenuShortcut.gameObject.SetActive(playerIsInRange);
+        UIManager.Instance.ShowSkillButton(playerIsInRange);
 
         PlayerExperienceManager.Instance.CanOpenCompetenceMenu(playerIsInRange);
     }
@@ -55,5 +60,11 @@ public class TotemZone : MonoBehaviour
     private void OnDisable()
     {
         GameManager.Instance.OnPlayerPositionChanged -= CheckIfPlayerIsInRange;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, zoneRadius);
     }
 }

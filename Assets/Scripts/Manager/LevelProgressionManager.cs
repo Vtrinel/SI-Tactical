@@ -120,7 +120,8 @@ public class LevelProgressionManager : MonoBehaviour
 
     public IEnumerator WinCoroutine()
     {
-        Debug.Log("Ouai c'est la cinématique de victoire");
+        goalZone.PlayWinParticles();
+
         yield return new WaitForSeconds(3f);
 
         OnGoalReached?.Invoke();

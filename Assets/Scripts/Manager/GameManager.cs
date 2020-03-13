@@ -531,12 +531,20 @@ public class GameManager : MonoBehaviour
         levelManager.SetUpGoalAnimation();
     }
 
-    bool restarting = false;
+    bool transitingScene = false;
     public void RestartGame()
     {
-        if (restarting) return;
-        restarting = true;
+        if (transitingScene) return;
+        transitingScene = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void GoBackToMenu()
+    {
+        if (transitingScene) return;
+        transitingScene = true;
+
+        SceneManager.LoadScene("Menu_testv2");
     }
 
     public void WinGame()
