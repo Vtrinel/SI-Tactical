@@ -61,6 +61,11 @@ public class PointActionBar : MonoBehaviour
             {
                 _pointBar.PA_Animator.Rebind();
                 _pointBar.PA_Animator.SetBool("InPreview", true);
+
+                if( i >= possessedActionPoints)
+                {
+                    _pointBar.PA_Animator.SetBool("InPreview", false);
+                }
             }
             i++;
         }

@@ -23,6 +23,7 @@ public class PAElement : MonoBehaviour
             else
             {
                 PA_Animator.SetTrigger("Use");
+                PA_Animator.SetBool("InPreview", false);
             }
         }
 
