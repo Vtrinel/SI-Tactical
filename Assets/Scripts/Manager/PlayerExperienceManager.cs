@@ -24,7 +24,7 @@ public class PlayerExperienceManager : MonoBehaviour
     public static PlayerExperienceManager _instance;
 
     [Header("Interface modifications")]
-    public Canvas competenceCanvas;
+    public GameObject competenceCanvas;
     public TextMeshProUGUI competenceInfoText;
 
     [Header("Menus Competences")]
@@ -69,6 +69,7 @@ public class PlayerExperienceManager : MonoBehaviour
     private bool isCanvasCompetenceShowed = false;
     public bool IsUsingCompetencesMenu => isCanvasCompetenceShowed;
     public int GetGoldQuantity => goldBar;
+    public int GetGoldMaxQuantity => goldToUnlockCompetence;
 
     // For the singleton
     private void Awake()
@@ -141,7 +142,7 @@ public class PlayerExperienceManager : MonoBehaviour
     public void IsCompetenceInterfaceShowing()
     {
         isCanvasCompetenceShowed = !isCanvasCompetenceShowed;
-        competenceCanvas.gameObject.SetActive(isCanvasCompetenceShowed);
+        competenceCanvas.SetActive(isCanvasCompetenceShowed);
         OnMenuOpenedOrClosed?.Invoke();
     }
 
@@ -212,6 +213,7 @@ public class PlayerExperienceManager : MonoBehaviour
     public void GainGold(int experience)
     {
         goldBar += experience;
+        goldBar = Mathf.Clamp(goldBar, 0, goldToUnlockCompetence);
         OnGainGold?.Invoke(experience);
     }
 
@@ -260,7 +262,7 @@ public class PlayerExperienceManager : MonoBehaviour
     public void CloseCompetenceInterface()
     {
         isCanvasCompetenceShowed = !isCanvasCompetenceShowed;
-        competenceCanvas.gameObject.SetActive(isCanvasCompetenceShowed);
+        competenceCanvas.SetActive(isCanvasCompetenceShowed);
         OnMenuOpenedOrClosed?.Invoke();
     }
 

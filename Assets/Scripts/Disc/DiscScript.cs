@@ -105,6 +105,7 @@ public class DiscScript : MonoBehaviour
         discHoverCirle.SetHovered(false);
     }
 
+    bool inRangeStamp = false;
     void Update()
     {
         if (currentTrajectory.Count > 0)
@@ -112,6 +113,15 @@ public class DiscScript : MonoBehaviour
 
         myAnimator.SetBool("Forward", isAttacking);
         myAnimator.SetBool("InRange", isInRange);
+
+        if(isInRange != inRangeStamp)
+        {
+            if(isInRange)
+            FxManager.Instance.CreateFx(FxType.enterRecallZone, gameObject.transform.position);
+            else
+                FxManager.Instance.CreateFx(FxType.leaveRecallZone, gameObject.transform.position);
+            inRangeStamp = isInRange;
+        }
     }
 
     private void OnEnable()
@@ -458,13 +468,11 @@ public class DiscScript : MonoBehaviour
     public void StartHovering()
     {
         discHoverCirle.SetHovered(true);
-            FxManager.Instance.CreateFx(FxType.enterRecallZone, gameObject.transform.position);
     }
 
     public void EndHovering()
     {
         discHoverCirle.SetHovered(false);
-        FxManager.Instance.CreateFx(FxType.leaveRecallZone, gameObject.transform.position);
 
     }
 }

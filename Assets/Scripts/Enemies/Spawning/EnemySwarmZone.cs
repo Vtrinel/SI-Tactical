@@ -124,7 +124,8 @@ public class EnemySwarmZone : MonoBehaviour
 
         foreach (SpawnPointEnemyCouple couple in enemiesToSpawn)
         {
-            couple.spawnPoint.StartSpawning(couple.enemyType, spawnedEnemiesAutoDetectPlayer, couple.attachedDiscType);
+            if (couple.spawnPoint != null)
+                couple.spawnPoint.StartSpawning(couple.enemyType, spawnedEnemiesAutoDetectPlayer, couple.attachedDiscType);
         }
 
         EndWaveTurn();
