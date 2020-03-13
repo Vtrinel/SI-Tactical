@@ -6,6 +6,8 @@ public class SoundManager : MonoBehaviour
     private static SoundManager _instance;
     public static SoundManager Instance { get { return _instance; } }
 
+    public GameObject soundFire;
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -141,6 +143,11 @@ public class SoundManager : MonoBehaviour
 
     #region Musics
 
+    public void ActiveFire()
+    {
+        soundFire.SetActive(true);
+    }
+
     public void PlayMusic(Music music)
     {
         foreach( MusicAudioClip musicAudioClip in MusicBGMList)
@@ -153,19 +160,8 @@ public class SoundManager : MonoBehaviour
                     audioSource.loop = false;
                 }
 
-                if (musicAudioClip.music == Music.fireLightUp)
-                {
-                    GameObject soundGameObject = new GameObject("Sound : " + currentCreatedClip.sound.ToString());
-                    AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
-
-                    audioSource.clip = musicAudioClip.audioClip;
-                    audioSource.loop = true;
-                }
-
                 audioSource.clip = musicAudioClip.audioClip;
                 audioSource.Play();
-
-                
             }
         }
     }

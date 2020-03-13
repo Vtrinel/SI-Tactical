@@ -87,7 +87,7 @@ public class LevelGoalZone : MonoBehaviour
         if(currentProgress > 0 && !fireSoundPlayed)
         {
             fireSoundPlayed = true;
-            SoundManager.Instance.PlayMusic(Music.fireLightUp);
+            SoundManager.Instance.ActiveFire();
         }
         SoundManager.Instance.PlaySound(Sound.statueCrack, gameObject.transform.position);
     }
