@@ -162,6 +162,7 @@ MonoBehaviour:
   navMeshAgent: {fileID: 2022475993876897125}
   damageReceiptionSystem: {fileID: 3147054295566447194}
   knockbackReceiptionSystem: {fileID: 5640311280364435821}
+  throwSocket: {fileID: 6855911299818822216}
   rageEffectZonePrefab: {fileID: 2679825475301777187, guid: 672902533ef626243b0a705c8e10a82b,
     type: 3}
   rageEffectZoneVerticalOffset: 1
@@ -448,6 +449,36 @@ MonoBehaviour:
   deathTriggerParameter: Dead
   debugMode: 0
   isMovingDebug: 0
+--- !u!1 &6981218414880024608
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6855911299818822216}
+  m_Layer: 0
+  m_Name: ThrowSocket
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6855911299818822216
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6981218414880024608}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.066, y: 0.11, z: -0.02}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5183112097939839137}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7198781468782072723
 GameObject:
   m_ObjectHideFlags: 0
@@ -1324,6 +1355,12 @@ GameObject:
 --- !u!4 &7363580258972736090 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: c51d5ea87c8c9a94a89671978b689937,
+    type: 3}
+  m_PrefabInstance: {fileID: 2542851492830753088}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5183112097939839137 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7251948822895815137, guid: c51d5ea87c8c9a94a89671978b689937,
     type: 3}
   m_PrefabInstance: {fileID: 2542851492830753088}
   m_PrefabAsset: {fileID: 0}

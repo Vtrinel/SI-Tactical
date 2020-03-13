@@ -55,8 +55,10 @@ public class PlayerController : MonoBehaviour
     public NavMeshAgent GetNavMeshAgent => navMeshAgent;
     public DamageableEntity damageReceiptionSystem = default;
     [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
+    [SerializeField] Transform throwSocket = default;
+    public Vector3 GetThrowSocket { get { if (throwSocket != null) { return throwSocket.position; } else return transform.position + Vector3.up; } }
 
-    #region Life
+                #region Life
     [Header("Damage Reception")]
     [SerializeField] EffectZone rageEffectZonePrefab = default;
     [SerializeField] float rageEffectZoneVerticalOffset = 1f;

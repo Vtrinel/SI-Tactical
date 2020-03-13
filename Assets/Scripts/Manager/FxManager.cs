@@ -157,5 +157,4 @@ public class FxGameObject
     public FxType fxType;
     public GameObject fxGameObject;
     public Vector3 offset;
-    public Quaternion eulerAngle;
 }
