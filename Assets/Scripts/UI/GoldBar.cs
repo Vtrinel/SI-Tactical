@@ -18,6 +18,7 @@ public class GoldBar : MonoBehaviour
 
     float currentGold = 0;
     bool maxGold = false;
+    public bool tooltipsDesactived;
 
     [SerializeField] float timeToFill = 3;
 
@@ -89,11 +90,13 @@ public class GoldBar : MonoBehaviour
 
     public void StartTooltip()
     {
+        if(tooltipsDesactived == false)
         barAnimator.SetBool("Tooltiped", true);
     }
 
     public void EndTooltip()
     {
-        barAnimator.SetBool("Tooltiped", false);
+        if (tooltipsDesactived == false)
+            barAnimator.SetBool("Tooltiped", false);
     }
 }
