@@ -313,11 +313,13 @@ public class EnemyBase : MonoBehaviour
 
     public void ShowWillBeHitIndicator()
     {
+        if(willBeHitIndicator != null)
         willBeHitIndicator.gameObject.SetActive(true);
     }
 
     public void HideWillBeHitIndicator()
     {
-        willBeHitIndicator.gameObject.SetActive(false);
+        if (willBeHitIndicator != null)
+            willBeHitIndicator.gameObject.SetActive(false);
     }
 }
