@@ -175,10 +175,7 @@ public enum Sound
     PlayerTeleport,
     SelectCompetence,
     NotEnoughActionPoint,
-    Win,
-    defeat,
     none,
-
 }
 
 
@@ -197,6 +194,8 @@ public enum Music
 {
     Menu,
     InGame,
+    Win,
+    defeat,
     InBoss
 }
 
