@@ -4098,7 +4098,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -235.9, y: -166}
+  m_AnchoredPosition: {x: 373, y: -166}
   m_SizeDelta: {x: 490.40002, y: 129.09998}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4656583593294197056
@@ -5420,7 +5420,7 @@ MonoBehaviour:
   imagesToFill:
   - {fileID: 5863547332313349332}
   - {fileID: 5441030289562971267}
-  timerToFill: 0.5
+  timerToFill: 0.7
   timer: 0
   fillCurve:
     serializedVersion: 2
@@ -5428,20 +5428,20 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
+      inSlope: 1.768983
+      outSlope: 1.768983
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.041330647
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
+      inSlope: 0.19099012
+      outSlope: 0.19099012
+      tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.049395144
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
