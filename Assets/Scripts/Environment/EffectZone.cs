@@ -37,6 +37,7 @@ public class EffectZone : MonoBehaviour
 
     [Header("Feedbacks")]
     [SerializeField] Sound soundToPlayOnStart = Sound.ExplosionDisc;
+    [SerializeField] FxType fxToPlayOnStart = FxType.none;
 
     [Header("Debug")]
     [SerializeField] MeshRenderer debugZoneRenderer = default;
@@ -55,6 +56,7 @@ public class EffectZone : MonoBehaviour
         persistanceDurationSystem.StartTimer();
 
         SoundManager.Instance.PlaySound(soundToPlayOnStart, transform.position);
+        FxManager.Instance.CreateFx(fxToPlayOnStart, transform.position);
 
         UpdateRadius();
     }

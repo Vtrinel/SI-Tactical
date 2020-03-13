@@ -188,7 +188,7 @@ public class DiscManager : MonoBehaviour
     {
         if (throwedDiscs.Contains(disc))
         {
-            FxManager.Instance.CreateFx(FxType.discDestroyed, disc.transform.position);
+            //FxManager.Instance.CreateFx(FxType.discDestroyed, disc.transform.position);
             throwedDiscs.Remove(disc);
             Debug.Log("Détruit ?");
         }
