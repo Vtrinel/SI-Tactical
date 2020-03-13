@@ -17,6 +17,7 @@ public class CanvasMenuManager : MonoBehaviour
     private void Awake()
     {
         CanvasMenuManagerStatic = this;
+        Time.timeScale = 1;
     }
 
 

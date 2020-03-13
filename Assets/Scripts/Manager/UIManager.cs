@@ -232,9 +232,18 @@ public class UIManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            pausePanel.SetActive(true);
+            if (pausePanel.activeSelf)
+            {
+                pausePanel.SetActive(false);
 
-            TimeManager.Instance.Pause();
+                TimeManager.Instance.Resume();
+            }
+            else
+            {
+                pausePanel.SetActive(true);
+
+                TimeManager.Instance.Pause();
+            }
         }
     }
 
