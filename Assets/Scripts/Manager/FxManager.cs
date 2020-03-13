@@ -121,7 +121,7 @@ public enum FxType
     enemyImpactShield,  //14
 
     // Player
-    playerMove,     // 15
+    playerGetHit,     // 15
     playerShockwave,
     playerTeleport,
     playerDeath,
