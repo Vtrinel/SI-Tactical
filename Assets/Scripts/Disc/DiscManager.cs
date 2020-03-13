@@ -309,7 +309,7 @@ public class DiscManager : MonoBehaviour
 
             SoundManager.Instance.PlaySound(Sound.ThrowDisc, newDisc.transform.position);
 
-            //FxManager.Instance.CreateFx(FxType.discThrow, GameManager.Instance.GetPlayer.transform.position);
+            FxManager.Instance.CreateFxThrow(FxType.discThrow, player.transform.position, player.transform.rotation);
         }
         return newDisc;
     }
