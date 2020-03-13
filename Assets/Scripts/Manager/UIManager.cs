@@ -152,6 +152,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text additionalInfoText2 = default;
     public void PlayStartTurnAnimation(TurnState currentTurnState, bool newEnemiesappeared, bool newEnemiesIncoming)
     {
+        startTurnAnimation.enabled = true;
         startTurnAnimation.Play();
         switch (currentTurnState)
         {
