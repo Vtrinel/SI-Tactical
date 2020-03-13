@@ -299,6 +299,11 @@ public class DiscScript : MonoBehaviour
 
         accelerationDurationSystem.ChangeTimerValue(accelerationDuration);
         accelerationDurationSystem.StartTimer();
+
+        if (!isBeingRecalled)
+        {
+            ShakeScriptableObjectManager.instance.LoadShake("ShakeSetting_Throw");
+        }
     }
 
     public void UpdateTrajectory()

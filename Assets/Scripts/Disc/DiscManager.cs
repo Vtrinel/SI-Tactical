@@ -190,7 +190,6 @@ public class DiscManager : MonoBehaviour
         {
             //FxManager.Instance.CreateFx(FxType.discDestroyed, disc.transform.position);
             throwedDiscs.Remove(disc);
-            Debug.Log("Détruit ?");
         }
 
         ReturnDiscInPool(disc);
@@ -310,7 +309,7 @@ public class DiscManager : MonoBehaviour
 
             SoundManager.Instance.PlaySound(Sound.ThrowDisc, newDisc.transform.position);
 
-            //FxManager.Instance.CreateFx(FxType.discThrow, GameManager.Instance.GetPlayer.transform.position);
+            FxManager.Instance.CreateFxThrow(FxType.discThrow, player.transform.position, player.transform.rotation);
         }
         return newDisc;
     }
