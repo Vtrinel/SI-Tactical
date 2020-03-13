@@ -7,6 +7,7 @@ public class PausePanel : MonoBehaviour
 {
     public void Resume()
     {
+        print("test");
         TimeManager.Instance.Resume();
 
         gameObject.SetActive(false);
@@ -17,11 +18,4 @@ public class PausePanel : MonoBehaviour
         SceneManager.LoadScene("Menu_testv2");
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Resume();
-        }
-    }
 }
