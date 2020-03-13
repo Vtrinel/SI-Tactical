@@ -33,7 +33,7 @@ public class CanvasMenuManager : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("");
+        SceneManager.LoadScene("Vince_Blockout");
     }
 
     private void Start()
