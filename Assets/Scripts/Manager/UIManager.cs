@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     public GoldBar myGoldBar;
 
     public GameObject pausePanel;
+    public GameObject buttonSkill;
 
     public FloatButton buttonEndTurn;
     public GameObject cancelButton;
@@ -235,5 +236,10 @@ public class UIManager : MonoBehaviour
 
             TimeManager.Instance.Pause();
         }
+    }
+
+    public void ShowSkillButton(bool value)
+    {
+        buttonSkill.SetActive(value);
     }
 }
