@@ -75,10 +75,11 @@ public class PostProcessAnimator : MonoBehaviour
     }
 
     [Button]
-    protected virtual void StartAnim()
+    public virtual void StartAnim()
     {
         animCount = 0.0f;
         isAnimating = true;
+        volume.weight = 1;
     }
 
     protected virtual void Animation()
@@ -103,6 +104,7 @@ public class PostProcessAnimator : MonoBehaviour
         if (AlphaCount() >= 1.0f)
         {
             isAnimating = false;
+            volume.weight = 0;
         }
     }
 
