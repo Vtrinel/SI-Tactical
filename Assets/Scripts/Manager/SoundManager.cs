@@ -192,6 +192,7 @@ public enum Sound
     PlayerTeleport,
     SelectCompetence,
     NotEnoughActionPoint,
+    statueCrack,
     none,
 }
 
