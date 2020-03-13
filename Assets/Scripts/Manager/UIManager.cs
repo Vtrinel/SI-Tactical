@@ -14,6 +14,8 @@ public class UIManager : MonoBehaviour
     public GameObject ButtonRecall;
     public GoldBar myGoldBar;
 
+    public GameObject pausePanel;
+
     public FloatButton buttonEndTurn;
     public GameObject cancelButton;
 
@@ -223,4 +225,15 @@ public class UIManager : MonoBehaviour
         goalPanelAnimator.SetTrigger("reachedGoalTurn");
     }
     #endregion
+
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            pausePanel.SetActive(true);
+
+            TimeManager.Instance.Pause();
+        }
+    }
 }
