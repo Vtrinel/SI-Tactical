@@ -15,6 +15,16 @@ public class LevelGoalZone : MonoBehaviour
         if (progressBar) progressBar.fillAmount = 0;
     }
 
+    [SerializeField] ParticleSystem particlesToPlayOnWin = default;
+
+    public void PlayWinParticles()
+    {
+        if (particlesToPlayOnWin != null)
+            particlesToPlayOnWin.gameObject.SetActive(true);
+    }
+    [SerializeField] Transform transformToLookAt = default;
+    public Transform GetTransformToLookAt { get { if (transformToLookAt != null) return transformToLookAt; else return transform; } }
+
     [Header("Main Parameters")]
     [SerializeField] float zoneRadius = 8f;
 
@@ -65,12 +75,19 @@ public class LevelGoalZone : MonoBehaviour
         return playerIsInRange ? 1 : 0;
     }
 
+    bool fireSoundPlayed = false;
     public void UpdateProgressionBar(int currentProgress, int deltaProgress, int targetProgress)
     {
         UpdateDescription(LevelProgressionManager.Instance.GetRemainingNumberOfTurn);
         if (progressBar != null)
         {
             progressBar.fillAmount = (float)currentProgress / targetProgress;
+        }
+
+        if(currentProgress > 0 && !fireSoundPlayed)
+        {
+            fireSoundPlayed = true;
+            SoundManager.Instance.PlayMusic(Music.fireLightUp);
         }
     }
 

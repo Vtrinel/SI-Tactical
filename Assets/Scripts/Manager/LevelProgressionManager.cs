@@ -40,12 +40,17 @@ public class LevelProgressionManager : MonoBehaviour
     {
         get
         {
-            if (particlesToPlayOnProgress.Length < currentProgressValue)
+            if(currentProgressValue + 1 == targetProgressValue)
+            {
+                return goalZone.GetTransformToLookAt;
+            }
+
+            if (currentProgressValue < particlesToPlayOnProgress.Length)
             {
                 return particlesToPlayOnProgress[currentProgressValue].transform;
             }
 
-            return goalZone.transform;
+            return goalZone.GetTransformToLookAt;
         }
     }
 
@@ -103,13 +108,24 @@ public class LevelProgressionManager : MonoBehaviour
         if (currentProgressValue == targetProgressValue)
         {
             currentProgressValue = targetProgressValue;
-            OnGoalReached?.Invoke();
-            UIManager.Instance.OnGoalTurnAmountReached();
+            StartCoroutine(WinCoroutine());
         }
+        else
+        {
+            yield return new WaitForSeconds(1f);
 
-        yield return new WaitForSeconds(1f);
+            TurnManager.Instance.EndProgressionTurn();
+        }
+    }
 
-        TurnManager.Instance.EndProgressionTurn();
+    public IEnumerator WinCoroutine()
+    {
+        goalZone.PlayWinParticles();
+
+        yield return new WaitForSeconds(3f);
+
+        OnGoalReached?.Invoke();
+        UIManager.Instance.OnGoalTurnAmountReached();
     }
 
     public void SetUpGoalAnimation()

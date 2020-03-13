@@ -153,8 +153,19 @@ public class SoundManager : MonoBehaviour
                     audioSource.loop = false;
                 }
 
+                if (musicAudioClip.music == Music.fireLightUp)
+                {
+                    GameObject soundGameObject = new GameObject("Sound : " + currentCreatedClip.sound.ToString());
+                    AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
+
+                    audioSource.clip = musicAudioClip.audioClip;
+                    audioSource.loop = true;
+                }
+
                 audioSource.clip = musicAudioClip.audioClip;
                 audioSource.Play();
+
+                
             }
         }
     }
@@ -202,7 +213,8 @@ public enum Music
     InGame,
     Win,
     defeat,
-    InBoss
+    InBoss,
+    fireLightUp,
 }
 
 // Group a name and an audioclip
