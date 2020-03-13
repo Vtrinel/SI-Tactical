@@ -259,13 +259,19 @@ public class CultisteEnemy : IAEnemyVirtual
 
     private void OnTriggerEnter(Collider other)
     {
+        
+
         if (other.gameObject.layer == 11 && !haveDisc && isPlaying)
         {
             DiscScript touchedDisc = other.GetComponent<DiscScript>();
+
             if (touchedDisc != null)
             {
                 if (!touchedDisc.isAttacking)
                 {
+                    FxManager.Instance.CreateFx(FxType.discDestroyed, touchedDisc.transform.position);
+                    Debug.Log("Test !!!");
+
                     myAnimator.SetBool("Walking", false);
                     myAnimator.SetBool("DestroyingDisc", true);
                     animationEventContainer.SetEvent2(EndDestroyDisc);
