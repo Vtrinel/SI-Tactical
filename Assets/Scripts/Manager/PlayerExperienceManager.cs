@@ -69,6 +69,7 @@ public class PlayerExperienceManager : MonoBehaviour
     private bool isCanvasCompetenceShowed = false;
     public bool IsUsingCompetencesMenu => isCanvasCompetenceShowed;
     public int GetGoldQuantity => goldBar;
+    public int GetGoldMaxQuantity => goldToUnlockCompetence;
 
     // For the singleton
     private void Awake()
@@ -212,6 +213,7 @@ public class PlayerExperienceManager : MonoBehaviour
     public void GainGold(int experience)
     {
         goldBar += experience;
+        goldBar = Mathf.Clamp(goldBar, 0, goldToUnlockCompetence);
         OnGainGold?.Invoke(experience);
     }
 

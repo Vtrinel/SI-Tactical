@@ -9,6 +9,7 @@ public class PointActionBar : MonoBehaviour
     private int currentPoint;
     public GameObject pointAction;
     [SerializeField] List<PAElement> allPointBarElement = new List<PAElement>();
+    [SerializeField] TooltipColliderUI tooltipCollider = default;
 
 
     private void OnEnable()
@@ -27,14 +28,16 @@ public class PointActionBar : MonoBehaviour
     {
         maxPoint = GameManager.Instance.maxActionPointsAmount;
         currentPoint = GameManager.Instance.GetCurrentActionPointsAmount;
+        tooltipCollider.SetName("Action Points : " + maxPoint + "/" + currentPoint);
     }
 
     void UpdatePointBar(int value)
     {
         currentPoint = value;
         int i = 0;
+        tooltipCollider.SetName("Action Points : " + currentPoint + "/" + maxPoint);
 
-        foreach(PAElement _pointBar in allPointBarElement)
+        foreach (PAElement _pointBar in allPointBarElement)
         {
             _pointBar.SetValue(i < currentPoint);
             i++;

@@ -7,8 +7,11 @@ public class LevelGoalZone : MonoBehaviour
 {
     public void SetUp()
     {
-        debugZone.transform.localScale = Vector3.one * zoneRadius;
-        debugZone.color = normalColor;
+        if (debugZone != null)
+        {
+            debugZone.transform.localScale = Vector3.one * zoneRadius;
+            debugZone.color = normalColor;
+        }
         if (progressBar) progressBar.fillAmount = 0;
     }
 
@@ -45,7 +48,8 @@ public class LevelGoalZone : MonoBehaviour
 
         playerIsInRange = inRange;
 
-        debugZone.color = playerIsInRange ? playerIsInRangeColor : normalColor;
+        if (debugZone != null)
+            debugZone.color = playerIsInRange ? playerIsInRangeColor : normalColor;
 
         if (!playerEnteredOnce)
         {

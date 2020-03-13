@@ -16,40 +16,40 @@ public class PostProcessAnimator : MonoBehaviour
     [SerializeField, ReadOnly] protected Bloom bloom;
 
     [SerializeField] protected AnimationCurve bloomAnimation;
-    [SerializeField] protected float minBloomIntensity;
+    [SerializeField, ReadOnly] protected float minBloomIntensity;
     [SerializeField] protected float maxBloomIntensity;
 
     [Header("Chromatic Aberration settings")]
     [SerializeField, ReadOnly] protected ChromaticAberration chromaticAberration;
 
     [SerializeField] protected AnimationCurve chromaticAnimation;
-    [SerializeField] protected float minChromaticIntensity;
+    [SerializeField, ReadOnly] protected float minChromaticIntensity;
     [SerializeField] protected float maxChromaticIntensity;
 
     [Header("Color Grading settings")]
     [SerializeField, ReadOnly] protected ColorGrading colorGrading;
 
     [SerializeField] protected AnimationCurve postExposureAnimation;
-    [SerializeField] protected float minPostExposure;
+    [SerializeField, ReadOnly] protected float minPostExposure;
     [SerializeField] protected float maxPostExposure;
 
     [SerializeField] protected AnimationCurve contrastAnimation;
-    [SerializeField] protected float minContrast;
+    [SerializeField, ReadOnly] protected float minContrast;
     [SerializeField] protected float maxContrast;
 
     [SerializeField] protected AnimationCurve saturationAnimation;
-    [SerializeField] protected float minSaturation;
+    [SerializeField, ReadOnly] protected float minSaturation;
     [SerializeField] protected float maxSaturation;
 
     [SerializeField] protected AnimationCurve colorFilterAnimation;
-    [SerializeField, ColorUsage(true, true)] protected Color startColorFilter;
+    [SerializeField, ColorUsage(true, true), ReadOnly] protected Color startColorFilter;
     [SerializeField, ColorUsage(true, true)] protected Color endColorFilter;
 
     [Header("Vignette settings")]
     [SerializeField, ReadOnly] protected Vignette vignette;
 
     [SerializeField] protected AnimationCurve vignetteAnimation;
-    [SerializeField] protected float minVignetteIntensity;
+    [SerializeField, ReadOnly] protected float minVignetteIntensity;
     [SerializeField] protected float maxVignetteIntensity;
 
     protected virtual void Start()
@@ -58,6 +58,15 @@ public class PostProcessAnimator : MonoBehaviour
         chromaticAberration = volume.profile.GetSetting<ChromaticAberration>();
         colorGrading = volume.profile.GetSetting<ColorGrading>();
         vignette = volume.profile.GetSetting<Vignette>();
+
+        //Set Min values
+        minBloomIntensity = bloom.intensity.value;
+        minVignetteIntensity = vignette.intensity.value;
+        minChromaticIntensity = chromaticAberration.intensity.value;
+        minPostExposure = colorGrading.postExposure.value;
+        minSaturation = colorGrading.saturation.value;
+        minContrast = colorGrading.contrast.value;
+        startColorFilter = colorGrading.colorFilter.value;
     }
 
     protected virtual void Update()
