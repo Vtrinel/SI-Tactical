@@ -36,6 +36,7 @@ public class LevelProgressionManager : MonoBehaviour
 
     [Header("Parameters")]
     [SerializeField] int targetProgressValue = 5;
+    public int GetRemainingNumberOfTurn => targetProgressValue - currentProgressValue;
     int currentProgressValue = 0;
 
     /// <summary>
