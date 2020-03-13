@@ -556,6 +556,7 @@ public class CompetencesUsabilityManager
         OnDiscRecallAnimEvent?.Invoke(); //Event
         ChangeUsabilityState(UsabilityState.Using, ActionType.Recall);
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+        ShakeScriptableObjectManager.instance.LoadShake("ShakeSetting_Recall");
     }
     public void LaunchRecallCompetenceForReal()
     {
