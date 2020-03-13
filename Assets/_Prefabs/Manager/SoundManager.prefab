@@ -48,16 +48,13 @@ MonoBehaviour:
   spatialBlend: 1
   dopplerLevel: 0
   delayWalkSound: 0.35
-  listBGMMusic:
+  MusicBGMList:
   - music: 0
     audioClip: {fileID: 8300000, guid: e362a1bb47df3c44598c4fe57550dfe6, type: 3}
-    volume: 0
-  - music: 0
-    audioClip: {fileID: 8300000, guid: a97b07b6141d49e46baa9d9f9167f562, type: 3}
-    volume: 0
-  - music: 0
-    audioClip: {fileID: 0}
-    volume: 0
+    volume: 1
+  - music: 1
+    audioClip: {fileID: 8300000, guid: ad7c3c941179bc64ba09b95f058db12f, type: 3}
+    volume: 1
   enemyMovementList:
   - {fileID: 8300000, guid: 9013cac8f48734943bfd8b1d17031f33, type: 3}
   - {fileID: 8300000, guid: 9ead6dc9575ce954f85e576b6c64c0fc, type: 3}
@@ -122,8 +119,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_audioClip: {fileID: 8300000, guid: ad7c3c941179bc64ba09b95f058db12f, type: 3}
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
