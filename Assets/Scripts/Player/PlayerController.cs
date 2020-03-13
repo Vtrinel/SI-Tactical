@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour
         TimeManager.Instance.StartSlowMotion();
         ShakeScriptableObjectManager.instance.LoadShake("ShakeSetting_player damage");
 
-        tooltipCollider.SetTooltipInformations(TooltipInformationFactory.GetPlayerInfos(damageReceiptionSystem.GetCurrentLifeAmount));
+        tooltipCollider.SetTooltipInformations(TooltipInformationFactory.GetPlayerInfos(currentLife - 1));
 
         FxManager.Instance.CreateFx(FxType.playerGetHit, gameObject.transform.position);
     }

@@ -126,12 +126,15 @@ public class PlayerExperienceManager : MonoBehaviour
             goldBar = goldToUnlockCompetence;
             canUnlockComp = true;
 
-            competenceInfoText.text = "Competence point available";
+            if (competenceInfoText != null)
+                competenceInfoText.text = "Competence point available";
         }
         else
         {
             canUnlockComp = false;
-            competenceInfoText.text = "No point available";
+
+            if (competenceInfoText != null)
+                competenceInfoText.text = "No point available";
         }
 
     }

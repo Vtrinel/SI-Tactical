@@ -151,7 +151,7 @@ public enum FxType
     totemUsable,    //22
 
     none,
-    discExplosion
+    discExplosion,
 }
 
 [System.Serializable]
