@@ -63,7 +63,6 @@ public class GoldBar : MonoBehaviour
 
         if((maxGold && maxGoldAnimationCounter < maxGoldTextApparitionDuration) || (!maxGold && maxGoldAnimationCounter > 0))
         {
-            Debug.Log(maxGoldAnimationCounter);
             maxGoldAnimationCounter += Time.deltaTime * (maxGold ? 1 : -1);
             maxGoldAnimationCounter = Mathf.Clamp(maxGoldAnimationCounter, 0, maxGoldTextApparitionDuration);
             Color newColor = Color.Lerp(maxGoldReachedHiddenColor, maxGoldReachedShownColor, maxGoldTextApparitionCurve.Evaluate(maxGoldAnimationCounter/ maxGoldTextApparitionDuration));
