@@ -132,6 +132,7 @@ public class PlayerExperienceManager : MonoBehaviour
         else
         {
             canUnlockComp = false;
+
             if (competenceInfoText != null)
                 competenceInfoText.text = "No point available";
         }

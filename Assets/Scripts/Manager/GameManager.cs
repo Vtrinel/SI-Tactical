@@ -492,7 +492,7 @@ public class GameManager : MonoBehaviour
     {
         if (playIntroCutscene)
         {
-            CameraManager.instance.GetPlayerCamera.InstantPlaceCameraOnTransform(levelManager.GetGoalZone.transform);
+            CameraManager.instance.GetPlayerCamera.InstantPlaceCameraOnTransform(levelManager.GetGoalZone.GetTransformToLookAt);
             StartCoroutine(IntroCutscene());
         }
         else
