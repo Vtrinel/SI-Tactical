@@ -88,7 +88,7 @@ public class LevelGoalZone : MonoBehaviour
         {
             fireSoundPlayed = true;
             SoundManager.Instance.PlayMusic(Music.fireLightUp);
-            SoundManager.Instance.PlaySound(Sound.statueCrack, gameObject.transform.position);
+            //SoundManager.Instance.PlaySound(Sound.statueCrack, gameObject.transform.position);
         }
     }
 
