@@ -11,12 +11,14 @@ public class EnemySpawnPoint : MonoBehaviour
     [SerializeField] EnemyType definedEnemyToSpawn = EnemyType.None;
     [SerializeField] bool definedEnemyWillAutoDetectPlayer = true;
     [SerializeField] DiscType definedLootedDisc = DiscType.None;
-    [SerializeField] GameObject spawnZoneDebugObject = default;
+    //[SerializeField] GameObject spawnZoneDebugObject = default;
+    [SerializeField] TooltipCollider tooltipCollider = default;
     private GameObject fxGameObject;
 
     private void Start()
     {
-        spawnZoneDebugObject?.SetActive(false);
+        //spawnZoneDebugObject?.SetActive(false);
+        tooltipCollider.gameObject.SetActive(false);
     }
 
     public void StartSpawning()
@@ -37,18 +39,17 @@ public class EnemySpawnPoint : MonoBehaviour
         spawnPendingWillAutoDetectPlayer = autoDetectPlayer;
         spawnPendingLootedDiscType = lootedDiscType;
 
-        /// NEXT STEP : add to spawn points to check on next player turn start + generate a preview
-        /// For now, just spawn instant
         TurnManager.Instance.AddPendingSpawnPoint(this);
-        spawnZoneDebugObject.SetActive(true);
-        fxGameObject = FxManager.Instance.SendFx(FxType.enemySpawnPreparation, gameObject.transform.position);
+        //spawnZoneDebugObject.SetActive(true);
+        fxGameObject = FxManager.Instance.SendFx(FxType.enemySpawnPreparation, gameObject.transform.position + Vector3.up * 0.01f);
+        tooltipCollider.gameObject.SetActive(true);
+        fxGameObject.SetActive(true);
     }
 
     public void SpawnPendingEnemy()
     {
         SpawnEnemyOnSpawnPoint(spawnPendingEnemyType, spawnPendingWillAutoDetectPlayer, spawnPendingLootedDiscType);
         Destroy(fxGameObject);
-        FxManager.Instance.CreateFx(FxType.enemySpawn, gameObject.transform.position);
     }
 
     public void SpawnEnemyOnSpawnPoint(EnemyType enemyTypeToSpawn, bool autoDetectPlayer, DiscType lootedDiscType)
@@ -61,7 +62,9 @@ public class EnemySpawnPoint : MonoBehaviour
             //enemyBase.myIA.myNavAgent.enabled = false;
         }
 
-        spawnZoneDebugObject.SetActive(false);
+        FxManager.Instance.CreateFx(FxType.enemySpawn, gameObject.transform.position);
+        //spawnZoneDebugObject.SetActive(false);
+        tooltipCollider.gameObject.SetActive(false);
     }
 
     IEnumerator DebugCoroutine(EnemyBase enemy)

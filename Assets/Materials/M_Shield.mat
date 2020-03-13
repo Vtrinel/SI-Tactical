@@ -19,6 +19,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _DissolveMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Noise:
         m_Texture: {fileID: 0}
         m_Scale: {x: 0.4, y: 0.4}
@@ -41,6 +45,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _ASEOutlineWidth: 0
+    - _ColorDissolveAmount: -0.01
+    - _DissolveAmount: 0.1
     - _ShadowMaskIntensity: 0.99
     - _ShadowNoiseScale: 0.412062
     - _ShadowOpacity: 0.526
@@ -52,7 +58,8 @@ Material:
     - __dirty: 0
     m_Colors:
     - _ASEOutlineColor: {r: 1, g: 1, b: 1, a: 0}
-    - _Color: {r: 1, g: 0.9186236, b: 0.3537736, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 0}
+    - _DissolveColor: {r: 0, g: 0, b: 0, a: 0}
     - _Emlissive: {r: 0, g: 0, b: 0, a: 0}
     - _ShadowAttenuation: {r: 0, g: 0, b: 0, a: 0}
     - _Shadow_Color: {r: 0.012230732, g: 0, b: 0.2627451, a: 0}

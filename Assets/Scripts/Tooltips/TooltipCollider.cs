@@ -21,4 +21,9 @@ public class TooltipCollider : MonoBehaviour, ITooltipable
     {
         informations.tooltipAdditionalInformationValue = value;
     }
+
+    public void SetDescription(string description)
+    {
+        informations.tooltipDescription = description;
+    }
 }
