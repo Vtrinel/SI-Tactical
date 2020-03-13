@@ -1,89 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1216314221344289615
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 9165982336634677364}
-  - component: {fileID: 3593795261428618688}
-  - component: {fileID: 4568474552119294518}
-  - component: {fileID: 902778497128215079}
-  m_Layer: 16
-  m_Name: PostProcess_PlayerShockwave
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &9165982336634677364
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1216314221344289615}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4955289573087558576}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3593795261428618688
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1216314221344289615}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 85db7232ee8acac47bc8c3c532fbfa03, type: 2}
-  isGlobal: 1
-  blendDistance: 0
-  weight: 0
-  priority: 1
---- !u!95 &4568474552119294518
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1216314221344289615}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 49027360f9b456a47b8f25073fdeee90, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &902778497128215079
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1216314221344289615}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c6c29db48746124088ec08805e6d9a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  postProcessAnimator: {fileID: 4568474552119294518}
-  animTriggerName: Shockwave
-  startDelay: 3
 --- !u!1 &2519572118980208953
 GameObject:
   m_ObjectHideFlags: 0
@@ -134,7 +50,7 @@ MonoBehaviour:
   isGlobal: 1
   blendDistance: 0
   weight: 0
-  priority: 0
+  priority: 2
 --- !u!95 &809564299876968740
 Animator:
   serializedVersion: 3
@@ -143,7 +59,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2519572118980208953}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: f050f50b52c48a8489b6817bfd881aac, type: 2}
   m_CullingMode: 0
@@ -166,8 +82,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e269bfb74d10f484d9aa2d83602496c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  postProcessAnimator: {fileID: 809564299876968740}
-  animTriggerName: EnemyDamaged
+  postProcessAnimator: {fileID: 9033226881497183891}
 --- !u!114 &9033226881497183891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,7 +288,6 @@ Transform:
   m_Children:
   - {fileID: 3411144998470289562}
   - {fileID: 5559437917978611929}
-  - {fileID: 9165982336634677364}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -444,7 +358,7 @@ MonoBehaviour:
   isGlobal: 1
   blendDistance: 0
   weight: 0
-  priority: 1
+  priority: 2
 --- !u!95 &5828929548208894807
 Animator:
   serializedVersion: 3
@@ -453,7 +367,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8812911879045722570}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 5ab754cf1afbe7d4b86b05e09c883609, type: 2}
   m_CullingMode: 0
@@ -476,8 +390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0d7672cff3c86a43b4a354e95005222, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  postProcessAnimator: {fileID: 5828929548208894807}
-  animTriggerName: PlayerDamaged
+  postProcessAnimator: {fileID: 9018265394074964236}
 --- !u!114 &9018265394074964236
 MonoBehaviour:
   m_ObjectHideFlags: 0
