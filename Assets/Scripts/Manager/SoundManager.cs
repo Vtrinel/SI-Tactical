@@ -175,7 +175,10 @@ public enum Sound
     PlayerTeleport,
     SelectCompetence,
     NotEnoughActionPoint,
-    none
+    Win,
+    defeat,
+    none,
+
 }
 
 
