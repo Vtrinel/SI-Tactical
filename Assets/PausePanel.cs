@@ -8,6 +8,8 @@ public class PausePanel : MonoBehaviour
     public void Resume()
     {
         TimeManager.Instance.Resume();
+
+        gameObject.SetActive(false);
     }
 
     public void ReturnToMenu()
@@ -20,8 +22,6 @@ public class PausePanel : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Resume();
-
-            gameObject.SetActive(false);
         }
     }
 }
