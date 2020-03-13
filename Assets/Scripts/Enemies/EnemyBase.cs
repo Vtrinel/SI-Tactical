@@ -29,6 +29,7 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] DamageableEntity damageReceiptionSystem = default;
     [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
     [SerializeField] Transform lifeBarParent;
+    [SerializeField] Animator lifeBarAnimator;
     [SerializeField] GameObject lifeBarEnemyPrefab;
     [SerializeField] Animator enemyAnimator = default;
     [SerializeField] AnimationEventsContainer animationEventContainer = default;
@@ -248,12 +249,14 @@ public class EnemyBase : MonoBehaviour
     {
         enemyHoverCirle.SetColor(new Color(enemyHoverCircleColor.r, enemyHoverCircleColor.g, enemyHoverCircleColor.b, enemyHoveredCircleAlpha));
         enemyHoverCirle.SetHovered(true);
+        lifeBarAnimator.SetBool("Hover", true);
     }
 
     public void EndHovering()
     {
         enemyHoverCirle.SetColor(new Color(enemyHoverCircleColor.r, enemyHoverCircleColor.g, enemyHoverCircleColor.b, enemyUnhoveredCircleAlpha));
         enemyHoverCirle.SetHovered(false);
+        lifeBarAnimator.SetBool("Hover", false);
     }
 
     [Header("Other feedbacks")]

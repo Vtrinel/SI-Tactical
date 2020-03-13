@@ -47,6 +47,8 @@ public class TurnManager : MonoBehaviour
 
     public void EndPlayerTurn()
     {
+        GameManager.Instance.SelectAction(ActionType.None);
+        CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
         currentTurnState = TurnState.EnemyTurn;
         OnEndPlayerTurn?.Invoke();
 
