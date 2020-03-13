@@ -613,7 +613,7 @@ MonoBehaviour:
   isPreparing: 0
   myShieldManager: {fileID: 5388920296371151253}
   haveDetectPlayer: 0
-  detectionPlayerRange: 10
+  detectionPlayerRange: 14
   detectionMaskRaycast:
     serializedVersion: 2
     m_Bits: 16896
@@ -768,11 +768,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   informations:
-    tooltipName: Cultist
+    tooltipName: CULTIST
     tooltipDescription: A range enemy that will look for your disks to destroy them,
       and then attack you
     tooltipAdditionalInformationValue: 0
-    tooltipAdditionalInformationType: 0
+    tooltipAdditionalInformationType: 2
     miniSizeTooltip: 0
     forcedTooltipLPosition: {fileID: 0}
     tooltipForcedPositionType: 0
