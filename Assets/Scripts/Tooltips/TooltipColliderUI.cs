@@ -22,4 +22,9 @@ public class TooltipColliderUI : MonoBehaviour, ITooltipable
     {
         isTooltipable = tooltipable;
     }
+
+    public void SetValueInInfos(int value)
+    {
+        informations.tooltipAdditionalInformationValue = value;
+    }
 }

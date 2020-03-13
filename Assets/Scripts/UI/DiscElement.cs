@@ -22,11 +22,6 @@ public class DiscElement : MonoBehaviour
         tooltipCollider.SetTooltipable(discType != DiscType.None);
     }
 
-    private void Start()
-    {
-        buttonAnimator.SetBool("Usable", true);
-    }
-
     public void SetIcon(int indexSprite, int number)
     {
         RefreshImage(indexSprite);
@@ -91,12 +86,14 @@ public class DiscElement : MonoBehaviour
 
     private void OnEnable()
     {
+        buttonAnimator.SetBool("Usable", true);
         tooltipCollider.OnStartTooltip += StartTooltiped;
         tooltipCollider.OnEndTooltip += EndTooltip;
     }
 
     private void OnDisnable()
     {
+        buttonAnimator.SetBool("Usable", true);
         tooltipCollider.OnStartTooltip -= StartTooltiped;
         tooltipCollider.OnEndTooltip -= EndTooltip;
     }
