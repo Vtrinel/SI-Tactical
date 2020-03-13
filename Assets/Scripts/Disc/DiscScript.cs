@@ -455,6 +455,13 @@ public class DiscScript : MonoBehaviour
     }
     #endregion
 
+    #region Feedbacks
+    void DemandeFx(Vector3 collision)
+    {
+        FxManager.Instance.CreateFx(FxType.leaveRecallZone, gameObject.transform.position);
+    }
+    #endregion
+
     [Header("Tooltips")]
     [SerializeField] TooltipCollider tooltipCollider = default;
     [SerializeField] HoverCircle discHoverCirle = default;
