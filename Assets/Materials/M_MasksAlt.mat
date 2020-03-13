@@ -19,6 +19,14 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _Crack:
+        m_Texture: {fileID: 2800000, guid: fb9827773dffa7844b52bacd45d0a344, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DissolveMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Noise:
         m_Texture: {fileID: 0}
         m_Scale: {x: 0.4, y: 0.4}
@@ -41,6 +49,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _ASEOutlineWidth: 0
+    - _Dissovle: 0
     - _ShadowMaskIntensity: 0.99
     - _ShadowNoiseScale: 0.412062
     - _ShadowOpacity: 0.526
