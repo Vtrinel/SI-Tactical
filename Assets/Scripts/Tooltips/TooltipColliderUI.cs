@@ -27,4 +27,14 @@ public class TooltipColliderUI : MonoBehaviour, ITooltipable
     {
         informations.tooltipAdditionalInformationValue = value;
     }
+
+    public void SetName(string name)
+    {
+        informations.tooltipName = name; 
+    }
+
+    public void SetSize(bool mini)
+    {
+        informations.miniSizeTooltip = mini;
+    }
 }
