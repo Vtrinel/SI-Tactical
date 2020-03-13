@@ -12,23 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6867ca9b98d12c7478dcbe6c041cf584, type: 3}
   m_Name: ShakeSetting_EnnemyDamage
   m_EditorClassIdentifier: 
-  noiseSettingProfile: {fileID: 11400000, guid: 307f130ff1f26b24c8d7b9ee7270a53f,
+  noiseSettingProfile: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4,
     type: 2}
-  shakeDuration: 0.5
-  shakeAmplitude: 1
-  shakeFrequency: 1.5
+  shakeDuration: 0.25
+  shakeAmplitude: 1.31
+  shakeFrequency: 1.67
   amplitudeOverTime:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 0.05348088
-      outSlope: 0.05348088
+      inSlope: 0.13397825
+      outSlope: 0.13397825
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.03796446
+      outWeight: 0.088709675
     - serializedVersion: 3
       time: 1
       value: -0.007858276
@@ -47,20 +47,20 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 0.10899138
-      outSlope: 0.10899138
+      inSlope: -1.9974421
+      outSlope: -1.9974421
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.04361874
+      outWeight: 0.035282258
     - serializedVersion: 3
       time: 1
       value: -0.007858276
-      inSlope: 0.00000046119087
-      outSlope: 0.00000046119087
+      inSlope: -0.231935
+      outSlope: -0.231935
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.0444265
+      inWeight: 0.061491907
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

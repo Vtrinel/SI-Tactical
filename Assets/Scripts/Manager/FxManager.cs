@@ -33,16 +33,28 @@ public class FxManager : MonoBehaviour
         if (fxGameObject != null)
         {
             GameObject newFx = Instantiate(fxGameObject.fxGameObject);
-            newFx.transform.position = position;
+            newFx.transform.position = position + fxGameObject.offset;
 
             if (myTypeFx == FxType.discThrow)
             {
+                Debug.Log("DiscThrow");
                 newFx.transform.position = position + fxGameObject.offset;
-                newFx.transform.rotation = fxGameObject.eulerAngle;
-                newFx.GetComponent<ParticleSystem>().Play();
+                newFx.transform.Rotate(fxGameObject.eulerAngle);
             }
-
         }
+    }
+
+    public GameObject SendFx(FxType myTypeFx, Vector3 position)
+    {
+        FxGameObject fxGameObject = GetFxGameObject(myTypeFx);
+        if (fxGameObject != null)
+        {
+            GameObject newFx = Instantiate(fxGameObject.fxGameObject);
+            newFx.transform.position = position + fxGameObject.offset;
+
+            return newFx;
+        }
+        return null;
     }
 
     bool CanCreateFx(FxType hisType)
@@ -131,5 +143,5 @@ public class FxGameObject
     public FxType fxType;
     public GameObject fxGameObject;
     public Vector3 offset;
-    public Quaternion eulerAngle;
+    public Vector3 eulerAngle;
 }

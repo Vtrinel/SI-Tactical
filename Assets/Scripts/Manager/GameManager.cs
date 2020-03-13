@@ -380,8 +380,7 @@ public class GameManager : MonoBehaviour
 
                 case ActionType.Special:
                     validatedAction = competencesUsabilityManager.LaunchSpecialCompetence();
-                    SoundManager.Instance.PlaySound(Sound.PlayerTeleport, player.transform.position);
-                    FxManager.Instance.CreateFx(FxType.playerTeleport, player.transform.position);
+
                     break;
             }
             if (validatedAction)
@@ -399,6 +398,9 @@ public class GameManager : MonoBehaviour
 
     public void CallSelectActionEvent(ActionType actionType)
     {
+        UIManager.Instance.ChangeCancelButtonVisibility(true);
+        UIManager.Instance.ChangeEndTurnButtonVisibility(false);
+        UIManager.Instance.RestartEndTurnButton();
         switch (actionType)
         {
             case ActionType.Move:
@@ -420,6 +422,8 @@ public class GameManager : MonoBehaviour
     {
         UIManager.Instance.GetActionBar.UpdatePreConsommationPointBar(currentActionPointsAmount, 0);
         UIManager.Instance.HideActionPointText();
+        UIManager.Instance.ChangeCancelButtonVisibility(false);
+        UIManager.Instance.ChangeEndTurnButtonVisibility(GetPlayerCanAct);
         switch (actionType)
         {
             case ActionType.Move:

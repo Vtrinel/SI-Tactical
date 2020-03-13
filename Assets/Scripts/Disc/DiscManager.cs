@@ -190,6 +190,7 @@ public class DiscManager : MonoBehaviour
         {
             FxManager.Instance.CreateFx(FxType.discDestroyed, disc.transform.position);
             throwedDiscs.Remove(disc);
+            Debug.Log("Détruit ?");
         }
 
         ReturnDiscInPool(disc);
@@ -231,7 +232,7 @@ public class DiscManager : MonoBehaviour
     public void PlayerRetreiveDisc(DiscScript retreivedDisc)
     {
         SoundManager.Instance.PlaySound(Sound.RecallDisc, player.position);
-        FxManager.Instance.CreateFx(FxType.discRecall, retreivedDisc.transform.position);
+        //FxManager.Instance.CreateFx(FxType.discRecall, retreivedDisc.transform.position);
 
 
         throwedDiscs.Remove(retreivedDisc);
@@ -248,6 +249,8 @@ public class DiscManager : MonoBehaviour
             DiscOverload(retreivedDiscType);
             //Debug.Log("TOO MUCH DISCS, NOT ADDED BUT SUPPOSED TO BE SOMETHING");
         }
+
+        GameManager.Instance.CheckForCompetencesUsability();
     }
 
     [Header("Overlaod Effects")]
@@ -307,7 +310,7 @@ public class DiscManager : MonoBehaviour
 
             SoundManager.Instance.PlaySound(Sound.ThrowDisc, newDisc.transform.position);
 
-            FxManager.Instance.CreateFx(FxType.discThrow, newDisc.transform.position);
+            FxManager.Instance.CreateFx(FxType.discThrow, GameManager.Instance.GetPlayer.transform.position);
         }
         return newDisc;
     }

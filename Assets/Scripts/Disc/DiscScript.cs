@@ -458,11 +458,14 @@ public class DiscScript : MonoBehaviour
     public void StartHovering()
     {
         discHoverCirle.SetHovered(true);
+            FxManager.Instance.CreateFx(FxType.enterRecallZone, gameObject.transform.position);
     }
 
     public void EndHovering()
     {
         discHoverCirle.SetHovered(false);
+        FxManager.Instance.CreateFx(FxType.leaveRecallZone, gameObject.transform.position);
+
     }
 }
 

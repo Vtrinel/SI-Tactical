@@ -7,15 +7,28 @@ using UnityEngine.UI;
 public class FloatButton : MonoBehaviour
 {
     public UnityEvent OnButtonFilled;
+    [SerializeField] Animator buttonAnimator = default;
 
     bool isClicking = false;
+    bool isKeyInputing = false;
 
-    [SerializeField] Image myImage;
+
+    [SerializeField] List<Image> imagesToFill = new List<Image>();
     [SerializeField] float timerToFill;
     [SerializeField] float timer = 0;
     [SerializeField] AnimationCurve fillCurve;
+    [SerializeField] Color fillColor = Color.yellow;
 
     bool canFill = false;
+
+    private void Start()
+    {
+        foreach(Image im in imagesToFill)
+        {
+            im.color = fillColor;
+            im.fillAmount = 0;
+        }
+    }
 
     // Update is called once per frame
     void Update()
@@ -26,7 +39,7 @@ public class FloatButton : MonoBehaviour
         }
 
         //float toThisValue = 0;
-        if (isClicking) 
+        if (isClicking || isKeyInputing) 
         { 
             //toThisValue = 1;
             timer += Time.deltaTime;
@@ -38,22 +51,26 @@ public class FloatButton : MonoBehaviour
 
         timer = Mathf.Clamp(timer, 0.0f, timerToFill);
 
-        myImage.fillAmount = Mathf.Lerp(0, 1, fillCurve.Evaluate(timer/timerToFill));
-
-        if(myImage.fillAmount >= 0.99f)
+        foreach (Image myImage in imagesToFill)
         {
-            OnButtonFilled.Invoke();
-            Restart();
+            float fillAmount = Mathf.Lerp(0, 1, fillCurve.Evaluate(timer / timerToFill));
+            myImage.fillAmount = fillAmount;
+
+            if (fillAmount >= 0.99f)
+            {
+                OnButtonFilled.Invoke();
+                Restart();
+            }
         }
     }
 
-    void Restart() 
+    public void Restart() 
     {
         canFill = false;
-        myImage.fillAmount = 0;
+        foreach (Image myImage in imagesToFill)
+            myImage.fillAmount = 0;
         timer = 0.0f;
-
-        print("fin de tour");
+        isKeyInputing = false;
 
     }
 
@@ -65,5 +82,19 @@ public class FloatButton : MonoBehaviour
         }
 
         isClicking = value;
+    }
+
+    bool _hover;
+    public void SetHover(bool hover)
+    {
+        _hover = hover;
+        buttonAnimator.SetBool("Hover", _hover || isKeyInputing);
+    }
+
+    public void ChangeIsKeyInputing(bool keyInputing)
+    {
+        isKeyInputing = keyInputing;
+        canFill = true;
+        buttonAnimator.SetBool("Hover", _hover || isKeyInputing);
     }
 }

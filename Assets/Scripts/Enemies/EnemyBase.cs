@@ -29,6 +29,7 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] DamageableEntity damageReceiptionSystem = default;
     [SerializeField] KnockbackableEntity knockbackReceiptionSystem = default;
     [SerializeField] Transform lifeBarParent;
+    [SerializeField] Animator lifeBarAnimator;
     [SerializeField] GameObject lifeBarEnemyPrefab;
     [SerializeField] Animator enemyAnimator = default;
     [SerializeField] AnimationEventsContainer animationEventContainer = default;
@@ -63,6 +64,8 @@ public class EnemyBase : MonoBehaviour
         enemyAnimator.SetTrigger("Hit");
         enemyAnimator.SetInteger("RandomHit", UnityEngine.Random.Range(0, 2));
         PostProcessAnimEnemyDamaged.instance.PlayPostProcessAnim();
+        FxManager.Instance.CreateFx(FxType.enemyDamage, gameObject.transform.position);
+        ShakeScriptableObjectManager.instance.LoadShake("ShakeSetting_EnnemyDamage");
     }
 
     public Action<EnemyBase> OnEnemyDeath;
@@ -77,8 +80,8 @@ public class EnemyBase : MonoBehaviour
         OnEnemyDeath?.Invoke(this);
         PlayerExperienceManager.Instance.GainGold(goldGain);
         SoundManager.Instance.PlaySound(Sound.EnemyDeath, gameObject.transform.position);
+        FxManager.Instance.CreateFx(FxType.enemyDeath, gameObject.transform.position);
         Destroy(gameObject);
-        
     }   
 
     [Header("Common Values")]
@@ -246,12 +249,14 @@ public class EnemyBase : MonoBehaviour
     {
         enemyHoverCirle.SetColor(new Color(enemyHoverCircleColor.r, enemyHoverCircleColor.g, enemyHoverCircleColor.b, enemyHoveredCircleAlpha));
         enemyHoverCirle.SetHovered(true);
+        lifeBarAnimator.SetBool("Hover", true);
     }
 
     public void EndHovering()
     {
         enemyHoverCirle.SetColor(new Color(enemyHoverCircleColor.r, enemyHoverCircleColor.g, enemyHoverCircleColor.b, enemyUnhoveredCircleAlpha));
         enemyHoverCirle.SetHovered(false);
+        lifeBarAnimator.SetBool("Hover", false);
     }
 
     [Header("Other feedbacks")]

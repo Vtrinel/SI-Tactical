@@ -552,6 +552,7 @@ public class CompetencesUsabilityManager
     #region Recall
     public void LaunchRecallCompetence()
     {
+        FxManager.Instance.CreateFx(FxType.discRecall, _player.transform.position);
         OnDiscRecallAnimEvent?.Invoke(); //Event
         ChangeUsabilityState(UsabilityState.Using, ActionType.Recall);
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
@@ -608,6 +609,8 @@ public class CompetencesUsabilityManager
             return false;
 
         ChangeUsabilityState(UsabilityState.Using, ActionType.Special);
+        SoundManager.Instance.PlaySound(Sound.PlayerTeleport, _player.transform.position);
+        FxManager.Instance.CreateFx(FxType.playerTeleport, _player.transform.position);
 
         return true;
     }

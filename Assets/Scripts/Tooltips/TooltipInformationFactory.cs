@@ -37,4 +37,15 @@ public static class TooltipInformationFactory
 
         return infos;
     }
+
+    public static TooltipInformations GetPlayerInfos(int currentLife)
+    {
+        TooltipInformations infos = new TooltipInformations();
+        infos.tooltipName = "KOURA";
+        infos.miniSizeTooltip = true;
+        infos.tooltipAdditionalInformationValue = currentLife;
+        infos.tooltipAdditionalInformationType = TooltipAdditionalInformationType.LifePoints;
+
+        return infos;
+    }
 }
