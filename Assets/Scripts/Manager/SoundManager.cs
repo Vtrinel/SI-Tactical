@@ -153,18 +153,19 @@ public class SoundManager : MonoBehaviour
                     audioSource.loop = false;
                 }
 
-                audioSource.clip = musicAudioClip.audioClip;
-                audioSource.Play();
-
-                if (musicAudioClip.music == Music.fireLightUp || musicAudioClip.music == Music.Win)
+                if (musicAudioClip.music == Music.fireLightUp)
                 {
                     GameObject soundGameObject = new GameObject("Sound : " + currentCreatedClip.sound.ToString());
                     AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
 
                     audioSource.clip = musicAudioClip.audioClip;
                     audioSource.loop = true;
-                    audioSource.Play();
                 }
+
+                audioSource.clip = musicAudioClip.audioClip;
+                audioSource.Play();
+
+                
             }
         }
     }
