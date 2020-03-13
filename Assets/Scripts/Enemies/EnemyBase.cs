@@ -67,7 +67,7 @@ public class EnemyBase : MonoBehaviour
         FxManager.Instance.CreateFx(FxType.enemyDamage, gameObject.transform.position);
         ShakeScriptableObjectManager.instance.LoadShake("ShakeSetting_EnnemyDamage");
 
-        tooltipCollider.SetValueInInfos(damageReceiptionSystem.GetCurrentLifeAmount);
+        tooltipCollider.SetValueInInfos(currentAmount);
     }
 
     public Action<EnemyBase> OnEnemyDeath;

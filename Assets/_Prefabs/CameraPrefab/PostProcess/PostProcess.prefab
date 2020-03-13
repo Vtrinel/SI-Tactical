@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 1137378397650068865}
   - component: {fileID: 809564299876968740}
   - component: {fileID: 9159212806468776399}
+  - component: {fileID: 9033226881497183891}
   m_Layer: 16
   m_Name: PostProcess_DamagedEnemy
   m_TagString: Untagged
@@ -129,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 0d4a3307f02a90d4f88f64b7985f77a0, type: 2}
+  sharedProfile: {fileID: 11400000, guid: da6f755657468bd4aa306231d6ee0cd8, type: 2}
   isGlobal: 1
   blendDistance: 0
   weight: 0
@@ -167,6 +168,181 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   postProcessAnimator: {fileID: 809564299876968740}
   animTriggerName: EnemyDamaged
+--- !u!114 &9033226881497183891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2519572118980208953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8641c829ca29844a94f99609dda453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: {fileID: 1137378397650068865}
+  animDuration: 1
+  animCount: 1.1302271
+  isAnimating: 0
+  bloom: {fileID: 0}
+  bloomAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.11470753
+      value: 0.96875083
+      inSlope: 0.048554897
+      outSlope: 0.048554897
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.2527422
+      value: 0.97249454
+      inSlope: -0.28663585
+      outSlope: -0.28663585
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.11628416
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5010437
+      value: 0.25775093
+      inSlope: -1.8168449
+      outSlope: -1.8168449
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.0023584962
+      inSlope: -0.07186452
+      outSlope: -0.07186452
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.13154869
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minBloomIntensity: 0.42
+  maxBloomIntensity: 3.11
+  chromaticAberration: {fileID: 0}
+  chromaticAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.018373653
+      value: 0.99676645
+      inSlope: 0.027745415
+      outSlope: 0.027745415
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.06992704
+    - serializedVersion: 3
+      time: 0.99487305
+      value: -0.0070762634
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minChromaticIntensity: 0.071
+  maxChromaticIntensity: 0.28
+  colorGrading: {fileID: 0}
+  postExposureAnimation:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minPostExposure: 0.87
+  maxPostExposure: 0
+  contrastAnimation:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minContrast: 71.7
+  maxContrast: 0
+  saturationAnimation:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minSaturation: -6.2
+  maxSaturation: 0
+  colorFilterAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.056110512
+      value: 0.963019
+      inSlope: 0.5804808
+      outSlope: 0.5804808
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.039404728
+    - serializedVersion: 3
+      time: 0.9935545
+      value: -0.0047261715
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  startColorFilter: {r: 1, g: 1, b: 1, a: 1}
+  endColorFilter: {r: 0.8798555, g: 0.8798555, b: 0.8798555, a: 1}
+  vignette: {fileID: 0}
+  vignetteAnimation:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minVignetteIntensity: 0.237
+  maxVignetteIntensity: 0
 --- !u!1 &4955289573087558582
 GameObject:
   m_ObjectHideFlags: 0
