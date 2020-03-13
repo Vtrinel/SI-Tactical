@@ -147,6 +147,12 @@ public class SoundManager : MonoBehaviour
         {
             if (musicAudioClip.music == music && musicAudioClip.audioClip != null)
             {
+
+                if (musicAudioClip.music == Music.defeat || musicAudioClip.music == Music.Win)
+                {
+                    audioSource.loop = false;
+                }
+
                 audioSource.clip = musicAudioClip.audioClip;
                 audioSource.Play();
             }
@@ -175,10 +181,7 @@ public enum Sound
     PlayerTeleport,
     SelectCompetence,
     NotEnoughActionPoint,
-    Win,
-    defeat,
     none,
-
 }
 
 
@@ -197,6 +200,8 @@ public enum Music
 {
     Menu,
     InGame,
+    Win,
+    defeat,
     InBoss
 }
 

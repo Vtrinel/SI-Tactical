@@ -15,7 +15,7 @@ MonoBehaviour:
   noiseSettingProfile: {fileID: 11400000, guid: e0c62c6dca2545c4db26a4cb778aaefe,
     type: 2}
   shakeDuration: 0.4
-  shakeAmplitude: 1.5
+  shakeAmplitude: 1
   shakeFrequency: 1
   amplitudeOverTime:
     serializedVersion: 2
@@ -56,20 +56,20 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: -1.0078583
+      outSlope: -1.0078583
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
+      value: -0.007858276
+      inSlope: 0.103254996
+      outSlope: 0.103254996
+      tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.046042025
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
