@@ -545,6 +545,7 @@ public class GameManager : MonoBehaviour
         gameWon = true;
         turnManager.WonGame();
         UIManager.Instance.ShowWinPanel();
+        SoundManager.Instance.PlayMusic(Music.Win);
     }
 
     public void LoseGame()
@@ -554,6 +555,7 @@ public class GameManager : MonoBehaviour
         turnManager.InterruptEnemiesTurn();
         turnManager.LostGame();
         UIManager.Instance.ShowLosePanel();
+        SoundManager.Instance.PlayMusic(Music.defeat);
     }
     #endregion
 

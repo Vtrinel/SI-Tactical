@@ -32,14 +32,30 @@ public class FxManager : MonoBehaviour
         FxGameObject fxGameObject = GetFxGameObject(myTypeFx);
         if (fxGameObject != null)
         {
+            if (fxGameObject.fxGameObject == null)
+                return;
+
+            GameObject newFx = Instantiate(fxGameObject.fxGameObject);
+            newFx.transform.position = position + fxGameObject.offset;
+        }
+    }
+
+    public void CreateFxThrow(FxType myTypeFx, Vector3 position, Quaternion roration)
+    {
+        FxGameObject fxGameObject = GetFxGameObject(myTypeFx);
+        if (fxGameObject != null)
+        {
             GameObject newFx = Instantiate(fxGameObject.fxGameObject);
             newFx.transform.position = position + fxGameObject.offset;
 
             if (myTypeFx == FxType.discThrow)
             {
-                Debug.Log("DiscThrow");
+                // Change the rotation
                 newFx.transform.position = position + fxGameObject.offset;
-                newFx.transform.Rotate(fxGameObject.eulerAngle);
+                var modifiedRotation = roration.eulerAngles;
+                modifiedRotation = new Vector3(modifiedRotation.x, modifiedRotation.y - 90, modifiedRotation.z);
+
+                newFx.transform.rotation = Quaternion.Euler(modifiedRotation);
             }
         }
     }
@@ -121,7 +137,7 @@ public enum FxType
     enemyImpactShield,  //14
 
     // Player
-    playerMove,     // 15
+    playerGetHit,     // 15
     playerShockwave,
     playerTeleport,
     playerDeath,
@@ -144,5 +160,4 @@ public class FxGameObject
     public FxType fxType;
     public GameObject fxGameObject;
     public Vector3 offset;
-    public Vector3 eulerAngle;
 }

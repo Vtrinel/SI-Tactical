@@ -556,6 +556,7 @@ public class CompetencesUsabilityManager
         OnDiscRecallAnimEvent?.Invoke(); //Event
         ChangeUsabilityState(UsabilityState.Using, ActionType.Recall);
         CameraManager.instance.GetPlayerCamera.ResetPlayerCamera();
+        ShakeScriptableObjectManager.instance.LoadShake("ShakeSetting_Recall");
     }
     public void LaunchRecallCompetenceForReal()
     {
@@ -602,15 +603,16 @@ public class CompetencesUsabilityManager
 
     public bool LaunchTeleportation()
     {
-        teleportationDurationSystem = new TimerSystem(teleportationDuration, EndTeleportation);
-        teleportationDurationSystem.StartTimer();
-
         if (!canTeleport)
             return false;
+
+        teleportationDurationSystem = new TimerSystem(teleportationDuration, EndTeleportation);
+        teleportationDurationSystem.StartTimer();
 
         ChangeUsabilityState(UsabilityState.Using, ActionType.Special);
         SoundManager.Instance.PlaySound(Sound.PlayerTeleport, _player.transform.position);
         FxManager.Instance.CreateFx(FxType.playerTeleport, _player.transform.position);
+        FxManager.Instance.CreateFx(FxType.playerTeleport, currentTeleportationPosition);
 
         return true;
     }

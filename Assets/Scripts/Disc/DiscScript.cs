@@ -115,11 +115,7 @@ public class DiscScript : MonoBehaviour
         myAnimator.SetBool("InRange", isInRange);
 
         if(isInRange != inRangeStamp)
-        {
-            if(isInRange)
-            FxManager.Instance.CreateFx(FxType.enterRecallZone, gameObject.transform.position);
-            else
-                FxManager.Instance.CreateFx(FxType.leaveRecallZone, gameObject.transform.position);
+        { 
             inRangeStamp = isInRange;
         }
     }
@@ -221,12 +217,12 @@ public class DiscScript : MonoBehaviour
         if (hit.collider.gameObject.layer == 12)
         {
             SoundManager.Instance.PlaySound(Sound.ShieldGetHit, hit.transform.position);
-            FxManager.Instance.CreateFx(FxType.genericImpact, hit.transform.position);
+            FxManager.Instance.CreateFx(FxType.genericImpact, hit.point);
         }
         else if (hit.collider.gameObject.layer == 14)
         {
             SoundManager.Instance.PlaySound(Sound.WallGetHit, hit.transform.position);
-            FxManager.Instance.CreateFx(FxType.genericImpact, hit.transform.position);
+            FxManager.Instance.CreateFx(FxType.genericImpact, hit.point);
         }
 
         Vector3 horizontalNormal = hit.normal;
@@ -299,6 +295,11 @@ public class DiscScript : MonoBehaviour
 
         accelerationDurationSystem.ChangeTimerValue(accelerationDuration);
         accelerationDurationSystem.StartTimer();
+
+        if (!isBeingRecalled)
+        {
+            ShakeScriptableObjectManager.instance.LoadShake("ShakeSetting_Throw");
+        }
     }
 
     public void UpdateTrajectory()
@@ -457,7 +458,7 @@ public class DiscScript : MonoBehaviour
     #region Feedbacks
     void DemandeFx(Vector3 collision)
     {
-        FxManager.Instance.CreateFx(FxType.discThrow, collision);
+        FxManager.Instance.CreateFx(FxType.leaveRecallZone, gameObject.transform.position);
     }
     #endregion
 
@@ -473,7 +474,6 @@ public class DiscScript : MonoBehaviour
     public void EndHovering()
     {
         discHoverCirle.SetHovered(false);
-
     }
 }
 
